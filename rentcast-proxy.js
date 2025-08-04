@@ -14,7 +14,15 @@ app.get("/rentcast", async (req, res) => {
       params: req.query,
     });
 
-    res.status(200).json(response.data);
+    // Only return the key fields to avoid GPT response size limit
+    const { rent, rentRangeLow, rentRangeHigh, confidenceScore } = response.data;
+
+    res.status(200).json({
+      rent,
+      rentRangeLow,
+      rentRangeHigh,
+      confidenceScore
+    });
   } catch (err) {
     res.status(err.response?.status || 500).json({
       error: "RentCast API error",
