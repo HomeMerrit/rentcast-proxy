@@ -5,6 +5,7 @@ require("dotenv").config();
 
 app.use(express.json());
 
+// 🔹 1. Long-term Rent Estimate
 app.get("/rentcast", async (req, res) => {
   try {
     const response = await axios.get("https://api.rentcast.io/v1/avm/rent/long-term", {
@@ -20,7 +21,7 @@ app.get("/rentcast", async (req, res) => {
       rent,
       rentRangeLow,
       rentRangeHigh,
-      confidenceScore
+      confidenceScore,
     });
   } catch (err) {
     res.status(err.response?.status || 500).json({
@@ -30,7 +31,7 @@ app.get("/rentcast", async (req, res) => {
   }
 });
 
-// ✅ Add this below the /rentcast route
+// 🔹 2. Property Details (APN + Legal Description)
 app.get("/property-details", async (req, res) => {
   try {
     const response = await axios.get("https://api.rentcast.io/v1/properties", {
@@ -54,6 +55,25 @@ app.get("/property-details", async (req, res) => {
   }
 });
 
+// 🔹 3. Random Property Generator
+app.get("/random-property", async (req, res) => {
+  try {
+    const response = await axios.get("https://api.rentcast.io/v1/properties/random", {
+      headers: {
+        "X-Api-Key": process.env.RENTCAST_API_KEY,
+      },
+    });
+
+    res.status(200).json(response.data);
+  } catch (err) {
+    res.status(err.response?.status || 500).json({
+      error: "RentCast Random Property API error",
+      details: err.response?.data || err.message,
+    });
+  }
+});
+
+// ✅ Server Listener
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`RentCast proxy running on port ${PORT}`);
