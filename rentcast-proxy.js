@@ -41,7 +41,13 @@ app.get("/property-details", async (req, res) => {
       params: req.query,
     });
 
-    const { assessorID, legalDescription } = response.data;
+    const property = response.data?.[0]; // RentCast returns an array
+
+    if (!property) {
+      return res.status(404).json({ error: "No property data found" });
+    }
+
+    const { assessorID, legalDescription } = property;
 
     res.status(200).json({
       assessorID,
