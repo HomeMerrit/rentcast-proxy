@@ -1,18 +1,17 @@
+// RentCast Proxy Server for Home Merrit
 const express = require("express");
 const axios = require("axios");
+const app = express();
 require("dotenv").config();
 
-const app = express();
 app.use(express.json());
 
-const RENTCAST_API_KEY = process.env.RENTCAST_API_KEY;
-
-// 🔹 1. Long-term Rent Estimate
+// 🔹 1. Rent Estimate Endpoint
 app.get("/rentcast", async (req, res) => {
   try {
     const response = await axios.get("https://api.rentcast.io/v1/avm/rent/long-term", {
       headers: {
-        "X-Api-Key": RENTCAST_API_KEY,
+        "X-Api-Key": process.env.RENTCAST_API_KEY,
       },
       params: req.query,
     });
@@ -33,12 +32,12 @@ app.get("/rentcast", async (req, res) => {
   }
 });
 
-// 🔹 2. Property Details (Comprehensive Info)
+// 🔹 2. Property Details Endpoint (APN + Legal Description + Owner Name etc.)
 app.get("/property-details", async (req, res) => {
   try {
     const response = await axios.get("https://api.rentcast.io/v1/properties", {
       headers: {
-        "X-Api-Key": RENTCAST_API_KEY,
+        "X-Api-Key": process.env.RENTCAST_API_KEY,
       },
       params: req.query,
     });
@@ -50,43 +49,45 @@ app.get("/property-details", async (req, res) => {
     }
 
     const {
-      formattedAddress,
-      city,
-      state,
-      zipCode,
       assessorID,
       legalDescription,
       owner,
-      ownerOccupied,
-      propertyTaxes,
-      taxAssessments,
+      yearBuilt,
       bedrooms,
       bathrooms,
       squareFootage,
-      lotSize,
-      yearBuilt,
-      county,
       propertyType,
-    } = property;
-
-    res.status(200).json({
-      formattedAddress,
+      address,
       city,
       state,
       zipCode,
-      assessorID,
-      legalDescription,
-      owner: owner?.names?.[0] || "TBD by title agency",
-      ownerOccupied,
-      propertyTaxes,
       taxAssessments,
-      bedrooms,
-      bathrooms,
-      squareFootage,
-      lotSize,
-      yearBuilt,
-      county,
-      propertyType,
+      propertyTaxes,
+      lotSize
+    } = property;
+
+    const taxYear = "2023";
+    const assessedValue = taxAssessments?.[taxYear]?.value || "";
+    const annualTaxes = propertyTaxes?.[taxYear]?.total || "";
+    const taxRate = assessedValue && annualTaxes ? (annualTaxes / assessedValue).toFixed(4) : "";
+
+    res.status(200).json({
+      assessorID: assessorID || "TBD by title agency",
+      legalDescription: legalDescription || "TBD by title agency",
+      SellersFullName: owner?.names?.[0] || "TBD by title agency",
+      YearBuilt: yearBuilt,
+      Bedrooms: bedrooms,
+      Bathrooms: bathrooms,
+      SquareFootage: squareFootage,
+      PropertyType: propertyType,
+      FullAddress: address,
+      City: city,
+      State: state,
+      Zip: zipCode,
+      AssessedValue: assessedValue,
+      AnnualTaxes: annualTaxes,
+      TaxRate: taxRate,
+      LotSize: lotSize,
     });
   } catch (err) {
     res.status(err.response?.status || 500).json({
@@ -96,25 +97,7 @@ app.get("/property-details", async (req, res) => {
   }
 });
 
-// 🔹 3. Random Property Generator (Optional Tool)
-app.get("/random-property", async (req, res) => {
-  try {
-    const response = await axios.get("https://api.rentcast.io/v1/properties/random", {
-      headers: {
-        "X-Api-Key": RENTCAST_API_KEY,
-      },
-    });
-
-    res.status(200).json(response.data);
-  } catch (err) {
-    res.status(err.response?.status || 500).json({
-      error: "RentCast Random Property API error",
-      details: err.response?.data || err.message,
-    });
-  }
-});
-
-// ✅ Server Listen
+// ✅ Server Listener
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`RentCast proxy running on port ${PORT}`);
