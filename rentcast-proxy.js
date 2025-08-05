@@ -14,7 +14,6 @@ app.get("/rentcast", async (req, res) => {
       params: req.query,
     });
 
-    // Only return the key fields to avoid GPT response size limit
     const { rent, rentRangeLow, rentRangeHigh, confidenceScore } = response.data;
 
     res.status(200).json({
@@ -26,6 +25,30 @@ app.get("/rentcast", async (req, res) => {
   } catch (err) {
     res.status(err.response?.status || 500).json({
       error: "RentCast API error",
+      details: err.response?.data || err.message,
+    });
+  }
+});
+
+// ✅ Add this below the /rentcast route
+app.get("/property-details", async (req, res) => {
+  try {
+    const response = await axios.get("https://api.rentcast.io/v1/properties", {
+      headers: {
+        "X-Api-Key": process.env.RENTCAST_API_KEY,
+      },
+      params: req.query,
+    });
+
+    const { assessorID, legalDescription } = response.data;
+
+    res.status(200).json({
+      assessorID,
+      legalDescription,
+    });
+  } catch (err) {
+    res.status(err.response?.status || 500).json({
+      error: "RentCast Property API error",
       details: err.response?.data || err.message,
     });
   }
