@@ -1,16 +1,18 @@
 const express = require("express");
 const axios = require("axios");
-const app = express();
 require("dotenv").config();
 
+const app = express();
 app.use(express.json());
+
+const RENTCAST_API_KEY = process.env.RENTCAST_API_KEY;
 
 // 🔹 1. Long-term Rent Estimate
 app.get("/rentcast", async (req, res) => {
   try {
     const response = await axios.get("https://api.rentcast.io/v1/avm/rent/long-term", {
       headers: {
-        "X-Api-Key": process.env.RENTCAST_API_KEY,
+        "X-Api-Key": RENTCAST_API_KEY,
       },
       params: req.query,
     });
@@ -31,12 +33,12 @@ app.get("/rentcast", async (req, res) => {
   }
 });
 
-// 🔹 2. Property Details (APN + Legal Description)
+// 🔹 2. Property Details (Comprehensive Info)
 app.get("/property-details", async (req, res) => {
   try {
     const response = await axios.get("https://api.rentcast.io/v1/properties", {
       headers: {
-        "X-Api-Key": process.env.RENTCAST_API_KEY,
+        "X-Api-Key": RENTCAST_API_KEY,
       },
       params: req.query,
     });
@@ -47,11 +49,44 @@ app.get("/property-details", async (req, res) => {
       return res.status(404).json({ error: "No property data found" });
     }
 
-    const { assessorID, legalDescription } = property;
-
-    res.status(200).json({
+    const {
+      formattedAddress,
+      city,
+      state,
+      zipCode,
       assessorID,
       legalDescription,
+      owner,
+      ownerOccupied,
+      propertyTaxes,
+      taxAssessments,
+      bedrooms,
+      bathrooms,
+      squareFootage,
+      lotSize,
+      yearBuilt,
+      county,
+      propertyType,
+    } = property;
+
+    res.status(200).json({
+      formattedAddress,
+      city,
+      state,
+      zipCode,
+      assessorID,
+      legalDescription,
+      owner: owner?.names?.[0] || "TBD by title agency",
+      ownerOccupied,
+      propertyTaxes,
+      taxAssessments,
+      bedrooms,
+      bathrooms,
+      squareFootage,
+      lotSize,
+      yearBuilt,
+      county,
+      propertyType,
     });
   } catch (err) {
     res.status(err.response?.status || 500).json({
@@ -61,12 +96,12 @@ app.get("/property-details", async (req, res) => {
   }
 });
 
-// 🔹 3. Random Property Generator
+// 🔹 3. Random Property Generator (Optional Tool)
 app.get("/random-property", async (req, res) => {
   try {
     const response = await axios.get("https://api.rentcast.io/v1/properties/random", {
       headers: {
-        "X-Api-Key": process.env.RENTCAST_API_KEY,
+        "X-Api-Key": RENTCAST_API_KEY,
       },
     });
 
@@ -79,7 +114,7 @@ app.get("/random-property", async (req, res) => {
   }
 });
 
-// ✅ Server Listener
+// ✅ Server Listen
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`RentCast proxy running on port ${PORT}`);
