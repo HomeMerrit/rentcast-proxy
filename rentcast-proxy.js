@@ -1,9 +1,9 @@
-// RentCast Proxy Server for Home Merrit
+// RentCast Proxy + Contract Forwarder for Home Merrit
 const express = require("express");
 const axios = require("axios");
-const app = express();
 require("dotenv").config();
 
+const app = express();
 app.use(express.json());
 
 // 🔹 1. Rent Estimate Endpoint
@@ -83,23 +83,33 @@ app.get("/property-details", async (req, res) => {
   }
 });
 
-// 🔹 3. Webhook Forwarding (Contract payloads → Zapier/Docupilot)
-app.post("/webhook", async (req, res) => {
+// 🔹 3. Contract Forwarding Endpoint (contracts → Zapier/Docupilot)
+app.post("/contract", async (req, res) => {
   try {
+    const { template, data } = req.body;
+
+    if (!template || !data) {
+      return res.status(400).json({ error: "Missing template or data" });
+    }
+
     console.log("📄 Received contract payload:", req.body);
 
+    const zapierWebhookUrl =
+      process.env.ZAPIER_WEBHOOK_URL ||
+      "https://hooks.zapier.com/hooks/catch/14562781/u49dfh5";
+
     const forwardRes = await axios.post(
-      "https://hooks.zapier.com/hooks/catch/14562781/u49dfh5", // or Docupilot target
-      req.body,
+      zapierWebhookUrl,
+      { template, data }, // ✅ Keep payload nested { template, data }
       { headers: { "Content-Type": "application/json" } }
     );
 
     res.status(200).json({
       status: "Contract forwarded successfully",
-      response: forwardRes.data,
+      zapierResponse: forwardRes.data,
     });
   } catch (err) {
-    console.error("❌ Webhook forwarding error:", err.message);
+    console.error("❌ Contract forwarding error:", err.message);
     res.status(500).json({ error: err.message });
   }
 });
@@ -107,5 +117,5 @@ app.post("/webhook", async (req, res) => {
 // ✅ Server Listener
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`RentCast proxy running on port ${PORT}`);
+  console.log(`RentCast proxy + contract API running on port ${PORT}`);
 });
