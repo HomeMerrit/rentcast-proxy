@@ -83,20 +83,23 @@ app.get("/property-details", async (req, res) => {
   }
 });
 
-// 🔹 3. Forward to Zapier (Flattened)
+// 🔹 3. Webhook Forwarding (Contract payloads → Zapier/Docupilot)
 app.post("/webhook", async (req, res) => {
   try {
-    console.log("Forwarding to Zapier, payload:", req.body);
+    console.log("📄 Received contract payload:", req.body);
 
-    const zapierRes = await axios.post(
-      "https://hooks.zapier.com/hooks/catch/14562781/u49dfh5",
+    const forwardRes = await axios.post(
+      "https://hooks.zapier.com/hooks/catch/14562781/u49dfh5", // or Docupilot target
       req.body,
       { headers: { "Content-Type": "application/json" } }
     );
 
-    res.status(200).json({ status: "forwarded to Zapier", zapierRes: zapierRes.data });
+    res.status(200).json({
+      status: "Contract forwarded successfully",
+      response: forwardRes.data,
+    });
   } catch (err) {
-    console.error("Zapier webhook error:", err.message);
+    console.error("❌ Webhook forwarding error:", err.message);
     res.status(500).json({ error: err.message });
   }
 });
