@@ -17,8 +17,7 @@ app.get("/rentcast", async (req, res) => {
       }
     );
 
-    const { rent, rentRangeLow, rentRangeHigh, confidenceScore } =
-      response.data;
+    const { rent, rentRangeLow, rentRangeHigh, confidenceScore } = response.data;
 
     res.status(200).json({
       rent,
@@ -34,7 +33,7 @@ app.get("/rentcast", async (req, res) => {
   }
 });
 
-// 🔹 2. Property Details Endpoint
+// 🔹 2. Property Details Endpoint (Flattened)
 app.get("/property-details", async (req, res) => {
   try {
     const response = await axios.get("https://api.rentcast.io/v1/properties", {
@@ -48,50 +47,34 @@ app.get("/property-details", async (req, res) => {
       return res.status(404).json({ error: "No property data found" });
     }
 
-    const {
-      assessorID,
-      legalDescription,
-      owner,
-      yearBuilt,
-      bedrooms,
-      bathrooms,
-      squareFootage,
-      propertyType,
-      address,
-      city,
-      state,
-      zipCode,
-      taxAssessments,
-      propertyTaxes,
-      lotSize,
-    } = property;
-
     const taxYear = "2023";
-    const assessedValue = taxAssessments?.[taxYear]?.value || "";
-    const annualTaxes = propertyTaxes?.[taxYear]?.total || "";
+    const assessedValue = property.taxAssessments?.[taxYear]?.value || "";
+    const annualTaxes = property.propertyTaxes?.[taxYear]?.total || "";
     const taxRate =
       assessedValue && annualTaxes
         ? (annualTaxes / assessedValue).toFixed(4)
         : "";
 
-    res.status(200).json({
-      assessorID: assessorID || "TBD by title agency",
-      legalDescription: legalDescription || "TBD by title agency",
-      SellersFullName: owner?.names?.[0] || "TBD by title agency",
-      YearBuilt: yearBuilt,
-      Bedrooms: bedrooms,
-      Bathrooms: bathrooms,
-      SquareFootage: squareFootage,
-      PropertyType: propertyType,
-      FullAddress: address,
-      City: city,
-      State: state,
-      Zip: zipCode,
+    const flatData = {
+      assessorID: property.assessorID || "TBD by title agency",
+      legalDescription: property.legalDescription || "TBD by title agency",
+      SellersFullName: property.owner?.names?.[0] || "TBD by title agency",
+      YearBuilt: property.yearBuilt,
+      Bedrooms: property.bedrooms,
+      Bathrooms: property.bathrooms,
+      SquareFootage: property.squareFootage,
+      PropertyType: property.propertyType,
+      FullAddress: property.address,
+      City: property.city,
+      State: property.state,
+      Zip: property.zipCode,
       AssessedValue: assessedValue,
       AnnualTaxes: annualTaxes,
       TaxRate: taxRate,
-      LotSize: lotSize,
-    });
+      LotSize: property.lotSize,
+    };
+
+    res.status(200).json(flatData);
   } catch (err) {
     res.status(err.response?.status || 500).json({
       error: "RentCast Property API error",
@@ -100,16 +83,20 @@ app.get("/property-details", async (req, res) => {
   }
 });
 
-// 🔹 3. Forward to Zapier Endpoint
+// 🔹 3. Forward to Zapier (Flattened)
 app.post("/webhook", async (req, res) => {
   try {
-    await axios.post(
+    console.log("Forwarding to Zapier, payload:", req.body);
+
+    const zapierRes = await axios.post(
       "https://hooks.zapier.com/hooks/catch/14562781/u49dfh5",
       req.body,
       { headers: { "Content-Type": "application/json" } }
     );
-    res.status(200).json({ status: "forwarded to Zapier" });
+
+    res.status(200).json({ status: "forwarded to Zapier", zapierRes: zapierRes.data });
   } catch (err) {
+    console.error("Zapier webhook error:", err.message);
     res.status(500).json({ error: err.message });
   }
 });
