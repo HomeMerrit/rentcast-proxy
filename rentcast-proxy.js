@@ -56,23 +56,24 @@ app.get("/property-details", async (req, res) => {
         : "";
 
     const flatData = {
-      assessorID: property.assessorID || "TBD by title agency",
-      legalDescription: property.legalDescription || "TBD by title agency",
-      SellersFullName: property.owner?.names?.[0] || "TBD by title agency",
-      YearBuilt: property.yearBuilt,
-      Bedrooms: property.bedrooms,
-      Bathrooms: property.bathrooms,
-      SquareFootage: property.squareFootage,
-      PropertyType: property.propertyType,
-      FullAddress: property.address,
-      City: property.city,
-      State: property.state,
-      Zip: property.zipCode,
-      AssessedValue: assessedValue,
-      AnnualTaxes: annualTaxes,
-      TaxRate: taxRate,
-      LotSize: property.lotSize,
-    };
+  assessorID: property.assessorID || "TBD by title agency",
+  legalDescription: property.legalDescription || "TBD by title agency",
+  SellersFullName: property.owner?.names?.[0] || "TBD by title agency",
+  YearBuilt: property.yearBuilt,
+  Bedrooms: property.bedrooms,
+  Bathrooms: property.bathrooms,
+  SquareFootage: property.squareFootage,
+  PropertyType: property.propertyType,
+  FullAddress: property.address,
+  City: property.city,
+  State: property.state,
+  Zip: property.zipCode,
+  County: property.county || "",         // ✅ ADD THIS LINE
+  AssessedValue: assessedValue,
+  AnnualTaxes: annualTaxes,
+  TaxRate: taxRate,
+  LotSize: property.lotSize,
+};
 
     res.status(200).json(flatData);
   } catch (err) {
