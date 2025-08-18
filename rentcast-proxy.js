@@ -9,14 +9,16 @@ app.use(express.json());
 // 🔹 1. Rent Estimate Endpoint
 app.get("/rentcast", async (req, res) => {
   try {
-    const response = await axios.get("https://api.rentcast.io/v1/avm/rent/long-term", {
-      headers: {
-        "X-Api-Key": process.env.RENTCAST_API_KEY,
-      },
-      params: req.query,
-    });
+    const response = await axios.get(
+      "https://api.rentcast.io/v1/avm/rent/long-term",
+      {
+        headers: { "X-Api-Key": process.env.RENTCAST_API_KEY },
+        params: req.query,
+      }
+    );
 
-    const { rent, rentRangeLow, rentRangeHigh, confidenceScore } = response.data;
+    const { rent, rentRangeLow, rentRangeHigh, confidenceScore } =
+      response.data;
 
     res.status(200).json({
       rent,
@@ -32,17 +34,15 @@ app.get("/rentcast", async (req, res) => {
   }
 });
 
-// 🔹 2. Property Details Endpoint (APN + Legal Description + Owner Name etc.)
+// 🔹 2. Property Details Endpoint
 app.get("/property-details", async (req, res) => {
   try {
     const response = await axios.get("https://api.rentcast.io/v1/properties", {
-      headers: {
-        "X-Api-Key": process.env.RENTCAST_API_KEY,
-      },
+      headers: { "X-Api-Key": process.env.RENTCAST_API_KEY },
       params: req.query,
     });
 
-    const property = response.data?.[0]; // RentCast returns an array
+    const property = response.data?.[0];
 
     if (!property) {
       return res.status(404).json({ error: "No property data found" });
@@ -63,13 +63,16 @@ app.get("/property-details", async (req, res) => {
       zipCode,
       taxAssessments,
       propertyTaxes,
-      lotSize
+      lotSize,
     } = property;
 
     const taxYear = "2023";
     const assessedValue = taxAssessments?.[taxYear]?.value || "";
     const annualTaxes = propertyTaxes?.[taxYear]?.total || "";
-    const taxRate = assessedValue && annualTaxes ? (annualTaxes / assessedValue).toFixed(4) : "";
+    const taxRate =
+      assessedValue && annualTaxes
+        ? (annualTaxes / assessedValue).toFixed(4)
+        : "";
 
     res.status(200).json({
       assessorID: assessorID || "TBD by title agency",
@@ -94,6 +97,20 @@ app.get("/property-details", async (req, res) => {
       error: "RentCast Property API error",
       details: err.response?.data || err.message,
     });
+  }
+});
+
+// 🔹 3. Forward to Zapier Endpoint
+app.post("/webhook", async (req, res) => {
+  try {
+    await axios.post(
+      "https://hooks.zapier.com/hooks/catch/14562781/u49dfh5",
+      req.body,
+      { headers: { "Content-Type": "application/json" } }
+    );
+    res.status(200).json({ status: "forwarded to Zapier" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 
