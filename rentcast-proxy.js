@@ -15,8 +15,7 @@ app.get("/rentcast", async (req, res) => {
     if (!params.maxRadius) params.maxRadius = 5;
     if (!params.daysOld) params.daysOld = 180;
     const response = await axios.get("https://api.rentcast.io/v1/avm/rent/long-term", {
-      headers: { "X-Api-Key": process.env.RENTCAST_API_KEY },
-      params,
+      headers: { "X-Api-Key": process.env.RENTCAST_API_KEY }, params,
     });
     res.status(200).json(response.data);
   } catch (err) {
@@ -24,7 +23,7 @@ app.get("/rentcast", async (req, res) => {
   }
 });
 
-// 🔹 2. Full Analysis (rent + value + property + density in one call)
+// 🔹 2. Full Analysis (rent + value + property + market + listings in one call)
 app.get("/rentcast-full", async (req, res) => {
   try {
     const address = req.query.address;
@@ -32,6 +31,7 @@ app.get("/rentcast-full", async (req, res) => {
     const apiKey = process.env.RENTCAST_API_KEY;
     const headers = { "X-Api-Key": apiKey };
 
+    // First get property to extract zip code for market data
     const [rentResponse, valueResponse, propertyResponse] = await Promise.allSettled([
       axios.get("https://api.rentcast.io/v1/avm/rent/long-term", {
         headers,
@@ -42,8 +42,7 @@ app.get("/rentcast-full", async (req, res) => {
         params: { address, compCount: req.query.compCount || 15, maxRadius: req.query.maxRadius || 10, daysOld: req.query.daysOld || 365 },
       }),
       axios.get("https://api.rentcast.io/v1/properties", {
-        headers,
-        params: { address },
+        headers, params: { address },
       }),
     ]);
 
@@ -54,9 +53,11 @@ app.get("/rentcast-full", async (req, res) => {
     if (valueResponse.status === "fulfilled") valueData = valueResponse.value.data;
 
     let propertyData = null;
+    let zipCode = null;
     if (propertyResponse.status === "fulfilled") {
       const property = propertyResponse.value.data?.[0];
       if (property) {
+        zipCode = property.zipCode;
         const taxYear = "2023";
         const assessedValue = property.taxAssessments?.[taxYear]?.value || "";
         const annualTaxes = property.propertyTaxes?.[taxYear]?.total || "";
@@ -65,13 +66,57 @@ app.get("/rentcast-full", async (req, res) => {
           assessorID: property.assessorID || "TBD by title agency",
           legalDescription: property.legalDescription || "TBD by title agency",
           SellersFullName: property.owner?.names?.[0] || "TBD by title agency",
+          OwnerNames: property.owner?.names || [],
+          OwnerType: property.owner?.type || null,
           YearBuilt: property.yearBuilt, Bedrooms: property.bedrooms, Bathrooms: property.bathrooms,
           SquareFootage: property.squareFootage, PropertyType: property.propertyType,
           FullAddress: property.address, City: property.city, State: property.state,
           Zip: property.zipCode, County: property.county || "",
-          AssessedValue: assessedValue, AnnualTaxes: annualTaxes, TaxRate: taxRate, LotSize: property.lotSize,
+          AssessedValue: assessedValue, AnnualTaxes: annualTaxes, TaxRate: taxRate,
+          LotSize: property.lotSize,
           HOAFee: property.hoa?.fee || null,
           SaleHistory: property.history || [],
+          Features: property.features || {},
+          LastSaleDate: property.lastSaleDate || null,
+          LastSalePrice: property.lastSalePrice || null,
+        };
+      }
+    }
+
+    // Second round: market data + active sale listing (needs zip code)
+    let marketData = null;
+    let listingData = null;
+
+    const secondRound = [];
+    if (zipCode) {
+      secondRound.push(
+        axios.get("https://api.rentcast.io/v1/markets", {
+          headers, params: { zipCode, dataType: "All" },
+        }).catch(() => null)
+      );
+      // Search for active sale listing at this address
+      secondRound.push(
+        axios.get("https://api.rentcast.io/v1/listings/sale", {
+          headers, params: { address, status: "Active", limit: 1 },
+        }).catch(() => null)
+      );
+    }
+
+    if (secondRound.length > 0) {
+      const [marketRes, listingRes] = await Promise.all(secondRound);
+      if (marketRes && marketRes.data) marketData = marketRes.data;
+      if (listingRes && listingRes.data && listingRes.data.length > 0) {
+        const listing = listingRes.data[0];
+        listingData = {
+          price: listing.price,
+          status: listing.status,
+          daysOnMarket: listing.daysOnMarket,
+          listingType: listing.listingType,
+          listedDate: listing.listedDate,
+          listingAgent: listing.listingAgent || null,
+          listingOffice: listing.listingOffice || null,
+          mlsName: listing.mlsName || null,
+          mlsNumber: listing.mlsNumber || null,
         };
       }
     }
@@ -94,7 +139,14 @@ app.get("/rentcast-full", async (req, res) => {
       densityInfo = { totalCompsFound: comps.length, compsWithinHalfMile, compsWithinOneMile, avgCompDistance: avgDistance ? parseFloat(avgDistance.toFixed(2)) : null, maxCompDistance: maxDistance ? parseFloat(maxDistance.toFixed(2)) : null, densityRating };
     }
 
-    res.status(200).json({ rent: rentData, value: valueData, property: propertyData, density: densityInfo });
+    res.status(200).json({
+      rent: rentData,
+      value: valueData,
+      property: propertyData,
+      density: densityInfo,
+      market: marketData,
+      listing: listingData,
+    });
   } catch (err) {
     res.status(err.response?.status || 500).json({ error: "RentCast Full Analysis error", details: err.response?.data || err.message });
   }
@@ -115,11 +167,15 @@ app.get("/property-details", async (req, res) => {
     res.status(200).json({
       assessorID: property.assessorID || "TBD by title agency", legalDescription: property.legalDescription || "TBD by title agency",
       SellersFullName: property.owner?.names?.[0] || "TBD by title agency",
+      OwnerNames: property.owner?.names || [], OwnerType: property.owner?.type || null,
       YearBuilt: property.yearBuilt, Bedrooms: property.bedrooms, Bathrooms: property.bathrooms,
       SquareFootage: property.squareFootage, PropertyType: property.propertyType,
       FullAddress: property.address, City: property.city, State: property.state,
       Zip: property.zipCode, County: property.county || "",
       AssessedValue: assessedValue, AnnualTaxes: annualTaxes, TaxRate: taxRate, LotSize: property.lotSize,
+      HOAFee: property.hoa?.fee || null, SaleHistory: property.history || [],
+      Features: property.features || {},
+      LastSaleDate: property.lastSaleDate || null, LastSalePrice: property.lastSalePrice || null,
     });
   } catch (err) {
     res.status(err.response?.status || 500).json({ error: "RentCast Property API error", details: err.response?.data || err.message });
