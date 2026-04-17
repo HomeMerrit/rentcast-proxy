@@ -6,23 +6,23 @@ require("dotenv").config();
 const app = express();
 app.use(cors());
 app.use(express.json());
-// 🔹 1. Rent Estimate Endpoint
+
+// 🔹 1. Rent Estimate Endpoint (FULL - includes comps)
 app.get("/rentcast", async (req, res) => {
   try {
+    const params = { ...req.query };
+    if (!params.compCount) params.compCount = 15;
+    if (!params.maxRadius) params.maxRadius = 5;
+    if (!params.daysOld) params.daysOld = 180;
+
     const response = await axios.get(
       "https://api.rentcast.io/v1/avm/rent/long-term",
       {
         headers: { "X-Api-Key": process.env.RENTCAST_API_KEY },
-        params: req.query,
+        params: params,
       }
     );
-    const { rent, rentRangeLow, rentRangeHigh, confidenceScore } = response.data;
-    res.status(200).json({
-      rent,
-      rentRangeLow,
-      rentRangeHigh,
-      confidenceScore,
-    });
+    res.status(200).json(response.data);
   } catch (err) {
     res.status(err.response?.status || 500).json({
       error: "RentCast API error",
@@ -30,7 +30,102 @@ app.get("/rentcast", async (req, res) => {
     });
   }
 });
-// 🔹 2. Property Details Endpoint (Flattened)
+
+// 🔹 2. Full Analysis Endpoint (rent + property + density in one call)
+app.get("/rentcast-full", async (req, res) => {
+  try {
+    const address = req.query.address;
+    if (!address) {
+      return res.status(400).json({ error: "Address is required" });
+    }
+    const apiKey = process.env.RENTCAST_API_KEY;
+    const headers = { "X-Api-Key": apiKey };
+
+    const [rentResponse, propertyResponse] = await Promise.allSettled([
+      axios.get("https://api.rentcast.io/v1/avm/rent/long-term", {
+        headers,
+        params: {
+          address,
+          compCount: req.query.compCount || 15,
+          maxRadius: req.query.maxRadius || 5,
+          daysOld: req.query.daysOld || 180,
+        },
+      }),
+      axios.get("https://api.rentcast.io/v1/properties", {
+        headers,
+        params: { address },
+      }),
+    ]);
+
+    let rentData = null;
+    if (rentResponse.status === "fulfilled") rentData = rentResponse.value.data;
+
+    let propertyData = null;
+    if (propertyResponse.status === "fulfilled") {
+      const property = propertyResponse.value.data?.[0];
+      if (property) {
+        const taxYear = "2023";
+        const assessedValue = property.taxAssessments?.[taxYear]?.value || "";
+        const annualTaxes = property.propertyTaxes?.[taxYear]?.total || "";
+        const taxRate = assessedValue && annualTaxes ? (annualTaxes / assessedValue).toFixed(4) : "";
+        propertyData = {
+          assessorID: property.assessorID || "TBD by title agency",
+          legalDescription: property.legalDescription || "TBD by title agency",
+          SellersFullName: property.owner?.names?.[0] || "TBD by title agency",
+          YearBuilt: property.yearBuilt,
+          Bedrooms: property.bedrooms,
+          Bathrooms: property.bathrooms,
+          SquareFootage: property.squareFootage,
+          PropertyType: property.propertyType,
+          FullAddress: property.address,
+          City: property.city,
+          State: property.state,
+          Zip: property.zipCode,
+          County: property.county || "",
+          AssessedValue: assessedValue,
+          AnnualTaxes: annualTaxes,
+          TaxRate: taxRate,
+          LotSize: property.lotSize,
+        };
+      }
+    }
+
+    let densityInfo = null;
+    if (rentData && rentData.comparables && rentData.comparables.length > 0) {
+      const comps = rentData.comparables;
+      const distances = comps.map((c) => c.distance).filter((d) => d != null);
+      const avgDistance = distances.length > 0 ? distances.reduce((a, b) => a + b, 0) / distances.length : null;
+      const maxDistance = distances.length > 0 ? Math.max(...distances) : null;
+      const compsWithinHalfMile = comps.filter((c) => c.distance != null && c.distance <= 0.5).length;
+      const compsWithinOneMile = comps.filter((c) => c.distance != null && c.distance <= 1).length;
+
+      let densityRating;
+      if (compsWithinHalfMile >= 5) densityRating = "Urban/Dense Suburban";
+      else if (compsWithinOneMile >= 5) densityRating = "Suburban";
+      else if (comps.length >= 5 && avgDistance <= 3) densityRating = "Low-Density Suburban";
+      else if (comps.length >= 3) densityRating = "Semi-Rural";
+      else densityRating = "Rural";
+
+      densityInfo = {
+        totalCompsFound: comps.length,
+        compsWithinHalfMile,
+        compsWithinOneMile,
+        avgCompDistance: avgDistance ? parseFloat(avgDistance.toFixed(2)) : null,
+        maxCompDistance: maxDistance ? parseFloat(maxDistance.toFixed(2)) : null,
+        densityRating,
+      };
+    }
+
+    res.status(200).json({ rent: rentData, property: propertyData, density: densityInfo });
+  } catch (err) {
+    res.status(err.response?.status || 500).json({
+      error: "RentCast Full Analysis error",
+      details: err.response?.data || err.message,
+    });
+  }
+});
+
+// 🔹 3. Property Details Endpoint (Flattened)
 app.get("/property-details", async (req, res) => {
   try {
     const response = await axios.get("https://api.rentcast.io/v1/properties", {
@@ -38,70 +133,39 @@ app.get("/property-details", async (req, res) => {
       params: req.query,
     });
     const property = response.data?.[0];
-    if (!property) {
-      return res.status(404).json({ error: "No property data found" });
-    }
+    if (!property) return res.status(404).json({ error: "No property data found" });
     const taxYear = "2023";
     const assessedValue = property.taxAssessments?.[taxYear]?.value || "";
     const annualTaxes = property.propertyTaxes?.[taxYear]?.total || "";
-    const taxRate =
-      assessedValue && annualTaxes
-        ? (annualTaxes / assessedValue).toFixed(4)
-        : "";
-    const flatData = {
+    const taxRate = assessedValue && annualTaxes ? (annualTaxes / assessedValue).toFixed(4) : "";
+    res.status(200).json({
       assessorID: property.assessorID || "TBD by title agency",
       legalDescription: property.legalDescription || "TBD by title agency",
       SellersFullName: property.owner?.names?.[0] || "TBD by title agency",
-      YearBuilt: property.yearBuilt,
-      Bedrooms: property.bedrooms,
-      Bathrooms: property.bathrooms,
-      SquareFootage: property.squareFootage,
-      PropertyType: property.propertyType,
-      FullAddress: property.address,
-      City: property.city,
-      State: property.state,
-      Zip: property.zipCode,
-      County: property.county || "",
-      AssessedValue: assessedValue,
-      AnnualTaxes: annualTaxes,
-      TaxRate: taxRate,
-      LotSize: property.lotSize,
-    };
-    res.status(200).json(flatData);
-  } catch (err) {
-    res.status(err.response?.status || 500).json({
-      error: "RentCast Property API error",
-      details: err.response?.data || err.message,
+      YearBuilt: property.yearBuilt, Bedrooms: property.bedrooms, Bathrooms: property.bathrooms,
+      SquareFootage: property.squareFootage, PropertyType: property.propertyType,
+      FullAddress: property.address, City: property.city, State: property.state,
+      Zip: property.zipCode, County: property.county || "",
+      AssessedValue: assessedValue, AnnualTaxes: annualTaxes, TaxRate: taxRate, LotSize: property.lotSize,
     });
+  } catch (err) {
+    res.status(err.response?.status || 500).json({ error: "RentCast Property API error", details: err.response?.data || err.message });
   }
 });
-// 🔹 3. Contract Forwarding Endpoint (contracts → Zapier/Docupilot)
+
+// 🔹 4. Contract Forwarding Endpoint
 app.post("/contract", async (req, res) => {
   try {
     const { template, data } = req.body;
-    if (!template || !data) {
-      return res.status(400).json({ error: "Missing template or data" });
-    }
-    console.log("📄 Received contract payload:", req.body);
-    const zapierWebhookUrl =
-      process.env.ZAPIER_WEBHOOK_URL ||
-      "https://hooks.zapier.com/hooks/catch/14562781/u49dfh5";
-    const forwardRes = await axios.post(
-      zapierWebhookUrl,
-      { template, data },
-      { headers: { "Content-Type": "application/json" } }
-    );
-    res.status(200).json({
-      status: "Contract forwarded successfully",
-      zapierResponse: forwardRes.data,
-    });
+    if (!template || !data) return res.status(400).json({ error: "Missing template or data" });
+    const zapierWebhookUrl = process.env.ZAPIER_WEBHOOK_URL || "https://hooks.zapier.com/hooks/catch/14562781/u49dfh5";
+    const forwardRes = await axios.post(zapierWebhookUrl, { template, data }, { headers: { "Content-Type": "application/json" } });
+    res.status(200).json({ status: "Contract forwarded successfully", zapierResponse: forwardRes.data });
   } catch (err) {
-    console.error("❌ Contract forwarding error:", err.message);
+    console.error("Contract forwarding error:", err.message);
     res.status(500).json({ error: err.message });
   }
 });
-// ✅ Server Listener
+
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`RentCast proxy + contract API running on port ${PORT}`);
-});
+app.listen(PORT, () => console.log(`RentCast proxy running on port ${PORT}`));
