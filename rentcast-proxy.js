@@ -70,6 +70,8 @@ app.get("/rentcast-full", async (req, res) => {
           FullAddress: property.address, City: property.city, State: property.state,
           Zip: property.zipCode, County: property.county || "",
           AssessedValue: assessedValue, AnnualTaxes: annualTaxes, TaxRate: taxRate, LotSize: property.lotSize,
+          HOAFee: property.hoa?.fee || null,
+          SaleHistory: property.history || [],
         };
       }
     }
