@@ -31,7 +31,7 @@ app.get("/rentcast-full", async (req, res) => {
     const apiKey = process.env.RENTCAST_API_KEY;
     const headers = { "X-Api-Key": apiKey };
 
-    // First get property to extract zip code for market data
+    // First round: rent, value, property
     const [rentResponse, valueResponse, propertyResponse] = await Promise.allSettled([
       axios.get("https://api.rentcast.io/v1/avm/rent/long-term", {
         headers,
@@ -83,9 +83,10 @@ app.get("/rentcast-full", async (req, res) => {
       }
     }
 
-    // Second round: market data + active sale listing (needs zip code)
+    // Second round: market data + sale listing + rental listing
     let marketData = null;
-    let listingData = null;
+    let saleListingData = null;
+    let rentalListingData = null;
 
     const secondRound = [];
     if (zipCode) {
@@ -94,32 +95,57 @@ app.get("/rentcast-full", async (req, res) => {
           headers, params: { zipCode, dataType: "All" },
         }).catch(() => null)
       );
-      // Search for active sale listing at this address
-      secondRound.push(
-        axios.get("https://api.rentcast.io/v1/listings/sale", {
-          headers, params: { address, status: "Active", limit: 1 },
-        }).catch(() => null)
-      );
+    } else {
+      secondRound.push(Promise.resolve(null));
+    }
+    // Always search for sale and rental listings by address
+    secondRound.push(
+      axios.get("https://api.rentcast.io/v1/listings/sale", {
+        headers, params: { address, status: "Active", limit: 1 },
+      }).catch(() => null)
+    );
+    secondRound.push(
+      axios.get("https://api.rentcast.io/v1/listings/rental/long-term", {
+        headers, params: { address, status: "Active", limit: 1 },
+      }).catch(() => null)
+    );
+
+    const [marketRes, saleListingRes, rentalListingRes] = await Promise.all(secondRound);
+
+    if (marketRes && marketRes.data) marketData = marketRes.data;
+
+    if (saleListingRes && saleListingRes.data && saleListingRes.data.length > 0) {
+      const listing = saleListingRes.data[0];
+      saleListingData = {
+        price: listing.price,
+        status: listing.status,
+        daysOnMarket: listing.daysOnMarket,
+        listingType: listing.listingType,
+        listedDate: listing.listedDate,
+        listingAgent: listing.listingAgent || null,
+        listingOffice: listing.listingOffice || null,
+        mlsName: listing.mlsName || null,
+        mlsNumber: listing.mlsNumber || null,
+      };
     }
 
-    if (secondRound.length > 0) {
-      const [marketRes, listingRes] = await Promise.all(secondRound);
-      if (marketRes && marketRes.data) marketData = marketRes.data;
-      if (listingRes && listingRes.data && listingRes.data.length > 0) {
-        const listing = listingRes.data[0];
-        listingData = {
-          price: listing.price,
-          status: listing.status,
-          daysOnMarket: listing.daysOnMarket,
-          listingType: listing.listingType,
-          listedDate: listing.listedDate,
-          listingAgent: listing.listingAgent || null,
-          listingOffice: listing.listingOffice || null,
-          mlsName: listing.mlsName || null,
-          mlsNumber: listing.mlsNumber || null,
-        };
-      }
+    if (rentalListingRes && rentalListingRes.data && rentalListingRes.data.length > 0) {
+      const listing = rentalListingRes.data[0];
+      rentalListingData = {
+        price: listing.price,
+        status: listing.status,
+        daysOnMarket: listing.daysOnMarket,
+        listedDate: listing.listedDate,
+        listingAgent: listing.listingAgent || null,
+        listingOffice: listing.listingOffice || null,
+        mlsNumber: listing.mlsNumber || null,
+      };
     }
+
+    // Determine property status
+    let propertyStatus = "Off Market";
+    if (saleListingData) propertyStatus = "On Market (For Sale)";
+    else if (rentalListingData) propertyStatus = "Active Rental";
 
     // Density from rental comps
     let densityInfo = null;
@@ -145,7 +171,9 @@ app.get("/rentcast-full", async (req, res) => {
       property: propertyData,
       density: densityInfo,
       market: marketData,
-      listing: listingData,
+      saleListing: saleListingData,
+      rentalListing: rentalListingData,
+      propertyStatus: propertyStatus,
     });
   } catch (err) {
     res.status(err.response?.status || 500).json({ error: "RentCast Full Analysis error", details: err.response?.data || err.message });
