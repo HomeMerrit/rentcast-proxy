@@ -7,49 +7,39 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// 🔹 1. Rent Estimate Endpoint (FULL - includes comps)
+// 🔹 1. Rent Estimate Endpoint (FULL)
 app.get("/rentcast", async (req, res) => {
   try {
     const params = { ...req.query };
     if (!params.compCount) params.compCount = 15;
     if (!params.maxRadius) params.maxRadius = 5;
     if (!params.daysOld) params.daysOld = 180;
-
-    const response = await axios.get(
-      "https://api.rentcast.io/v1/avm/rent/long-term",
-      {
-        headers: { "X-Api-Key": process.env.RENTCAST_API_KEY },
-        params: params,
-      }
-    );
+    const response = await axios.get("https://api.rentcast.io/v1/avm/rent/long-term", {
+      headers: { "X-Api-Key": process.env.RENTCAST_API_KEY },
+      params,
+    });
     res.status(200).json(response.data);
   } catch (err) {
-    res.status(err.response?.status || 500).json({
-      error: "RentCast API error",
-      details: err.response?.data || err.message,
-    });
+    res.status(err.response?.status || 500).json({ error: "RentCast API error", details: err.response?.data || err.message });
   }
 });
 
-// 🔹 2. Full Analysis Endpoint (rent + property + density in one call)
+// 🔹 2. Full Analysis (rent + value + property + density in one call)
 app.get("/rentcast-full", async (req, res) => {
   try {
     const address = req.query.address;
-    if (!address) {
-      return res.status(400).json({ error: "Address is required" });
-    }
+    if (!address) return res.status(400).json({ error: "Address is required" });
     const apiKey = process.env.RENTCAST_API_KEY;
     const headers = { "X-Api-Key": apiKey };
 
-    const [rentResponse, propertyResponse] = await Promise.allSettled([
+    const [rentResponse, valueResponse, propertyResponse] = await Promise.allSettled([
       axios.get("https://api.rentcast.io/v1/avm/rent/long-term", {
         headers,
-        params: {
-          address,
-          compCount: req.query.compCount || 15,
-          maxRadius: req.query.maxRadius || 5,
-          daysOld: req.query.daysOld || 180,
-        },
+        params: { address, compCount: req.query.compCount || 15, maxRadius: req.query.maxRadius || 5, daysOld: req.query.daysOld || 180 },
+      }),
+      axios.get("https://api.rentcast.io/v1/avm/value", {
+        headers,
+        params: { address, compCount: req.query.compCount || 15, maxRadius: req.query.maxRadius || 10, daysOld: req.query.daysOld || 365 },
       }),
       axios.get("https://api.rentcast.io/v1/properties", {
         headers,
@@ -59,6 +49,9 @@ app.get("/rentcast-full", async (req, res) => {
 
     let rentData = null;
     if (rentResponse.status === "fulfilled") rentData = rentResponse.value.data;
+
+    let valueData = null;
+    if (valueResponse.status === "fulfilled") valueData = valueResponse.value.data;
 
     let propertyData = null;
     if (propertyResponse.status === "fulfilled") {
@@ -72,65 +65,44 @@ app.get("/rentcast-full", async (req, res) => {
           assessorID: property.assessorID || "TBD by title agency",
           legalDescription: property.legalDescription || "TBD by title agency",
           SellersFullName: property.owner?.names?.[0] || "TBD by title agency",
-          YearBuilt: property.yearBuilt,
-          Bedrooms: property.bedrooms,
-          Bathrooms: property.bathrooms,
-          SquareFootage: property.squareFootage,
-          PropertyType: property.propertyType,
-          FullAddress: property.address,
-          City: property.city,
-          State: property.state,
-          Zip: property.zipCode,
-          County: property.county || "",
-          AssessedValue: assessedValue,
-          AnnualTaxes: annualTaxes,
-          TaxRate: taxRate,
-          LotSize: property.lotSize,
+          YearBuilt: property.yearBuilt, Bedrooms: property.bedrooms, Bathrooms: property.bathrooms,
+          SquareFootage: property.squareFootage, PropertyType: property.propertyType,
+          FullAddress: property.address, City: property.city, State: property.state,
+          Zip: property.zipCode, County: property.county || "",
+          AssessedValue: assessedValue, AnnualTaxes: annualTaxes, TaxRate: taxRate, LotSize: property.lotSize,
         };
       }
     }
 
+    // Density from rental comps
     let densityInfo = null;
     if (rentData && rentData.comparables && rentData.comparables.length > 0) {
       const comps = rentData.comparables;
-      const distances = comps.map((c) => c.distance).filter((d) => d != null);
+      const distances = comps.map(c => c.distance).filter(d => d != null);
       const avgDistance = distances.length > 0 ? distances.reduce((a, b) => a + b, 0) / distances.length : null;
       const maxDistance = distances.length > 0 ? Math.max(...distances) : null;
-      const compsWithinHalfMile = comps.filter((c) => c.distance != null && c.distance <= 0.5).length;
-      const compsWithinOneMile = comps.filter((c) => c.distance != null && c.distance <= 1).length;
-
+      const compsWithinHalfMile = comps.filter(c => c.distance != null && c.distance <= 0.5).length;
+      const compsWithinOneMile = comps.filter(c => c.distance != null && c.distance <= 1).length;
       let densityRating;
       if (compsWithinHalfMile >= 5) densityRating = "Urban/Dense Suburban";
       else if (compsWithinOneMile >= 5) densityRating = "Suburban";
       else if (comps.length >= 5 && avgDistance <= 3) densityRating = "Low-Density Suburban";
       else if (comps.length >= 3) densityRating = "Semi-Rural";
       else densityRating = "Rural";
-
-      densityInfo = {
-        totalCompsFound: comps.length,
-        compsWithinHalfMile,
-        compsWithinOneMile,
-        avgCompDistance: avgDistance ? parseFloat(avgDistance.toFixed(2)) : null,
-        maxCompDistance: maxDistance ? parseFloat(maxDistance.toFixed(2)) : null,
-        densityRating,
-      };
+      densityInfo = { totalCompsFound: comps.length, compsWithinHalfMile, compsWithinOneMile, avgCompDistance: avgDistance ? parseFloat(avgDistance.toFixed(2)) : null, maxCompDistance: maxDistance ? parseFloat(maxDistance.toFixed(2)) : null, densityRating };
     }
 
-    res.status(200).json({ rent: rentData, property: propertyData, density: densityInfo });
+    res.status(200).json({ rent: rentData, value: valueData, property: propertyData, density: densityInfo });
   } catch (err) {
-    res.status(err.response?.status || 500).json({
-      error: "RentCast Full Analysis error",
-      details: err.response?.data || err.message,
-    });
+    res.status(err.response?.status || 500).json({ error: "RentCast Full Analysis error", details: err.response?.data || err.message });
   }
 });
 
-// 🔹 3. Property Details Endpoint (Flattened)
+// 🔹 3. Property Details Endpoint
 app.get("/property-details", async (req, res) => {
   try {
     const response = await axios.get("https://api.rentcast.io/v1/properties", {
-      headers: { "X-Api-Key": process.env.RENTCAST_API_KEY },
-      params: req.query,
+      headers: { "X-Api-Key": process.env.RENTCAST_API_KEY }, params: req.query,
     });
     const property = response.data?.[0];
     if (!property) return res.status(404).json({ error: "No property data found" });
@@ -139,8 +111,7 @@ app.get("/property-details", async (req, res) => {
     const annualTaxes = property.propertyTaxes?.[taxYear]?.total || "";
     const taxRate = assessedValue && annualTaxes ? (annualTaxes / assessedValue).toFixed(4) : "";
     res.status(200).json({
-      assessorID: property.assessorID || "TBD by title agency",
-      legalDescription: property.legalDescription || "TBD by title agency",
+      assessorID: property.assessorID || "TBD by title agency", legalDescription: property.legalDescription || "TBD by title agency",
       SellersFullName: property.owner?.names?.[0] || "TBD by title agency",
       YearBuilt: property.yearBuilt, Bedrooms: property.bedrooms, Bathrooms: property.bathrooms,
       SquareFootage: property.squareFootage, PropertyType: property.propertyType,
@@ -153,7 +124,7 @@ app.get("/property-details", async (req, res) => {
   }
 });
 
-// 🔹 4. Contract Forwarding Endpoint
+// 🔹 4. Contract Forwarding
 app.post("/contract", async (req, res) => {
   try {
     const { template, data } = req.body;
