@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+.env.local
+
+# Pipeline output (regenerated each run)
+output/leads_*.csv
+output/all_leads_master.csv
