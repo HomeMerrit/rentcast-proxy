@@ -92,4 +92,7 @@ def print_summary(stats: dict[str, Any]) -> None:
     if stats.get("master_file"):
         print(f"  Master CSV:          {stats['master_file']}")
         print(f"  Appended to master:  {stats.get('appended_to_master', 0)}")
+    if stats.get("sheet_url"):
+        print(f"  Google Sheet:        {stats['sheet_url']}")
+        print(f"  Sheet rows appended: {stats.get('sheet_rows_appended', 0)}")
     print("=" * 60)

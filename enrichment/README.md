@@ -26,6 +26,9 @@ mock response for that stage with a warning logged — the pipeline always runs 
 | `OPENCORPORATES_API_KEY` | enrichment stage 4 |
 | `WHOISXML_API_KEY` | enrichment stage 5 |
 | `EXPERIAN_API_KEY` | enrichment stage 6 (gated) |
+| `GOOGLE_SHEETS_CREDS_PATH` | path to Google service-account JSON (optional) |
+| `GOOGLE_SHEET_ID` | target spreadsheet ID (optional; auto-creates if unset) |
+| `GOOGLE_SHEET_TAB` | tab name within the sheet, defaults to `Leads` |
 | `LOG_LEVEL` | optional, defaults to `INFO` |
 
 You can place these in a `.env` file at the repo root — `python-dotenv` loads it
@@ -77,6 +80,30 @@ Both files share the canonical schema defined in `pipeline/normalizer.CANONICAL_
 4. **Score** — `scoring/prescreen.py` produces a 0.0–1.0 weighted score and assigns
    `HOT` (≥0.70), `WARM` (0.40–0.69), or `COLD` (<0.40).
 5. **Export** — `output/exporter.py` writes daily + master CSVs and prints a run summary.
+
+## Google Sheets export
+
+The pipeline pushes HOT + WARM leads to a Google Sheet whenever
+`GOOGLE_SHEETS_CREDS_PATH` is set. If `GOOGLE_SHEET_ID` is also set, rows are
+appended to that sheet's `Leads` tab (created on first run). If `GOOGLE_SHEET_ID`
+is unset, a new spreadsheet titled "SellFi Leads" is created and its URL is
+printed in the run summary — note the service account owns it, so share it back
+to your Google account from the Sheets UI.
+
+One-time setup:
+
+1. Create a Google Cloud project → enable the Google Sheets API and Google Drive API.
+2. Create a service account → generate a JSON key → download it.
+3. Either:
+   - Create a sheet in your Google account, share it with the service-account
+     email (with edit access), grab the sheet ID from the URL, and set
+     `GOOGLE_SHEET_ID`. **(Recommended — you own the sheet.)**
+   - Or leave `GOOGLE_SHEET_ID` unset and let the pipeline create a new
+     spreadsheet on first run; then share it back to yourself manually.
+4. Set `GOOGLE_SHEETS_CREDS_PATH` to the JSON key path.
+
+If the credentials env var isn't set, the Sheets step is silently skipped and
+the CSV outputs still work.
 
 ## Tuning
 

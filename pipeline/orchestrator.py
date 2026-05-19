@@ -33,6 +33,7 @@ from pipeline.normalizer import normalize  # noqa: E402
 from enrichment.enricher import enrich  # noqa: E402
 from scoring.prescreen import score_and_stage  # noqa: E402
 from output.exporter import export, print_summary  # noqa: E402
+from output.sheets_exporter import push_to_sheet  # noqa: E402
 
 logging.basicConfig(
     level=os.getenv("LOG_LEVEL", "INFO"),
@@ -94,12 +95,18 @@ def main() -> int:
     print("[5/5] Exporting")
     export_stats = export(scored)
 
+    hot_warm = [lead for lead in scored if (lead.get("stage") or "").upper() in {"HOT", "WARM"}]
+    sheets_result = push_to_sheet(hot_warm)
+
     summary = {
         "total_scraped": len(raw),
         "passed_filters": len(normalized),
         "dropped": dropped,
         **export_stats,
     }
+    if sheets_result:
+        summary["sheet_url"] = sheets_result["spreadsheet_url"]
+        summary["sheet_rows_appended"] = sheets_result["rows_appended"]
     print_summary(summary)
     return 0
 
