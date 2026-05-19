@@ -1,0 +1,38 @@
+# SIC / industry policy for SellFi lead pipeline
+restricted_industries:
+  - cannabis
+  - adult entertainment
+  - gambling
+  - firearms
+  - mlm
+  - payday lending
+  - religious organizations
+
+preferred_industries:
+  - saas
+  - ecommerce
+  - digital agency
+  - amazon fba
+  - content sites
+  - home services
+  - b2b services
+
+# Substrings (case-insensitive) used to identify MCA lenders / advance providers
+# inside UCC filing secured-party names.
+mca_lender_keywords:
+  - merchant capital
+  - merchant cash
+  - funding solutions
+  - funding circle
+  - advance
+  - cash advance
+  - working capital
+  - rapid capital
+  - bizcash
+  - kabbage
+  - ondeck
+  - bluevine
+  - fundbox
+  - credibly
+  - swift capital
+  - rapid finance

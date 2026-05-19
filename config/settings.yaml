@@ -1,0 +1,9 @@
+# Pipeline tuning knobs.
+min_revenue: 250000
+min_days_listed: 90
+prescreen_gate_for_credit_pull: 0.6
+mca_stack_drop_threshold: 3
+
+scoring:
+  hot_threshold: 0.7
+  warm_threshold: 0.4
