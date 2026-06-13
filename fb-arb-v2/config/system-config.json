@@ -1,0 +1,97 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-12T00:00:00Z",
+  "generated_by": "initial_defaults",
+  "brain_notes": "Initial configuration. Brain will update this weekly based on real performance data.",
+
+  "thresholds": {
+    "global": {
+      "min_margin_dollars": 35,
+      "min_margin_percent": 35,
+      "max_source_price": 500,
+      "min_source_price": 10,
+      "max_weight_lbs": 30
+    },
+    "by_category": {
+      "tools":               { "min_margin_dollars": 30, "min_margin_percent": 30, "comp_multiplier": 0.90 },
+      "musical instruments": { "min_margin_dollars": 45, "min_margin_percent": 35, "comp_multiplier": 0.85 },
+      "golf":                { "min_margin_dollars": 35, "min_margin_percent": 35, "comp_multiplier": 0.88 },
+      "cameras":             { "min_margin_dollars": 40, "min_margin_percent": 40, "comp_multiplier": 0.90 },
+      "electronics":         { "min_margin_dollars": 30, "min_margin_percent": 30, "comp_multiplier": 0.88 },
+      "baby":                { "min_margin_dollars": 25, "min_margin_percent": 30, "comp_multiplier": 0.92 },
+      "ski":                 { "min_margin_dollars": 40, "min_margin_percent": 40, "comp_multiplier": 0.90 },
+      "bikes":               { "min_margin_dollars": 45, "min_margin_percent": 35, "comp_multiplier": 0.85 },
+      "clothing":            { "min_margin_dollars": 20, "min_margin_percent": 40, "comp_multiplier": 0.80 },
+      "collectibles":        { "min_margin_dollars": 30, "min_margin_percent": 50, "comp_multiplier": 0.85 }
+    }
+  },
+
+  "search_queries": [
+    { "query": "dewalt drill set",        "category": "tools",    "min_price": 20, "max_price": 250, "weight": 1.0 },
+    { "query": "milwaukee impact driver", "category": "tools",    "min_price": 30, "max_price": 250, "weight": 1.0 },
+    { "query": "snap-on tool",            "category": "tools",    "min_price": 30, "max_price": 400, "weight": 0.9 },
+    { "query": "makita tool",             "category": "tools",    "min_price": 20, "max_price": 200, "weight": 0.8 },
+    { "query": "ski equipment",           "category": "ski",      "min_price": 30, "max_price": 400, "weight": 1.0 },
+    { "query": "snowboard",               "category": "ski",      "min_price": 30, "max_price": 300, "weight": 0.9 },
+    { "query": "ski boots",               "category": "ski",      "min_price": 20, "max_price": 200, "weight": 0.9 },
+    { "query": "callaway golf clubs",     "category": "golf",     "min_price": 30, "max_price": 400, "weight": 1.0 },
+    { "query": "taylormade driver",       "category": "golf",     "min_price": 30, "max_price": 350, "weight": 0.9 },
+    { "query": "golf iron set",           "category": "golf",     "min_price": 40, "max_price": 400, "weight": 0.9 },
+    { "query": "canon camera lens",       "category": "cameras",  "min_price": 50, "max_price": 400, "weight": 1.0 },
+    { "query": "sony camera",             "category": "cameras",  "min_price": 80, "max_price": 500, "weight": 0.9 },
+    { "query": "nikon lens",              "category": "cameras",  "min_price": 50, "max_price": 400, "weight": 0.9 },
+    { "query": "gibson guitar",           "category": "musical instruments", "min_price": 100, "max_price": 500, "weight": 1.0 },
+    { "query": "fender stratocaster",     "category": "musical instruments", "min_price": 80,  "max_price": 500, "weight": 1.0 },
+    { "query": "martin guitar",           "category": "musical instruments", "min_price": 100, "max_price": 500, "weight": 0.9 },
+    { "query": "uppababy stroller",       "category": "baby",     "min_price": 50, "max_price": 400, "weight": 1.0 },
+    { "query": "nuna stroller",           "category": "baby",     "min_price": 50, "max_price": 350, "weight": 0.9 },
+    { "query": "mountain bike",           "category": "bikes",    "min_price": 80, "max_price": 500, "weight": 0.8 },
+    { "query": "yeti cooler",             "category": "outdoors", "min_price": 30, "max_price": 300, "weight": 0.8 },
+    { "query": "apple airpods",           "category": "electronics", "min_price": 20, "max_price": 200, "weight": 0.9 },
+    { "query": "nintendo switch",         "category": "electronics", "min_price": 50, "max_price": 350, "weight": 0.9 },
+    { "query": "ps5",                     "category": "electronics", "min_price": 100, "max_price": 500, "weight": 0.9 }
+  ],
+
+  "platform_routing": {
+    "musical instruments": { "platform": "Reverb",    "fee": 0.077 },
+    "phones":              { "platform": "Swappa",    "fee": 0.030 },
+    "laptops":             { "platform": "Swappa",    "fee": 0.030 },
+    "tablets":             { "platform": "Swappa",    "fee": 0.030 },
+    "sneakers":            { "platform": "StockX",    "fee": 0.120 },
+    "clothing":            { "platform": "Poshmark",  "fee": 0.200 },
+    "collectibles":        { "platform": "Whatnot",   "fee": 0.109 },
+    "default":             { "platform": "eBay",      "fee": 0.133 }
+  },
+
+  "seller_signal_weights": {
+    "moving":          1.5,
+    "estate sale":     1.5,
+    "divorce":         1.4,
+    "must sell":       1.3,
+    "downsizing":      1.3,
+    "clearing out":    1.2,
+    "need gone":       1.3,
+    "open to offers":  1.1,
+    "priced to sell":  1.1,
+    "quick sale":      1.2
+  },
+
+  "seasonal_boosts": {
+    "ski":   { "10": 1.4, "11": 1.8, "12": 2.0, "01": 2.0, "02": 1.6, "03": 1.0, "04": 0.6, "05": 0.4, "06": 0.4, "07": 0.4, "08": 0.4, "09": 0.8 },
+    "golf":  { "03": 1.4, "04": 1.8, "05": 2.0, "06": 1.5, "07": 1.2, "08": 1.0, "09": 1.2, "10": 1.0, "11": 0.6, "12": 0.5, "01": 0.5, "02": 0.6 },
+    "bikes": { "04": 1.5, "05": 2.0, "06": 1.8, "07": 1.5, "08": 1.4, "09": 1.3, "10": 1.0, "11": 0.7, "12": 0.6, "01": 0.6, "02": 0.7, "03": 1.2 }
+  },
+
+  "ebay_misspell_targets": [
+    { "product": "DeWalt drill",           "category": "tools",    "threshold": 0.55 },
+    { "product": "Milwaukee impact",       "category": "tools",    "threshold": 0.55 },
+    { "product": "Snap-on wrench",         "category": "tools",    "threshold": 0.55 },
+    { "product": "Callaway driver",        "category": "golf",     "threshold": 0.60 },
+    { "product": "Gibson Les Paul",        "category": "musical instruments", "threshold": 0.60 },
+    { "product": "Fender Stratocaster",    "category": "musical instruments", "threshold": 0.60 },
+    { "product": "Canon lens",             "category": "cameras",  "threshold": 0.58 },
+    { "product": "UppaBaby Cruz",          "category": "baby",     "threshold": 0.60 },
+    { "product": "Yeti Tundra",            "category": "outdoors", "threshold": 0.58 },
+    { "product": "Nintendo Switch OLED",   "category": "electronics", "threshold": 0.62 }
+  ]
+}

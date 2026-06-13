@@ -1,0 +1,29 @@
+{
+  "name": "fb-arb-v2",
+  "version": "2.0.0",
+  "description": "FB Marketplace + eBay → Multi-Platform Arbitrage Engine with Self-Improving Brain",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "test": "node scripts/test-pipeline.js",
+    "mark-sold": "node scripts/mark-sold.js",
+    "setup-check": "node scripts/setup-check.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.24.0",
+    "@supabase/supabase-js": "^2.43.4",
+    "axios": "^1.7.2",
+    "dotenv": "^16.4.5",
+    "node-cron": "^3.0.3",
+    "node-telegram-bot-api": "^0.66.0",
+    "readline": "^1.3.0",
+    "xml2js": "^0.6.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
