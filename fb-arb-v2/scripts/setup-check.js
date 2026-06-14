@@ -15,7 +15,8 @@ async function checkSetup() {
   }
 
   check('SOCIAVAULT_API_KEY', process.env.SOCIAVAULT_API_KEY, 'Get from sociavault.com');
-  check('EBAY_APP_ID', process.env.EBAY_APP_ID, 'Get from developer.ebay.com → Production keys → Finding API');
+  check('EBAY_APP_ID', process.env.EBAY_APP_ID, 'Get from developer.ebay.com → Production keyset → App ID');
+  check('EBAY_CERT_ID', process.env.EBAY_CERT_ID, 'Get from developer.ebay.com → Production keyset → Cert ID (OAuth client secret)');
   check('SUPABASE_URL', process.env.SUPABASE_URL, 'Get from Supabase project settings → API');
   check('SUPABASE_ANON_KEY', process.env.SUPABASE_ANON_KEY, 'Get from Supabase project settings → API');
   check('TELEGRAM_BOT_TOKEN', process.env.TELEGRAM_BOT_TOKEN, 'Message @BotFather on Telegram → /newbot');
@@ -37,6 +38,21 @@ async function checkSetup() {
     console.log('  ✅ SociaVault API — connected');
   } catch (err) {
     console.log(`  ❌ SociaVault API — ${err.response?.status || err.message}`);
+    allGood = false;
+  }
+
+  // Test eBay Browse API (OAuth token + a sample comp lookup)
+  try {
+    const { getToken, getEbaySoldComps } = require('../src/enrichment/ebay-comps');
+    await getToken();
+    const comps = await getEbaySoldComps('DeWalt 20v drill');
+    if (comps.count > 0) {
+      console.log(`  ✅ eBay Browse API — connected (sample: $${comps.median} median, ${comps.count} active listings)`);
+    } else {
+      console.log('  ⚠️  eBay Browse API — token OK but sample search returned 0 results (check keys/marketplace)');
+    }
+  } catch (err) {
+    console.log(`  ❌ eBay Browse API — ${err.response?.data?.error_description || err.message}`);
     allGood = false;
   }
 

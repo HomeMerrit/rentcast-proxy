@@ -29,6 +29,8 @@ CREATE TABLE IF NOT EXISTS listings (
   ebay_comp_count INT DEFAULT 0,
   net_margin DECIMAL(10,2),
   margin_percent DECIMAL(5,1),
+  est_fees DECIMAL(10,2),              -- estimated platform fees at time of sourcing
+  est_shipping DECIMAL(10,2),          -- estimated shipping cost (used to compute actual net margin on sale)
   target_platform TEXT,
   category TEXT,
   photos JSONB DEFAULT '[]',

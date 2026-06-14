@@ -161,6 +161,8 @@ async function processListing(listing, searchConfig, cfg, pipelineRunId) {
         source_price: sourcePrice,
         ebay_median_sold: comps.median,
         ebay_comp_count: comps.count,
+        est_fees: margin.fees,
+        est_shipping: margin.shippingCost,
         net_margin: margin.netMargin,
         margin_percent: margin.marginPercent,
         target_platform: platformInfo.platform,

@@ -18,7 +18,7 @@ multipliers, search weights, platform preferences — so it gets smarter every w
                                    ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                    ENRICHMENT LAYER                         │
-│  eBay Sold Comps (Finding API)                              │
+│  eBay Resale Comps (Browse API — active-listing proxy)      │
 │  Dynamic Margin Calc (reads system-config.json)             │
 │  Category Router (reads system-config.json)                 │
 └──────────────────────────────────┬──────────────────────────┘
@@ -60,11 +60,11 @@ Anyone can copy the code. Nobody can copy 6 months of your performance data.
 ## Tech Stack
 - Node.js (CommonJS)
 - SociaVault API (FB Marketplace — 3 documented endpoints)
-- eBay Finding API (sold comps + misspell search)
+- eBay Browse API (resale-value comps via active listings + misspell search; OAuth client-credentials)
 - Anthropic Claude API (Brain optimization + description generation)
 - Telegram Bot API (operator alerts + commands)
 - Supabase (all data + config versioning)
-- node-cron (pipeline: 30min, brain: weekly Sunday midnight)
+- node-cron (pipeline: every 2h by default, brain: weekly Sunday midnight)
 
 ## SociaVault API (Primary FB Source)
 Base URL: https://api.sociavault.com
@@ -77,9 +77,15 @@ Endpoints:
 
 Response: clean JSON, see src/sourcing/sociavault.js for full field mapping
 
-## eBay Finding API
-Base: https://svcs.ebay.com/services/search/FindingService/v1
-Operations: findCompletedItems (sold comps), findItemsAdvanced (current listings)
+## eBay Browse API
+Auth: OAuth client-credentials — needs EBAY_APP_ID (client_id) + EBAY_CERT_ID (client_secret)
+Token: POST https://api.ebay.com/identity/v1/oauth2/token
+Search: GET https://api.ebay.com/buy/browse/v1/item_summary/search
+IMPORTANT: The legacy Finding API findCompletedItems (true *sold* prices) is deprecated and
+unavailable to new keys. We use the Browse API's ACTIVE listings as a resale-value proxy —
+asking prices run higher than sold prices, so the per-category comp_multiplier discounts them.
+For real sold data, apply for eBay's Marketplace Insights API and swap the endpoint in
+src/enrichment/ebay-comps.js (browseSearch); the rest of the pipeline is unchanged.
 
 ## Environment Variables
 All in .env — see .env.example. Must be set before running.
@@ -90,7 +96,7 @@ npm install                    # install deps
 cp .env.example .env           # then fill in all keys
 node scripts/setup-check.js    # verify all API keys work
 npm test                       # test all components + send Telegram alert
-npm start                      # run pipeline (cron every 30 min) + brain (weekly)
+npm start                      # run pipeline (cron every 2h) + brain (weekly)
 npm run dev                    # nodemon watch mode
 node scripts/mark-sold.js      # interactive CLI to log a sale
 ```

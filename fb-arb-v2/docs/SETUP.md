@@ -7,11 +7,16 @@
 2. Sign up (free tier: 100 req/day, Starter: 1,000/day)
 3. Copy API key → `SOCIAVAULT_API_KEY`
 
-### eBay Finding API
+### eBay Browse API
 1. Go to developer.ebay.com → Sign in
 2. Create an application
-3. Get **Production** keys (not Sandbox)
-4. Copy App ID → `EBAY_APP_ID`
+3. Get the **Production** keyset (not Sandbox)
+4. Copy **App ID** → `EBAY_APP_ID` (this is the OAuth client_id)
+5. Copy **Cert ID** → `EBAY_CERT_ID` (this is the OAuth client_secret — required for the Browse API)
+
+> Note: comps come from **active** eBay listings (a resale-value proxy), because eBay's
+> legacy Finding API sold-price endpoint is deprecated. For true sold data, apply for the
+> Marketplace Insights API and swap the endpoint in `src/enrichment/ebay-comps.js`.
 
 ### Supabase
 1. Go to supabase.com → New project
@@ -75,7 +80,7 @@ This tests every component and sends a test Telegram alert. Check your phone.
 npm start
 ```
 
-Pipeline runs every 30 minutes. Brain runs Sunday midnight.
+Pipeline runs every 2 hours (configurable via `PIPELINE_CRON`). Brain runs Sunday midnight.
 
 ---
 

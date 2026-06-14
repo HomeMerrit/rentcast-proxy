@@ -7,7 +7,16 @@ const { supabase } = require('../db/supabase');
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
+// Cache generated misspellings so we don't burn a Claude call on every pipeline run.
+// Misspellings for a product don't change — regenerate at most once a day.
+const _misspellCache = new Map();
+const MISSPELL_TTL = 24 * 60 * 60 * 1000; // 24 hours
+
 async function generateMisspellings(product) {
+  const key = product.toLowerCase().trim();
+  const cached = _misspellCache.get(key);
+  if (cached && (Date.now() - cached.ts) < MISSPELL_TTL) return cached.list;
+
   try {
     const msg = await anthropic.messages.create({
       model: 'claude-sonnet-4-6',
@@ -22,7 +31,9 @@ Example: ["dewalt dril", "dewallt drill", "dewalt drll"]`
     });
 
     const text = msg.content[0].text.trim().replace(/```json|```/g, '').trim();
-    return JSON.parse(text);
+    const list = JSON.parse(text);
+    _misspellCache.set(key, { list, ts: Date.now() });
+    return list;
   } catch {
     return [];
   }
@@ -69,11 +80,11 @@ async function runMisspellPipeline(pipelineRunId, cfg) {
 
 async function processMisspellListing(listing, target, comps, cfg, pipelineRunId) {
   try {
-    const sourcePrice = parseFloat(listing.sellingStatus?.[0]?.currentPrice?.[0]?.['__value__'] || 0);
-    const sourceUrl = listing.viewItemURL?.[0] || '';
-    const listingId = listing.itemId?.[0] || sourceUrl;
-    const title = listing.title?.[0] || 'Unknown';
-    const photos = listing.galleryURL ? [listing.galleryURL[0]] : [];
+    const sourcePrice = listing.price || 0;
+    const sourceUrl = listing.url || '';
+    const listingId = listing.itemId || sourceUrl;
+    const title = listing.title || 'Unknown';
+    const photos = listing.image ? [listing.image] : [];
 
     if (!sourceUrl || sourcePrice <= 0) return null;
     if (sourcePrice >= comps.median * (target.threshold || 0.60)) return null;
@@ -105,6 +116,8 @@ async function processMisspellListing(listing, target, comps, cfg, pipelineRunId
         ebay_comp_count: comps.count,
         net_margin: margin.netMargin,
         margin_percent: margin.marginPercent,
+        est_fees: margin.fees,
+        est_shipping: margin.shippingCost,
         target_platform: platformInfo.platform,
         category: target.category,
         photos,

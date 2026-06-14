@@ -62,7 +62,7 @@ src/
     ebay-misspell.js    eBay underpriced listing finder
     seller-signals.js   Listing language → deal score boost
   enrichment/
-    ebay-comps.js       eBay Finding API sold comps
+    ebay-comps.js       eBay Browse API resale comps (active-listing proxy)
     margin.js           Net margin calculator (all platform fees)
   brain/
     weekly-optimizer.js THE BRAIN — reads data, optimizes config

@@ -8,8 +8,7 @@ const PLATFORM_TIPS = {
   Reverb: 'Musician-focused. Include: year (if known), specs, modifications, case/cables included.',
   Swappa: 'Device focus: storage, carrier lock status, cosmetic condition, accessories included.',
   StockX: 'Minimal: size, condition (new/used), what is in box.',
-  Whatnot: 'Punchy 1-2 sentence live auction hook.',
-  Mercari: 'Friendly and concise. List condition honestly. Include accessories.'
+  Whatnot: 'Punchy 1-2 sentence live auction hook.'
 };
 
 async function generateListingDescription({ title, category, condition, platform, sourceDescription }) {

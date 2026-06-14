@@ -5,8 +5,12 @@ const { runMisspellPipeline } = require('./sourcing/ebay-misspell');
 const { runWeeklyBrain } = require('./brain/weekly-optimizer');
 const { supabase } = require('./db/supabase');
 const { loadConfig } = require('./config-loader');
+const { initBot } = require('./alerts/telegram');
 
-const PIPELINE_CRON = process.env.PIPELINE_CRON || '*/30 * * * *';
+// Every 2 hours by default. Each run fans out across all search_queries, and each
+// query/listing burns SociaVault + eBay credits — running every 30 min blows past
+// the SociaVault free tier (100/day) in a single run. Override with PIPELINE_CRON.
+const PIPELINE_CRON = process.env.PIPELINE_CRON || '0 */2 * * *';
 const BRAIN_CRON = process.env.BRAIN_CRON || '0 0 * * 0'; // Sunday midnight
 const IS_TEST = process.argv.includes('--test');
 const RUN_BRAIN_NOW = process.argv.includes('--brain');
@@ -62,6 +66,11 @@ async function main() {
     await runWeeklyBrain();
     process.exit(0);
   }
+
+  // Start the Telegram bot up front so commands + approve/skip buttons work
+  // immediately, even before the first deal alert fires. (Skipped in --test:
+  // the test run sends one alert and exits, and a polling bot would hang it.)
+  if (!IS_TEST) initBot();
 
   await runPipeline();
 

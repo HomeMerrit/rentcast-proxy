@@ -15,6 +15,15 @@ function getBot() {
   return _bot;
 }
 
+// Start the bot (polling + command/button handlers) at process startup.
+// Without this, the bot only comes alive when the first alert is sent — meaning
+// /stats, /pending, /config and the Approve/Skip buttons would be dead until then.
+function initBot() {
+  const b = getBot();
+  console.log('[Telegram] Bot initialized — commands and approve/skip buttons are live');
+  return b;
+}
+
 function esc(text) {
   return (text || '').toString().replace(/[_*[\]()~`>#+=|{}.!-]/g, '\\$&');
 }
@@ -199,4 +208,4 @@ async function getPending() {
   return `📋 *Pending Pickups (${data.length}):*\n\n${lines.join('\n\n')}`;
 }
 
-module.exports = { sendDealAlert };
+module.exports = { sendDealAlert, initBot };
