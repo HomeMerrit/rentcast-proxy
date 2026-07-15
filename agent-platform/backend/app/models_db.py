@@ -1,0 +1,69 @@
+import uuid
+from datetime import datetime
+from sqlalchemy import String, Integer, Boolean, Text, ForeignKey, DateTime, JSON
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from .database import Base
+
+class Agent(Base):
+    __tablename__ = "agents"
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    name: Mapped[str] = mapped_column(String, unique=True, nullable=False)
+    title: Mapped[str] = mapped_column(String, nullable=False)
+    department: Mapped[str] = mapped_column(String, nullable=False)
+    bio: Mapped[str | None] = mapped_column(Text)
+    avatar_seed: Mapped[str] = mapped_column(String, nullable=False)
+    model: Mapped[str] = mapped_column(String, default="claude-sonnet-5-20251001")
+    status: Mapped[str] = mapped_column(String, default="idle")
+    current_task: Mapped[str | None] = mapped_column(Text)
+    task_count: Mapped[int] = mapped_column(Integer, default=0)
+    success_count: Mapped[int] = mapped_column(Integer, default=0)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.utcnow)
+    skills: Mapped[list["AgentSkill"]] = relationship("AgentSkill", back_populates="agent", cascade="all, delete")
+    work_log: Mapped[list["WorkLog"]] = relationship("WorkLog", back_populates="agent", cascade="all, delete")
+
+class AgentSkill(Base):
+    __tablename__ = "agent_skills"
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    agent_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("agents.id", ondelete="CASCADE"))
+    skill: Mapped[str] = mapped_column(String, nullable=False)
+    proficiency: Mapped[int] = mapped_column(Integer, default=0)
+    times_used: Mapped[int] = mapped_column(Integer, default=0)
+    last_used: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    agent: Mapped["Agent"] = relationship("Agent", back_populates="skills")
+
+class WorkLog(Base):
+    __tablename__ = "work_log"
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    agent_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("agents.id", ondelete="CASCADE"))
+    task_type: Mapped[str] = mapped_column(String, nullable=False)
+    task_input: Mapped[dict] = mapped_column(JSON, default=dict)
+    result: Mapped[str | None] = mapped_column(Text)
+    reflection: Mapped[str | None] = mapped_column(Text)
+    success: Mapped[bool] = mapped_column(Boolean, default=False)
+    tokens_used: Mapped[int] = mapped_column(Integer, default=0)
+    duration_ms: Mapped[int | None] = mapped_column(Integer)
+    started_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.utcnow)
+    finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    agent: Mapped["Agent"] = relationship("Agent", back_populates="work_log")
+
+class AgentComm(Base):
+    __tablename__ = "agent_comms"
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    from_agent_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), ForeignKey("agents.id", ondelete="SET NULL"))
+    to_agent_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), ForeignKey("agents.id", ondelete="SET NULL"))
+    message: Mapped[str] = mapped_column(Text, nullable=False)
+    message_type: Mapped[str] = mapped_column(String, default="message")
+    metadata_: Mapped[dict] = mapped_column("metadata", JSON, default=dict)
+    read: Mapped[bool] = mapped_column(Boolean, default=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.utcnow)
+
+class AgentSession(Base):
+    __tablename__ = "agent_sessions"
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    agent_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("agents.id", ondelete="CASCADE"))
+    thread_id: Mapped[str] = mapped_column(String, unique=True, nullable=False)
+    checkpoint: Mapped[dict] = mapped_column(JSON, default=dict)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.utcnow)
