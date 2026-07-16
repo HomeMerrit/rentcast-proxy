@@ -72,6 +72,26 @@ for name in ["backend", "frontend", "celery", "celery-beat", "qdrant"]:
     result[name] = {"status": st, "domains": doms}
     emit("  " + name.ljust(13) + " " + st.ljust(14) + " " + (", ".join(doms) if doms else "(no domain)"))
 
+# HTTP probe each service's domains from the runner (open internet, unlike the sandbox)
+emit("\n=== HTTP PROBES (from runner) ===")
+probes = {}
+probe_paths = {"backend": "/health", "frontend": "/"}
+for name in ("backend", "frontend"):
+    sid = services.get(name)
+    if not sid:
+        continue
+    path = probe_paths[name]
+    for dom in dom_by_service.get(sid, []):
+        url = "https://" + dom + path
+        try:
+            resp = requests.get(url, timeout=25)
+            body = (resp.text or "")[:120].replace("\n", " ")
+            probes[url] = resp.status_code
+            emit("  " + str(resp.status_code) + "  " + url + "   " + body)
+        except Exception as e:
+            probes[url] = "ERR"
+            emit("  ERR " + url + "  " + str(e)[:120])
+
 with open("railway_check.txt", "w") as f:
-    f.write("\n".join(OUT) + "\nJSON=" + json.dumps(result) + "\n")
+    f.write("\n".join(OUT) + "\nJSON=" + json.dumps(result) + "\nPROBES=" + json.dumps(probes) + "\n")
 emit("\nJSON=" + json.dumps(result))
