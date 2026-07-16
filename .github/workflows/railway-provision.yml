@@ -1,0 +1,48 @@
+name: Railway Provision DB
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  provision:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout platform branch
+        uses: actions/checkout@v4
+        with:
+          ref: claude/airtable-hyper-agent-research-et2uba
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Setup Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+      - name: Install deps
+        run: pip install requests
+      - name: Provision databases
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: python3 scripts/railway_provision.py
+      - name: Commit provision log
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ -f railway_provision.txt ]; then
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git config user.name "github-actions[bot]"
+            git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
+            cp railway_provision.txt scripts/railway_provision_output.txt
+            git add scripts/railway_provision_output.txt
+            git diff --cached --quiet || git commit -m "chore: railway provision log [skip ci]"
+            git push origin claude/airtable-hyper-agent-research-et2uba
+          fi
