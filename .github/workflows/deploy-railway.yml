@@ -30,21 +30,15 @@ jobs:
       - name: Install Python dependencies
         run: pip install requests
 
-      - name: Debug token presence
+      - name: Check token is set
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         run: |
           if [ -z "$RAILWAY_TOKEN" ]; then
-            echo "ERROR: RAILWAY_TOKEN secret is empty or not set - check the secret name in repo Settings > Secrets"
+            echo "ERROR: RAILWAY_TOKEN secret is not set"
             exit 1
-          else
-            echo "RAILWAY_TOKEN is set (length=${#RAILWAY_TOKEN})"
           fi
-
-      - name: Verify Railway auth
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-        run: railway whoami
+          echo "Token is set (length=${#RAILWAY_TOKEN})"
 
       - name: Deploy full stack to Railway
         env:
