@@ -5,6 +5,9 @@ class Settings(BaseSettings):
     redis_url: str = "redis://localhost:6379/0"
     anthropic_api_key: str = ""
     environment: str = "development"
+    qdrant_host: str = "localhost"
+    qdrant_port: int = 6333
+    e2b_api_key: str = ""
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 

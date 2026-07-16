@@ -6,6 +6,8 @@ interface StreamState {
   events: AGUIEvent[];
   currentMessage: string;
   currentTool: string | null;
+  lastToolResult: string | null;
+  retrievedMemories: string[];
   status: AgentStatus;
   isConnected: boolean;
   lastActivity: string | null;
@@ -18,6 +20,8 @@ export function useAgentStream(agentId: string, initialStatus: AgentStatus = "id
     events: [],
     currentMessage: "",
     currentTool: null,
+    lastToolResult: null,
+    retrievedMemories: [],
     status: initialStatus,
     isConnected: false,
     lastActivity: null,
@@ -61,10 +65,24 @@ export function useAgentStream(agentId: string, initialStatus: AgentStatus = "id
               return { ...next, status: "thinking", currentTool: (event.data.tool_name as string) ?? null };
             case "TOOL_CALL_END":
               return { ...next, currentTool: null };
+            case "TOOL_CALL_RESULT":
+              return {
+                ...next,
+                lastToolResult: (event.data.result as string) ?? null,
+                currentTool: null,
+              };
             case "STATE_SNAPSHOT":
               return { ...next, status: (event.data.status as AgentStatus) ?? s.status };
             case "STATE_DELTA":
               if (event.data.status) return { ...next, status: event.data.status as AgentStatus };
+              return next;
+            case "CUSTOM":
+              if (event.data.subtype === "MEMORY_RETRIEVED") {
+                return {
+                  ...next,
+                  retrievedMemories: (event.data.memories as string[]) ?? [],
+                };
+              }
               return next;
             default:
               return next;

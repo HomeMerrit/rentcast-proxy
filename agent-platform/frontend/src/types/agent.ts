@@ -52,8 +52,17 @@ export interface Agent {
   recent_comms?: AgentComm[];
 }
 
+export interface Memory {
+  id: string;
+  content: string;
+  task_type: string;
+  created_at: string;
+  score?: number; // present in search results
+}
+
 // AG-UI Protocol event types
 export type AGUIEventType =
+  | "CONNECTED"
   | "RUN_STARTED"
   | "RUN_FINISHED"
   | "RUN_ERROR"

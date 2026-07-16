@@ -1,14 +1,14 @@
 from __future__ import annotations
+import asyncio
 import time
-from typing import Annotated, Optional, TypedDict
 from uuid import uuid4
+from typing import Annotated, Optional, TypedDict
 from langgraph.graph import StateGraph, END
 from langgraph.graph.message import add_messages
-from langchain_core.messages import BaseMessage, HumanMessage, SystemMessage, AIMessage
+from langchain_core.messages import BaseMessage, HumanMessage, SystemMessage, AIMessage, ToolMessage
 from langchain_anthropic import ChatAnthropic
-from ..config import settings
 from .publisher import AgentEventPublisher
-
+from ..config import settings
 
 class AgentState(TypedDict):
     agent_id: str
@@ -21,13 +21,15 @@ class AgentState(TypedDict):
     success: bool
     tokens_used: int
     start_time: float
-
+    retrieved_memories: list[dict]
+    tool_iterations: int
 
 SYSTEM_PROMPT = """You are a specialized AI agent. Complete the given task thoroughly and accurately.
-After completing the task, reflect on your performance: what went well, what could improve.
+You have access to tools — use them when they would help you do a better job.
+After completing the task, reflect on your performance.
 Be concise and direct."""
 
-REFLECT_PROMPT = """Review your previous response and reflect:
+REFLECT_PROMPT = """Review your work and reflect:
 1. Did you complete the task fully?
 2. What could you do better next time?
 3. Any skills you should improve?
@@ -42,86 +44,208 @@ class BaseAgent:
         task_type: str,
         model: str = "claude-sonnet-5-20251001",
         publisher: Optional[AgentEventPublisher] = None,
+        tools: list = None,
+        memory_manager=None,
     ):
         self.agent_id = agent_id
         self.agent_name = agent_name
         self.task_type = task_type
         self._publisher = publisher
+        self.memory_manager = memory_manager
+        self.tools = tools or []
+        self._tool_map = {t.name: t for t in self.tools}
         self.llm = ChatAnthropic(
             model=model,
             api_key=settings.anthropic_api_key,
             max_tokens=4096,
         )
+        self.llm_with_tools = self.llm.bind_tools(self.tools) if self.tools else self.llm
         self.graph = self._build_graph()
 
     def _build_graph(self):
         g = StateGraph(AgentState)
+        g.add_node("memory_retrieve", self._memory_retrieve)
         g.add_node("think", self._think)
+        g.add_node("tools", self._execute_tools)
         g.add_node("reflect", self._reflect)
+        g.add_node("memory_store", self._memory_store)
         g.add_node("complete", self._complete)
-        g.set_entry_point("think")
-        g.add_edge("think", "reflect")
-        g.add_edge("reflect", "complete")
+
+        g.set_entry_point("memory_retrieve")
+        g.add_edge("memory_retrieve", "think")
+        g.add_conditional_edges("think", self._should_use_tools, {
+            "tools": "tools",
+            "reflect": "reflect",
+        })
+        g.add_edge("tools", "think")
+        g.add_edge("reflect", "memory_store")
+        g.add_edge("memory_store", "complete")
         g.add_edge("complete", END)
         return g.compile()
 
+    async def _memory_retrieve(self, state: AgentState) -> dict:
+        if not self.memory_manager:
+            return {"retrieved_memories": [], "tool_iterations": 0}
+        query = f"{state['task_type']}: {state['task_input']}"
+        memories = await self.memory_manager.search(self.agent_id, query)
+        if memories and self._publisher:
+            await self._publisher.publish("CUSTOM", {
+                "subtype": "MEMORY_RETRIEVED",
+                "count": len(memories),
+                "memories": [m["content"] for m in memories[:3]],
+            })
+        return {"retrieved_memories": memories, "tool_iterations": 0}
+
     async def _think(self, state: AgentState) -> dict:
-        if self._publisher:
-            await self._publisher.publish("STATE_SNAPSHOT", {"status": "thinking"})
+        # Build memory context
+        memory_ctx = ""
+        if state.get("retrieved_memories"):
+            memory_ctx = "\n\nRelevant memories from past tasks:\n" + "\n".join(
+                f"- {m['content']}" for m in state["retrieved_memories"]
+            )
 
-        task_desc = f"Task type: {state['task_type']}\nInput: {state['task_input']}"
-        messages = [SystemMessage(content=SYSTEM_PROMPT), HumanMessage(content=task_desc)]
+        task_desc = f"Task type: {state['task_type']}\nInput: {state['task_input']}{memory_ctx}"
 
-        message_id = str(uuid4())
-        if self._publisher:
-            await self._publisher.publish("TEXT_MESSAGE_START", {"message_id": message_id})
+        # Only send system message on first think (no prior AI messages)
+        prior_ai = [m for m in state["messages"] if isinstance(m, AIMessage)]
+        if not prior_ai:
+            messages = [SystemMessage(content=SYSTEM_PROMPT), HumanMessage(content=task_desc)]
+        else:
+            messages = list(state["messages"])
 
+        # Stream response
         full_content = ""
+        tool_calls = []
         last_chunk = None
-        async for chunk in self.llm.astream(messages):
+        msg_id = str(uuid4())
+        text_started = False
+
+        if self._publisher:
+            await self._publisher.publish("STATE_SNAPSHOT", {"status": "thinking", "current_task": state["task_type"]})
+
+        async for chunk in self.llm_with_tools.astream(messages):
             last_chunk = chunk
+            # Extract text delta
+            delta = ""
             if isinstance(chunk.content, str):
                 delta = chunk.content
-            elif isinstance(chunk.content, list) and chunk.content:
-                first = chunk.content[0]
-                delta = first.get("text", "") if isinstance(first, dict) else ""
-            else:
-                delta = ""
+            elif isinstance(chunk.content, list):
+                for block in chunk.content:
+                    if isinstance(block, dict) and block.get("type") == "text":
+                        delta += block.get("text", "")
 
-            if delta and self._publisher:
-                await self._publisher.publish("TEXT_MESSAGE_CONTENT", {"delta": delta})
+            if delta:
+                if not text_started and self._publisher:
+                    await self._publisher.publish("TEXT_MESSAGE_START", {"message_id": msg_id})
+                    text_started = True
+                full_content += delta
+                if self._publisher:
+                    await self._publisher.publish("TEXT_MESSAGE_CONTENT", {"delta": delta, "message_id": msg_id})
 
-            full_content += delta
+            # Accumulate tool calls
+            if hasattr(chunk, "tool_call_chunks") and chunk.tool_call_chunks:
+                tool_calls.extend(chunk.tool_call_chunks)
 
-        if self._publisher:
-            await self._publisher.publish("TEXT_MESSAGE_END", {})
+        if text_started and self._publisher:
+            await self._publisher.publish("TEXT_MESSAGE_END", {"message_id": msg_id})
 
+        # Build the final AI message
         tokens = 0
         if last_chunk and last_chunk.usage_metadata:
             tokens = last_chunk.usage_metadata.get("total_tokens", 0)
 
+        # Reconstruct proper AI message with tool_calls if present
+        if last_chunk:
+            ai_msg = AIMessage(content=full_content or last_chunk.content, tool_calls=last_chunk.tool_calls if hasattr(last_chunk, 'tool_calls') else [])
+        else:
+            ai_msg = AIMessage(content=full_content)
+
         return {
-            "messages": [AIMessage(content=full_content)],
-            "result": full_content,
-            "tokens_used": tokens,
+            "messages": [ai_msg],
+            "result": full_content if full_content else state.get("result"),
+            "tokens_used": state.get("tokens_used", 0) + tokens,
+        }
+
+    def _should_use_tools(self, state: AgentState) -> str:
+        last_msg = state["messages"][-1]
+        has_tools = (
+            hasattr(last_msg, "tool_calls")
+            and last_msg.tool_calls
+            and len(last_msg.tool_calls) > 0
+        )
+        if has_tools and state.get("tool_iterations", 0) < 5:
+            return "tools"
+        return "reflect"
+
+    async def _execute_tools(self, state: AgentState) -> dict:
+        last_msg = state["messages"][-1]
+        tool_messages = []
+
+        for tc in last_msg.tool_calls:
+            tool_name = tc["name"]
+            tool_args = tc["args"]
+            tool_call_id = tc["id"]
+
+            if self._publisher:
+                await self._publisher.publish("TOOL_CALL_START", {
+                    "tool_name": tool_name,
+                    "tool_call_id": tool_call_id,
+                })
+
+            tool_fn = self._tool_map.get(tool_name)
+            try:
+                if tool_fn is None:
+                    result_str = f"Unknown tool: {tool_name}"
+                else:
+                    result = await tool_fn.ainvoke(tool_args)
+                    result_str = str(result)
+            except Exception as e:
+                result_str = f"Tool error: {e}"
+
+            if self._publisher:
+                await self._publisher.publish("TOOL_CALL_RESULT", {
+                    "tool_name": tool_name,
+                    "tool_call_id": tool_call_id,
+                    "result": result_str[:500],
+                })
+                await self._publisher.publish("TOOL_CALL_END", {
+                    "tool_call_id": tool_call_id,
+                })
+
+            tool_messages.append(ToolMessage(
+                content=result_str,
+                tool_call_id=tool_call_id,
+            ))
+
+        return {
+            "messages": tool_messages,
+            "tool_iterations": state.get("tool_iterations", 0) + 1,
         }
 
     async def _reflect(self, state: AgentState) -> dict:
         reflect_messages = list(state["messages"]) + [HumanMessage(content=REFLECT_PROMPT)]
         response = await self.llm.ainvoke(reflect_messages)
         tokens = response.usage_metadata.get("total_tokens", 0) if response.usage_metadata else 0
-
         if self._publisher:
-            await self._publisher.publish(
-                "CUSTOM",
-                {"subtype": "REFLECTION", "content": response.content},
-            )
-
+            await self._publisher.publish("CUSTOM", {
+                "subtype": "REFLECTION",
+                "content": response.content,
+            })
         return {
             "messages": [response],
             "reflection": response.content,
-            "tokens_used": state["tokens_used"] + tokens,
+            "tokens_used": state.get("tokens_used", 0) + tokens,
         }
+
+    async def _memory_store(self, state: AgentState) -> dict:
+        if self.memory_manager and state.get("result"):
+            content = f"Task '{state['task_type']}': {state['result'][:400]}"
+            await self.memory_manager.add(
+                agent_id=self.agent_id,
+                content=content,
+                task_type=state["task_type"],
+            )
+        return {}
 
     async def _complete(self, state: AgentState) -> dict:
         if self._publisher:
@@ -140,6 +264,8 @@ class BaseAgent:
             "success": False,
             "tokens_used": 0,
             "start_time": time.time(),
+            "retrieved_memories": [],
+            "tool_iterations": 0,
         }
         final = await self.graph.ainvoke(initial)
         return {

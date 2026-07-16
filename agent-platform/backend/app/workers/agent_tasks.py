@@ -49,12 +49,18 @@ async def _run_task_async(
         await publisher.publish("STATE_SNAPSHOT", {"status": "active", "current_task": task_type})
 
         try:
+            from ..memory.manager import memory_manager
+            from ..tools.code_exec import execute_python
+            from ..tools.browser import browse_web
+
             agent_runner = BaseAgent(
                 agent_id=agent_id,
                 agent_name=agent_name,
                 task_type=task_type,
                 model=model,
                 publisher=publisher,
+                tools=[execute_python, browse_web],
+                memory_manager=memory_manager,
             )
             result_data = await agent_runner.run(task_input)
 
