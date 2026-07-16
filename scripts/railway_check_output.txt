@@ -1,11 +1,11 @@
 Project: agentos-platform
-  [http 400] {"errors":[{"message":"Field \"domains\" argument \"serviceId\" of type \"String!\" is required, but it was not provided.","locations":[{"line":3,"column":3}],"extensions":{"code":"GRAPHQL_VALIDATION_FAILED"},"traceId":"2086215462824675672"}]}
+  [http 400] {"errors":[{"message":"Field \"domains\" argument \"serviceId\" of type \"String!\" is required, but it was not provided.","locations":[{"line":3,"column":3}],"extensions":{"code":"GRAPHQL_VALIDATION_FAILED"},"traceId":"2160297951651521441"}]}
 
 
 === SERVICE STATUS + DOMAINS ===
-  backend       CRASHED        (no domain)
+  backend       BUILDING       (no domain)
   frontend      FAILED         (no domain)
-  celery        SUCCESS        (no domain)
-  celery-beat   SUCCESS        (no domain)
+  celery        QUEUED         (no domain)
+  celery-beat   QUEUED         (no domain)
   qdrant        SUCCESS        (no domain)
-JSON={"backend": {"status": "CRASHED", "domains": []}, "frontend": {"status": "FAILED", "domains": []}, "celery": {"status": "SUCCESS", "domains": []}, "celery-beat": {"status": "SUCCESS", "domains": []}, "qdrant": {"status": "SUCCESS", "domains": []}}
+JSON={"backend": {"status": "BUILDING", "domains": []}, "frontend": {"status": "FAILED", "domains": []}, "celery": {"status": "QUEUED", "domains": []}, "celery-beat": {"status": "QUEUED", "domains": []}, "qdrant": {"status": "SUCCESS", "domains": []}}
