@@ -51,71 +51,31 @@ def step(n, msg):
     print("\n" + "="*60 + "\n  [" + str(n) + "] " + msg + "\n" + "="*60, flush=True)
 
 
-# 1. Verify auth
-step(1, "Verify Railway token")
-me = gql("{ me { id email } }")
-ME_ID = me["me"]["id"]
-print("  Authenticated: " + me["me"]["email"] + " (id=" + ME_ID + ")")
+# 1. Verify auth + get workspace ID
+step(1, "Verify Railway token and find workspace ID")
 
-# 1b. Find workspace/team ID via schema introspection
-step("1b", "Schema introspection + find workspace ID")
-
-# Get ALL top-level queries
-schema = gql('{ __schema { queryType { fields { name } } } }', soft=True)
-all_fields = []
-if schema:
-    all_fields = [f["name"] for f in (schema.get("__schema") or {}).get("queryType", {}).get("fields", [])]
-    print("  All top-level queries: " + str(all_fields))
-    relevant = [f for f in all_fields if any(kw in f.lower() for kw in ["team", "workspace", "org", "account", "member"])]
-    print("  Team/workspace related: " + str(relevant))
-
-# Get User type fields
-user_type = gql('{ __type(name: "User") { fields { name } } }', soft=True)
-if user_type:
-    user_fields = [f["name"] for f in (user_type.get("__type") or {}).get("fields", [])]
-    print("  User type fields: " + str(user_fields))
+# me.workspaces is NOT a Connection - it returns Workspace or [Workspace] directly
+me = gql("{ me { id email workspaces { id name } } }")
+print("  Authenticated: " + me["me"]["email"])
 
 WORKSPACE_ID = None
-
-# Try every plausible query
-for q, label, key_path in [
-    ("{ teams { edges { node { id name } } } }", "teams", "teams.edges"),
-    ("{ workspaces { edges { node { id name } } } }", "workspaces", "workspaces.edges"),
-    ("{ organizations { edges { node { id name } } } }", "organizations", "organizations.edges"),
-    ("{ accounts { edges { node { id name } } } }", "accounts", "accounts.edges"),
-    ("{ me { id teams { edges { node { id name } } } } }", "me.teams", "me.teams.edges"),
-    ("{ me { id workspaces { edges { node { id name } } } } }", "me.workspaces", "me.workspaces.edges"),
-    ("{ me { id organizations { edges { node { id name } } } } }", "me.organizations", "me.organizations.edges"),
-]:
-    result = gql(q, soft=True)
-    if not result:
-        continue
-    # navigate key_path
-    node = result
-    for p in key_path.split(".")[:-1]:
-        node = (node or {}).get(p) or {}
-    edges = (node or {}).get(key_path.split(".")[-1], [])
-    if isinstance(edges, list) and edges:
-        WORKSPACE_ID = edges[0]["node"]["id"]
-        print("  Workspace ID via '" + label + "': " + WORKSPACE_ID + " (" + edges[0]["node"].get("name", "?") + ")")
-        break
-    elif isinstance(edges, list):
-        print("  '" + label + "': ok but empty list")
+workspaces = me["me"].get("workspaces") or []
+if isinstance(workspaces, list) and workspaces:
+    WORKSPACE_ID = workspaces[0]["id"]
+    print("  Workspace ID (list[0]): " + WORKSPACE_ID + " (" + workspaces[0].get("name", "?") + ")")
+elif isinstance(workspaces, dict) and workspaces.get("id"):
+    WORKSPACE_ID = workspaces["id"]
+    print("  Workspace ID (single): " + WORKSPACE_ID + " (" + workspaces.get("name", "?") + ")")
+else:
+    print("  workspaces raw: " + json.dumps(workspaces)[:200])
 
 if not WORKSPACE_ID:
-    print("  Could not find workspace ID via any query.")
-    print("  Trying projectCreate without workspaceId to see Railway error...")
-    try:
-        gql("""
-mutation($name: String!) {
-  projectCreate(input: { name: $name }) {
-    id environments { edges { node { id name } } }
-  }
-}
-""", {"name": "agentos-test"})
-    except RuntimeError as e:
-        print("  projectCreate without workspaceId: " + str(e)[:300])
-    raise RuntimeError("Cannot find workspace ID. See introspection output above.")
+    # Try introspecting Workspace type to understand structure
+    ws_type = gql('{ __type(name: "Workspace") { fields { name type { name kind ofType { name kind } } } } }', soft=True)
+    if ws_type:
+        fields = [(f["name"], f["type"]) for f in (ws_type.get("__type") or {}).get("fields", [])]
+        print("  Workspace type fields: " + str([f[0] for f in fields[:20]]))
+    raise RuntimeError("Could not extract workspace ID from me.workspaces: " + json.dumps(workspaces)[:200])
 
 # 2. Create project
 step(2, "Create Railway project")
