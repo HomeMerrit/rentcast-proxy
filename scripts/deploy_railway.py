@@ -48,49 +48,33 @@ def step(n, msg):
     print("\n" + "="*60 + "\n  [" + str(n) + "] " + msg + "\n" + "="*60, flush=True)
 
 
-# 1. Verify auth
-step(1, "Verify Railway token")
-print("  Token length: " + str(len(TOKEN)))
+# 1. Verify auth + get workspace ID
+step(1, "Verify Railway token and get workspace ID")
+me = gql("{ me { id email name teams { edges { node { id name } } } } }")
+print("  Authenticated: " + (me["me"].get("email") or me["me"]["id"]))
 
-def try_auth():
-    for q, label in [
-        ("{ me { id email } }", "me"),
-        ("{ viewer { id email } }", "viewer"),
-        ('{ projects(first: 1) { edges { node { id } } } }', "projects"),
-    ]:
-        try:
-            result = gql(q)
-            first_key = list(result.keys())[0] if result else None
-            val = result.get(first_key) if first_key else None
-            info = ""
-            if isinstance(val, dict):
-                info = val.get("email", val.get("id", "ok"))
-            print("  Authenticated via '" + label + "': " + str(info))
-            return True
-        except RuntimeError as e:
-            print("  [" + label + "] " + str(e)[:200])
-        except Exception as e:
-            print("  [" + label + " http error] " + str(e)[:200])
-    return False
+teams = me["me"].get("teams", {}).get("edges", [])
+if not teams:
+    # fallback: query teams directly
+    teams_data = gql("{ teams { edges { node { id name } } } }", soft=True)
+    teams = (teams_data.get("teams") or {}).get("edges", [])
 
-if not try_auth():
-    print("  WARNING: All auth checks failed. Token may be wrong type.")
-    print("  Attempting project creation anyway as real auth test...")
-    print("")
-    print("  >>> If you created a PROJECT token from Railway Project Settings,")
-    print("  >>> that won't work. Go to railway.com/account/tokens instead.")
-    print("")
+if not teams:
+    raise RuntimeError("No workspace/team found. Create a team at railway.com first.")
+
+WORKSPACE_ID = teams[0]["node"]["id"]
+print("  Workspace ID: " + WORKSPACE_ID + " (" + teams[0]["node"]["name"] + ")")
 
 # 2. Create project
 step(2, "Create Railway project")
 proj = gql("""
-mutation($name: String!) {
-  projectCreate(input: { name: $name }) {
+mutation($name: String!, $workspaceId: String!) {
+  projectCreate(input: { name: $name, defaultEnvironmentName: "production" }, workspaceId: $workspaceId) {
     id
     environments { edges { node { id name } } }
   }
 }
-""", {"name": "agentos-platform"})
+""", {"name": "agentos-platform", "workspaceId": WORKSPACE_ID})
 
 PROJECT_ID = proj["projectCreate"]["id"]
 ENV_ID = proj["projectCreate"]["environments"]["edges"][0]["node"]["id"]
@@ -356,7 +340,7 @@ print("\n" + "="*60)
 print("  DEPLOYMENT INITIATED")
 print("="*60)
 print("")
-print("  Railway Dashboard: https://railway.app/project/" + PROJECT_ID)
+print("  Railway Dashboard: https://railway.com/project/" + PROJECT_ID)
 print("  Services are building now (3-5 min each).")
 print("")
 if FRONTEND_URL:
@@ -368,5 +352,5 @@ if BACKEND_URL:
 else:
     print("  Backend URL: check Railway dashboard after builds complete")
 print("")
-print("  NEXT STEP: add ANTHROPIC_API_KEY in Railway dashboard")
+print("  To update ANTHROPIC_API_KEY in Railway dashboard:")
 print("  -> backend service -> Variables -> ANTHROPIC_API_KEY")
