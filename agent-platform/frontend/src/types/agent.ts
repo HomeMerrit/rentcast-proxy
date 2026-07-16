@@ -29,8 +29,19 @@ export interface AgentComm {
   to_agent_name?: string;
   message: string;
   message_type: "message" | "task" | "result" | "human_message" | "human_reply";
+  metadata_?: Record<string, unknown>;
   created_at: string;
   read: boolean;
+}
+
+export interface AgentCard {
+  name: string;
+  description: string;
+  url: string;
+  version: string;
+  capabilities: { streaming: boolean; pushNotifications: boolean };
+  skills: { id: string; name: string; description: string }[];
+  metadata: { department: string; title: string; model: string; status: string };
 }
 
 export interface Agent {

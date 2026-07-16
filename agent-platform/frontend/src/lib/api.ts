@@ -1,4 +1,4 @@
-import type { Agent, Memory } from "@/types/agent";
+import type { Agent, Memory, AgentCard, AgentComm } from "@/types/agent";
 
 const BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
@@ -56,5 +56,24 @@ export const api = {
       apiFetch<void>(`/agents/${agentId}/memories/${memoryId}`, {
         method: "DELETE",
       }),
+  },
+  comms: {
+    humanInbox: (unread_only = false) =>
+      apiFetch<AgentComm[]>(`/comms/human-inbox${unread_only ? "?unread_only=true" : ""}`),
+    unreadCount: () =>
+      apiFetch<{ unread: number }>("/comms/human-inbox/count"),
+    reply: (commId: string, message: string) =>
+      apiFetch<AgentComm>(`/comms/${commId}/reply`, {
+        method: "POST",
+        body: JSON.stringify({ message }),
+      }),
+    markRead: (commId: string) =>
+      apiFetch<{ ok: boolean }>(`/comms/${commId}/read`, { method: "PATCH" }),
+  },
+  a2a: {
+    card: (agentId: string) =>
+      apiFetch<AgentCard>(`/agents/${agentId}/card`),
+    platformCard: () =>
+      apiFetch<Record<string, unknown>>("/.well-known/agent-card.json"),
   },
 };

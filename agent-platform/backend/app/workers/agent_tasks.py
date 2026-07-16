@@ -2,16 +2,11 @@ import asyncio
 from datetime import datetime, timezone
 from uuid import UUID
 
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
-from sqlalchemy.pool import NullPool
 from sqlalchemy import select
 
 from .celery_app import celery_app
 from ..config import settings
-
-# Dedicated async engine for Celery tasks — uses NullPool to avoid cross-event-loop issues
-_task_engine = create_async_engine(settings.database_url, poolclass=NullPool)
-AsyncTaskSession = async_sessionmaker(_task_engine, class_=AsyncSession, expire_on_commit=False)
+from ..database import AsyncTaskSession
 
 
 def run_async(coro):
@@ -52,14 +47,16 @@ async def _run_task_async(
             from ..memory.manager import memory_manager
             from ..tools.code_exec import execute_python
             from ..tools.browser import browse_web
+            from ..tools.a2a_tools import create_a2a_tools
 
+            a2a_tools = create_a2a_tools(agent_id, agent_name, publisher=publisher)
             agent_runner = BaseAgent(
                 agent_id=agent_id,
                 agent_name=agent_name,
                 task_type=task_type,
                 model=model,
                 publisher=publisher,
-                tools=[execute_python, browse_web],
+                tools=[execute_python, browse_web] + a2a_tools,
                 memory_manager=memory_manager,
             )
             result_data = await agent_runner.run(task_input)

@@ -65,6 +65,10 @@ function describeEvent(event: AGUIEvent): string {
       if (d.subtype === "REFLECTION") return "Reflecting on task...";
       if (d.subtype === "MEMORY_RETRIEVED")
         return `Retrieved ${(d.count as number) || 0} memories`;
+      if (d.subtype === "A2A_SENT")
+        return `Sent task to ${(d.to_agent as string) || "agent"}`;
+      if (d.subtype === "HUMAN_NOTIFIED")
+        return `Notified human: ${((d.message_preview as string) || "").slice(0, 60)}`;
       return `Custom: ${(d.subtype as string) || ""}`;
     default:
       return event.type;

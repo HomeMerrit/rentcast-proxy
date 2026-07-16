@@ -2,7 +2,7 @@ from __future__ import annotations
 import uuid
 from datetime import datetime
 from typing import Optional
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, model_validator
 
 class AgentSkillOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
@@ -32,8 +32,16 @@ class AgentCommOut(BaseModel):
     to_agent_id: Optional[uuid.UUID] = None
     message: str
     message_type: str
+    metadata_: dict = {}
     read: bool
     created_at: datetime
+    from_agent_name: Optional[str] = None
+
+    @model_validator(mode='after')
+    def populate_names(self) -> 'AgentCommOut':
+        if self.metadata_ and not self.from_agent_name:
+            self.from_agent_name = self.metadata_.get("from_agent_name")
+        return self
 
 class AgentOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
