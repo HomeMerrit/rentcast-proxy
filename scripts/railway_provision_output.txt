@@ -1,0 +1,47 @@
+=== Link project via CLI ===
+
+  $ railway link --project 311fa837-720a-4a33-9439-28e7c853bd7a --environment ef95ba5f-eb20-436b-aff4-948e751c199d
+    Project agentos-platform linked successfully! 🎉
+    > Select a workspace sellfi's Projects
+    > Select a project agentos-platform
+    > Select an environment production
+    Multiple services available — use --service <name> to link one.
+    Available: celery-beat, frontend, celery, backend, qdrant
+  [exit 0]
+
+=== Existing services ===
+  {"celery-beat": "01aefb60-2429-47bc-85ca-da2b6b2f114e", "frontend": "129956d5-6cf1-422f-9096-57d10d956837", "celery": "1403ebc4-65e8-4137-91c3-4a6a0f31af46", "backend": "a7402d3d-8436-4578-80ae-41e7bede5bb4", "qdrant": "b3b21715-5351-44b6-bed7-811c5f854ac6"}
+
+=== Add Postgres ===
+
+  $ railway add --database postgres
+    > What do you need? Database
+  [exit 0]
+
+=== Add Redis ===
+
+  $ railway add --database redis
+    > What do you need? Database
+  [exit 0]
+
+=== Wait for databases to register ===
+  services now: {"celery-beat": "01aefb60-2429-47bc-85ca-da2b6b2f114e", "frontend": "129956d5-6cf1-422f-9096-57d10d956837", "celery": "1403ebc4-65e8-4137-91c3-4a6a0f31af46", "redis": "2066b31c-4654-45f0-bb24-d0f764005e64", "postgres": "44c5d981-0795-4ac6-b80d-ac44ed3cd21d", "backend": "a7402d3d-8436-4578-80ae-41e7bede5bb4", "qdrant": "b3b21715-5351-44b6-bed7-811c5f854ac6"}
+  postgres vars: ["DATABASE_PUBLIC_URL", "DATABASE_URL", "PGDATA", "PGDATABASE", "PGHOST", "PGPASSWORD", "PGPORT", "PGUSER", "POSTGRES_DB", "POSTGRES_PASSWORD", "POSTGRES_USER", "RAILWAY_DEPLOYMENT_DRAINING_SECONDS", "RAILWAY_ENVIRONMENT", "RAILWAY_ENVIRONMENT_ID", "RAILWAY_ENVIRONMENT_NAME", "RAILWAY_PRIVATE_DOMAIN", "RAILWAY_PROJECT_ID", "RAILWAY_PROJECT_NAME", "RAILWAY_SERVICE_BACKEND_URL", "RAILWAY_SERVICE_FRONTEND_URL", "RAILWAY_SERVICE_ID", "RAILWAY_SERVICE_NAME", "RAILWAY_TCP_APPLICATION_PORT", "RAILWAY_TCP_PROXY_DOMAIN", "RAILWAY_TCP_PROXY_PORT", "RAILWAY_VOLUME_ID", "RAILWAY_VOLUME_MOUNT_PATH", "RAILWAY_VOLUME_NAME", "SSL_CERT_DAYS"]
+  using postgres key: DATABASE_URL
+  redis vars: ["RAILWAY_ENVIRONMENT", "RAILWAY_ENVIRONMENT_ID", "RAILWAY_ENVIRONMENT_NAME", "RAILWAY_PRIVATE_DOMAIN", "RAILWAY_PROJECT_ID", "RAILWAY_PROJECT_NAME", "RAILWAY_SERVICE_BACKEND_URL", "RAILWAY_SERVICE_FRONTEND_URL", "RAILWAY_SERVICE_ID", "RAILWAY_SERVICE_NAME", "RAILWAY_TCP_APPLICATION_PORT", "RAILWAY_TCP_PROXY_DOMAIN", "RAILWAY_TCP_PROXY_PORT", "RAILWAY_VOLUME_ID", "RAILWAY_VOLUME_MOUNT_PATH", "RAILWAY_VOLUME_NAME", "REDISHOST", "REDISPASSWORD", "REDISPORT", "REDISUSER", "REDIS_PASSWORD", "REDIS_PUBLIC_URL", "REDIS_URL"]
+  using redis key: REDIS_URL
+
+  DATABASE_URL resolved: yes
+  REDIS_URL resolved:    yes
+
+=== Set DATABASE_URL / REDIS_URL on app services ===
+  backend: vars set
+  celery: vars set
+  celery-beat: vars set
+
+=== Redeploy app services ===
+  backend: redeploy via API
+  celery: redeploy via API
+  celery-beat: redeploy via API
+RESULT=OK
+HAS_DB=1
