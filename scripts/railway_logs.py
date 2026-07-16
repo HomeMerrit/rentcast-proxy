@@ -64,26 +64,28 @@ for name in TARGETS:
     query($deploymentId: String!, $limit: Int) {
       buildLogs(deploymentId: $deploymentId, limit: $limit) { timestamp message severity }
     }
-    """, {"deploymentId": dep_id, "limit": 500})
+    """, {"deploymentId": dep_id, "limit": 400})
     logs = bl.get("buildLogs")
     if logs:
         emit("---- BUILD LOGS (" + name + ") ----")
-        for entry in logs:
+        for entry in logs[-120:]:
             emit("  " + (entry.get("message") or ""))
     else:
-        emit("  (no buildLogs returned; trying deploymentLogs)")
-        dl = gql("""
-        query($deploymentId: String!, $limit: Int) {
-          deploymentLogs(deploymentId: $deploymentId, limit: $limit) { timestamp message severity }
-        }
-        """, {"deploymentId": dep_id, "limit": 500})
-        dlogs = dl.get("deploymentLogs")
-        if dlogs:
-            emit("---- DEPLOY LOGS (" + name + ") ----")
-            for entry in dlogs:
-                emit("  " + (entry.get("message") or ""))
-        else:
-            emit("  (no logs available via API)")
+        emit("  (no buildLogs)")
+
+    # Runtime / deploy logs (crash reasons live here)
+    dl = gql("""
+    query($deploymentId: String!, $limit: Int) {
+      deploymentLogs(deploymentId: $deploymentId, limit: $limit) { timestamp message severity }
+    }
+    """, {"deploymentId": dep_id, "limit": 400})
+    dlogs = dl.get("deploymentLogs")
+    if dlogs:
+        emit("---- RUNTIME LOGS (" + name + ") ----")
+        for entry in dlogs[-120:]:
+            emit("  " + (entry.get("message") or ""))
+    else:
+        emit("  (no runtime logs)")
 
 with open("railway_logs.txt", "w") as f:
     f.write("\n".join(OUT) + "\n")
