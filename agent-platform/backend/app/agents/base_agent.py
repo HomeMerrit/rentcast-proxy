@@ -23,6 +23,7 @@ class AgentState(TypedDict):
     start_time: float
     retrieved_memories: list[dict]
     tool_iterations: int
+    system_prompt: str
 
 SYSTEM_PROMPT = """You are a specialized AI agent. Complete the given task thoroughly and accurately.
 You have access to tools — use them when they would help you do a better job.
@@ -52,6 +53,21 @@ class BaseAgent:
         self.task_type = task_type
         self._publisher = publisher
         self.memory_manager = memory_manager
+        self._langfuse_handler = None
+        if settings.langfuse_secret_key and settings.langfuse_public_key:
+            try:
+                from langfuse.callback import CallbackHandler
+                self._langfuse_handler = CallbackHandler(
+                    public_key=settings.langfuse_public_key,
+                    secret_key=settings.langfuse_secret_key,
+                    host=settings.langfuse_host,
+                    trace_name=f"{agent_name}/{task_type}",
+                    session_id=agent_id,
+                    user_id=agent_name,
+                    tags=[task_type, agent_name],
+                )
+            except ImportError:
+                pass
         self.tools = tools or []
         self._tool_map = {t.name: t for t in self.tools}
         self.llm = ChatAnthropic(
@@ -83,9 +99,32 @@ class BaseAgent:
         g.add_edge("complete", END)
         return g.compile()
 
+    async def _load_evolved_prompt(self) -> str:
+        try:
+            from ..database import AsyncTaskSession
+            from ..models_db import AgentConfig
+            from sqlalchemy import select
+            async with AsyncTaskSession() as db:
+                result = await db.execute(
+                    select(AgentConfig).where(
+                        AgentConfig.agent_id == self.agent_id,
+                        AgentConfig.config_type == "system_prompt",
+                        AgentConfig.active == True,  # noqa: E712
+                    ).order_by(AgentConfig.generation.desc()).limit(1)
+                )
+                config = result.scalar_one_or_none()
+                if config:
+                    return config.value
+        except Exception:
+            pass
+        return SYSTEM_PROMPT
+
     async def _memory_retrieve(self, state: AgentState) -> dict:
+        # Load evolved system prompt
+        system_prompt = await self._load_evolved_prompt()
+
         if not self.memory_manager:
-            return {"retrieved_memories": [], "tool_iterations": 0}
+            return {"retrieved_memories": [], "tool_iterations": 0, "system_prompt": system_prompt}
         query = f"{state['task_type']}: {state['task_input']}"
         memories = await self.memory_manager.search(self.agent_id, query)
         if memories and self._publisher:
@@ -94,7 +133,7 @@ class BaseAgent:
                 "count": len(memories),
                 "memories": [m["content"] for m in memories[:3]],
             })
-        return {"retrieved_memories": memories, "tool_iterations": 0}
+        return {"retrieved_memories": memories, "tool_iterations": 0, "system_prompt": system_prompt}
 
     async def _think(self, state: AgentState) -> dict:
         # Build memory context
@@ -106,10 +145,12 @@ class BaseAgent:
 
         task_desc = f"Task type: {state['task_type']}\nInput: {state['task_input']}{memory_ctx}"
 
+        active_system_prompt = state.get("system_prompt") or SYSTEM_PROMPT
+
         # Only send system message on first think (no prior AI messages)
         prior_ai = [m for m in state["messages"] if isinstance(m, AIMessage)]
         if not prior_ai:
-            messages = [SystemMessage(content=SYSTEM_PROMPT), HumanMessage(content=task_desc)]
+            messages = [SystemMessage(content=active_system_prompt), HumanMessage(content=task_desc)]
         else:
             messages = list(state["messages"])
 
@@ -123,7 +164,10 @@ class BaseAgent:
         if self._publisher:
             await self._publisher.publish("STATE_SNAPSHOT", {"status": "thinking", "current_task": state["task_type"]})
 
-        async for chunk in self.llm_with_tools.astream(messages):
+        # Pass Langfuse callback if configured
+        stream_config = {"callbacks": [self._langfuse_handler]} if self._langfuse_handler else {}
+
+        async for chunk in self.llm_with_tools.astream(messages, config=stream_config):
             last_chunk = chunk
             # Extract text delta
             delta = ""
@@ -266,6 +310,7 @@ class BaseAgent:
             "start_time": time.time(),
             "retrieved_memories": [],
             "tool_iterations": 0,
+            "system_prompt": SYSTEM_PROMPT,  # will be overridden by _memory_retrieve
         }
         final = await self.graph.ainvoke(initial)
         return {

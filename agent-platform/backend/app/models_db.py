@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime
-from sqlalchemy import String, Integer, Boolean, Text, ForeignKey, DateTime, JSON
+from sqlalchemy import String, Integer, Boolean, Text, ForeignKey, DateTime, JSON, Float
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .database import Base
@@ -67,3 +67,27 @@ class AgentSession(Base):
     checkpoint: Mapped[dict] = mapped_column(JSON, default=dict)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.utcnow)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.utcnow)
+
+
+class EvalResult(Base):
+    __tablename__ = "eval_results"
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    agent_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("agents.id", ondelete="CASCADE"))
+    work_log_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), ForeignKey("work_log.id", ondelete="SET NULL"), nullable=True)
+    score: Mapped[int] = mapped_column(Integer, default=50)
+    reasoning: Mapped[str | None] = mapped_column(Text)
+    judge_model: Mapped[str] = mapped_column(String, default="claude-haiku-4-5-20251001")
+    skill_updates: Mapped[dict] = mapped_column(JSON, default=dict)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.utcnow)
+
+
+class AgentConfig(Base):
+    __tablename__ = "agent_configs"
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    agent_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("agents.id", ondelete="CASCADE"))
+    config_type: Mapped[str] = mapped_column(String, default="system_prompt")
+    value: Mapped[str] = mapped_column(Text, nullable=False)
+    generation: Mapped[int] = mapped_column(Integer, default=1)
+    eval_score: Mapped[float | None] = mapped_column(Float, nullable=True)
+    active: Mapped[bool] = mapped_column(Boolean, default=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.utcnow)

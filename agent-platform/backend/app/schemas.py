@@ -100,3 +100,15 @@ class RunTaskResponse(BaseModel):
     task_id: str
     agent_id: str
     status: str = "queued"
+
+
+class EvalResultOut(BaseModel):
+    id: uuid.UUID
+    agent_id: uuid.UUID
+    work_log_id: Optional[uuid.UUID] = None
+    score: int
+    reasoning: Optional[str] = None
+    judge_model: str
+    skill_updates: dict = {}
+    created_at: datetime
+    model_config = ConfigDict(from_attributes=True)

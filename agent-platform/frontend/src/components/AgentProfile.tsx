@@ -7,7 +7,7 @@ import { StatusDot } from "./StatusDot";
 import { useAgentStream } from "@/lib/ag-ui";
 import { successRate } from "@/lib/utils";
 import { api } from "@/lib/api";
-import type { Agent, AGUIEvent, AGUIEventType, Memory } from "@/types/agent";
+import type { Agent, AGUIEvent, AGUIEventType, Memory, EvalResult, EvalSummary, AgentConfigInfo } from "@/types/agent";
 import Link from "next/link";
 
 interface Props {
@@ -175,6 +175,154 @@ function MemoriesPanel({ agentId }: { agentId: string }) {
   );
 }
 
+// ── Score Badge ───────────────────────────────────────────────────────────────
+
+function ScoreBadge({ score }: { score: number }) {
+  const color =
+    score >= 80
+      ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
+      : score >= 60
+      ? "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400"
+      : "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400";
+  return (
+    <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${color}`}>
+      {score}/100
+    </span>
+  );
+}
+
+// ── Evals Panel ───────────────────────────────────────────────────────────────
+
+function EvalPanel({ agentId }: { agentId: string }) {
+  const [evals, setEvals] = useState<EvalResult[]>([]);
+  const [summary, setSummary] = useState<EvalSummary | null>(null);
+  const [config, setConfig] = useState<AgentConfigInfo | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [evolving, setEvolving] = useState(false);
+  const [evolved, setEvolved] = useState(false);
+
+  useEffect(() => {
+    Promise.all([
+      api.evals.list(agentId).catch(() => [] as EvalResult[]),
+      api.evals.summary(agentId).catch(() => null),
+      api.evals.config(agentId).catch(() => null),
+    ]).then(([e, s, c]) => {
+      setEvals(e);
+      setSummary(s);
+      setConfig(c);
+      setLoading(false);
+    });
+  }, [agentId]);
+
+  const handleEvolve = async () => {
+    setEvolving(true);
+    await api.evals.evolve(agentId).catch(() => null);
+    setEvolving(false);
+    setEvolved(true);
+    setTimeout(() => setEvolved(false), 4000);
+  };
+
+  if (loading) return <p className="text-sm text-gray-400">Loading evals...</p>;
+
+  return (
+    <div className="space-y-4">
+      {/* Summary stats */}
+      {summary && summary.total_evals > 0 && (
+        <div className="grid grid-cols-3 gap-3">
+          <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-3 text-center">
+            <div className="text-2xl font-bold text-gray-900 dark:text-white">{summary.avg_score}</div>
+            <div className="text-xs text-gray-500 mt-0.5">Avg Score</div>
+          </div>
+          <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-3 text-center">
+            <div className="text-2xl font-bold text-gray-900 dark:text-white">{summary.total_evals}</div>
+            <div className="text-xs text-gray-500 mt-0.5">Total Evals</div>
+          </div>
+          <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-3 text-center">
+            <div className="text-2xl font-bold" style={{ color: summary.avg_score >= 80 ? '#10b981' : summary.avg_score >= 60 ? '#f59e0b' : '#ef4444' }}>
+              {summary.avg_score >= 80 ? '🟢' : summary.avg_score >= 60 ? '🟡' : '🔴'}
+            </div>
+            <div className="text-xs text-gray-500 mt-0.5">Trend</div>
+          </div>
+        </div>
+      )}
+
+      {/* Evolution status */}
+      {config && config.generation > 0 && (
+        <div className="rounded-lg bg-violet-50 dark:bg-violet-950/30 border border-violet-200 dark:border-violet-800 p-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-xs font-medium text-violet-700 dark:text-violet-300">
+                System Prompt · Generation {config.generation}
+              </p>
+              {config.eval_score && (
+                <p className="text-xs text-violet-500 mt-0.5">Triggered at avg score: {config.eval_score.toFixed(1)}</p>
+              )}
+            </div>
+            <span className="text-xs bg-violet-100 dark:bg-violet-900/40 text-violet-700 dark:text-violet-300 rounded-full px-2 py-0.5">
+              Evolved
+            </span>
+          </div>
+          {config.value && (
+            <p className="mt-2 text-xs text-violet-600 dark:text-violet-400 italic line-clamp-2">{config.value}</p>
+          )}
+        </div>
+      )}
+
+      {/* Evolve button */}
+      <button
+        onClick={handleEvolve}
+        disabled={evolving}
+        className="w-full rounded-lg border border-violet-300 dark:border-violet-700 py-2 text-sm font-medium text-violet-700 dark:text-violet-400 hover:bg-violet-50 dark:hover:bg-violet-950/30 disabled:opacity-50 transition-colors"
+      >
+        {evolved ? '✓ Evolution triggered!' : evolving ? 'Triggering...' : '⚡ Evolve Agent Prompt'}
+      </button>
+
+      {/* Recent evals list */}
+      {evals.length === 0 ? (
+        <p className="text-sm text-gray-400">
+          No evaluations yet. Evals run automatically after each task completes.
+        </p>
+      ) : (
+        <div className="space-y-2">
+          {evals.map((e) => (
+            <div key={e.id} className="rounded-lg border border-gray-200 dark:border-gray-700 p-3">
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex-1 min-w-0">
+                  {e.reasoning && (
+                    <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">{e.reasoning}</p>
+                  )}
+                  {Object.keys(e.skill_updates).length > 0 && (
+                    <div className="mt-1.5 flex flex-wrap gap-1">
+                      {Object.entries(e.skill_updates).map(([skill, delta]) => (
+                        <span
+                          key={skill}
+                          className={`text-xs rounded-full px-2 py-0.5 ${
+                            delta > 0
+                              ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
+                              : "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
+                          }`}
+                        >
+                          {skill} {delta > 0 ? `+${delta}` : delta}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <div className="shrink-0 flex flex-col items-end gap-1">
+                  <ScoreBadge score={e.score} />
+                  <span className="text-xs text-gray-400">
+                    {new Date(e.created_at).toLocaleDateString()}
+                  </span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export function AgentProfile({ agent }: Props) {
@@ -191,9 +339,16 @@ export function AgentProfile({ agent }: Props) {
   const rate = successRate(agent);
 
   // Tab state
-  const [activeTab, setActiveTab] = useState<"overview" | "activity" | "memories">(
+  const [activeTab, setActiveTab] = useState<"overview" | "activity" | "memories" | "evals">(
     "overview"
   );
+
+  // Eval summary for header stat chip
+  const [evalSummary, setEvalSummary] = useState<EvalSummary | null>(null);
+
+  useEffect(() => {
+    api.evals.summary(agent.id).then(setEvalSummary).catch(() => {});
+  }, [agent.id]);
 
   // Run Task form
   const [showForm, setShowForm] = useState(false);
@@ -325,6 +480,12 @@ export function AgentProfile({ agent }: Props) {
                   </div>
                   <div className="text-gray-600 text-xs">Skills</div>
                 </div>
+                {evalSummary && evalSummary.total_evals > 0 && (
+                  <div className="flex items-center gap-1.5">
+                    <ScoreBadge score={Math.round(evalSummary.avg_score)} />
+                    <span className="text-xs text-gray-500">avg eval</span>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -407,7 +568,7 @@ export function AgentProfile({ agent }: Props) {
 
         {/* ── Tab navigation ────────────────────────────────────────────── */}
         <div className="flex gap-1 rounded-lg bg-gray-100 dark:bg-gray-800 p-1">
-          {(["overview", "activity", "memories"] as const).map((tab) => (
+          {(["overview", "activity", "memories", "evals"] as const).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -593,6 +754,14 @@ export function AgentProfile({ agent }: Props) {
           <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6">
             <h2 className="text-lg font-semibold text-gray-200 mb-4">Memories</h2>
             <MemoriesPanel agentId={agent.id} />
+          </div>
+        )}
+
+        {/* ── Evals tab ─────────────────────────────────────────────────── */}
+        {activeTab === "evals" && (
+          <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6">
+            <h2 className="text-lg font-semibold text-gray-200 mb-4">Evaluations</h2>
+            <EvalPanel agentId={agent.id} />
           </div>
         )}
 

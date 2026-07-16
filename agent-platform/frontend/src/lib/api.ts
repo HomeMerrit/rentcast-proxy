@@ -1,4 +1,4 @@
-import type { Agent, Memory, AgentCard, AgentComm } from "@/types/agent";
+import type { Agent, Memory, AgentCard, AgentComm, EvalResult, EvalSummary, AgentConfigInfo } from "@/types/agent";
 
 const BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
@@ -69,6 +69,18 @@ export const api = {
       }),
     markRead: (commId: string) =>
       apiFetch<{ ok: boolean }>(`/comms/${commId}/read`, { method: "PATCH" }),
+  },
+  evals: {
+    list: (agentId: string) =>
+      apiFetch<EvalResult[]>(`/agents/${agentId}/evals`),
+    summary: (agentId: string) =>
+      apiFetch<EvalSummary>(`/agents/${agentId}/evals/summary`),
+    config: (agentId: string) =>
+      apiFetch<AgentConfigInfo>(`/agents/${agentId}/config`),
+    evolve: (agentId: string) =>
+      apiFetch<{ status: string; agent_id: string }>(`/agents/${agentId}/evolve`, {
+        method: "POST",
+      }),
   },
   a2a: {
     card: (agentId: string) =>

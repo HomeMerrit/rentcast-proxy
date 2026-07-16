@@ -71,6 +71,34 @@ export interface Memory {
   score?: number; // present in search results
 }
 
+export interface EvalResult {
+  id: string;
+  agent_id: string;
+  work_log_id?: string;
+  score: number;
+  reasoning?: string;
+  judge_model: string;
+  skill_updates: Record<string, number>;
+  created_at: string;
+}
+
+export interface EvalSummary {
+  avg_score: number;
+  total_evals: number;
+  min_score: number;
+  max_score: number;
+  recent: { score: number; created_at: string }[];
+}
+
+export interface AgentConfigInfo {
+  generation: number;
+  active: boolean;
+  value: string | null;
+  id?: string;
+  eval_score?: number;
+  created_at?: string;
+}
+
 // AG-UI Protocol event types
 export type AGUIEventType =
   | "CONNECTED"

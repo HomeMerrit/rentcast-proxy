@@ -8,6 +8,9 @@ class Settings(BaseSettings):
     qdrant_host: str = "localhost"
     qdrant_port: int = 6333
     e2b_api_key: str = ""
+    langfuse_public_key: str = ""
+    langfuse_secret_key: str = ""
+    langfuse_host: str = "https://cloud.langfuse.com"
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
