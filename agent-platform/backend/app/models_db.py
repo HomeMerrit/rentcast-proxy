@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime
-from sqlalchemy import String, Integer, Boolean, Text, ForeignKey, DateTime, JSON, Float
+from sqlalchemy import String, Integer, Boolean, Text, ForeignKey, DateTime, JSON, Float, Column, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .database import Base
@@ -91,3 +91,13 @@ class AgentConfig(Base):
     eval_score: Mapped[float | None] = mapped_column(Float, nullable=True)
     active: Mapped[bool] = mapped_column(Boolean, default=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.utcnow)
+
+
+class APIKey(Base):
+    __tablename__ = "api_keys"
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    name = Column(String, nullable=False)
+    key_hash = Column(String, unique=True, nullable=False, index=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    last_used_at = Column(DateTime(timezone=True), nullable=True)
+    active = Column(Boolean, default=True, nullable=False)

@@ -1,18 +1,38 @@
+import uuid
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from .routers import agents, stream, comms, work_log, memory, a2a, evals
+from .routers import auth as auth_router
 from .database import engine, Base
-# Import new models so SQLAlchemy registers them:
-from .models_db import EvalResult, AgentConfig  # noqa: F401
+from .models_db import EvalResult, AgentConfig, APIKey  # noqa: F401
+from .config import settings
+import logging
+
+logger = logging.getLogger("agentos")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+    # Startup warnings
+    if not settings.anthropic_api_key:
+        logger.warning("ANTHROPIC_API_KEY is not set — agents will fail to run")
+    if settings.require_auth:
+        logger.info("Auth is ENABLED — all endpoints require a valid API key")
+    else:
+        logger.info("Auth is DISABLED — set REQUIRE_AUTH=true in production")
     yield
 
 app = FastAPI(title="AgentOS API", version="0.1.0", lifespan=lifespan)
+
+@app.middleware("http")
+async def request_id_middleware(request: Request, call_next):
+    request_id = request.headers.get("X-Request-ID", str(uuid.uuid4()))
+    response = await call_next(request)
+    response.headers["X-Request-ID"] = request_id
+    return response
 
 app.add_middleware(
     CORSMiddleware,
@@ -29,7 +49,8 @@ app.include_router(work_log.router, prefix="/work-log", tags=["work_log"])
 app.include_router(memory.router, prefix="/agents", tags=["memory"])
 app.include_router(a2a.router, tags=["a2a"])
 app.include_router(evals.router, prefix="/agents", tags=["evals"])
+app.include_router(auth_router.router, prefix="/auth", tags=["auth"])
 
 @app.get("/health")
 async def health():
-    return {"status": "ok"}
+    return {"status": "ok", "auth_required": settings.require_auth}

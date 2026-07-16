@@ -11,6 +11,8 @@ class Settings(BaseSettings):
     langfuse_public_key: str = ""
     langfuse_secret_key: str = ""
     langfuse_host: str = "https://cloud.langfuse.com"
+    require_auth: bool = False
+    enable_rate_limit: bool = False
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 

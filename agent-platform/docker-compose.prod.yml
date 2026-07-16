@@ -1,0 +1,119 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: agentplatform
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-agentplatform}
+      POSTGRES_DB: agentplatform
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U agentplatform"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  qdrant:
+    image: qdrant/qdrant:latest
+    restart: unless-stopped
+    volumes:
+      - qdrant_data:/qdrant/storage
+    ports:
+      - "6333:6333"
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql+asyncpg://agentplatform:${POSTGRES_PASSWORD:-agentplatform}@postgres:5432/agentplatform
+      REDIS_URL: redis://redis:6379/0
+      QDRANT_HOST: qdrant
+      QDRANT_PORT: 6333
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      ENVIRONMENT: production
+      REQUIRE_AUTH: ${REQUIRE_AUTH:-false}
+      ENABLE_RATE_LIMIT: ${ENABLE_RATE_LIMIT:-false}
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
+      LANGFUSE_HOST: ${LANGFUSE_HOST:-https://cloud.langfuse.com}
+      E2B_API_KEY: ${E2B_API_KEY:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      qdrant:
+        condition: service_started
+    ports:
+      - "8000:8000"
+
+  celery:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    command: celery -A app.workers.celery_app worker --loglevel=info --concurrency=2
+    environment:
+      DATABASE_URL: postgresql+asyncpg://agentplatform:${POSTGRES_PASSWORD:-agentplatform}@postgres:5432/agentplatform
+      REDIS_URL: redis://redis:6379/0
+      QDRANT_HOST: qdrant
+      QDRANT_PORT: 6333
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      ENVIRONMENT: production
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
+      E2B_API_KEY: ${E2B_API_KEY:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  celery-beat:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    command: celery -A app.workers.celery_app beat --loglevel=info
+    environment:
+      DATABASE_URL: postgresql+asyncpg://agentplatform:${POSTGRES_PASSWORD:-agentplatform}@postgres:5432/agentplatform
+      REDIS_URL: redis://redis:6379/0
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      ENVIRONMENT: production
+    depends_on:
+      - redis
+      - postgres
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://backend:8000}
+      NEXT_PUBLIC_REQUIRE_AUTH: ${NEXT_PUBLIC_REQUIRE_AUTH:-false}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
+  redis_data:
+  qdrant_data:
