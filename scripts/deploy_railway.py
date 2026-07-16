@@ -22,12 +22,14 @@ HEADERS = {
 def gql(query, variables=None, soft=False):
     payload = {"query": query, "variables": variables or {}}
     r = requests.post(API, json=payload, headers=HEADERS, timeout=30)
+    if r.status_code != 200:
+        print("  [http] " + str(r.status_code) + " " + r.text[:400])
     r.raise_for_status()
     data = r.json()
     if "errors" in data:
         msg = json.dumps(data["errors"], indent=2)
         if soft:
-            print("  [warn] " + msg[:300])
+            print("  [warn] " + msg[:400])
             return {}
         raise RuntimeError("GraphQL error:\n" + msg)
     return data.get("data", {})
@@ -48,8 +50,36 @@ def step(n, msg):
 
 # 1. Verify auth
 step(1, "Verify Railway token")
-me = gql("{ me { id email name } }")
-print("  Authenticated: " + (me["me"].get("name") or me["me"]["email"]))
+print("  Token length: " + str(len(TOKEN)))
+
+def try_auth():
+    for q, label in [
+        ("{ me { id email } }", "me"),
+        ("{ viewer { id email } }", "viewer"),
+        ('{ projects(first: 1) { edges { node { id } } } }', "projects"),
+    ]:
+        try:
+            result = gql(q)
+            first_key = list(result.keys())[0] if result else None
+            val = result.get(first_key) if first_key else None
+            info = ""
+            if isinstance(val, dict):
+                info = val.get("email", val.get("id", "ok"))
+            print("  Authenticated via '" + label + "': " + str(info))
+            return True
+        except RuntimeError as e:
+            print("  [" + label + "] " + str(e)[:200])
+        except Exception as e:
+            print("  [" + label + " http error] " + str(e)[:200])
+    return False
+
+if not try_auth():
+    print("  WARNING: All auth checks failed. Token may be wrong type.")
+    print("  Attempting project creation anyway as real auth test...")
+    print("")
+    print("  >>> If you created a PROJECT token from Railway Project Settings,")
+    print("  >>> that won't work. Go to railway.com/account/tokens instead.")
+    print("")
 
 # 2. Create project
 step(2, "Create Railway project")
