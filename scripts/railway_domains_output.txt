@@ -1,0 +1,14 @@
+ServiceDomainCreateInput: ["environmentId", "serviceId", "targetPort"]
+ServiceDomainUpdateInput: ["domain", "environmentId", "serviceDomainId", "serviceId", "targetPort"]
+
+=== backend (want targetPort 8000) ===
+  existing: [{"id": "4b780f00-9fc6-4881-98c1-f792a02ec0e1", "domain": "backend-production-a20b.up.railway.app", "targetPort": 8000}, {"id": "6bcc3968-d138-4c74-87c7-68620db699f0", "domain": "backend-production-6557.up.railway.app", "targetPort": 8000}, {"id": "36d853a2-5056-4a44-b66a-7de3a78d27d3", "domain": "backend-production-3a48.up.railway.app", "targetPort": 8000}]
+  already routed correctly: backend-production-a20b.up.railway.app
+
+=== frontend (want targetPort 3000) ===
+  existing: [{"id": "413a8069-1812-4df1-9596-1096add3cee7", "domain": "frontend-production-a9cc3.up.railway.app", "targetPort": 3000}, {"id": "74ffdd8f-e19c-445e-9e96-ecdfbc3976ae", "domain": "frontend-production-d351.up.railway.app", "targetPort": 3000}, {"id": "17c76114-9b45-4478-8aae-5594cf5d0304", "domain": "frontend-production-c115.up.railway.app", "targetPort": 3000}]
+  already routed correctly: frontend-production-a9cc3.up.railway.app
+
+RESULT={"backend": "https://backend-production-a20b.up.railway.app", "frontend": "https://frontend-production-a9cc3.up.railway.app"}
+BACKEND_URL=https://backend-production-a20b.up.railway.app
+FRONTEND_URL=https://frontend-production-a9cc3.up.railway.app
