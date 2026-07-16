@@ -3,9 +3,14 @@ import type { Agent, Memory, AgentCard, AgentComm, EvalResult, EvalSummary, Agen
 const BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
 async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
+  const apiKey = typeof window !== "undefined" ? localStorage.getItem("agentos_api_key") : null;
   const res = await fetch(`${BASE}${path}`, {
-    headers: { "Content-Type": "application/json" },
     ...init,
+    headers: {
+      "Content-Type": "application/json",
+      ...(apiKey ? { Authorization: `Bearer ${apiKey}` } : {}),
+      ...((init?.headers as Record<string, string>) ?? {}),
+    },
   });
   if (!res.ok) throw new Error(`API ${path} → ${res.status}`);
   return res.json() as Promise<T>;
