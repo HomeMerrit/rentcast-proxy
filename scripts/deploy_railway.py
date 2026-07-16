@@ -22,9 +22,12 @@ HEADERS = {
 def gql(query, variables=None, soft=False):
     payload = {"query": query, "variables": variables or {}}
     r = requests.post(API, json=payload, headers=HEADERS, timeout=30)
-    if r.status_code not in (200, 400):
+    if r.status_code != 200:
+        if soft:
+            print("  [http " + str(r.status_code) + "] " + r.text[:300])
+            return {}
         print("  [http] " + str(r.status_code) + " " + r.text[:400])
-    r.raise_for_status()
+        r.raise_for_status()
     data = r.json()
     if "errors" in data:
         msg = json.dumps(data["errors"], indent=2)
@@ -51,41 +54,68 @@ def step(n, msg):
 # 1. Verify auth
 step(1, "Verify Railway token")
 me = gql("{ me { id email } }")
-print("  Authenticated: " + me["me"]["email"])
+ME_ID = me["me"]["id"]
+print("  Authenticated: " + me["me"]["email"] + " (id=" + ME_ID + ")")
 
-# 1b. Find workspace/team ID
-step("1b", "Find workspace ID")
+# 1b. Find workspace/team ID via schema introspection
+step("1b", "Schema introspection + find workspace ID")
+
+# Get ALL top-level queries
+schema = gql('{ __schema { queryType { fields { name } } } }', soft=True)
+all_fields = []
+if schema:
+    all_fields = [f["name"] for f in (schema.get("__schema") or {}).get("queryType", {}).get("fields", [])]
+    print("  All top-level queries: " + str(all_fields))
+    relevant = [f for f in all_fields if any(kw in f.lower() for kw in ["team", "workspace", "org", "account", "member"])]
+    print("  Team/workspace related: " + str(relevant))
+
+# Get User type fields
+user_type = gql('{ __type(name: "User") { fields { name } } }', soft=True)
+if user_type:
+    user_fields = [f["name"] for f in (user_type.get("__type") or {}).get("fields", [])]
+    print("  User type fields: " + str(user_fields))
+
 WORKSPACE_ID = None
 
-# Print available top-level query fields for debugging
-schema = gql('{ __schema { queryType { fields { name } } } }', soft=True)
-if schema:
-    field_names = [f["name"] for f in (schema.get("__schema") or {}).get("queryType", {}).get("fields", [])]
-    print("  Available top-level queries: " + str(field_names[:30]))
-
-# Try teams
-for q, label, path in [
-    ("{ teams { edges { node { id name } } } }", "teams", ["teams", "edges"]),
-    ("{ workspaces { edges { node { id name } } } }", "workspaces", ["workspaces", "edges"]),
-    ("{ me { id teams { edges { node { id name } } } } }", "me.teams", ["me", "teams", "edges"]),
-    ("{ me { id workspaces { edges { node { id name } } } } }", "me.workspaces", ["me", "workspaces", "edges"]),
+# Try every plausible query
+for q, label, key_path in [
+    ("{ teams { edges { node { id name } } } }", "teams", "teams.edges"),
+    ("{ workspaces { edges { node { id name } } } }", "workspaces", "workspaces.edges"),
+    ("{ organizations { edges { node { id name } } } }", "organizations", "organizations.edges"),
+    ("{ accounts { edges { node { id name } } } }", "accounts", "accounts.edges"),
+    ("{ me { id teams { edges { node { id name } } } } }", "me.teams", "me.teams.edges"),
+    ("{ me { id workspaces { edges { node { id name } } } } }", "me.workspaces", "me.workspaces.edges"),
+    ("{ me { id organizations { edges { node { id name } } } } }", "me.organizations", "me.organizations.edges"),
 ]:
     result = gql(q, soft=True)
-    if result:
-        # navigate path
-        node = result
-        for p in path[:-1]:
-            node = (node or {}).get(p) or {}
-        edges = (node or {}).get("edges", [])
-        if edges:
-            WORKSPACE_ID = edges[0]["node"]["id"]
-            print("  Workspace ID via '" + label + "': " + WORKSPACE_ID + " (" + edges[0]["node"]["name"] + ")")
-            break
-        else:
-            print("  '" + label + "': query ok but no edges")
+    if not result:
+        continue
+    # navigate key_path
+    node = result
+    for p in key_path.split(".")[:-1]:
+        node = (node or {}).get(p) or {}
+    edges = (node or {}).get(key_path.split(".")[-1], [])
+    if isinstance(edges, list) and edges:
+        WORKSPACE_ID = edges[0]["node"]["id"]
+        print("  Workspace ID via '" + label + "': " + WORKSPACE_ID + " (" + edges[0]["node"].get("name", "?") + ")")
+        break
+    elif isinstance(edges, list):
+        print("  '" + label + "': ok but empty list")
 
 if not WORKSPACE_ID:
-    raise RuntimeError("Could not find workspace ID via any query. See available queries above.")
+    print("  Could not find workspace ID via any query.")
+    print("  Trying projectCreate without workspaceId to see Railway error...")
+    try:
+        gql("""
+mutation($name: String!) {
+  projectCreate(input: { name: $name }) {
+    id environments { edges { node { id name } } }
+  }
+}
+""", {"name": "agentos-test"})
+    except RuntimeError as e:
+        print("  projectCreate without workspaceId: " + str(e)[:300])
+    raise RuntimeError("Cannot find workspace ID. See introspection output above.")
 
 # 2. Create project
 step(2, "Create Railway project")
