@@ -2,6 +2,11 @@ name: Railway Deploy Code
 
 on:
   workflow_dispatch:
+    inputs:
+      services:
+        description: 'Comma-separated services to deploy (blank = all)'
+        required: false
+        default: ''
 
 permissions:
   contents: write
@@ -38,6 +43,7 @@ jobs:
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
           GITHUB_WORKSPACE: ${{ github.workspace }}
+          DEPLOY_SERVICES: ${{ github.event.inputs.services }}
         run: python3 scripts/railway_deploy_code.py
 
       - name: Publish result to step summary
