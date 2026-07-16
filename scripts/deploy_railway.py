@@ -53,8 +53,6 @@ def step(n, msg):
 
 # 1. Verify auth + get workspace ID
 step(1, "Verify Railway token and find workspace ID")
-
-# me.workspaces is NOT a Connection - it returns Workspace or [Workspace] directly
 me = gql("{ me { id email workspaces { id name } } }")
 print("  Authenticated: " + me["me"]["email"])
 
@@ -62,31 +60,46 @@ WORKSPACE_ID = None
 workspaces = me["me"].get("workspaces") or []
 if isinstance(workspaces, list) and workspaces:
     WORKSPACE_ID = workspaces[0]["id"]
-    print("  Workspace ID (list[0]): " + WORKSPACE_ID + " (" + workspaces[0].get("name", "?") + ")")
+    print("  Workspace ID: " + WORKSPACE_ID + " (" + workspaces[0].get("name", "?") + ")")
 elif isinstance(workspaces, dict) and workspaces.get("id"):
     WORKSPACE_ID = workspaces["id"]
-    print("  Workspace ID (single): " + WORKSPACE_ID + " (" + workspaces.get("name", "?") + ")")
-else:
-    print("  workspaces raw: " + json.dumps(workspaces)[:200])
+    print("  Workspace ID: " + WORKSPACE_ID + " (" + workspaces.get("name", "?") + ")")
 
 if not WORKSPACE_ID:
-    # Try introspecting Workspace type to understand structure
-    ws_type = gql('{ __type(name: "Workspace") { fields { name type { name kind ofType { name kind } } } } }', soft=True)
-    if ws_type:
-        fields = [(f["name"], f["type"]) for f in (ws_type.get("__type") or {}).get("fields", [])]
-        print("  Workspace type fields: " + str([f[0] for f in fields[:20]]))
-    raise RuntimeError("Could not extract workspace ID from me.workspaces: " + json.dumps(workspaces)[:200])
+    raise RuntimeError("No workspace found: " + json.dumps(workspaces)[:200])
 
-# 2. Create project
+# 2. Create project - introspect input type first to get right field names
 step(2, "Create Railway project")
+
+# Try workspaceId inside input first
 proj = gql("""
 mutation($name: String!, $workspaceId: String!) {
-  projectCreate(input: { name: $name, defaultEnvironmentName: "production" }, workspaceId: $workspaceId) {
+  projectCreate(input: { name: $name, defaultEnvironmentName: "production", workspaceId: $workspaceId }) {
     id
     environments { edges { node { id name } } }
   }
 }
-""", {"name": "agentos-platform", "workspaceId": WORKSPACE_ID})
+""", {"name": "agentos-platform", "workspaceId": WORKSPACE_ID}, soft=True)
+
+# Fallback: teamId inside input
+if not proj or not proj.get("projectCreate"):
+    print("  Trying teamId in input...")
+    proj = gql("""
+mutation($name: String!, $teamId: String!) {
+  projectCreate(input: { name: $name, defaultEnvironmentName: "production", teamId: $teamId }) {
+    id
+    environments { edges { node { id name } } }
+  }
+}
+""", {"name": "agentos-platform", "teamId": WORKSPACE_ID}, soft=True)
+
+# Fallback: introspect and show ProjectCreateInput fields
+if not proj or not proj.get("projectCreate"):
+    pc_type = gql('{ __type(name: "ProjectCreateInput") { inputFields { name type { name kind } } } }', soft=True)
+    if pc_type:
+        fields = [f["name"] for f in (pc_type.get("__type") or {}).get("inputFields", [])]
+        print("  ProjectCreateInput fields: " + str(fields))
+    raise RuntimeError("projectCreate failed with both workspaceId and teamId in input. See fields above.")
 
 PROJECT_ID = proj["projectCreate"]["id"]
 ENV_ID = proj["projectCreate"]["environments"]["edges"][0]["node"]["id"]
