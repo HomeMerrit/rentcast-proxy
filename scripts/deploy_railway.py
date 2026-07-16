@@ -22,7 +22,7 @@ HEADERS = {
 def gql(query, variables=None, soft=False):
     payload = {"query": query, "variables": variables or {}}
     r = requests.post(API, json=payload, headers=HEADERS, timeout=30)
-    if r.status_code != 200:
+    if r.status_code not in (200, 400):
         print("  [http] " + str(r.status_code) + " " + r.text[:400])
     r.raise_for_status()
     data = r.json()
@@ -48,22 +48,44 @@ def step(n, msg):
     print("\n" + "="*60 + "\n  [" + str(n) + "] " + msg + "\n" + "="*60, flush=True)
 
 
-# 1. Verify auth + get workspace ID
-step(1, "Verify Railway token and get workspace ID")
-me = gql("{ me { id email name teams { edges { node { id name } } } } }")
-print("  Authenticated: " + (me["me"].get("email") or me["me"]["id"]))
+# 1. Verify auth
+step(1, "Verify Railway token")
+me = gql("{ me { id email } }")
+print("  Authenticated: " + me["me"]["email"])
 
-teams = me["me"].get("teams", {}).get("edges", [])
-if not teams:
-    # fallback: query teams directly
-    teams_data = gql("{ teams { edges { node { id name } } } }", soft=True)
-    teams = (teams_data.get("teams") or {}).get("edges", [])
+# 1b. Find workspace/team ID
+step("1b", "Find workspace ID")
+WORKSPACE_ID = None
 
-if not teams:
-    raise RuntimeError("No workspace/team found. Create a team at railway.com first.")
+# Print available top-level query fields for debugging
+schema = gql('{ __schema { queryType { fields { name } } } }', soft=True)
+if schema:
+    field_names = [f["name"] for f in (schema.get("__schema") or {}).get("queryType", {}).get("fields", [])]
+    print("  Available top-level queries: " + str(field_names[:30]))
 
-WORKSPACE_ID = teams[0]["node"]["id"]
-print("  Workspace ID: " + WORKSPACE_ID + " (" + teams[0]["node"]["name"] + ")")
+# Try teams
+for q, label, path in [
+    ("{ teams { edges { node { id name } } } }", "teams", ["teams", "edges"]),
+    ("{ workspaces { edges { node { id name } } } }", "workspaces", ["workspaces", "edges"]),
+    ("{ me { id teams { edges { node { id name } } } } }", "me.teams", ["me", "teams", "edges"]),
+    ("{ me { id workspaces { edges { node { id name } } } } }", "me.workspaces", ["me", "workspaces", "edges"]),
+]:
+    result = gql(q, soft=True)
+    if result:
+        # navigate path
+        node = result
+        for p in path[:-1]:
+            node = (node or {}).get(p) or {}
+        edges = (node or {}).get("edges", [])
+        if edges:
+            WORKSPACE_ID = edges[0]["node"]["id"]
+            print("  Workspace ID via '" + label + "': " + WORKSPACE_ID + " (" + edges[0]["node"]["name"] + ")")
+            break
+        else:
+            print("  '" + label + "': query ok but no edges")
+
+if not WORKSPACE_ID:
+    raise RuntimeError("Could not find workspace ID via any query. See available queries above.")
 
 # 2. Create project
 step(2, "Create Railway project")
