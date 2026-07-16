@@ -34,9 +34,15 @@ async def request_id_middleware(request: Request, call_next):
     response.headers["X-Request-ID"] = request_id
     return response
 
+_cors_origins = ["http://localhost:3000", "http://localhost:3001"]
+if settings.cors_origins:
+    _cors_origins += [o.strip() for o in settings.cors_origins.split(",") if o.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:3001"],
+    allow_origins=_cors_origins,
+    # Allow any Railway-hosted frontend (e.g. frontend-production-xxxx.up.railway.app)
+    allow_origin_regex=r"https://.*\.up\.railway\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

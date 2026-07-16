@@ -13,6 +13,8 @@ class Settings(BaseSettings):
     langfuse_host: str = "https://cloud.langfuse.com"
     require_auth: bool = False
     enable_rate_limit: bool = False
+    # Comma-separated extra CORS origins (in addition to localhost + *.up.railway.app)
+    cors_origins: str = ""
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
