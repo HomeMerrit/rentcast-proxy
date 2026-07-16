@@ -19,84 +19,76 @@
   [exit 0]
 
   $ railway whoami
-    Unauthorized. Please check that your RAILWAY_TOKEN is valid and has access to the resource you're trying to use.
-  [exit 1]
+    Logged in as info@sellfi.com 👋
+  [exit 0]
 
 === Deploy backend ===
 
-  $ railway link --project 311fa837-720a-4a33-9439-28e7c853bd7a --environment ef95ba5f-eb20-436b-aff4-948e751c199d --service a7402d3d-8436-4578-80ae-41e7bede5bb4
-    Unauthorized. Please check that your RAILWAY_TOKEN is valid and has access to the resource you're trying to use.
-  [exit 1]
-
-  $ railway link -p 311fa837-720a-4a33-9439-28e7c853bd7a -e ef95ba5f-eb20-436b-aff4-948e751c199d -s a7402d3d-8436-4578-80ae-41e7bede5bb4
-    Unauthorized. Please check that your RAILWAY_TOKEN is valid and has access to the resource you're trying to use.
-  [exit 1]
-
-  $ railway up --service a7402d3d-8436-4578-80ae-41e7bede5bb4 --environment ef95ba5f-eb20-436b-aff4-948e751c199d --detach   (cwd=/home/runner/work/rentcast-proxy/rentcast-proxy/agent-platform/backend)
-    Invalid RAILWAY_TOKEN. Please check that it is valid and has access to the resource you're trying to use.
-  [exit 1]
+  $ railway link --project 311fa837-720a-4a33-9439-28e7c853bd7a --environment ef95ba5f-eb20-436b-aff4-948e751c199d --service a7402d3d-8436-4578-80ae-41e7bede5bb4   (cwd=/home/runner/work/rentcast-proxy/rentcast-proxy/agent-platform/backend)
+    Project agentos-platform linked successfully! 🎉
+    > Select a workspace sellfi's Projects
+    > Select a project agentos-platform
+    > Select an environment production
+    > Select a service backend
+  [exit 0]
 
   $ railway up --detach   (cwd=/home/runner/work/rentcast-proxy/rentcast-proxy/agent-platform/backend)
-    Invalid RAILWAY_TOKEN. Please check that it is valid and has access to the resource you're trying to use.
-  [exit 1]
+    Indexing...
+    Uploading...
+      Build Logs: https://railway.com/project/311fa837-720a-4a33-9439-28e7c853bd7a/service/a7402d3d-8436-4578-80ae-41e7bede5bb4?id=0f1c3b4e-595a-483f-8805-34a7556d6342&
+  [exit 0]
 
 === Deploy celery ===
 
-  $ railway link --project 311fa837-720a-4a33-9439-28e7c853bd7a --environment ef95ba5f-eb20-436b-aff4-948e751c199d --service 1403ebc4-65e8-4137-91c3-4a6a0f31af46
-    Unauthorized. Please check that your RAILWAY_TOKEN is valid and has access to the resource you're trying to use.
-  [exit 1]
-
-  $ railway link -p 311fa837-720a-4a33-9439-28e7c853bd7a -e ef95ba5f-eb20-436b-aff4-948e751c199d -s 1403ebc4-65e8-4137-91c3-4a6a0f31af46
-    Unauthorized. Please check that your RAILWAY_TOKEN is valid and has access to the resource you're trying to use.
-  [exit 1]
-
-  $ railway up --service 1403ebc4-65e8-4137-91c3-4a6a0f31af46 --environment ef95ba5f-eb20-436b-aff4-948e751c199d --detach   (cwd=/home/runner/work/rentcast-proxy/rentcast-proxy/agent-platform/backend)
-    Invalid RAILWAY_TOKEN. Please check that it is valid and has access to the resource you're trying to use.
-  [exit 1]
+  $ railway link --project 311fa837-720a-4a33-9439-28e7c853bd7a --environment ef95ba5f-eb20-436b-aff4-948e751c199d --service 1403ebc4-65e8-4137-91c3-4a6a0f31af46   (cwd=/home/runner/work/rentcast-proxy/rentcast-proxy/agent-platform/backend)
+    Project agentos-platform linked successfully! 🎉
+    > Select a workspace sellfi's Projects
+    > Select a project agentos-platform
+    > Select an environment production
+    > Select a service celery
+  [exit 0]
 
   $ railway up --detach   (cwd=/home/runner/work/rentcast-proxy/rentcast-proxy/agent-platform/backend)
-    Invalid RAILWAY_TOKEN. Please check that it is valid and has access to the resource you're trying to use.
-  [exit 1]
+    Indexing...
+    Uploading...
+      Build Logs: https://railway.com/project/311fa837-720a-4a33-9439-28e7c853bd7a/service/1403ebc4-65e8-4137-91c3-4a6a0f31af46?id=6ed340f5-cd6b-453d-8109-fa48ed2e97ef&
+  [exit 0]
 
 === Deploy celery-beat ===
 
-  $ railway link --project 311fa837-720a-4a33-9439-28e7c853bd7a --environment ef95ba5f-eb20-436b-aff4-948e751c199d --service 01aefb60-2429-47bc-85ca-da2b6b2f114e
-    Unauthorized. Please check that your RAILWAY_TOKEN is valid and has access to the resource you're trying to use.
-  [exit 1]
-
-  $ railway link -p 311fa837-720a-4a33-9439-28e7c853bd7a -e ef95ba5f-eb20-436b-aff4-948e751c199d -s 01aefb60-2429-47bc-85ca-da2b6b2f114e
-    Unauthorized. Please check that your RAILWAY_TOKEN is valid and has access to the resource you're trying to use.
-  [exit 1]
-
-  $ railway up --service 01aefb60-2429-47bc-85ca-da2b6b2f114e --environment ef95ba5f-eb20-436b-aff4-948e751c199d --detach   (cwd=/home/runner/work/rentcast-proxy/rentcast-proxy/agent-platform/backend)
-    Invalid RAILWAY_TOKEN. Please check that it is valid and has access to the resource you're trying to use.
-  [exit 1]
+  $ railway link --project 311fa837-720a-4a33-9439-28e7c853bd7a --environment ef95ba5f-eb20-436b-aff4-948e751c199d --service 01aefb60-2429-47bc-85ca-da2b6b2f114e   (cwd=/home/runner/work/rentcast-proxy/rentcast-proxy/agent-platform/backend)
+    Project agentos-platform linked successfully! 🎉
+    > Select a workspace sellfi's Projects
+    > Select a project agentos-platform
+    > Select an environment production
+    > Select a service celery-beat
+  [exit 0]
 
   $ railway up --detach   (cwd=/home/runner/work/rentcast-proxy/rentcast-proxy/agent-platform/backend)
-    Invalid RAILWAY_TOKEN. Please check that it is valid and has access to the resource you're trying to use.
-  [exit 1]
+    Indexing...
+    Uploading...
+      Build Logs: https://railway.com/project/311fa837-720a-4a33-9439-28e7c853bd7a/service/01aefb60-2429-47bc-85ca-da2b6b2f114e?id=9445c75e-0335-4ca9-a281-38903ddda1b1&
+  [exit 0]
 
 === Deploy frontend ===
 
-  $ railway link --project 311fa837-720a-4a33-9439-28e7c853bd7a --environment ef95ba5f-eb20-436b-aff4-948e751c199d --service 129956d5-6cf1-422f-9096-57d10d956837
-    Unauthorized. Please check that your RAILWAY_TOKEN is valid and has access to the resource you're trying to use.
-  [exit 1]
-
-  $ railway link -p 311fa837-720a-4a33-9439-28e7c853bd7a -e ef95ba5f-eb20-436b-aff4-948e751c199d -s 129956d5-6cf1-422f-9096-57d10d956837
-    Unauthorized. Please check that your RAILWAY_TOKEN is valid and has access to the resource you're trying to use.
-  [exit 1]
-
-  $ railway up --service 129956d5-6cf1-422f-9096-57d10d956837 --environment ef95ba5f-eb20-436b-aff4-948e751c199d --detach   (cwd=/home/runner/work/rentcast-proxy/rentcast-proxy/agent-platform/frontend)
-    Invalid RAILWAY_TOKEN. Please check that it is valid and has access to the resource you're trying to use.
-  [exit 1]
+  $ railway link --project 311fa837-720a-4a33-9439-28e7c853bd7a --environment ef95ba5f-eb20-436b-aff4-948e751c199d --service 129956d5-6cf1-422f-9096-57d10d956837   (cwd=/home/runner/work/rentcast-proxy/rentcast-proxy/agent-platform/frontend)
+    Project agentos-platform linked successfully! 🎉
+    > Select a workspace sellfi's Projects
+    > Select a project agentos-platform
+    > Select an environment production
+    > Select a service frontend
+  [exit 0]
 
   $ railway up --detach   (cwd=/home/runner/work/rentcast-proxy/rentcast-proxy/agent-platform/frontend)
-    Invalid RAILWAY_TOKEN. Please check that it is valid and has access to the resource you're trying to use.
-  [exit 1]
+    Indexing...
+    Uploading...
+      Build Logs: https://railway.com/project/311fa837-720a-4a33-9439-28e7c853bd7a/service/129956d5-6cf1-422f-9096-57d10d956837?id=bbc3e4fe-dbbc-41c2-8b3a-ca7c7be13c26&
+  [exit 0]
 
 === Poll deployment status (30s) ===
-  celery-beat    NO_DEPLOYMENT
-  frontend       NO_DEPLOYMENT
-  celery         NO_DEPLOYMENT
-  backend        NO_DEPLOYMENT
+  celery-beat    INITIALIZING
+  frontend       INITIALIZING
+  celery         INITIALIZING
+  backend        INITIALIZING
   qdrant         SUCCESS
