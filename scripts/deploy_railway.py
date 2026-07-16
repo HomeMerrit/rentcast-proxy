@@ -68,8 +68,26 @@ elif isinstance(workspaces, dict) and workspaces.get("id"):
 if not WORKSPACE_ID:
     raise RuntimeError("No workspace found: " + json.dumps(workspaces)[:200])
 
-# 2. Create project
+# 2. Create project (idempotent: reuse existing if found)
 step(2, "Create Railway project")
+
+# Check for an existing project named agentos-platform in this workspace
+existing = gql("""
+query($workspaceId: String!) {
+  projects(workspaceId: $workspaceId) {
+    edges { node { id name environments { edges { node { id name } } } } }
+  }
+}
+""", {"workspaceId": WORKSPACE_ID}, soft=True)
+if not existing:
+    existing = gql("{ projects { edges { node { id name environments { edges { node { id name } } } } } } }", soft=True)
+proj = None
+for edge in ((existing.get("projects") or {}).get("edges") or []):
+    node = edge.get("node") or {}
+    if node.get("name") == "agentos-platform":
+        proj = {"projectCreate": node}
+        print("  Reusing existing project: " + node["id"])
+        break
 
 # Introspect ProjectCreateInput to discover the correct workspace/team field
 pc_type = gql('{ __type(name: "ProjectCreateInput") { inputFields { name } } }', soft=True)
@@ -401,12 +419,25 @@ mutation($input: VariableCollectionUpsertInput!) {
     }})
     print("  Frontend NEXT_PUBLIC_API_URL updated to " + BACKEND_URL)
 
+# Write deployment info file (uploaded as artifact by the workflow)
+DASHBOARD_URL = "https://railway.com/project/" + PROJECT_ID
+info_lines = [
+    "RAILWAY_PROJECT_ID=" + PROJECT_ID,
+    "RAILWAY_ENVIRONMENT_ID=" + ENV_ID,
+    "RAILWAY_DASHBOARD=" + DASHBOARD_URL,
+    "BACKEND_URL=" + (BACKEND_URL or "not-generated"),
+    "FRONTEND_URL=" + (FRONTEND_URL or "not-generated"),
+]
+with open("railway_deployment.txt", "w") as f:
+    f.write("\n".join(info_lines) + "\n")
+print("\n  Wrote railway_deployment.txt")
+
 # Done
 print("\n" + "="*60)
 print("  DEPLOYMENT INITIATED")
 print("="*60)
 print("")
-print("  Railway Dashboard: https://railway.com/project/" + PROJECT_ID)
+print("  Railway Dashboard: " + DASHBOARD_URL)
 print("  Services are building now (3-5 min each).")
 print("")
 if FRONTEND_URL:
