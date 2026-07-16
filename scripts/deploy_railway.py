@@ -68,38 +68,79 @@ elif isinstance(workspaces, dict) and workspaces.get("id"):
 if not WORKSPACE_ID:
     raise RuntimeError("No workspace found: " + json.dumps(workspaces)[:200])
 
-# 2. Create project - introspect input type first to get right field names
+# 2. Create project
 step(2, "Create Railway project")
 
-# Try workspaceId inside input first
-proj = gql("""
-mutation($name: String!, $workspaceId: String!) {
-  projectCreate(input: { name: $name, defaultEnvironmentName: "production", workspaceId: $workspaceId }) {
+# Introspect ProjectCreateInput to discover the correct workspace/team field
+pc_type = gql('{ __type(name: "ProjectCreateInput") { inputFields { name } } }', soft=True)
+pc_fields = []
+if pc_type and pc_type.get("__type"):
+    pc_fields = [f["name"] for f in (pc_type["__type"].get("inputFields") or [])]
+    print("  ProjectCreateInput fields: " + str(pc_fields))
+
+# Also introspect Mutation.projectCreate top-level args
+mut_type = gql('{ __type(name: "Mutation") { fields { name args { name } } } }', soft=True)
+pc_args = []
+if mut_type and mut_type.get("__type"):
+    for f in (mut_type["__type"].get("fields") or []):
+        if f["name"] == "projectCreate":
+            pc_args = [a["name"] for a in (f.get("args") or [])]
+            print("  projectCreate top-level args: " + str(pc_args))
+            break
+
+PROJ_FRAGMENT = """
     id
     environments { edges { node { id name } } }
-  }
-}
-""", {"name": "agentos-platform", "workspaceId": WORKSPACE_ID}, soft=True)
+"""
 
-# Fallback: teamId inside input
-if not proj or not proj.get("projectCreate"):
-    print("  Trying teamId in input...")
-    proj = gql("""
-mutation($name: String!, $teamId: String!) {
-  projectCreate(input: { name: $name, defaultEnvironmentName: "production", teamId: $teamId }) {
-    id
-    environments { edges { node { id name } } }
-  }
-}
-""", {"name": "agentos-platform", "teamId": WORKSPACE_ID}, soft=True)
+proj = None
 
-# Fallback: introspect and show ProjectCreateInput fields
+# Try each known workspace/team field candidate inside input
+for ws_field in ["teamId", "workspaceId", "organizationId"]:
+    if ws_field not in pc_fields:
+        continue
+    print("  Trying input field: " + ws_field)
+    proj = gql(
+        'mutation($n: String!, $w: String!) { projectCreate(input: { name: $n, defaultEnvironmentName: "production", '
+        + ws_field + ': $w }) {' + PROJ_FRAGMENT + '} }',
+        {"n": "agentos-platform", "w": WORKSPACE_ID}, soft=True
+    )
+    if proj and proj.get("projectCreate"):
+        print("  Created via input." + ws_field)
+        break
+
+# Try workspace/team field as a TOP-LEVEL mutation arg
 if not proj or not proj.get("projectCreate"):
-    pc_type = gql('{ __type(name: "ProjectCreateInput") { inputFields { name type { name kind } } } }', soft=True)
-    if pc_type:
-        fields = [f["name"] for f in (pc_type.get("__type") or {}).get("inputFields", [])]
-        print("  ProjectCreateInput fields: " + str(fields))
-    raise RuntimeError("projectCreate failed with both workspaceId and teamId in input. See fields above.")
+    for ws_arg in ["teamId", "workspaceId"]:
+        if ws_arg not in pc_args:
+            continue
+        print("  Trying top-level arg: " + ws_arg)
+        proj = gql(
+            'mutation($n: String!, $w: String!) { projectCreate(' + ws_arg + ': $w, input: { name: $n, defaultEnvironmentName: "production" }) {'
+            + PROJ_FRAGMENT + '} }',
+            {"n": "agentos-platform", "w": WORKSPACE_ID}, soft=True
+        )
+        if proj and proj.get("projectCreate"):
+            print("  Created via top-level " + ws_arg)
+            break
+
+# Try without any workspace arg (personal accounts may not need it)
+if not proj or not proj.get("projectCreate"):
+    print("  Trying projectCreate without workspace arg...")
+    proj = gql(
+        'mutation { projectCreate(input: { name: "agentos-platform", defaultEnvironmentName: "production" }) {'
+        + PROJ_FRAGMENT + '} }',
+        soft=True
+    )
+    if proj and proj.get("projectCreate"):
+        print("  Created without workspace arg")
+
+if not proj or not proj.get("projectCreate"):
+    raise RuntimeError(
+        "projectCreate failed.\n"
+        "  ProjectCreateInput fields: " + str(pc_fields) + "\n"
+        "  projectCreate top-level args: " + str(pc_args)
+    )
 
 PROJECT_ID = proj["projectCreate"]["id"]
 ENV_ID = proj["projectCreate"]["environments"]["edges"][0]["node"]["id"]
