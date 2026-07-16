@@ -54,3 +54,18 @@ jobs:
           name: railway-deployment-info
           path: railway_deployment.txt
           if-no-files-found: warn
+
+      - name: Commit deployment info to repo
+        if: always()
+        run: |
+          if [ -f railway_deployment.txt ]; then
+            echo "=== DEPLOYMENT INFO ==="
+            cat railway_deployment.txt
+            echo "======================"
+            git config user.email "deploy@railway-bot"
+            git config user.name "Railway Deploy Bot"
+            cp railway_deployment.txt scripts/railway_deployment.txt
+            git add scripts/railway_deployment.txt
+            git diff --cached --quiet || git commit -m "chore: update railway deployment info [skip ci]"
+            git push origin claude/airtable-hyper-agent-research-et2uba || true
+          fi
