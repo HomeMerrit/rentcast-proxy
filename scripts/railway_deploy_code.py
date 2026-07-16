@@ -45,9 +45,16 @@ def gql(query, variables=None, soft=False):
 
 
 def run(cmd, cwd=None):
-    """Run a shell command, capture combined output into the log, return (ok, output)."""
+    """Run a shell command, capture combined output into the log, return (ok, output).
+
+    The Railway CLI expects an ACCOUNT/team token in RAILWAY_API_TOKEN (a project-scoped
+    token would go in RAILWAY_TOKEN). Our token is an account token that authenticates the
+    GraphQL API, so we must expose it as RAILWAY_API_TOKEN and clear RAILWAY_TOKEN, otherwise
+    the CLI treats it as an invalid project token and returns "Invalid RAILWAY_TOKEN".
+    """
     logline("\n  $ " + cmd + (("   (cwd=" + cwd + ")") if cwd else ""))
-    env = {**os.environ, "RAILWAY_TOKEN": TOKEN}
+    env = {k: v for k, v in os.environ.items() if k != "RAILWAY_TOKEN"}
+    env["RAILWAY_API_TOKEN"] = TOKEN
     try:
         r = subprocess.run(cmd, shell=True, text=True, cwd=cwd, env=env,
                            capture_output=True, timeout=900)
@@ -122,16 +129,16 @@ for name in ["backend", "celery", "celery-beat", "frontend"]:
         deployed[name] = "NO_SOURCE_DIR"
         continue
 
-    # Link the service non-interactively.
-    link_ok, _ = run("railway link --project " + PROJECT_ID + " --environment " + ENV_ID + " --service " + sid)
+    # Link the service non-interactively IN the source dir so .railway/config.json
+    # lands next to the code that `railway up` will upload.
+    link_ok, _ = run("railway link --project " + PROJECT_ID + " --environment " + ENV_ID + " --service " + sid, cwd=src)
     if not link_ok:
-        # Older/newer flag styles
-        run("railway link -p " + PROJECT_ID + " -e " + ENV_ID + " -s " + sid)
+        run("railway link -p " + PROJECT_ID + " -e " + ENV_ID + " -s " + sid, cwd=src)
 
-    # Upload + build (detached). Try service-scoped up first, then plain up (uses link).
-    up_ok, up_out = run("railway up --service " + sid + " --environment " + ENV_ID + " --detach", cwd=src)
+    # Upload + build (detached). Prefer the linked config; fall back to explicit service.
+    up_ok, up_out = run("railway up --detach", cwd=src)
     if not up_ok:
-        up_ok, up_out = run("railway up --detach", cwd=src)
+        up_ok, up_out = run("railway up --service " + sid + " --environment " + ENV_ID + " --detach", cwd=src)
     deployed[name] = "UP_OK" if up_ok else "UP_FAILED"
 
 # ---- Poll deployment status -------------------------------------------------
