@@ -1,0 +1,102 @@
+=== Load project services ===
+  Project: agentos-platform (311fa837-720a-4a33-9439-28e7c853bd7a)
+  Services: {
+  "celery-beat": "01aefb60-2429-47bc-85ca-da2b6b2f114e",
+  "frontend": "129956d5-6cf1-422f-9096-57d10d956837",
+  "celery": "1403ebc4-65e8-4137-91c3-4a6a0f31af46",
+  "backend": "a7402d3d-8436-4578-80ae-41e7bede5bb4",
+  "qdrant": "b3b21715-5351-44b6-bed7-811c5f854ac6"
+}
+
+=== Set celery start commands ===
+  celery: startCommand set
+  celery-beat: startCommand set
+
+=== Railway CLI diagnostics ===
+
+  $ railway --version
+    railway 5.26.2
+  [exit 0]
+
+  $ railway whoami
+    Unauthorized. Please check that your RAILWAY_TOKEN is valid and has access to the resource you're trying to use.
+  [exit 1]
+
+=== Deploy backend ===
+
+  $ railway link --project 311fa837-720a-4a33-9439-28e7c853bd7a --environment ef95ba5f-eb20-436b-aff4-948e751c199d --service a7402d3d-8436-4578-80ae-41e7bede5bb4
+    Unauthorized. Please check that your RAILWAY_TOKEN is valid and has access to the resource you're trying to use.
+  [exit 1]
+
+  $ railway link -p 311fa837-720a-4a33-9439-28e7c853bd7a -e ef95ba5f-eb20-436b-aff4-948e751c199d -s a7402d3d-8436-4578-80ae-41e7bede5bb4
+    Unauthorized. Please check that your RAILWAY_TOKEN is valid and has access to the resource you're trying to use.
+  [exit 1]
+
+  $ railway up --service a7402d3d-8436-4578-80ae-41e7bede5bb4 --environment ef95ba5f-eb20-436b-aff4-948e751c199d --detach   (cwd=/home/runner/work/rentcast-proxy/rentcast-proxy/agent-platform/backend)
+    Invalid RAILWAY_TOKEN. Please check that it is valid and has access to the resource you're trying to use.
+  [exit 1]
+
+  $ railway up --detach   (cwd=/home/runner/work/rentcast-proxy/rentcast-proxy/agent-platform/backend)
+    Invalid RAILWAY_TOKEN. Please check that it is valid and has access to the resource you're trying to use.
+  [exit 1]
+
+=== Deploy celery ===
+
+  $ railway link --project 311fa837-720a-4a33-9439-28e7c853bd7a --environment ef95ba5f-eb20-436b-aff4-948e751c199d --service 1403ebc4-65e8-4137-91c3-4a6a0f31af46
+    Unauthorized. Please check that your RAILWAY_TOKEN is valid and has access to the resource you're trying to use.
+  [exit 1]
+
+  $ railway link -p 311fa837-720a-4a33-9439-28e7c853bd7a -e ef95ba5f-eb20-436b-aff4-948e751c199d -s 1403ebc4-65e8-4137-91c3-4a6a0f31af46
+    Unauthorized. Please check that your RAILWAY_TOKEN is valid and has access to the resource you're trying to use.
+  [exit 1]
+
+  $ railway up --service 1403ebc4-65e8-4137-91c3-4a6a0f31af46 --environment ef95ba5f-eb20-436b-aff4-948e751c199d --detach   (cwd=/home/runner/work/rentcast-proxy/rentcast-proxy/agent-platform/backend)
+    Invalid RAILWAY_TOKEN. Please check that it is valid and has access to the resource you're trying to use.
+  [exit 1]
+
+  $ railway up --detach   (cwd=/home/runner/work/rentcast-proxy/rentcast-proxy/agent-platform/backend)
+    Invalid RAILWAY_TOKEN. Please check that it is valid and has access to the resource you're trying to use.
+  [exit 1]
+
+=== Deploy celery-beat ===
+
+  $ railway link --project 311fa837-720a-4a33-9439-28e7c853bd7a --environment ef95ba5f-eb20-436b-aff4-948e751c199d --service 01aefb60-2429-47bc-85ca-da2b6b2f114e
+    Unauthorized. Please check that your RAILWAY_TOKEN is valid and has access to the resource you're trying to use.
+  [exit 1]
+
+  $ railway link -p 311fa837-720a-4a33-9439-28e7c853bd7a -e ef95ba5f-eb20-436b-aff4-948e751c199d -s 01aefb60-2429-47bc-85ca-da2b6b2f114e
+    Unauthorized. Please check that your RAILWAY_TOKEN is valid and has access to the resource you're trying to use.
+  [exit 1]
+
+  $ railway up --service 01aefb60-2429-47bc-85ca-da2b6b2f114e --environment ef95ba5f-eb20-436b-aff4-948e751c199d --detach   (cwd=/home/runner/work/rentcast-proxy/rentcast-proxy/agent-platform/backend)
+    Invalid RAILWAY_TOKEN. Please check that it is valid and has access to the resource you're trying to use.
+  [exit 1]
+
+  $ railway up --detach   (cwd=/home/runner/work/rentcast-proxy/rentcast-proxy/agent-platform/backend)
+    Invalid RAILWAY_TOKEN. Please check that it is valid and has access to the resource you're trying to use.
+  [exit 1]
+
+=== Deploy frontend ===
+
+  $ railway link --project 311fa837-720a-4a33-9439-28e7c853bd7a --environment ef95ba5f-eb20-436b-aff4-948e751c199d --service 129956d5-6cf1-422f-9096-57d10d956837
+    Unauthorized. Please check that your RAILWAY_TOKEN is valid and has access to the resource you're trying to use.
+  [exit 1]
+
+  $ railway link -p 311fa837-720a-4a33-9439-28e7c853bd7a -e ef95ba5f-eb20-436b-aff4-948e751c199d -s 129956d5-6cf1-422f-9096-57d10d956837
+    Unauthorized. Please check that your RAILWAY_TOKEN is valid and has access to the resource you're trying to use.
+  [exit 1]
+
+  $ railway up --service 129956d5-6cf1-422f-9096-57d10d956837 --environment ef95ba5f-eb20-436b-aff4-948e751c199d --detach   (cwd=/home/runner/work/rentcast-proxy/rentcast-proxy/agent-platform/frontend)
+    Invalid RAILWAY_TOKEN. Please check that it is valid and has access to the resource you're trying to use.
+  [exit 1]
+
+  $ railway up --detach   (cwd=/home/runner/work/rentcast-proxy/rentcast-proxy/agent-platform/frontend)
+    Invalid RAILWAY_TOKEN. Please check that it is valid and has access to the resource you're trying to use.
+  [exit 1]
+
+=== Poll deployment status (30s) ===
+  celery-beat    NO_DEPLOYMENT
+  frontend       NO_DEPLOYMENT
+  celery         NO_DEPLOYMENT
+  backend        NO_DEPLOYMENT
+  qdrant         SUCCESS
