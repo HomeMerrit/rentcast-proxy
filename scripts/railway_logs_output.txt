@@ -1,9 +1,9 @@
 Services: {"celery-beat": "01aefb60-2429-47bc-85ca-da2b6b2f114e", "frontend": "129956d5-6cf1-422f-9096-57d10d956837", "celery": "1403ebc4-65e8-4137-91c3-4a6a0f31af46", "backend": "a7402d3d-8436-4578-80ae-41e7bede5bb4", "qdrant": "b3b21715-5351-44b6-bed7-811c5f854ac6"}
 
-########## backend : FAILED (deployment 0f1c3b4e-595a-483f-8805-34a7556d6342) ##########
+########## backend : FAILED (deployment de52b683-0b01-48a8-b371-3fbd7905d1cf) ##########
 ---- BUILD LOGS (backend) ----
-  scheduling build on Metal builder "builder-dmpfyc"
-  fetched snapshot sha256:3fc5042f27d769b6587eaff7be9e0a15f679d1cd5b96e6900f8e1d54fd73bbd1 (20 kB bytes)
+  scheduling build on Metal builder "builder-yeilvl"
+  fetched snapshot sha256:6bef7c07fe01337b6dad311eb31ae4bdacfbfa8ae883faa863ff4004ef875643 (21 kB bytes)
   fetching snapshot
   unpacking archive
   [internal] load build definition from Dockerfile
@@ -24,14 +24,15 @@ Services: {"celery-beat": "01aefb60-2429-47bc-85ca-da2b6b2f114e", "frontend": "1
   [3/7] RUN apt-get update && apt-get install -y --no-install-recommends     gcc libpq-dev curl     && rm -rf /var/lib/apt/lists/*
   [2/7] WORKDIR /app
   [1/7] FROM docker.io/library/python:3.12-slim@sha256:57cd7c3a7a273101a6485ba99423ee568157882804b1124b4dd04266317710de
-  [internal] load build context
   [1/7] FROM docker.io/library/python:3.12-slim@sha256:57cd7c3a7a273101a6485ba99423ee568157882804b1124b4dd04266317710de
+  [internal] load build context
   [internal] load build context
   [1/7] FROM docker.io/library/python:3.12-slim@sha256:57cd7c3a7a273101a6485ba99423ee568157882804b1124b4dd04266317710de
   [1/7] FROM docker.io/library/python:3.12-slim@sha256:57cd7c3a7a273101a6485ba99423ee568157882804b1124b4dd04266317710de
   [1/7] FROM docker.io/library/python:3.12-slim@sha256:57cd7c3a7a273101a6485ba99423ee568157882804b1124b4dd04266317710de
   [internal] load build context
   [2/7] WORKDIR /app
+  [3/7] RUN apt-get update && apt-get install -y --no-install-recommends     gcc libpq-dev curl     && rm -rf /var/lib/apt/lists/*
   [3/7] RUN apt-get update && apt-get install -y --no-install-recommends     gcc libpq-dev curl     && rm -rf /var/lib/apt/lists/*
   [4/7] COPY requirements.txt .
   [4/7] COPY requirements.txt .
@@ -72,9 +73,9 @@ Services: {"celery-beat": "01aefb60-2429-47bc-85ca-da2b6b2f114e", "frontend": "1
 
     Downloading celery-5.4.0-py3-none-any.whl.metadata (21 kB)
 
-  Collecting anthropic==0.40.0 (from -r requirements.txt (line 10))
+  Collecting anthropic<1,>=0.41.0 (from -r requirements.txt (line 10))
 
-    Downloading anthropic-0.40.0-py3-none-any.whl.metadata (23 kB)
+    Downloading anthropic-0.117.0-py3-none-any.whl.metadata (3.3 kB)
 
   Collecting langgraph==0.2.60 (from -r requirements.txt (line 11))
 
@@ -192,21 +193,254 @@ Services: {"celery-beat": "01aefb60-2429-47bc-85ca-da2b6b2f114e", "frontend": "1
 
     Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB)
 
-  Collecting anyio<5,>=3.5.0 (from anthropic==0.40.0->-r requirements.txt (line 10))
+  Collecting langgraph-checkpoint<3.0.0,>=2.0.4 (from langgraph==0.2.60->-r requirements.txt (line 11))
 
-    Downloading anyio-4.14.2-py3-none-any.whl.metadata (4.6 kB)
+    Downloading langgraph_checkpoint-2.1.2-py3-none-any.whl.metadata (4.2 kB)
 
-  Collecting distro<2,>=1.7.0 (from anthropic==0.40.0->-r requirements.txt (line 10))
+  Collecting langgraph-sdk<0.2.0,>=0.1.42 (from langgraph==0.2.60->-r requirements.txt (line 11))
 
-    Downloading distro-1.9.0-py3-none-any.whl.metadata (6.8 kB)
+    Downloading langgraph_sdk-0.1.74-py3-none-any.whl.metadata (1.5 kB)
 
-  Collecting jiter<1,>=0.4.0 (from anthropic==0.40.0->-r requirements.txt (line 10))
+  Collecting PyYAML>=5.3 (from langchain-core==0.3.25->-r requirements.txt (line 12))
 
-    Downloading jiter-0.16.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (5.2 kB)
+    Downloading pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
 
-  Collecting sniffio (from anthropic==0.40.0->-r requirements.txt (line 10))
+  Collecting jsonpatch<2.0,>=1.33 (from langchain-core==0.3.25->-r requirements.txt (line 12))
 
-    Downloading sniffio-1.3.1-py3-none-any.whl.metadata (3.9 kB)
+    Downloading jsonpatch-1.33-py2.py3-none-any.whl.metadata (3.0 kB)
+
+  Collecting langsmith<0.3,>=0.1.125 (from langchain-core==0.3.25->-r requirements.txt (line 12))
+
+    Downloading langsmith-0.2.11-py3-none-any.whl.metadata (14 kB)
+
+  Collecting packaging<25,>=23.2 (from langchain-core==0.3.25->-r requirements.txt (line 12))
+
+    Downloading packaging-24.2-py3-none-any.whl.metadata (3.2 kB)
+
+  Collecting tenacity!=8.4.0,<10.0.0,>=8.1.0 (from langchain-core==0.3.25->-r requirements.txt (line 12))
+
+    Downloading tenacity-9.1.4-py3-none-any.whl.metadata (1.2 kB)
+
+  Collecting defusedxml<0.8.0,>=0.7.1 (from langchain-anthropic==0.3.3->-r requirements.txt (line 13))
+
+    Downloading defusedxml-0.7.1-py2.py3-none-any.whl.metadata (32 kB)
+
+  INFO: pip is looking at multiple versions of langchain-anthropic to determine which version is compatible with other requirements. This could take a while.
+
+  ERROR: Cannot install -r requirements.txt (line 11), -r requirements.txt (line 13) and langchain-core==0.3.25 because these package versions have conflicting dependencies.
+
+  
+The conflict is caused by:
+    The user requested langchain-core==0.3.25
+    langgraph 0.2.60 depends on langchain-core!=0.3.0, !=0.3.1, !=0.3.10, !=0.3.11, !=0.3.12, !=0.3.13, !=0.3.14, !=0.3.15, !=0.3.16, !=0.3.17, !=0.3.18, !=0.3.19, !=0.3.2, !=0.3.20, !=0.3.21, !=0.3.22, !=0.3.3, !=0.3.4, !=0.3.5, !=0.3.6, !=0.3.7, !=0.3.8, !=0.3.9, <0.4.0 and >=0.2.43
+    langchain-anthropic 0.3.3 depends on langchain-core<0.4.0 and >=0.3.30
+
+To fix this you could try to:
+1. loosen the range of package versions you've specified
+2. remove package versions to allow pip to attempt to solve the dependency conflict
+
+
+  
+[notice] A new release of pip is available: 25.0.1 -> 26.1.2
+[notice] To update, run: pip install --upgrade pip
+
+  ERROR: ResolutionImpossible: for help visit https://pip.pypa.io/en/latest/topics/dependency-resolution/#dealing-with-dependency-conflicts
+
+  [5/7] RUN pip install --no-cache-dir -r requirements.txt
+  Build Failed: build daemon returned an error < failed to solve: process "/bin/sh -c pip install --no-cache-dir -r requirements.txt" did not complete successfully: exit code: 1 >
+  scheduling build on Metal builder "builder-dmpfyc"
+
+########## celery : FAILED (deployment 9d449c6a-c455-4ec2-a110-2fdb24b1d573) ##########
+---- BUILD LOGS (celery) ----
+  scheduling build on Metal builder "builder-avwtui"
+  fetched snapshot sha256:6bef7c07fe01337b6dad311eb31ae4bdacfbfa8ae883faa863ff4004ef875643 (21 kB bytes)
+  fetching snapshot
+  unpacking archive
+  [internal] load build definition from Dockerfile
+  [internal] load build definition from Dockerfile
+  [internal] load build definition from Dockerfile
+  [internal] load build definition from Dockerfile
+  [internal] load metadata for docker.io/library/python:3.12-slim
+  [internal] load metadata for docker.io/library/python:3.12-slim
+  [internal] load .dockerignore
+  [internal] load .dockerignore
+  [internal] load .dockerignore
+  [internal] load .dockerignore
+  [7/7] COPY . .
+  [6/7] RUN playwright install chromium --with-deps
+  [5/7] RUN pip install --no-cache-dir -r requirements.txt
+  [4/7] COPY requirements.txt .
+  [internal] load build context
+  [3/7] RUN apt-get update && apt-get install -y --no-install-recommends     gcc libpq-dev curl     && rm -rf /var/lib/apt/lists/*
+  [2/7] WORKDIR /app
+  [1/7] FROM docker.io/library/python:3.12-slim@sha256:57cd7c3a7a273101a6485ba99423ee568157882804b1124b4dd04266317710de
+  [1/7] FROM docker.io/library/python:3.12-slim@sha256:57cd7c3a7a273101a6485ba99423ee568157882804b1124b4dd04266317710de
+  [internal] load build context
+  [internal] load build context
+  [1/7] FROM docker.io/library/python:3.12-slim@sha256:57cd7c3a7a273101a6485ba99423ee568157882804b1124b4dd04266317710de
+  [1/7] FROM docker.io/library/python:3.12-slim@sha256:57cd7c3a7a273101a6485ba99423ee568157882804b1124b4dd04266317710de
+  [1/7] FROM docker.io/library/python:3.12-slim@sha256:57cd7c3a7a273101a6485ba99423ee568157882804b1124b4dd04266317710de
+  [internal] load build context
+  [2/7] WORKDIR /app
+  [3/7] RUN apt-get update && apt-get install -y --no-install-recommends     gcc libpq-dev curl     && rm -rf /var/lib/apt/lists/*
+  [4/7] COPY requirements.txt .
+  [4/7] COPY requirements.txt .
+  [5/7] RUN pip install --no-cache-dir -r requirements.txt
+  Collecting fastapi==0.115.5 (from -r requirements.txt (line 1))
+
+    Downloading fastapi-0.115.5-py3-none-any.whl.metadata (27 kB)
+
+  Collecting uvicorn==0.32.1 (from uvicorn[standard]==0.32.1->-r requirements.txt (line 2))
+
+    Downloading uvicorn-0.32.1-py3-none-any.whl.metadata (6.6 kB)
+
+  Collecting sqlalchemy==2.0.36 (from sqlalchemy[asyncio]==2.0.36->-r requirements.txt (line 3))
+
+    Downloading SQLAlchemy-2.0.36-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (9.7 kB)
+
+  Collecting asyncpg==0.30.0 (from -r requirements.txt (line 4))
+
+    Downloading asyncpg-0.30.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (5.0 kB)
+
+  Collecting alembic==1.14.0 (from -r requirements.txt (line 5))
+
+    Downloading alembic-1.14.0-py3-none-any.whl.metadata (7.4 kB)
+
+  Collecting pydantic==2.10.3 (from -r requirements.txt (line 6))
+
+    Downloading pydantic-2.10.3-py3-none-any.whl.metadata (172 kB)
+
+  Collecting pydantic-settings==2.6.1 (from -r requirements.txt (line 7))
+
+    Downloading pydantic_settings-2.6.1-py3-none-any.whl.metadata (3.5 kB)
+
+  Collecting redis==5.2.1 (from -r requirements.txt (line 8))
+
+    Downloading redis-5.2.1-py3-none-any.whl.metadata (9.1 kB)
+
+  Collecting celery==5.4.0 (from -r requirements.txt (line 9))
+
+    Downloading celery-5.4.0-py3-none-any.whl.metadata (21 kB)
+
+  Collecting anthropic<1,>=0.41.0 (from -r requirements.txt (line 10))
+
+    Downloading anthropic-0.117.0-py3-none-any.whl.metadata (3.3 kB)
+
+  Collecting langgraph==0.2.60 (from -r requirements.txt (line 11))
+
+    Downloading langgraph-0.2.60-py3-none-any.whl.metadata (15 kB)
+
+  Collecting langchain-core==0.3.25 (from -r requirements.txt (line 12))
+
+    Downloading langchain_core-0.3.25-py3-none-any.whl.metadata (6.3 kB)
+
+  Collecting langchain-anthropic==0.3.3 (from -r requirements.txt (line 13))
+
+    Downloading langchain_anthropic-0.3.3-py3-none-any.whl.metadata (2.3 kB)
+
+  Collecting httpx==0.28.1 (from -r requirements.txt (line 14))
+
+    Downloading httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)
+
+  Collecting python-multipart==0.0.18 (from -r requirements.txt (line 15))
+
+    Downloading python_multipart-0.0.18-py3-none-any.whl.metadata (1.8 kB)
+
+  Collecting python-dotenv==1.0.1 (from -r requirements.txt (line 16))
+
+    Downloading python_dotenv-1.0.1-py3-none-any.whl.metadata (23 kB)
+
+  Collecting qdrant-client>=1.12.0 (from qdrant-client[fastembed]>=1.12.0->-r requirements.txt (line 17))
+
+    Downloading qdrant_client-1.18.0-py3-none-any.whl.metadata (11 kB)
+
+  Collecting e2b-code-interpreter>=0.0.12 (from -r requirements.txt (line 18))
+
+    Downloading e2b_code_interpreter-2.8.1-py3-none-any.whl.metadata (2.5 kB)
+
+  Collecting browser-use>=0.1.7 (from -r requirements.txt (line 19))
+
+    Downloading browser_use-0.13.4-py3-none-any.whl.metadata (16 kB)
+
+  Collecting playwright>=1.44.0 (from -r requirements.txt (line 20))
+
+    Downloading playwright-1.61.0-py3-none-manylinux1_x86_64.whl.metadata (3.3 kB)
+
+  Collecting langchain-community>=0.3.0 (from -r requirements.txt (line 21))
+
+    Downloading langchain_community-0.4.2-py3-none-any.whl.metadata (3.4 kB)
+
+  Collecting langfuse>=2.0.0 (from -r requirements.txt (line 22))
+
+    Downloading langfuse-4.14.0-py3-none-any.whl.metadata (2.1 kB)
+
+  Collecting fastapi-limiter>=0.1.6 (from -r requirements.txt (line 23))
+
+    Downloading fastapi_limiter-0.2.0-py3-none-any.whl.metadata (5.4 kB)
+
+  Collecting starlette<0.42.0,>=0.40.0 (from fastapi==0.115.5->-r requirements.txt (line 1))
+
+    Downloading starlette-0.41.3-py3-none-any.whl.metadata (6.0 kB)
+
+  Collecting typing-extensions>=4.8.0 (from fastapi==0.115.5->-r requirements.txt (line 1))
+
+    Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+
+  Collecting click>=7.0 (from uvicorn==0.32.1->uvicorn[standard]==0.32.1->-r requirements.txt (line 2))
+
+    Downloading click-8.4.2-py3-none-any.whl.metadata (2.6 kB)
+
+  Collecting h11>=0.8 (from uvicorn==0.32.1->uvicorn[standard]==0.32.1->-r requirements.txt (line 2))
+
+    Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+
+  Collecting greenlet!=0.4.17 (from sqlalchemy==2.0.36->sqlalchemy[asyncio]==2.0.36->-r requirements.txt (line 3))
+
+    Downloading greenlet-3.5.3-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (3.8 kB)
+
+  Collecting Mako (from alembic==1.14.0->-r requirements.txt (line 5))
+
+    Downloading mako-1.3.12-py3-none-any.whl.metadata (2.9 kB)
+
+  Collecting annotated-types>=0.6.0 (from pydantic==2.10.3->-r requirements.txt (line 6))
+
+    Downloading annotated_types-0.7.0-py3-none-any.whl.metadata (15 kB)
+
+  Collecting pydantic-core==2.27.1 (from pydantic==2.10.3->-r requirements.txt (line 6))
+
+    Downloading pydantic_core-2.27.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.6 kB)
+
+  Collecting billiard<5.0,>=4.2.0 (from celery==5.4.0->-r requirements.txt (line 9))
+
+    Downloading billiard-4.2.4-py3-none-any.whl.metadata (4.8 kB)
+
+  Collecting kombu<6.0,>=5.3.4 (from celery==5.4.0->-r requirements.txt (line 9))
+
+    Downloading kombu-5.6.2-py3-none-any.whl.metadata (3.5 kB)
+
+  Collecting vine<6.0,>=5.1.0 (from celery==5.4.0->-r requirements.txt (line 9))
+
+    Downloading vine-5.1.0-py3-none-any.whl.metadata (2.7 kB)
+
+  Collecting click-didyoumean>=0.3.0 (from celery==5.4.0->-r requirements.txt (line 9))
+
+    Downloading click_didyoumean-0.3.1-py3-none-any.whl.metadata (3.9 kB)
+
+  Collecting click-repl>=0.2.0 (from celery==5.4.0->-r requirements.txt (line 9))
+
+    Downloading click_repl-0.3.0-py3-none-any.whl.metadata (3.6 kB)
+
+  Collecting click-plugins>=1.1.1 (from celery==5.4.0->-r requirements.txt (line 9))
+
+    Downloading click_plugins-1.1.1.2-py2.py3-none-any.whl.metadata (6.5 kB)
+
+  Collecting tzdata>=2022.7 (from celery==5.4.0->-r requirements.txt (line 9))
+
+    Downloading tzdata-2026.3-py2.py3-none-any.whl.metadata (1.4 kB)
+
+  Collecting python-dateutil>=2.8.2 (from celery==5.4.0->-r requirements.txt (line 9))
+
+    Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB)
 
   Collecting langgraph-checkpoint<3.0.0,>=2.0.4 (from langgraph==0.2.60->-r requirements.txt (line 11))
 
@@ -236,14 +470,19 @@ Services: {"celery-beat": "01aefb60-2429-47bc-85ca-da2b6b2f114e", "frontend": "1
 
     Downloading tenacity-9.1.4-py3-none-any.whl.metadata (1.2 kB)
 
+  Collecting defusedxml<0.8.0,>=0.7.1 (from langchain-anthropic==0.3.3->-r requirements.txt (line 13))
+
+    Downloading defusedxml-0.7.1-py2.py3-none-any.whl.metadata (32 kB)
+
   INFO: pip is looking at multiple versions of langchain-anthropic to determine which version is compatible with other requirements. This could take a while.
 
-  ERROR: Cannot install -r requirements.txt (line 13) and anthropic==0.40.0 because these package versions have conflicting dependencies.
+  ERROR: Cannot install -r requirements.txt (line 11), -r requirements.txt (line 13) and langchain-core==0.3.25 because these package versions have conflicting dependencies.
 
   
 The conflict is caused by:
-    The user requested anthropic==0.40.0
-    langchain-anthropic 0.3.3 depends on anthropic<1 and >=0.41.0
+    The user requested langchain-core==0.3.25
+    langgraph 0.2.60 depends on langchain-core!=0.3.0, !=0.3.1, !=0.3.10, !=0.3.11, !=0.3.12, !=0.3.13, !=0.3.14, !=0.3.15, !=0.3.16, !=0.3.17, !=0.3.18, !=0.3.19, !=0.3.2, !=0.3.20, !=0.3.21, !=0.3.22, !=0.3.3, !=0.3.4, !=0.3.5, !=0.3.6, !=0.3.7, !=0.3.8, !=0.3.9, <0.4.0 and >=0.2.43
+    langchain-anthropic 0.3.3 depends on langchain-core<0.4.0 and >=0.3.30
 
 To fix this you could try to:
 1. loosen the range of package versions you've specified
@@ -258,12 +497,12 @@ To fix this you could try to:
 
   [5/7] RUN pip install --no-cache-dir -r requirements.txt
   Build Failed: build daemon returned an error < failed to solve: process "/bin/sh -c pip install --no-cache-dir -r requirements.txt" did not complete successfully: exit code: 1 >
-  scheduling build on Metal builder "builder-dmpfyc"
+  scheduling build on Metal builder "builder-avwtui"
 
-########## celery : FAILED (deployment 6ed340f5-cd6b-453d-8109-fa48ed2e97ef) ##########
----- BUILD LOGS (celery) ----
-  scheduling build on Metal builder "builder-zteqqo"
-  fetched snapshot sha256:3fc5042f27d769b6587eaff7be9e0a15f679d1cd5b96e6900f8e1d54fd73bbd1 (20 kB bytes)
+########## celery-beat : FAILED (deployment 8ddf238f-b940-4c6f-8f7d-10e2b043bb5c) ##########
+---- BUILD LOGS (celery-beat) ----
+  scheduling build on Metal builder "builder-wkspkn"
+  fetched snapshot sha256:6bef7c07fe01337b6dad311eb31ae4bdacfbfa8ae883faa863ff4004ef875643 (21 kB bytes)
   fetching snapshot
   unpacking archive
   [internal] load build definition from Dockerfile
@@ -272,7 +511,6 @@ To fix this you could try to:
   [internal] load build definition from Dockerfile
   [internal] load metadata for docker.io/library/python:3.12-slim
   [internal] load metadata for docker.io/library/python:3.12-slim
-  [internal] load .dockerignore
   [internal] load .dockerignore
   [internal] load .dockerignore
   [internal] load .dockerignore
@@ -291,13 +529,12 @@ To fix this you could try to:
   [1/7] FROM docker.io/library/python:3.12-slim@sha256:57cd7c3a7a273101a6485ba99423ee568157882804b1124b4dd04266317710de
   [1/7] FROM docker.io/library/python:3.12-slim@sha256:57cd7c3a7a273101a6485ba99423ee568157882804b1124b4dd04266317710de
   [1/7] FROM docker.io/library/python:3.12-slim@sha256:57cd7c3a7a273101a6485ba99423ee568157882804b1124b4dd04266317710de
-  [1/7] FROM docker.io/library/python:3.12-slim@sha256:57cd7c3a7a273101a6485ba99423ee568157882804b1124b4dd04266317710de
-  [2/7] WORKDIR /app
-  [internal] load build context
   [2/7] WORKDIR /app
   [3/7] RUN apt-get update && apt-get install -y --no-install-recommends     gcc libpq-dev curl     && rm -rf /var/lib/apt/lists/*
+  [internal] load build context
   Hit:1 http://deb.debian.org/debian trixie InRelease
-Get:2 http://deb.debian.org/debian trixie-updates InRelease [47.3 kB]
+
+  Get:2 http://deb.debian.org/debian trixie-updates InRelease [47.3 kB]
 
   Get:3 http://deb.debian.org/debian-security trixie-security InRelease [43.4 kB]
 
@@ -307,7 +544,7 @@ Get:2 http://deb.debian.org/debian trixie-updates InRelease [47.3 kB]
 
   Get:6 http://deb.debian.org/debian-security trixie-security/main amd64 Packages [226 kB]
 
-  Fetched 9990 kB in 1s (11.7 MB/s)
+  Fetched 9990 kB in 1s (12.1 MB/s)
 Reading package lists...
   
   Reading package lists...
@@ -315,17 +552,17 @@ Reading package lists...
   Building dependency tree...
   
 Reading state information...
-
+  
   The following additional packages will be installed:
   binutils binutils-common binutils-x86-64-linux-gnu cpp cpp-14
-
-    cpp-14-x86-64-linux-gnu cpp-x86-64-linux-gnu gcc-14 gcc-14-x86-64-linux-gnu
+  cpp-14-x86-64-linux-gnu cpp-x86-64-linux-gnu gcc-14 gcc-14-x86-64-linux-gnu
 
     gcc-x86-64-linux-gnu libasan8 libatomic1 libbinutils libbrotli1 libcc1-0
 
     libcom-err2 libctf-nobfd0 libctf0 libcurl4t64 libgcc-14-dev libgnutls30t64
   libgomp1 libgprofng0 libgssapi-krb5-2 libhwasan0 libidn2-0 libisl23 libitm1
-  libjansson4 libk5crypto3 libkeyutils1 libkrb5-3 libkrb5support0 libldap2
+
+    libjansson4 libk5crypto3 libkeyutils1 libkrb5-3 libkrb5support0 libldap2
 
     liblsan0 libmpc3 libmpfr6 libnghttp2-14 libnghttp3-9 libp11-kit0 libpq5
 
@@ -486,923 +723,7 @@ debconf: falling back to frontend: Teletype
 debconf: (This frontend requires a controlling tty.)
 debconf: falling back to frontend: Noninteractive
 
-  Fetched 60.1 MB in 0s (214 MB/s)
-
-  Selecting previously unselected package libsframe1:amd64.
-(Reading database ... 
-  (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%
-  (Reading database ... 75%
-  (Reading database ... 80%
-  (Reading database ... 85%
-  (Reading database ... 90%
-  (Reading database ... 95%
-  (Reading database ... 100%(Reading database ... 5645 files and directories currently installed.)
-
-  Preparing to unpack .../00-libsframe1_2.44-3_amd64.deb ...
-
-  Unpacking libsframe1:amd64 (2.44-3) ...
-
-  Selecting previously unselected package binutils-common:amd64.
-
-  Preparing to unpack .../01-binutils-common_2.44-3_amd64.deb ...
-
-  Unpacking binutils-common:amd64 (2.44-3) ...
-
-  Selecting previously unselected package libbinutils:amd64.
-
-  Preparing to unpack .../02-libbinutils_2.44-3_amd64.deb ...
-
-  Unpacking libbinutils:amd64 (2.44-3) ...
-
-  Selecting previously unselected package libgprofng0:amd64.
-
-  Preparing to unpack .../03-libgprofng0_2.44-3_amd64.deb ...
-
-  Unpacking libgprofng0:amd64 (2.44-3) ...
-
-  Selecting previously unselected package libctf-nobfd0:amd64.
-
-  Preparing to unpack .../04-libctf-nobfd0_2.44-3_amd64.deb ...
-
-  Unpacking libctf-nobfd0:amd64 (2.44-3) ...
-
-  Selecting previously unselected package libctf0:amd64.
-
-  Preparing to unpack .../05-libctf0_2.44-3_amd64.deb ...
-
-  Unpacking libctf0:amd64 (2.44-3) ...
-
-  Selecting previously unselected package libjansson4:amd64.
-
-  Preparing to unpack .../06-libjansson4_2.14-2+b3_amd64.deb ...
-
-  Unpacking libjansson4:amd64 (2.14-2+b3) ...
-
-  Selecting previously unselected package binutils-x86-64-linux-gnu.
-
-  Preparing to unpack .../07-binutils-x86-64-linux-gnu_2.44-3_amd64.deb ...
-
-  Unpacking binutils-x86-64-linux-gnu (2.44-3) ...
-
-  Selecting previously unselected package binutils.
-
-  Preparing to unpack .../08-binutils_2.44-3_amd64.deb ...
-
-  Unpacking binutils (2.44-3) ...
-
-  Selecting previously unselected package libisl23:amd64.
-
-  Preparing to unpack .../09-libisl23_0.27-1_amd64.deb ...
-
-  Unpacking libisl23:amd64 (0.27-1) ...
-
-  Selecting previously unselected package libmpfr6:amd64.
-
-  Preparing to unpack .../10-libmpfr6_4.2.2-1_amd64.deb ...
-
-  Unpacking libmpfr6:amd64 (4.2.2-1) ...
-
-  Selecting previously unselected package libmpc3:amd64.
-
-  Preparing to unpack .../11-libmpc3_1.3.1-1+b3_amd64.deb ...
-
-  Unpacking libmpc3:amd64 (1.3.1-1+b3) ...
-
-  Selecting previously unselected package cpp-14-x86-64-linux-gnu.
-
-  Preparing to unpack .../12-cpp-14-x86-64-linux-gnu_14.2.0-19_amd64.deb ...
-
-  Unpacking cpp-14-x86-64-linux-gnu (14.2.0-19) ...
-
-  Selecting previously unselected package cpp-14.
-
-  Preparing to unpack .../13-cpp-14_14.2.0-19_amd64.deb ...
-
-  Unpacking cpp-14 (14.2.0-19) ...
-
-  Selecting previously unselected package cpp-x86-64-linux-gnu.
-
-  Preparing to unpack .../14-cpp-x86-64-linux-gnu_4%3a14.2.0-1_amd64.deb ...
-
-  Unpacking cpp-x86-64-linux-gnu (4:14.2.0-1) ...
-
-  Selecting previously unselected package cpp.
-
-  Preparing to unpack .../15-cpp_4%3a14.2.0-1_amd64.deb ...
-
-  Unpacking cpp (4:14.2.0-1) ...
-
-  Selecting previously unselected package libbrotli1:amd64.
-
-  Preparing to unpack .../16-libbrotli1_1.1.0-2+b7_amd64.deb ...
-
-  Unpacking libbrotli1:amd64 (1.1.0-2+b7) ...
-
-  Selecting previously unselected package libkrb5support0:amd64.
-
-  Preparing to unpack .../17-libkrb5support0_1.21.3-5+deb13u1_amd64.deb ...
-
-  Unpacking libkrb5support0:amd64 (1.21.3-5+deb13u1) ...
-
-  Selecting previously unselected package libcom-err2:amd64.
-
-  Preparing to unpack .../18-libcom-err2_1.47.2-3+b11_amd64.deb ...
-
-  Unpacking libcom-err2:amd64 (1.47.2-3+b11) ...
-
-  Selecting previously unselected package libk5crypto3:amd64.
-
-  Preparing to unpack .../19-libk5crypto3_1.21.3-5+deb13u1_amd64.deb ...
-
-  Unpacking libk5crypto3:amd64 (1.21.3-5+deb13u1) ...
-
-  Selecting previously unselected package libkeyutils1:amd64.
-
-  Preparing to unpack .../20-libkeyutils1_1.6.3-6_amd64.deb ...
-
-  Unpacking libkeyutils1:amd64 (1.6.3-6) ...
-
-  Selecting previously unselected package libkrb5-3:amd64.
-
-  Preparing to unpack .../21-libkrb5-3_1.21.3-5+deb13u1_amd64.deb ...
-
-  Unpacking libkrb5-3:amd64 (1.21.3-5+deb13u1) ...
-
-  Selecting previously unselected package libgssapi-krb5-2:amd64.
-
-  Preparing to unpack .../22-libgssapi-krb5-2_1.21.3-5+deb13u1_amd64.deb ...
-
-  Unpacking libgssapi-krb5-2:amd64 (1.21.3-5+deb13u1) ...
-
-  Selecting previously unselected package libunistring5:amd64.
-
-  Preparing to unpack .../23-libunistring5_1.3-2_amd64.deb ...
-
-  Unpacking libunistring5:amd64 (1.3-2) ...
-
-  Selecting previously unselected package libidn2-0:amd64.
-
-  Preparing to unpack .../24-libidn2-0_2.3.8-2_amd64.deb ...
-
-  Unpacking libidn2-0:amd64 (2.3.8-2) ...
-
-  Selecting previously unselected package libsasl2-modules-db:amd64.
-
-  Preparing to unpack .../25-libsasl2-modules-db_2.1.28+dfsg1-9_amd64.deb ...
-
-  Unpacking libsasl2-modules-db:amd64 (2.1.28+dfsg1-9) ...
-
-  Selecting previously unselected package libsasl2-2:amd64.
-
-  Preparing to unpack .../26-libsasl2-2_2.1.28+dfsg1-9_amd64.deb ...
-
-  Unpacking libsasl2-2:amd64 (2.1.28+dfsg1-9) ...
-
-  Selecting previously unselected package libldap2:amd64.
-
-  Preparing to unpack .../27-libldap2_2.6.10+dfsg-1_amd64.deb ...
-
-  Unpacking libldap2:amd64 (2.6.10+dfsg-1) ...
-
-  Selecting previously unselected package libnghttp2-14:amd64.
-
-  Preparing to unpack .../28-libnghttp2-14_1.64.0-1.1+deb13u1_amd64.deb ...
-
-  Unpacking libnghttp2-14:amd64 (1.64.0-1.1+deb13u1) ...
-
-  Selecting previously unselected package libnghttp3-9:amd64.
-
-  Preparing to unpack .../29-libnghttp3-9_1.8.0-1_amd64.deb ...
-
-  Unpacking libnghttp3-9:amd64 (1.8.0-1) ...
-
-  Selecting previously unselected package libpsl5t64:amd64.
-
-  Preparing to unpack .../30-libpsl5t64_0.21.2-1.1+b1_amd64.deb ...
-
-  Unpacking libpsl5t64:amd64 (0.21.2-1.1+b1) ...
-
-  Selecting previously unselected package libp11-kit0:amd64.
-
-  Preparing to unpack .../31-libp11-kit0_0.25.5-3_amd64.deb ...
-
-  Unpacking libp11-kit0:amd64 (0.25.5-3) ...
-
-  Selecting previously unselected package libtasn1-6:amd64.
-
-  Preparing to unpack .../32-libtasn1-6_4.20.0-2+deb13u1_amd64.deb ...
-
-  Unpacking libtasn1-6:amd64 (4.20.0-2+deb13u1) ...
-
-  Selecting previously unselected package libgnutls30t64:amd64.
-
-  Preparing to unpack .../33-libgnutls30t64_3.8.9-3+deb13u4_amd64.deb ...
-
-  Unpacking libgnutls30t64:amd64 (3.8.9-3+deb13u4) ...
-
-  Selecting previously unselected package librtmp1:amd64.
-
-  Preparing to unpack .../34-librtmp1_2.4+20151223.gitfa8646d.1-2+b5_amd64.deb ...
-
-  Unpacking librtmp1:amd64 (2.4+20151223.gitfa8646d.1-2+b5) ...
-
-  Selecting previously unselected package libssh2-1t64:amd64.
-
-  Preparing to unpack .../35-libssh2-1t64_1.11.1-1+deb13u1_amd64.deb ...
-
-  Unpacking libssh2-1t64:amd64 (1.11.1-1+deb13u1) ...
-
-  Selecting previously unselected package libcurl4t64:amd64.
-
-  Preparing to unpack .../36-libcurl4t64_8.14.1-2+deb13u4_amd64.deb ...
-
-  Unpacking libcurl4t64:amd64 (8.14.1-2+deb13u4) ...
-
-  Selecting previously unselected package curl.
-
-  Preparing to unpack .../37-curl_8.14.1-2+deb13u4_amd64.deb ...
-
-  Unpacking curl (8.14.1-2+deb13u4) ...
-
-  Selecting previously unselected package libcc1-0:amd64.
-
-  Preparing to unpack .../38-libcc1-0_14.2.0-19_amd64.deb ...
-
-  Unpacking libcc1-0:amd64 (14.2.0-19) ...
-
-  Selecting previously unselected package libgomp1:amd64.
-
-  Preparing to unpack .../39-libgomp1_14.2.0-19_amd64.deb ...
-
-  Unpacking libgomp1:amd64 (14.2.0-19) ...
-
-  Selecting previously unselected package libitm1:amd64.
-
-  Preparing to unpack .../40-libitm1_14.2.0-19_amd64.deb ...
-
-  Unpacking libitm1:amd64 (14.2.0-19) ...
-
-  Selecting previously unselected package libatomic1:amd64.
-
-  Preparing to unpack .../41-libatomic1_14.2.0-19_amd64.deb ...
-
-  Unpacking libatomic1:amd64 (14.2.0-19) ...
-
-  Selecting previously unselected package libasan8:amd64.
-
-  Preparing to unpack .../42-libasan8_14.2.0-19_amd64.deb ...
-
-  Unpacking libasan8:amd64 (14.2.0-19) ...
-
-  Selecting previously unselected package liblsan0:amd64.
-
-  Preparing to unpack .../43-liblsan0_14.2.0-19_amd64.deb ...
-
-  Unpacking liblsan0:amd64 (14.2.0-19) ...
-
-  Selecting previously unselected package libtsan2:amd64.
-
-  Preparing to unpack .../44-libtsan2_14.2.0-19_amd64.deb ...
-
-  Unpacking libtsan2:amd64 (14.2.0-19) ...
-
-  Selecting previously unselected package libubsan1:amd64.
-
-  Preparing to unpack .../45-libubsan1_14.2.0-19_amd64.deb ...
-
-  Unpacking libubsan1:amd64 (14.2.0-19) ...
-
-  Selecting previously unselected package libhwasan0:amd64.
-
-  Preparing to unpack .../46-libhwasan0_14.2.0-19_amd64.deb ...
-
-  Unpacking libhwasan0:amd64 (14.2.0-19) ...
-
-  Selecting previously unselected package libquadmath0:amd64.
-
-  Preparing to unpack .../47-libquadmath0_14.2.0-19_amd64.deb ...
-
-  Unpacking libquadmath0:amd64 (14.2.0-19) ...
-
-  scheduling build on Metal builder "builder-avwtui"
-  Selecting previously unselected package libgcc-14-dev:amd64.
-Preparing to unpack .../48-libgcc-14-dev_14.2.0-19_amd64.deb ...
-
-  Unpacking libgcc-14-dev:amd64 (14.2.0-19) ...
-
-  Selecting previously unselected package gcc-14-x86-64-linux-gnu.
-
-  Preparing to unpack .../49-gcc-14-x86-64-linux-gnu_14.2.0-19_amd64.deb ...
-
-  Unpacking gcc-14-x86-64-linux-gnu (14.2.0-19) ...
-
-  Selecting previously unselected package gcc-14.
-
-  Preparing to unpack .../50-gcc-14_14.2.0-19_amd64.deb ...
-
-  Unpacking gcc-14 (14.2.0-19) ...
-
-  Selecting previously unselected package gcc-x86-64-linux-gnu.
-
-  Preparing to unpack .../51-gcc-x86-64-linux-gnu_4%3a14.2.0-1_amd64.deb ...
-
-  Unpacking gcc-x86-64-linux-gnu (4:14.2.0-1) ...
-
-  Selecting previously unselected package gcc.
-
-  Preparing to unpack .../52-gcc_4%3a14.2.0-1_amd64.deb ...
-
-  Unpacking gcc (4:14.2.0-1) ...
-
-  Selecting previously unselected package libpq5:amd64.
-
-  Preparing to unpack .../53-libpq5_17.10-0+deb13u1_amd64.deb ...
-
-  Unpacking libpq5:amd64 (17.10-0+deb13u1) ...
-
-  Selecting previously unselected package libssl-dev:amd64.
-
-  Preparing to unpack .../54-libssl-dev_3.5.6-1~deb13u2_amd64.deb ...
-
-  Unpacking libssl-dev:amd64 (3.5.6-1~deb13u2) ...
-
-  Selecting previously unselected package libpq-dev.
-
-  Preparing to unpack .../55-libpq-dev_17.10-0+deb13u1_amd64.deb ...
-
-  Unpacking libpq-dev (17.10-0+deb13u1) ...
-
-  Setting up libkeyutils1:amd64 (1.6.3-6) ...
-
-  Setting up libbrotli1:amd64 (1.1.0-2+b7) ...
-
-  Setting up binutils-common:amd64 (2.44-3) ...
-
-  Setting up libnghttp2-14:amd64 (1.64.0-1.1+deb13u1) ...
-
-  Setting up libctf-nobfd0:amd64 (2.44-3) ...
-
-  Setting up libcom-err2:amd64 (1.47.2-3+b11) ...
-
-  Setting up libgomp1:amd64 (14.2.0-19) ...
-
-  Setting up libsframe1:amd64 (2.44-3) ...
-
-  Setting up libjansson4:amd64 (2.14-2+b3) ...
-
-  Setting up libkrb5support0:amd64 (1.21.3-5+deb13u1) ...
-
-  Setting up libsasl2-modules-db:amd64 (2.1.28+dfsg1-9) ...
-
-  Setting up libmpfr6:amd64 (4.2.2-1) ...
-
-  Setting up libquadmath0:amd64 (14.2.0-19) ...
-
-  Setting up libp11-kit0:amd64 (0.25.5-3) ...
-
-  Setting up libunistring5:amd64 (1.3-2) ...
-
-  Setting up libssl-dev:amd64 (3.5.6-1~deb13u2) ...
-
-  Setting up libmpc3:amd64 (1.3.1-1+b3) ...
-
-  Setting up libatomic1:amd64 (14.2.0-19) ...
-
-  Setting up libk5crypto3:amd64 (1.21.3-5+deb13u1) ...
-
-  Setting up libsasl2-2:amd64 (2.1.28+dfsg1-9) ...
-
-  Setting up libnghttp3-9:amd64 (1.8.0-1) ...
-
-  Setting up libubsan1:amd64 (14.2.0-19) ...
-
-  Setting up libhwasan0:amd64 (14.2.0-19) ...
-
-  Setting up libasan8:amd64 (14.2.0-19) ...
-
-  Setting up libtasn1-6:amd64 (4.20.0-2+deb13u1) ...
-
-  Setting up libkrb5-3:amd64 (1.21.3-5+deb13u1) ...
-
-  Setting up libssh2-1t64:amd64 (1.11.1-1+deb13u1) ...
-
-  Setting up libtsan2:amd64 (14.2.0-19) ...
-
-  Setting up libbinutils:amd64 (2.44-3) ...
-
-  Setting up libisl23:amd64 (0.27-1) ...
-
-  Setting up libcc1-0:amd64 (14.2.0-19) ...
-
-  Setting up libldap2:amd64 (2.6.10+dfsg-1) ...
-
-  Setting up liblsan0:amd64 (14.2.0-19) ...
-
-  Setting up libitm1:amd64 (14.2.0-19) ...
-
-  Setting up libctf0:amd64 (2.44-3) ...
-
-  Setting up libidn2-0:amd64 (2.3.8-2) ...
-
-  Setting up libgprofng0:amd64 (2.44-3) ...
-
-  Setting up libgssapi-krb5-2:amd64 (1.21.3-5+deb13u1) ...
-
-  Setting up cpp-14-x86-64-linux-gnu (14.2.0-19) ...
-
-  Setting up cpp-14 (14.2.0-19) ...
-
-  Setting up libgcc-14-dev:amd64 (14.2.0-19) ...
-
-  Setting up binutils-x86-64-linux-gnu (2.44-3) ...
-
-  Setting up cpp-x86-64-linux-gnu (4:14.2.0-1) ...
-
-  Setting up libgnutls30t64:amd64 (3.8.9-3+deb13u4) ...
-
-  Setting up libpsl5t64:amd64 (0.21.2-1.1+b1) ...
-
-  Setting up libpq5:amd64 (17.10-0+deb13u1) ...
-
-  Setting up libpq-dev (17.10-0+deb13u1) ...
-
-  Setting up binutils (2.44-3) ...
-
-  Setting up librtmp1:amd64 (2.4+20151223.gitfa8646d.1-2+b5) ...
-
-  Setting up cpp (4:14.2.0-1) ...
-
-  Setting up gcc-14-x86-64-linux-gnu (14.2.0-19) ...
-
-  Setting up gcc-x86-64-linux-gnu (4:14.2.0-1) ...
-
-  Setting up libcurl4t64:amd64 (8.14.1-2+deb13u4) ...
-
-  Setting up gcc-14 (14.2.0-19) ...
-
-  Setting up curl (8.14.1-2+deb13u4) ...
-
-  Setting up gcc (4:14.2.0-1) ...
-
-  Processing triggers for libc-bin (2.41-12+deb13u3) ...
-
-  [3/7] RUN apt-get update && apt-get install -y --no-install-recommends     gcc libpq-dev curl     && rm -rf /var/lib/apt/lists/*
-  [4/7] COPY requirements.txt .
-  [4/7] COPY requirements.txt .
-  [5/7] RUN pip install --no-cache-dir -r requirements.txt
-  Collecting fastapi==0.115.5 (from -r requirements.txt (line 1))
-
-    Downloading fastapi-0.115.5-py3-none-any.whl.metadata (27 kB)
-
-  Collecting uvicorn==0.32.1 (from uvicorn[standard]==0.32.1->-r requirements.txt (line 2))
-
-    Downloading uvicorn-0.32.1-py3-none-any.whl.metadata (6.6 kB)
-
-  Collecting sqlalchemy==2.0.36 (from sqlalchemy[asyncio]==2.0.36->-r requirements.txt (line 3))
-
-    Downloading SQLAlchemy-2.0.36-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (9.7 kB)
-
-  Collecting asyncpg==0.30.0 (from -r requirements.txt (line 4))
-
-    Downloading asyncpg-0.30.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (5.0 kB)
-
-  Collecting alembic==1.14.0 (from -r requirements.txt (line 5))
-
-    Downloading alembic-1.14.0-py3-none-any.whl.metadata (7.4 kB)
-
-  Collecting pydantic==2.10.3 (from -r requirements.txt (line 6))
-
-    Downloading pydantic-2.10.3-py3-none-any.whl.metadata (172 kB)
-
-  Collecting pydantic-settings==2.6.1 (from -r requirements.txt (line 7))
-
-    Downloading pydantic_settings-2.6.1-py3-none-any.whl.metadata (3.5 kB)
-
-  Collecting redis==5.2.1 (from -r requirements.txt (line 8))
-
-    Downloading redis-5.2.1-py3-none-any.whl.metadata (9.1 kB)
-
-  Collecting celery==5.4.0 (from -r requirements.txt (line 9))
-
-    Downloading celery-5.4.0-py3-none-any.whl.metadata (21 kB)
-
-  Collecting anthropic==0.40.0 (from -r requirements.txt (line 10))
-
-    Downloading anthropic-0.40.0-py3-none-any.whl.metadata (23 kB)
-
-  Collecting langgraph==0.2.60 (from -r requirements.txt (line 11))
-
-    Downloading langgraph-0.2.60-py3-none-any.whl.metadata (15 kB)
-
-  Collecting langchain-core==0.3.25 (from -r requirements.txt (line 12))
-
-    Downloading langchain_core-0.3.25-py3-none-any.whl.metadata (6.3 kB)
-
-  Collecting langchain-anthropic==0.3.3 (from -r requirements.txt (line 13))
-
-    Downloading langchain_anthropic-0.3.3-py3-none-any.whl.metadata (2.3 kB)
-
-  Collecting httpx==0.28.1 (from -r requirements.txt (line 14))
-
-    Downloading httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)
-
-  Collecting python-multipart==0.0.18 (from -r requirements.txt (line 15))
-
-    Downloading python_multipart-0.0.18-py3-none-any.whl.metadata (1.8 kB)
-
-  Collecting python-dotenv==1.0.1 (from -r requirements.txt (line 16))
-
-    Downloading python_dotenv-1.0.1-py3-none-any.whl.metadata (23 kB)
-
-  Collecting qdrant-client>=1.12.0 (from qdrant-client[fastembed]>=1.12.0->-r requirements.txt (line 17))
-
-    Downloading qdrant_client-1.18.0-py3-none-any.whl.metadata (11 kB)
-
-  Collecting e2b-code-interpreter>=0.0.12 (from -r requirements.txt (line 18))
-
-    Downloading e2b_code_interpreter-2.8.1-py3-none-any.whl.metadata (2.5 kB)
-
-  Collecting browser-use>=0.1.7 (from -r requirements.txt (line 19))
-
-    Downloading browser_use-0.13.4-py3-none-any.whl.metadata (16 kB)
-
-  Collecting playwright>=1.44.0 (from -r requirements.txt (line 20))
-
-    Downloading playwright-1.61.0-py3-none-manylinux1_x86_64.whl.metadata (3.3 kB)
-
-  Collecting langchain-community>=0.3.0 (from -r requirements.txt (line 21))
-
-    Downloading langchain_community-0.4.2-py3-none-any.whl.metadata (3.4 kB)
-
-  Collecting langfuse>=2.0.0 (from -r requirements.txt (line 22))
-
-    Downloading langfuse-4.14.0-py3-none-any.whl.metadata (2.1 kB)
-
-  Collecting fastapi-limiter>=0.1.6 (from -r requirements.txt (line 23))
-
-    Downloading fastapi_limiter-0.2.0-py3-none-any.whl.metadata (5.4 kB)
-
-  Collecting starlette<0.42.0,>=0.40.0 (from fastapi==0.115.5->-r requirements.txt (line 1))
-
-    Downloading starlette-0.41.3-py3-none-any.whl.metadata (6.0 kB)
-
-  Collecting typing-extensions>=4.8.0 (from fastapi==0.115.5->-r requirements.txt (line 1))
-
-    Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
-
-  Collecting click>=7.0 (from uvicorn==0.32.1->uvicorn[standard]==0.32.1->-r requirements.txt (line 2))
-
-    Downloading click-8.4.2-py3-none-any.whl.metadata (2.6 kB)
-
-  Collecting h11>=0.8 (from uvicorn==0.32.1->uvicorn[standard]==0.32.1->-r requirements.txt (line 2))
-
-    Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
-
-  Collecting greenlet!=0.4.17 (from sqlalchemy==2.0.36->sqlalchemy[asyncio]==2.0.36->-r requirements.txt (line 3))
-
-    Downloading greenlet-3.5.3-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (3.8 kB)
-
-  Collecting Mako (from alembic==1.14.0->-r requirements.txt (line 5))
-
-    Downloading mako-1.3.12-py3-none-any.whl.metadata (2.9 kB)
-
-  Collecting annotated-types>=0.6.0 (from pydantic==2.10.3->-r requirements.txt (line 6))
-
-    Downloading annotated_types-0.7.0-py3-none-any.whl.metadata (15 kB)
-
-  Collecting pydantic-core==2.27.1 (from pydantic==2.10.3->-r requirements.txt (line 6))
-
-    Downloading pydantic_core-2.27.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.6 kB)
-
-  Collecting billiard<5.0,>=4.2.0 (from celery==5.4.0->-r requirements.txt (line 9))
-
-    Downloading billiard-4.2.4-py3-none-any.whl.metadata (4.8 kB)
-
-  Collecting kombu<6.0,>=5.3.4 (from celery==5.4.0->-r requirements.txt (line 9))
-
-    Downloading kombu-5.6.2-py3-none-any.whl.metadata (3.5 kB)
-
-  Collecting vine<6.0,>=5.1.0 (from celery==5.4.0->-r requirements.txt (line 9))
-
-    Downloading vine-5.1.0-py3-none-any.whl.metadata (2.7 kB)
-
-  Collecting click-didyoumean>=0.3.0 (from celery==5.4.0->-r requirements.txt (line 9))
-
-    Downloading click_didyoumean-0.3.1-py3-none-any.whl.metadata (3.9 kB)
-
-  Collecting click-repl>=0.2.0 (from celery==5.4.0->-r requirements.txt (line 9))
-
-    Downloading click_repl-0.3.0-py3-none-any.whl.metadata (3.6 kB)
-
-  Collecting click-plugins>=1.1.1 (from celery==5.4.0->-r requirements.txt (line 9))
-
-    Downloading click_plugins-1.1.1.2-py2.py3-none-any.whl.metadata (6.5 kB)
-
-  Collecting tzdata>=2022.7 (from celery==5.4.0->-r requirements.txt (line 9))
-
-    Downloading tzdata-2026.3-py2.py3-none-any.whl.metadata (1.4 kB)
-
-  Collecting python-dateutil>=2.8.2 (from celery==5.4.0->-r requirements.txt (line 9))
-
-    Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB)
-
-  Collecting anyio<5,>=3.5.0 (from anthropic==0.40.0->-r requirements.txt (line 10))
-
-    Downloading anyio-4.14.2-py3-none-any.whl.metadata (4.6 kB)
-
-  Collecting distro<2,>=1.7.0 (from anthropic==0.40.0->-r requirements.txt (line 10))
-
-    Downloading distro-1.9.0-py3-none-any.whl.metadata (6.8 kB)
-
-  Collecting jiter<1,>=0.4.0 (from anthropic==0.40.0->-r requirements.txt (line 10))
-
-    Downloading jiter-0.16.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (5.2 kB)
-
-  Collecting sniffio (from anthropic==0.40.0->-r requirements.txt (line 10))
-
-    Downloading sniffio-1.3.1-py3-none-any.whl.metadata (3.9 kB)
-
-  Collecting langgraph-checkpoint<3.0.0,>=2.0.4 (from langgraph==0.2.60->-r requirements.txt (line 11))
-
-    Downloading langgraph_checkpoint-2.1.2-py3-none-any.whl.metadata (4.2 kB)
-
-  Collecting langgraph-sdk<0.2.0,>=0.1.42 (from langgraph==0.2.60->-r requirements.txt (line 11))
-
-    Downloading langgraph_sdk-0.1.74-py3-none-any.whl.metadata (1.5 kB)
-
-  Collecting PyYAML>=5.3 (from langchain-core==0.3.25->-r requirements.txt (line 12))
-
-    Downloading pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
-
-  Collecting jsonpatch<2.0,>=1.33 (from langchain-core==0.3.25->-r requirements.txt (line 12))
-
-    Downloading jsonpatch-1.33-py2.py3-none-any.whl.metadata (3.0 kB)
-
-  Collecting langsmith<0.3,>=0.1.125 (from langchain-core==0.3.25->-r requirements.txt (line 12))
-
-    Downloading langsmith-0.2.11-py3-none-any.whl.metadata (14 kB)
-
-  Collecting packaging<25,>=23.2 (from langchain-core==0.3.25->-r requirements.txt (line 12))
-
-    Downloading packaging-24.2-py3-none-any.whl.metadata (3.2 kB)
-
-  Collecting tenacity!=8.4.0,<10.0.0,>=8.1.0 (from langchain-core==0.3.25->-r requirements.txt (line 12))
-
-    Downloading tenacity-9.1.4-py3-none-any.whl.metadata (1.2 kB)
-
-  INFO: pip is looking at multiple versions of langchain-anthropic to determine which version is compatible with other requirements. This could take a while.
-
-  ERROR: Cannot install -r requirements.txt (line 13) and anthropic==0.40.0 because these package versions have conflicting dependencies.
-
-  
-The conflict is caused by:
-    The user requested anthropic==0.40.0
-    langchain-anthropic 0.3.3 depends on anthropic<1 and >=0.41.0
-
-To fix this you could try to:
-1. loosen the range of package versions you've specified
-2. remove package versions to allow pip to attempt to solve the dependency conflict
-
-
-  
-[notice] A new release of pip is available: 25.0.1 -> 26.1.2
-[notice] To update, run: pip install --upgrade pip
-
-  ERROR: ResolutionImpossible: for help visit https://pip.pypa.io/en/latest/topics/dependency-resolution/#dealing-with-dependency-conflicts
-
-  [5/7] RUN pip install --no-cache-dir -r requirements.txt
-  Build Failed: build daemon returned an error < failed to solve: process "/bin/sh -c pip install --no-cache-dir -r requirements.txt" did not complete successfully: exit code: 1 >
-
-########## celery-beat : FAILED (deployment 9445c75e-0335-4ca9-a281-38903ddda1b1) ##########
----- BUILD LOGS (celery-beat) ----
-  scheduling build on Metal builder "builder-gxtevu"
-  fetched snapshot sha256:3fc5042f27d769b6587eaff7be9e0a15f679d1cd5b96e6900f8e1d54fd73bbd1 (20 kB bytes)
-  fetching snapshot
-  unpacking archive
-  [internal] load build definition from Dockerfile
-  [internal] load build definition from Dockerfile
-  [internal] load build definition from Dockerfile
-  [internal] load build definition from Dockerfile
-  [internal] load metadata for docker.io/library/python:3.12-slim
-  [internal] load metadata for docker.io/library/python:3.12-slim
-  [internal] load .dockerignore
-  [internal] load .dockerignore
-  [internal] load .dockerignore
-  [internal] load .dockerignore
-  [7/7] COPY . .
-  [6/7] RUN playwright install chromium --with-deps
-  [5/7] RUN pip install --no-cache-dir -r requirements.txt
-  [4/7] COPY requirements.txt .
-  [internal] load build context
-  [3/7] RUN apt-get update && apt-get install -y --no-install-recommends     gcc libpq-dev curl     && rm -rf /var/lib/apt/lists/*
-  [2/7] WORKDIR /app
-  [1/7] FROM docker.io/library/python:3.12-slim@sha256:57cd7c3a7a273101a6485ba99423ee568157882804b1124b4dd04266317710de
-  [1/7] FROM docker.io/library/python:3.12-slim@sha256:57cd7c3a7a273101a6485ba99423ee568157882804b1124b4dd04266317710de
-  [internal] load build context
-  [internal] load build context
-  [internal] load build context
-  [1/7] FROM docker.io/library/python:3.12-slim@sha256:57cd7c3a7a273101a6485ba99423ee568157882804b1124b4dd04266317710de
-  [1/7] FROM docker.io/library/python:3.12-slim@sha256:57cd7c3a7a273101a6485ba99423ee568157882804b1124b4dd04266317710de
-  [1/7] FROM docker.io/library/python:3.12-slim@sha256:57cd7c3a7a273101a6485ba99423ee568157882804b1124b4dd04266317710de
-  [2/7] WORKDIR /app
-  [3/7] RUN apt-get update && apt-get install -y --no-install-recommends     gcc libpq-dev curl     && rm -rf /var/lib/apt/lists/*
-  [internal] load build context
-  Hit:1 http://deb.debian.org/debian trixie InRelease
-Get:2 http://deb.debian.org/debian trixie-updates InRelease [47.3 kB]
-
-  Get:3 http://deb.debian.org/debian-security trixie-security InRelease [43.4 kB]
-
-  Get:4 http://deb.debian.org/debian trixie/main amd64 Packages [9673 kB]
-
-  Get:5 http://deb.debian.org/debian trixie-updates/main amd64 Packages [660 B]
-
-  Get:6 http://deb.debian.org/debian-security trixie-security/main amd64 Packages [226 kB]
-
-  Fetched 9990 kB in 1s (12.6 MB/s)
-Reading package lists...
-  scheduling build on Metal builder "builder-gxtevu"
-  
-  Reading package lists...
-  
-  Building dependency tree...
-  
-Reading state information...
-
-  The following additional packages will be installed:
-  binutils binutils-common binutils-x86-64-linux-gnu cpp cpp-14
-
-    cpp-14-x86-64-linux-gnu cpp-x86-64-linux-gnu gcc-14 gcc-14-x86-64-linux-gnu
-
-    gcc-x86-64-linux-gnu libasan8 libatomic1 libbinutils libbrotli1 libcc1-0
-
-    libcom-err2 libctf-nobfd0 libctf0 libcurl4t64 libgcc-14-dev libgnutls30t64
-  libgomp1 libgprofng0 libgssapi-krb5-2 libhwasan0 libidn2-0 libisl23 libitm1
-
-    libjansson4 libk5crypto3 libkeyutils1 libkrb5-3 libkrb5support0 libldap2
-
-    liblsan0 libmpc3 libmpfr6 libnghttp2-14 libnghttp3-9 libp11-kit0 libpq5
-
-    libpsl5t64 libquadmath0 librtmp1 libsasl2-2 libsasl2-modules-db libsframe1
-
-    libssh2-1t64 libssl-dev libtasn1-6 libtsan2 libubsan1 libunistring5
-
-  Suggested packages:
-  binutils-doc gprofng-gui binutils-gold cpp-doc gcc-14-locales cpp-14-doc
-  gcc-multilib make manpages-dev autoconf automake libtool flex bison gdb
-  gcc-doc gcc-14-multilib gcc-14-doc gdb-x86-64-linux-gnu gnutls-bin krb5-doc
-  krb5-user postgresql-doc-17 libssl-doc
-Recommended packages:
-  bash-completion libc6-dev | libc-dev libc6-dev libc-dev krb5-locales
-  libldap-common publicsuffix libsasl2-modules
-
-  The following NEW packages will be installed:
-  binutils binutils-common binutils-x86-64-linux-gnu cpp cpp-14
-
-    cpp-14-x86-64-linux-gnu cpp-x86-64-linux-gnu curl gcc gcc-14
-
-    gcc-14-x86-64-linux-gnu gcc-x86-64-linux-gnu libasan8 libatomic1 libbinutils
-
-    libbrotli1 libcc1-0 libcom-err2 libctf-nobfd0 libctf0 libcurl4t64
-
-    libgcc-14-dev libgnutls30t64 libgomp1 libgprofng0 libgssapi-krb5-2
-  libhwasan0 libidn2-0 libisl23 libitm1 libjansson4 libk5crypto3 libkeyutils1
-
-    libkrb5-3 libkrb5support0 libldap2 liblsan0 libmpc3 libmpfr6 libnghttp2-14
-
-    libnghttp3-9 libp11-kit0 libpq-dev libpq5 libpsl5t64 libquadmath0 librtmp1
-
-    libsasl2-2 libsasl2-modules-db libsframe1 libssh2-1t64 libssl-dev libtasn1-6
-
-    libtsan2 libubsan1 libunistring5
-
-  0 upgraded, 56 newly installed, 0 to remove and 0 not upgraded.
-Need to get 60.1 MB of archives.
-After this operation, 225 MB of additional disk space will be used.
-Get:1 http://deb.debian.org/debian trixie/main amd64 libsframe1 amd64 2.44-3 [78.4 kB]
-
-  Get:2 http://deb.debian.org/debian trixie/main amd64 binutils-common amd64 2.44-3 [2509 kB]
-
-  Get:3 http://deb.debian.org/debian trixie/main amd64 libbinutils amd64 2.44-3 [534 kB]
-
-  Get:4 http://deb.debian.org/debian trixie/main amd64 libgprofng0 amd64 2.44-3 [808 kB]
-
-  Get:5 http://deb.debian.org/debian trixie/main amd64 libctf-nobfd0 amd64 2.44-3 [156 kB]
-
-  Get:6 http://deb.debian.org/debian trixie/main amd64 libctf0 amd64 2.44-3 [88.6 kB]
-
-  Get:7 http://deb.debian.org/debian trixie/main amd64 libjansson4 amd64 2.14-2+b3 [39.8 kB]
-
-  Get:8 http://deb.debian.org/debian trixie/main amd64 binutils-x86-64-linux-gnu amd64 2.44-3 [1014 kB]
-
-  Get:9 http://deb.debian.org/debian trixie/main amd64 binutils amd64 2.44-3 [265 kB]
-
-  Get:10 http://deb.debian.org/debian trixie/main amd64 libisl23 amd64 0.27-1 [659 kB]
-
-  Get:11 http://deb.debian.org/debian trixie/main amd64 libmpfr6 amd64 4.2.2-1 [729 kB]
-
-  Get:12 http://deb.debian.org/debian trixie/main amd64 libmpc3 amd64 1.3.1-1+b3 [52.2 kB]
-
-  Get:13 http://deb.debian.org/debian trixie/main amd64 cpp-14-x86-64-linux-gnu amd64 14.2.0-19 [11.0 MB]
-
-  Get:14 http://deb.debian.org/debian trixie/main amd64 cpp-14 amd64 14.2.0-19 [1280 B]
-
-  Get:15 http://deb.debian.org/debian trixie/main amd64 cpp-x86-64-linux-gnu amd64 4:14.2.0-1 [4840 B]
-
-  Get:16 http://deb.debian.org/debian trixie/main amd64 cpp amd64 4:14.2.0-1 [1568 B]
-
-  Get:17 http://deb.debian.org/debian trixie/main amd64 libbrotli1 amd64 1.1.0-2+b7 [307 kB]
-
-  Get:18 http://deb.debian.org/debian trixie/main amd64 libkrb5support0 amd64 1.21.3-5+deb13u1 [33.1 kB]
-
-  Get:19 http://deb.debian.org/debian trixie/main amd64 libcom-err2 amd64 1.47.2-3+b11 [25.0 kB]
-
-  Get:20 http://deb.debian.org/debian trixie/main amd64 libk5crypto3 amd64 1.21.3-5+deb13u1 [81.2 kB]
-
-  Get:21 http://deb.debian.org/debian trixie/main amd64 libkeyutils1 amd64 1.6.3-6 [9456 B]
-
-  Get:22 http://deb.debian.org/debian trixie/main amd64 libkrb5-3 amd64 1.21.3-5+deb13u1 [326 kB]
-
-  Get:23 http://deb.debian.org/debian trixie/main amd64 libgssapi-krb5-2 amd64 1.21.3-5+deb13u1 [138 kB]
-
-  Get:24 http://deb.debian.org/debian trixie/main amd64 libunistring5 amd64 1.3-2 [477 kB]
-
-  Get:25 http://deb.debian.org/debian trixie/main amd64 libidn2-0 amd64 2.3.8-2 [109 kB]
-
-  Get:26 http://deb.debian.org/debian trixie/main amd64 libsasl2-modules-db amd64 2.1.28+dfsg1-9 [19.8 kB]
-
-  Get:27 http://deb.debian.org/debian trixie/main amd64 libsasl2-2 amd64 2.1.28+dfsg1-9 [57.5 kB]
-
-  Get:28 http://deb.debian.org/debian trixie/main amd64 libldap2 amd64 2.6.10+dfsg-1 [194 kB]
-
-  Get:29 http://deb.debian.org/debian trixie/main amd64 libnghttp2-14 amd64 1.64.0-1.1+deb13u1 [76.2 kB]
-
-  Get:30 http://deb.debian.org/debian trixie/main amd64 libnghttp3-9 amd64 1.8.0-1 [67.7 kB]
-
-  Get:31 http://deb.debian.org/debian trixie/main amd64 libpsl5t64 amd64 0.21.2-1.1+b1 [57.2 kB]
-
-  Get:32 http://deb.debian.org/debian trixie/main amd64 libp11-kit0 amd64 0.25.5-3 [425 kB]
-
-  Get:33 http://deb.debian.org/debian trixie/main amd64 libtasn1-6 amd64 4.20.0-2+deb13u1 [50.1 kB]
-
-  Get:34 http://deb.debian.org/debian trixie/main amd64 libgnutls30t64 amd64 3.8.9-3+deb13u4 [1469 kB]
-
-  Get:35 http://deb.debian.org/debian trixie/main amd64 librtmp1 amd64 2.4+20151223.gitfa8646d.1-2+b5 [58.8 kB]
-
-  Get:36 http://deb.debian.org/debian trixie/main amd64 libssh2-1t64 amd64 1.11.1-1+deb13u1 [245 kB]
-
-  Get:37 http://deb.debian.org/debian trixie/main amd64 libcurl4t64 amd64 8.14.1-2+deb13u4 [392 kB]
-
-  Get:38 http://deb.debian.org/debian trixie/main amd64 curl amd64 8.14.1-2+deb13u4 [270 kB]
-
-  Get:39 http://deb.debian.org/debian trixie/main amd64 libcc1-0 amd64 14.2.0-19 [42.8 kB]
-
-  Get:40 http://deb.debian.org/debian trixie/main amd64 libgomp1 amd64 14.2.0-19 [137 kB]
-
-  Get:41 http://deb.debian.org/debian trixie/main amd64 libitm1 amd64 14.2.0-19 [26.0 kB]
-
-  Get:42 http://deb.debian.org/debian trixie/main amd64 libatomic1 amd64 14.2.0-19 [9308 B]
-
-  Get:43 http://deb.debian.org/debian trixie/main amd64 libasan8 amd64 14.2.0-19 [2725 kB]
-
-  Get:44 http://deb.debian.org/debian trixie/main amd64 liblsan0 amd64 14.2.0-19 [1204 kB]
-
-  Get:45 http://deb.debian.org/debian trixie/main amd64 libtsan2 amd64 14.2.0-19 [2460 kB]
-
-  Get:46 http://deb.debian.org/debian trixie/main amd64 libubsan1 amd64 14.2.0-19 [1074 kB]
-
-  Get:47 http://deb.debian.org/debian trixie/main amd64 libhwasan0 amd64 14.2.0-19 [1488 kB]
-
-  Get:48 http://deb.debian.org/debian trixie/main amd64 libquadmath0 amd64 14.2.0-19 [145 kB]
-
-  Get:49 http://deb.debian.org/debian trixie/main amd64 libgcc-14-dev amd64 14.2.0-19 [2672 kB]
-
-  Get:50 http://deb.debian.org/debian trixie/main amd64 gcc-14-x86-64-linux-gnu amd64 14.2.0-19 [21.4 MB]
-
-  Get:51 http://deb.debian.org/debian trixie/main amd64 gcc-14 amd64 14.2.0-19 [540 kB]
-
-  Get:52 http://deb.debian.org/debian trixie/main amd64 gcc-x86-64-linux-gnu amd64 4:14.2.0-1 [1436 B]
-
-  Get:53 http://deb.debian.org/debian trixie/main amd64 gcc amd64 4:14.2.0-1 [5136 B]
-
-  Get:54 http://deb.debian.org/debian trixie/main amd64 libpq5 amd64 17.10-0+deb13u1 [230 kB]
-
-  Get:55 http://deb.debian.org/debian trixie/main amd64 libssl-dev amd64 3.5.6-1~deb13u2 [2959 kB]
-
-  Get:56 http://deb.debian.org/debian trixie/main amd64 libpq-dev amd64 17.10-0+deb13u1 [154 kB]
-
-  debconf: unable to initialize frontend: Dialog
-debconf: (TERM is not set, so the dialog frontend is not usable.)
-debconf: falling back to frontend: Readline
-
-  debconf: unable to initialize frontend: Readline
-debconf: (Can't locate Term/ReadLine.pm in @INC (you may need to install the Term::ReadLine module) (@INC entries checked: /etc/perl /usr/local/lib/x86_64-linux-gnu/perl/5.40.1 /usr/local/share/perl/5.40.1 /usr/lib/x86_64-linux-gnu/perl5/5.40 /usr/share/perl5 /usr/lib/x86_64-linux-gnu/perl-base /usr/lib/x86_64-linux-gnu/perl/5.40 /usr/share/perl/5.40 /usr/local/lib/site_perl) at /usr/share/perl5/Debconf/FrontEnd/Readline.pm line 8, <STDIN> line 56.)
-debconf: falling back to frontend: Teletype
-
-  debconf: unable to initialize frontend: Teletype
-debconf: (This frontend requires a controlling tty.)
-debconf: falling back to frontend: Noninteractive
-
-  Fetched 60.1 MB in 0s (197 MB/s)
+  Fetched 60.1 MB in 0s (259 MB/s)
 
   Selecting previously unselected package libsframe1:amd64.
 (Reading database ... 
@@ -1902,9 +1223,9 @@ debconf: falling back to frontend: Noninteractive
 
     Downloading celery-5.4.0-py3-none-any.whl.metadata (21 kB)
 
-  Collecting anthropic==0.40.0 (from -r requirements.txt (line 10))
+  Collecting anthropic<1,>=0.41.0 (from -r requirements.txt (line 10))
 
-    Downloading anthropic-0.40.0-py3-none-any.whl.metadata (23 kB)
+    Downloading anthropic-0.117.0-py3-none-any.whl.metadata (3.3 kB)
 
   Collecting langgraph==0.2.60 (from -r requirements.txt (line 11))
 
@@ -1940,6 +1261,7 @@ debconf: falling back to frontend: Noninteractive
 
   Collecting browser-use>=0.1.7 (from -r requirements.txt (line 19))
 
+  scheduling build on Metal builder "builder-uvqmsv"
     Downloading browser_use-0.13.4-py3-none-any.whl.metadata (16 kB)
 
   Collecting playwright>=1.44.0 (from -r requirements.txt (line 20))
@@ -2022,22 +1344,6 @@ debconf: falling back to frontend: Noninteractive
 
     Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB)
 
-  Collecting anyio<5,>=3.5.0 (from anthropic==0.40.0->-r requirements.txt (line 10))
-
-    Downloading anyio-4.14.2-py3-none-any.whl.metadata (4.6 kB)
-
-  Collecting distro<2,>=1.7.0 (from anthropic==0.40.0->-r requirements.txt (line 10))
-
-    Downloading distro-1.9.0-py3-none-any.whl.metadata (6.8 kB)
-
-  Collecting jiter<1,>=0.4.0 (from anthropic==0.40.0->-r requirements.txt (line 10))
-
-    Downloading jiter-0.16.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (5.2 kB)
-
-  Collecting sniffio (from anthropic==0.40.0->-r requirements.txt (line 10))
-
-    Downloading sniffio-1.3.1-py3-none-any.whl.metadata (3.9 kB)
-
   Collecting langgraph-checkpoint<3.0.0,>=2.0.4 (from langgraph==0.2.60->-r requirements.txt (line 11))
 
     Downloading langgraph_checkpoint-2.1.2-py3-none-any.whl.metadata (4.2 kB)
@@ -2066,14 +1372,19 @@ debconf: falling back to frontend: Noninteractive
 
     Downloading tenacity-9.1.4-py3-none-any.whl.metadata (1.2 kB)
 
+  Collecting defusedxml<0.8.0,>=0.7.1 (from langchain-anthropic==0.3.3->-r requirements.txt (line 13))
+
+    Downloading defusedxml-0.7.1-py2.py3-none-any.whl.metadata (32 kB)
+
   INFO: pip is looking at multiple versions of langchain-anthropic to determine which version is compatible with other requirements. This could take a while.
 
-  ERROR: Cannot install -r requirements.txt (line 13) and anthropic==0.40.0 because these package versions have conflicting dependencies.
+  ERROR: Cannot install -r requirements.txt (line 11), -r requirements.txt (line 13) and langchain-core==0.3.25 because these package versions have conflicting dependencies.
 
   
 The conflict is caused by:
-    The user requested anthropic==0.40.0
-    langchain-anthropic 0.3.3 depends on anthropic<1 and >=0.41.0
+    The user requested langchain-core==0.3.25
+    langgraph 0.2.60 depends on langchain-core!=0.3.0, !=0.3.1, !=0.3.10, !=0.3.11, !=0.3.12, !=0.3.13, !=0.3.14, !=0.3.15, !=0.3.16, !=0.3.17, !=0.3.18, !=0.3.19, !=0.3.2, !=0.3.20, !=0.3.21, !=0.3.22, !=0.3.3, !=0.3.4, !=0.3.5, !=0.3.6, !=0.3.7, !=0.3.8, !=0.3.9, <0.4.0 and >=0.2.43
+    langchain-anthropic 0.3.3 depends on langchain-core<0.4.0 and >=0.3.30
 
 To fix this you could try to:
 1. loosen the range of package versions you've specified
@@ -2089,30 +1400,6 @@ To fix this you could try to:
   [5/7] RUN pip install --no-cache-dir -r requirements.txt
   Build Failed: build daemon returned an error < failed to solve: process "/bin/sh -c pip install --no-cache-dir -r requirements.txt" did not complete successfully: exit code: 1 >
 
-########## frontend : FAILED (deployment 80dd59f6-76ee-4765-98f8-d3f840321a13) ##########
----- BUILD LOGS (frontend) ----
-  scheduling build on Metal builder "builder-yietym"
-  fetched snapshot sha256:02e84367538c450f88cf0ad6f43c7762ea407c82d9077dbad84521f42a78a61d (73 kB bytes)
-  fetching snapshot
-  unpacking archive
-  ==============================================================================
-SECURITY VULNERABILITIES DETECTED
-==============================================================================
-
-Railway cannot proceed with deployment due to security vulnerabilities in your
-project's dependencies.
-
-Found 1 vulnerable package(s):
-
-  next@15.1.0
-      Source: package-lock.json
-      Severity: CRITICAL
-      Upgrade to 15.1.11: npm install next@^15.1.11
-
-      Vulnerabilities:
-      - CVE-2025-55183 (MEDIUM): https://github.com/vercel/next.js/security/advisories/GHSA-w37m-7fhw-fmv9
-      - CVE-2025-55184 (HIGH): https://github.com/vercel/next.js/security/advisories/GHSA-mwv6-3258-q52c
-      - CVE-2025-66478 (CRITICAL): https://github.com/vercel/next.js/security/advisories/GHSA-9qr9-h5gf-34mp
-      - CVE-2025-67779 (HIGH): https://github.com/vercel/next.js/security/advisories/GHSA-5j59-xgg2-r9c4
-
-For assistance, visit https://station.railway.com/new?type=technical
+########## frontend : BUILDING (deployment c37c861f-a976-40bf-8369-e03dd3b9f738) ##########
+  (no buildLogs returned; trying deploymentLogs)
+  (no logs available via API)
