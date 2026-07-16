@@ -1,11 +1,14 @@
 from __future__ import annotations
 import time
 from typing import Annotated, Optional, TypedDict
+from uuid import uuid4
 from langgraph.graph import StateGraph, END
 from langgraph.graph.message import add_messages
-from langchain_core.messages import BaseMessage, HumanMessage, SystemMessage
+from langchain_core.messages import BaseMessage, HumanMessage, SystemMessage, AIMessage
 from langchain_anthropic import ChatAnthropic
 from ..config import settings
+from .publisher import AgentEventPublisher
+
 
 class AgentState(TypedDict):
     agent_id: str
@@ -19,6 +22,7 @@ class AgentState(TypedDict):
     tokens_used: int
     start_time: float
 
+
 SYSTEM_PROMPT = """You are a specialized AI agent. Complete the given task thoroughly and accurately.
 After completing the task, reflect on your performance: what went well, what could improve.
 Be concise and direct."""
@@ -29,11 +33,20 @@ REFLECT_PROMPT = """Review your previous response and reflect:
 3. Any skills you should improve?
 Keep reflection to 2-3 sentences."""
 
+
 class BaseAgent:
-    def __init__(self, agent_id: str, agent_name: str, task_type: str, model: str = "claude-sonnet-5-20251001"):
+    def __init__(
+        self,
+        agent_id: str,
+        agent_name: str,
+        task_type: str,
+        model: str = "claude-sonnet-5-20251001",
+        publisher: Optional[AgentEventPublisher] = None,
+    ):
         self.agent_id = agent_id
         self.agent_name = agent_name
         self.task_type = task_type
+        self._publisher = publisher
         self.llm = ChatAnthropic(
             model=model,
             api_key=settings.anthropic_api_key,
@@ -53,19 +66,57 @@ class BaseAgent:
         return g.compile()
 
     async def _think(self, state: AgentState) -> dict:
+        if self._publisher:
+            await self._publisher.publish("STATE_SNAPSHOT", {"status": "thinking"})
+
         task_desc = f"Task type: {state['task_type']}\nInput: {state['task_input']}"
         messages = [SystemMessage(content=SYSTEM_PROMPT), HumanMessage(content=task_desc)]
-        response = await self.llm.ainvoke(messages)
+
+        message_id = str(uuid4())
+        if self._publisher:
+            await self._publisher.publish("TEXT_MESSAGE_START", {"message_id": message_id})
+
+        full_content = ""
+        last_chunk = None
+        async for chunk in self.llm.astream(messages):
+            last_chunk = chunk
+            if isinstance(chunk.content, str):
+                delta = chunk.content
+            elif isinstance(chunk.content, list) and chunk.content:
+                first = chunk.content[0]
+                delta = first.get("text", "") if isinstance(first, dict) else ""
+            else:
+                delta = ""
+
+            if delta and self._publisher:
+                await self._publisher.publish("TEXT_MESSAGE_CONTENT", {"delta": delta})
+
+            full_content += delta
+
+        if self._publisher:
+            await self._publisher.publish("TEXT_MESSAGE_END", {})
+
+        tokens = 0
+        if last_chunk and last_chunk.usage_metadata:
+            tokens = last_chunk.usage_metadata.get("total_tokens", 0)
+
         return {
-            "messages": [response],
-            "result": response.content,
-            "tokens_used": response.usage_metadata.get("total_tokens", 0) if response.usage_metadata else 0,
+            "messages": [AIMessage(content=full_content)],
+            "result": full_content,
+            "tokens_used": tokens,
         }
 
     async def _reflect(self, state: AgentState) -> dict:
         reflect_messages = list(state["messages"]) + [HumanMessage(content=REFLECT_PROMPT)]
         response = await self.llm.ainvoke(reflect_messages)
         tokens = response.usage_metadata.get("total_tokens", 0) if response.usage_metadata else 0
+
+        if self._publisher:
+            await self._publisher.publish(
+                "CUSTOM",
+                {"subtype": "REFLECTION", "content": response.content},
+            )
+
         return {
             "messages": [response],
             "reflection": response.content,
@@ -73,6 +124,8 @@ class BaseAgent:
         }
 
     async def _complete(self, state: AgentState) -> dict:
+        if self._publisher:
+            await self._publisher.publish("STATE_SNAPSHOT", {"status": "active"})
         return {"success": bool(state.get("result"))}
 
     async def run(self, task_input: dict) -> dict:

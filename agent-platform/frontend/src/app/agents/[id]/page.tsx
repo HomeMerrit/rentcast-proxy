@@ -1,13 +1,15 @@
 import { AgentProfile } from "@/components/AgentProfile";
-import { mockAgents } from "@/lib/mock-data";
 import { notFound } from "next/navigation";
+import { api } from "@/lib/api";
 
-export default function AgentPage({ params }: { params: { id: string } }) {
-  const agent = mockAgents.find((a) => a.id === params.id);
+// Next.js 15: params is a Promise
+export default async function AgentPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const agent = await api.agents.get(id).catch(() => null);
   if (!agent) return notFound();
   return <AgentProfile agent={agent} />;
-}
-
-export function generateStaticParams() {
-  return mockAgents.map((a) => ({ id: a.id }));
 }

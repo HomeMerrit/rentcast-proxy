@@ -1,23 +1,40 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+import type { Agent } from "@/types/agent";
 
-export async function fetchAgents() {
-  const res = await fetch(`${API_URL}/agents`, { next: { revalidate: 10 } });
-  if (!res.ok) throw new Error("Failed to fetch agents");
-  return res.json();
-}
+const BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
-export async function fetchAgent(id: string) {
-  const res = await fetch(`${API_URL}/agents/${id}`, { next: { revalidate: 5 } });
-  if (!res.ok) throw new Error("Failed to fetch agent");
-  return res.json();
-}
-
-export async function updateAgentStatus(id: string, status: string, current_task?: string) {
-  const res = await fetch(`${API_URL}/agents/${id}/status`, {
-    method: "PATCH",
+async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
+  const res = await fetch(`${BASE}${path}`, {
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ status, current_task }),
+    ...init,
   });
-  if (!res.ok) throw new Error("Failed to update status");
-  return res.json();
+  if (!res.ok) throw new Error(`API ${path} → ${res.status}`);
+  return res.json() as Promise<T>;
 }
+
+export const api = {
+  agents: {
+    list: () => apiFetch<Agent[]>("/agents/"),
+    get: (id: string) => apiFetch<Agent>(`/agents/${id}`),
+    run: (
+      id: string,
+      task_type: string,
+      task_input: Record<string, unknown> = {}
+    ) =>
+      apiFetch<{ task_id: string; agent_id: string; status: string }>(
+        `/agents/${id}/run`,
+        {
+          method: "POST",
+          body: JSON.stringify({ task_type, task_input }),
+        }
+      ),
+    updateStatus: (
+      id: string,
+      status: string,
+      current_task?: string | null
+    ) =>
+      apiFetch<Agent>(`/agents/${id}/status`, {
+        method: "PATCH",
+        body: JSON.stringify({ status, current_task: current_task ?? null }),
+      }),
+  },
+};

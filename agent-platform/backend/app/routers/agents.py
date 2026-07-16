@@ -7,7 +7,7 @@ from sqlalchemy.orm import selectinload
 import redis.asyncio as aioredis
 from ..database import get_db
 from ..models_db import Agent
-from ..schemas import AgentOut, AgentCreate, AgentStatusUpdate
+from ..schemas import AgentOut, AgentCreate, AgentStatusUpdate, RunTaskRequest, RunTaskResponse
 from ..config import settings
 
 router = APIRouter()
@@ -37,6 +37,24 @@ async def create_agent(body: AgentCreate, db: AsyncSession = Depends(get_db)):
     await db.commit()
     await db.refresh(agent)
     return agent
+
+@router.post("/{agent_id}/run", response_model=RunTaskResponse)
+async def run_task(agent_id: UUID, body: RunTaskRequest, db: AsyncSession = Depends(get_db)):
+    from ..workers.agent_tasks import run_agent_task
+    result = await db.execute(select(Agent).where(Agent.id == agent_id))
+    agent = result.scalar_one_or_none()
+    if not agent:
+        raise HTTPException(404, "Agent not found")
+
+    task = run_agent_task.delay(
+        str(agent_id),
+        agent.name,
+        body.task_type,
+        body.task_input,
+        agent.model,
+    )
+    return RunTaskResponse(task_id=task.id, agent_id=str(agent_id))
+
 
 @router.patch("/{agent_id}/status", response_model=AgentOut)
 async def update_status(agent_id: UUID, body: AgentStatusUpdate, db: AsyncSession = Depends(get_db)):

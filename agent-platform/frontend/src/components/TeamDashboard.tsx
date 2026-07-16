@@ -1,9 +1,14 @@
-"use client";
 import { AgentCard } from "./AgentCard";
-import { mockAgents } from "@/lib/mock-data";
+import type { Agent } from "@/types/agent";
 
-export function TeamDashboard() {
-  const active = mockAgents.filter((a) => a.status === "active" || a.status === "thinking").length;
+interface Props {
+  agents: Agent[];
+}
+
+export function TeamDashboard({ agents }: Props) {
+  const active = agents.filter(
+    (a) => a.status === "active" || a.status === "thinking"
+  ).length;
 
   return (
     <div className="min-h-screen bg-gray-950">
@@ -16,21 +21,32 @@ export function TeamDashboard() {
               {active} active
             </span>
           </div>
-          <div className="text-sm text-gray-600">{mockAgents.length} agents</div>
+          <div className="text-sm text-gray-600">{agents.length} agents</div>
         </div>
       </header>
 
       <main className="max-w-6xl mx-auto px-6 py-8">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-100">Your AI Team</h1>
-          <p className="text-gray-500 mt-1 text-sm">Working 24/7 — click any agent to see their profile</p>
+          <p className="text-gray-500 mt-1 text-sm">
+            Working 24/7 — click any agent to see their profile
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {mockAgents.map((agent) => (
-            <AgentCard key={agent.id} agent={agent} />
-          ))}
-        </div>
+        {agents.length === 0 ? (
+          <div className="text-center py-16">
+            <p className="text-gray-600 text-lg">No agents found.</p>
+            <p className="text-gray-700 text-sm mt-2">
+              Make sure the backend is reachable and has agents registered.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {agents.map((agent) => (
+              <AgentCard key={agent.id} agent={agent} />
+            ))}
+          </div>
+        )}
       </main>
     </div>
   );

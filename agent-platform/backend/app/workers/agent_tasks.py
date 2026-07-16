@@ -1,6 +1,18 @@
 import asyncio
+from datetime import datetime, timezone
 from uuid import UUID
+
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
+from sqlalchemy.pool import NullPool
+from sqlalchemy import select
+
 from .celery_app import celery_app
+from ..config import settings
+
+# Dedicated async engine for Celery tasks — uses NullPool to avoid cross-event-loop issues
+_task_engine = create_async_engine(settings.database_url, poolclass=NullPool)
+AsyncTaskSession = async_sessionmaker(_task_engine, class_=AsyncSession, expire_on_commit=False)
+
 
 def run_async(coro):
     loop = asyncio.new_event_loop()
@@ -9,19 +21,113 @@ def run_async(coro):
     finally:
         loop.close()
 
-@celery_app.task(name="app.workers.agent_tasks.run_agent_task", bind=True, max_retries=3)
-def run_agent_task(self, agent_id: str, task_type: str, task_input: dict):
+
+async def _run_task_async(
+    agent_id: str,
+    agent_name: str,
+    task_type: str,
+    task_input: dict,
+    model: str,
+):
     from ..agents.base_agent import BaseAgent
-    agent = BaseAgent(agent_id=agent_id, agent_name="agent", task_type=task_type)
+    from ..agents.publisher import AgentEventPublisher
+    from ..models_db import Agent, WorkLog
+
+    started_at = datetime.now(timezone.utc)
+
+    # Set agent status to active in DB before publishing
+    async with AsyncTaskSession() as db:
+        result = await db.execute(select(Agent).where(Agent.id == UUID(agent_id)))
+        agent_row = result.scalar_one_or_none()
+        if agent_row:
+            agent_row.status = "active"
+            agent_row.current_task = task_type
+            await db.commit()
+
+    async with AgentEventPublisher(agent_id, settings.redis_url) as publisher:
+        await publisher.publish("RUN_STARTED", {"task_type": task_type, "agent_name": agent_name})
+        await publisher.publish("STATE_SNAPSHOT", {"status": "active", "current_task": task_type})
+
+        try:
+            agent_runner = BaseAgent(
+                agent_id=agent_id,
+                agent_name=agent_name,
+                task_type=task_type,
+                model=model,
+                publisher=publisher,
+            )
+            result_data = await agent_runner.run(task_input)
+
+            finished_at = datetime.now(timezone.utc)
+
+            # Update agent and create WorkLog
+            async with AsyncTaskSession() as db:
+                result = await db.execute(select(Agent).where(Agent.id == UUID(agent_id)))
+                agent_row = result.scalar_one_or_none()
+                if agent_row:
+                    agent_row.status = "idle"
+                    agent_row.current_task = None
+                    agent_row.task_count = (agent_row.task_count or 0) + 1
+                    if result_data["success"]:
+                        agent_row.success_count = (agent_row.success_count or 0) + 1
+
+                work_log = WorkLog(
+                    agent_id=UUID(agent_id),
+                    task_type=task_type,
+                    task_input=task_input,
+                    result=result_data["result"],
+                    reflection=result_data["reflection"],
+                    success=result_data["success"],
+                    tokens_used=result_data["tokens_used"],
+                    duration_ms=result_data["duration_ms"],
+                    started_at=started_at,
+                    finished_at=finished_at,
+                )
+                db.add(work_log)
+                await db.commit()
+
+            await publisher.publish("STATE_SNAPSHOT", {"status": "idle", "current_task": None})
+            await publisher.publish("RUN_FINISHED", {
+                "result": result_data["result"],
+                "tokens_used": result_data["tokens_used"],
+                "duration_ms": result_data["duration_ms"],
+            })
+
+            return result_data
+
+        except Exception as exc:
+            async with AsyncTaskSession() as db:
+                result = await db.execute(select(Agent).where(Agent.id == UUID(agent_id)))
+                agent_row = result.scalar_one_or_none()
+                if agent_row:
+                    agent_row.status = "error"
+                    agent_row.current_task = None
+                    await db.commit()
+
+            await publisher.publish("STATE_SNAPSHOT", {"status": "error", "current_task": None})
+            await publisher.publish("RUN_ERROR", {"error": str(exc)})
+            raise
+
+
+@celery_app.task(name="app.workers.agent_tasks.run_agent_task", bind=True, max_retries=3)
+def run_agent_task(
+    self,
+    agent_id: str,
+    agent_name: str,
+    task_type: str,
+    task_input: dict,
+    model: str = "claude-sonnet-5-20251001",
+):
     try:
-        result = run_async(agent.run(task_input))
-        return result
+        return run_async(_run_task_async(agent_id, agent_name, task_type, task_input, model))
     except Exception as exc:
         raise self.retry(exc=exc, countdown=2 ** self.request.retries)
+
 
 @celery_app.task(name="app.workers.agent_tasks.health_check")
 def health_check():
     return {"status": "ok"}
+
 
 @celery_app.task(name="app.workers.agent_tasks.run_reflexion_eval")
 def run_reflexion_eval():

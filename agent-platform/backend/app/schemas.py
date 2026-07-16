@@ -80,3 +80,15 @@ class CommCreate(BaseModel):
     to_agent_id: Optional[uuid.UUID] = None
     message: str
     message_type: str = "message"
+
+
+class RunTaskRequest(BaseModel):
+    task_type: str
+    task_input: dict = {}
+    model: str = "claude-sonnet-5-20251001"
+
+
+class RunTaskResponse(BaseModel):
+    task_id: str
+    agent_id: str
+    status: str = "queued"
