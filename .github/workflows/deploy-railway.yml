@@ -7,10 +7,6 @@ on:
         description: 'Railway API token'
         required: true
         type: string
-      anthropic_api_key:
-        description: 'Anthropic API key'
-        required: true
-        type: string
 
 jobs:
   deploy:
@@ -45,6 +41,6 @@ jobs:
       - name: Deploy full stack to Railway
         env:
           RAILWAY_TOKEN: ${{ inputs.railway_token }}
-          ANTHROPIC_API_KEY: ${{ inputs.anthropic_api_key }}
+          ANTHROPIC_API_KEY: 'SET_IN_RAILWAY_DASHBOARD'
           GITHUB_WORKSPACE: ${{ github.workspace }}
         run: python3 scripts/deploy_railway.py
