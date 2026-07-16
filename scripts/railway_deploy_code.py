@@ -116,7 +116,10 @@ SOURCES = {
 }
 
 deployed = {}
-for name in ["backend", "celery", "celery-beat", "frontend"]:
+_filter = os.environ.get("DEPLOY_SERVICES", "").strip()
+_wanted = [s.strip() for s in _filter.split(",") if s.strip()] if _filter else ["backend", "celery", "celery-beat", "frontend"]
+logline("\n  Deploying services: " + ", ".join(_wanted))
+for name in _wanted:
     sid = services.get(name)
     src = SOURCES[name]
     logline("\n=== Deploy " + name + " ===")

@@ -38,19 +38,20 @@ node = proj.get("project") or {}
 services = {e["node"]["name"]: e["node"]["id"] for e in (node.get("services") or {}).get("edges", [])}
 emit("Project: " + node.get("name", "?"))
 
-# All domains for the project/env in one query
-alld = gql("""
-query($projectId: String!, $environmentId: String!) {
-  domains(projectId: $projectId, environmentId: $environmentId) {
-    serviceDomains { domain serviceId }
-    customDomains { domain serviceId }
-  }
-}
-""", {"projectId": PROJECT_ID, "environmentId": ENV_ID})
-dom_by_service = {}
-d = alld.get("domains") or {}
-for entry in (d.get("serviceDomains") or []) + (d.get("customDomains") or []):
-    dom_by_service.setdefault(entry.get("serviceId"), []).append(entry.get("domain"))
+# Domains must be queried per service (serviceId is required)
+def domains_for(sid):
+    dd = gql("""
+    query($projectId: String!, $environmentId: String!, $serviceId: String!) {
+      domains(projectId: $projectId, environmentId: $environmentId, serviceId: $serviceId) {
+        serviceDomains { domain }
+        customDomains { domain }
+      }
+    }
+    """, {"projectId": PROJECT_ID, "environmentId": ENV_ID, "serviceId": sid})
+    d = dd.get("domains") or {}
+    return [x.get("domain") for x in (d.get("serviceDomains") or []) + (d.get("customDomains") or []) if x.get("domain")]
+
+dom_by_service = {sid: domains_for(sid) for sid in services.values()}
 
 emit("\n=== SERVICE STATUS + DOMAINS ===")
 result = {}
