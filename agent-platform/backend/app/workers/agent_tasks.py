@@ -129,7 +129,7 @@ def run_agent_task(
     agent_name: str,
     task_type: str,
     task_input: dict,
-    model: str = "claude-sonnet-5-20251001",
+    model: str = "claude-sonnet-5",
 ):
     try:
         return run_async(_run_task_async(agent_id, agent_name, task_type, task_input, model))

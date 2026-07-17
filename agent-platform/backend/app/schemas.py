@@ -66,7 +66,7 @@ class AgentCreate(BaseModel):
     department: str
     bio: Optional[str] = None
     avatar_seed: str
-    model: str = "claude-sonnet-5-20251001"
+    model: str = "claude-sonnet-5"
 
 class AgentStatusUpdate(BaseModel):
     status: str
@@ -93,7 +93,7 @@ class CommCreate(BaseModel):
 class RunTaskRequest(BaseModel):
     task_type: str
     task_input: dict = {}
-    model: str = "claude-sonnet-5-20251001"
+    model: str = "claude-sonnet-5"
 
 
 class RunTaskResponse(BaseModel):

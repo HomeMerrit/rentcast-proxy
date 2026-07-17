@@ -13,7 +13,7 @@ class Agent(Base):
     department: Mapped[str] = mapped_column(String, nullable=False)
     bio: Mapped[str | None] = mapped_column(Text)
     avatar_seed: Mapped[str] = mapped_column(String, nullable=False)
-    model: Mapped[str] = mapped_column(String, default="claude-sonnet-5-20251001")
+    model: Mapped[str] = mapped_column(String, default="claude-sonnet-5")
     status: Mapped[str] = mapped_column(String, default="idle")
     current_task: Mapped[str | None] = mapped_column(Text)
     task_count: Mapped[int] = mapped_column(Integer, default=0)

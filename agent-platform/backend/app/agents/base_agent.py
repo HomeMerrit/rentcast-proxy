@@ -43,7 +43,7 @@ class BaseAgent:
         agent_id: str,
         agent_name: str,
         task_type: str,
-        model: str = "claude-sonnet-5-20251001",
+        model: str = "claude-sonnet-5",
         publisher: Optional[AgentEventPublisher] = None,
         tools: list = None,
         memory_manager=None,

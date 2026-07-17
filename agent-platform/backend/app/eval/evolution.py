@@ -21,7 +21,7 @@ async def evolve_agent_prompt(
 ) -> str:
     """Generate an evolved system prompt. Returns new prompt string."""
     llm = ChatAnthropic(
-        model="claude-sonnet-5-20251001",
+        model="claude-sonnet-5",
         api_key=settings.anthropic_api_key,
         max_tokens=512,
         temperature=0.3,
