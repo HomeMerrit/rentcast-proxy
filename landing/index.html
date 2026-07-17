@@ -294,32 +294,31 @@ section{position:relative;z-index:1}
     } else { // hq house
       bx=box(place,u,v,0.13,52,c); s+=bx.walls+windows(bx,2)+gable(bx,COL.roofgold,26);
     }
-    return {svg:s, key:(u+v)};
+    return {svg:s, key:(u+v), gy:bx.C[1]};
   }
 
   function tree(place,u,v){var b=place(u,v);
     return {svg:'<rect x="'+(b[0]-3)+'" y="'+(b[1]-16)+'" width="6" height="16" rx="2" fill="#9C7A50"/>'+
       '<circle cx="'+b[0]+'" cy="'+(b[1]-24)+'" r="15" fill="#8FBE79"/>'+
       '<circle cx="'+(b[0]+7)+'" cy="'+(b[1]-20)+'" r="9" fill="#7FB06B"/>'+
-      '<circle cx="'+(b[0]-7)+'" cy="'+(b[1]-19)+'" r="10" fill="#9FCB88"/>', key:(u+v)};}
+      '<circle cx="'+(b[0]-7)+'" cy="'+(b[1]-19)+'" r="10" fill="#9FCB88"/>', key:(u+v), gy:b[1]};}
 
-  // worker = chess pawn, kept in its department color (identity by color, not shape)
+  // worker = "citizen" piece: a little person (head + shoulders) on a chess-piece base,
+  // kept in its department color. Identity by color, warmth by silhouette.
   function peg(pt,color,scale,role){
     scale=scale||1;var s=scale,x=pt[0],y=pt[1];
     function n(v){return (Math.round(v*10)/10);}
-    var dark=shade(color,-.16), lite=shade(color,.26), ring=shade(color,-.07);
-    var o='<ellipse cx="'+n(x)+'" cy="'+n(y+1.6)+'" rx="'+n(7.6*s)+'" ry="'+n(3*s)+'" fill="rgba(20,16,10,.16)"/>'; // ground shadow
-    // flared base
-    o+='<path d="M'+n(x-7*s)+' '+n(y)+' Q '+n(x-7.4*s)+' '+n(y-4*s)+' '+n(x-3.2*s)+' '+n(y-5.6*s)+' L '+n(x+3.2*s)+' '+n(y-5.6*s)+' Q '+n(x+7.4*s)+' '+n(y-4*s)+' '+n(x+7*s)+' '+n(y)+' Z" fill="'+color+'"/>';
-    // bell body
-    o+='<path d="M'+n(x-4.4*s)+' '+n(y-5.6*s)+' Q '+n(x-5*s)+' '+n(y-12*s)+' '+n(x-2.2*s)+' '+n(y-13.6*s)+' L '+n(x+2.2*s)+' '+n(y-13.6*s)+' Q '+n(x+5*s)+' '+n(y-12*s)+' '+n(x+4.4*s)+' '+n(y-5.6*s)+' Z" fill="'+color+'"/>';
-    // collar + head
-    o+='<ellipse cx="'+n(x)+'" cy="'+n(y-13.6*s)+'" rx="'+n(4.3*s)+'" ry="'+n(1.7*s)+'" fill="'+ring+'"/>';
-    o+='<circle cx="'+n(x)+'" cy="'+n(y-17.7*s)+'" r="'+n(4.3*s)+'" fill="'+color+'"/>';
+    var dark=shade(color,-.16), lite=shade(color,.26);
+    var o='<ellipse cx="'+n(x)+'" cy="'+n(y+1.6)+'" rx="'+n(7*s)+'" ry="'+n(2.8*s)+'" fill="rgba(20,16,10,.16)"/>'; // ground shadow
+    // flared skirt / base (the "piece")
+    o+='<path d="M'+n(x-6.4*s)+' '+n(y)+' Q '+n(x-6.8*s)+' '+n(y-4.5*s)+' '+n(x-4*s)+' '+n(y-6.2*s)+' L '+n(x+4*s)+' '+n(y-6.2*s)+' Q '+n(x+6.8*s)+' '+n(y-4.5*s)+' '+n(x+6.4*s)+' '+n(y)+' Z" fill="'+color+'"/>';
+    // torso with rounded shoulders (the "person")
+    o+='<path d="M'+n(x-4.6*s)+' '+n(y-6.2*s)+' Q '+n(x-5.4*s)+' '+n(y-12.5*s)+' '+n(x-3.2*s)+' '+n(y-14.4*s)+' Q '+n(x-1.7*s)+' '+n(y-15.6*s)+' '+n(x)+' '+n(y-15.6*s)+' Q '+n(x+1.7*s)+' '+n(y-15.6*s)+' '+n(x+3.2*s)+' '+n(y-14.4*s)+' Q '+n(x+5.4*s)+' '+n(y-12.5*s)+' '+n(x+4.6*s)+' '+n(y-6.2*s)+' Z" fill="'+color+'"/>';
+    // head
+    o+='<circle cx="'+n(x)+'" cy="'+n(y-19*s)+'" r="'+n(3.7*s)+'" fill="'+color+'"/>';
     // right-side volume shade (light from the front-left, matching the buildings)
-    o+='<path d="M'+n(x)+' '+n(y)+' Q '+n(x+7.4*s)+' '+n(y-4*s)+' '+n(x+3.2*s)+' '+n(y-5.6*s)+' Q '+n(x+5*s)+' '+n(y-12*s)+' '+n(x+2.2*s)+' '+n(y-13.6*s)+' L '+n(x)+' '+n(y-13.6*s)+' Z" fill="'+dark+'" opacity=".5"/>';
-    o+='<path d="M'+n(x)+' '+n(y-22*s)+' a'+n(4.3*s)+' '+n(4.3*s)+' 0 0 1 0 '+n(8.6*s)+' Z" fill="'+dark+'" opacity=".45"/>';
-    o+='<circle cx="'+n(x-1.4*s)+'" cy="'+n(y-18.9*s)+'" r="'+n(1.7*s)+'" fill="'+lite+'" opacity=".85"/>'; // head highlight
+    o+='<path d="M'+n(x)+' '+n(y)+' Q '+n(x+6.8*s)+' '+n(y-4.5*s)+' '+n(x+4*s)+' '+n(y-6.2*s)+' Q '+n(x+5.4*s)+' '+n(y-12.5*s)+' '+n(x+3.2*s)+' '+n(y-14.4*s)+' L '+n(x)+' '+n(y-14.4*s)+' Z" fill="'+dark+'" opacity=".45"/>';
+    o+='<circle cx="'+n(x-1.3*s)+'" cy="'+n(y-20.1*s)+'" r="'+n(1.5*s)+'" fill="'+lite+'" opacity=".85"/>'; // head highlight
     return o;
   }
 
@@ -348,16 +347,17 @@ section{position:relative;z-index:1}
     var trees=[[0.16,0.5,11800],[0.86,0.52,12000],[0.5,0.9,12200],[0.64,0.82,12400],[0.38,0.86,12600],[0.12,0.7,12800]];
     // depth-sorted static objects (each wrapped as reveal group)
     var objs=[];
-    builds.forEach(function(bd){var g=deptBuilding(place,bd.u,bd.v,bd.type);objs.push({key:bd.key||g.key,at:bd.at,svg:'<g class="rv" data-at="'+bd.at+'">'+g.svg+'</g>'});});
-    trees.forEach(function(t){var g=tree(place,t[0],t[1]);objs.push({key:g.key,at:t[2],svg:'<g class="rv" data-at="'+t[2]+'">'+g.svg+'</g>'});});
+    builds.forEach(function(bd){var g=deptBuilding(place,bd.u,bd.v,bd.type);objs.push({key:g.key,at:bd.at,gy:g.gy,svg:g.svg});});
+    trees.forEach(function(t){var g=tree(place,t[0],t[1]);objs.push({key:g.key,at:t[2],gy:g.gy,svg:g.svg});});
     objs.sort(function(a,b){return a.key-b.key;});
 
-    /* ===== motion system: constant-speed path-following on the road grid ===== */
-    var anim="",mv="",mid=0;
+    /* ===== movement + depth-sorted renderer (rAF) =====
+       Ground pieces are driven per-frame and the whole scene is re-sorted by
+       ground contact point every frame, so pieces genuinely pass BEHIND buildings. */
+    var anim="",fx="",fseq=0;
     var WALK=42, DRIVE=78;                 // world speed in px/sec (calm)
     var OP=!!(window.CSS&&CSS.supports&&CSS.supports('offset-path','path("M0 0 L1 1")'));
     function proj(uv){return uv.map(function(p){return place(p[0],p[1]);});}
-    function plen(pts){var L=0;for(var i=1;i<pts.length;i++)L+=Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]);return L;}
     function pd(pts){return 'M'+pts.map(function(p){return p[0].toFixed(1)+' '+p[1].toFixed(1);}).join(' L ');}
     // Manhattan route on the iso grid: out to the main street (v=.5), along it, then in.
     function routeUV(a,b){
@@ -367,16 +367,7 @@ section{position:relative;z-index:1}
       p.push([b[0],b[1]]);
       return p;
     }
-    // glyph wrapped so it walks upright with a footstep bob
-    function walkG(color,role,scale){return '<g style="animation:bob .52s ease-in-out infinite">'+peg([0,0],color,scale||0.92,role)+'</g>';}
-    function cart(color){return '<ellipse cx="0" cy="7" rx="15" ry="4.2" fill="rgba(20,16,10,.16)"/>'+
-      '<rect x="-13" y="-9" width="24" height="14" rx="3" fill="'+color+'"/>'+
-      '<rect x="-13" y="-9" width="24" height="4.6" rx="2.4" fill="'+shade(color,.14)+'"/>'+
-      '<rect x="-3" y="-4" width="6" height="9" rx="1.5" fill="'+shade(color,-.22)+'"/>'+
-      '<circle cx="-7" cy="6" r="3.1" fill="#2C2620"/><circle cx="7" cy="6" r="3.1" fill="#2C2620"/>';}
-    var mailG='<rect x="-8" y="-6" width="16" height="11" rx="2" fill="#fff" stroke="#D8CBB2"/><path d="M-8 -5 L0 1 L8 -5" fill="none" stroke="#C9A24E" stroke-width="1.3"/>';
-    var pkgG='<rect x="-6" y="-9" width="12" height="9" rx="2" fill="#D9A46A"/><rect x="-6" y="-9" width="12" height="3.5" fill="#C58B4E"/>';
-    // pull a building point out to its road-facing edge so a peg stops at the door, not on the roof
+    // pull a building point out to its road-facing edge so a piece stops at the door, not on the roof
     function dock(uv){
       var du=Math.abs(uv[0]-0.5),dv=Math.abs(uv[1]-0.5);
       if(Math.max(du,dv)<0.14)return uv;
@@ -384,70 +375,103 @@ section{position:relative;z-index:1}
       if(dv>=du)q[1]=uv[1]+(uv[1]<0.5?1:-1)*0.13; else q[0]=uv[0]+(uv[0]<0.5?1:-1)*0.13;
       return q;
     }
-    // worker commuting a→b→a along the roads, constant speed
-    function commuter(aUV,bUV,color,role,at,scale){
-      if(!OP)return;
-      var scr=proj(routeUV(dock(aUV),dock(bUV))), trip=scr.concat(scr.slice(0,-1).reverse());
-      var dur=Math.max(6,plen(trip)/WALK).toFixed(1);
-      mv+='<g class="rv mv" data-at="'+at+'"><g style="offset-path:path(\''+pd(trip)+'\');offset-rotate:0deg;animation:travel '+dur+'s linear infinite">'+walkG(color,role,scale)+'</g></g>';
+    function cart(color){return '<ellipse cx="0" cy="7" rx="15" ry="4.2" fill="rgba(20,16,10,.16)"/>'+
+      '<rect x="-13" y="-9" width="24" height="14" rx="3" fill="'+color+'"/>'+
+      '<rect x="-13" y="-9" width="24" height="4.6" rx="2.4" fill="'+shade(color,.14)+'"/>'+
+      '<rect x="-3" y="-4" width="6" height="9" rx="1.5" fill="'+shade(color,-.22)+'"/>'+
+      '<circle cx="-7" cy="6" r="3.1" fill="#2C2620"/><circle cx="7" cy="6" r="3.1" fill="#2C2620"/>';}
+    var mailG='<rect x="-8" y="-6" width="16" height="11" rx="2" fill="#fff" stroke="#D8CBB2"/><path d="M-8 -5 L0 1 L8 -5" fill="none" stroke="#C9A24E" stroke-width="1.3"/>';
+    var pkgG='<rect x="-6" y="-9" width="12" height="9" rx="2" fill="#D9A46A"/><rect x="-6" y="-9" width="12" height="3.5" fill="#C58B4E"/>';
+
+    // --- ground movers (pawns + carts): registered here, driven + depth-sorted in the rAF loop ---
+    var movers=[], moverSVG="", pathDefs="", mseq=0;
+    function reg(glyph,pts,speed,at,type){
+      var id='mvr'+mseq, pid='mpath'+mseq; mseq++;
+      var trip=pts.concat(pts.slice(0,-1).reverse());   // walk there, then back — a full commute
+      pathDefs+='<path id="'+pid+'" d="'+pd(trip)+'" fill="none"/>';
+      moverSVG+='<g class="sprite" id="'+id+'" style="opacity:0"><g class="mvin">'+glyph+'</g></g>';
+      movers.push({id:id,pid:pid,at:at,speed:speed,type:type,phase:(mseq*1.7)%6.283,gy:-1});
     }
-    // continuous one-way traffic (customers arriving, carts delivering) that loops a→b→a
-    function traffic(glyph,aUV,bUV,speed,at,delay){
-      if(!OP)return;
-      var scr=proj(routeUV(aUV,bUV)), trip=scr.concat(scr.slice(0,-1).reverse());
-      var dur=Math.max(5,plen(trip)/speed).toFixed(1);
-      mv+='<g class="rv mv" data-at="'+at+'"><g style="offset-path:path(\''+pd(trip)+'\');offset-rotate:0deg;animation:travel '+dur+'s linear infinite'+(delay?';animation-delay:-'+delay+'s':'')+'">'+glyph+'</g></g>';
-    }
-    // parcel tossed on a gravity arc between two buildings
+    function commuter(aUV,bUV,color,at){reg(peg([0,0],color,0.92),proj(routeUV(dock(aUV),dock(bUV))),WALK,at,'walk');}
+    function customer(color,at){reg(peg([0,0],color,0.94),proj(routeUV([-0.12,0.5],[0.44,0.5])),WALK,at,'walk');}
+    function cartRun(color,aUV,bUV,at){reg(cart(color),proj(routeUV(aUV,bUV)),DRIVE,at,'cart');}
+
+    // --- overlay FX (value + paperwork): CSS-driven, always above the scene ---
     function parcel(glyph,aUV,bUV,at,dur,lift){
       if(!OP)return;
       var p0=place(aUV[0],aUV[1]),p1=place(bUV[0],bUV[1]);p0=[p0[0],p0[1]-24];p1=[p1[0],p1[1]-24];
-      var cx=((p0[0]+p1[0])/2).toFixed(1),cy=((p0[1]+p1[1])/2-(lift||46)).toFixed(1),id='fl'+(mid++);
+      var cx=((p0[0]+p1[0])/2).toFixed(1),cy=((p0[1]+p1[1])/2-(lift||46)).toFixed(1),id='fx'+(fseq++);
       anim+='@keyframes '+id+'{0%{offset-distance:0%;opacity:0}9%{opacity:1}86%{opacity:1}100%{offset-distance:100%;opacity:0}}';
-      mv+='<g class="rv mv" data-at="'+at+'"><g style="offset-path:path(\'M'+p0[0].toFixed(1)+' '+p0[1].toFixed(1)+' Q '+cx+' '+cy+' '+p1[0].toFixed(1)+' '+p1[1].toFixed(1)+'\');offset-rotate:0deg;animation:'+id+' '+dur+'s linear infinite">'+glyph+'</g></g>';
+      fx+='<g class="rv mv" data-at="'+at+'"><g style="offset-path:path(\'M'+p0[0].toFixed(1)+' '+p0[1].toFixed(1)+' Q '+cx+' '+cy+' '+p1[0].toFixed(1)+' '+p1[1].toFixed(1)+'\');offset-rotate:0deg;animation:'+id+' '+dur+'s linear infinite">'+glyph+'</g></g>';
     }
-    // value rising from a building (revenue lands)
     function coin(uv,at,delay){
-      var p=place(uv[0],uv[1]),id='rs'+(mid++);
+      var p=place(uv[0],uv[1]),id='fx'+(fseq++);
       anim+='@keyframes '+id+'{0%{transform:translate(0,0);opacity:0}14%{opacity:1}58%{opacity:1}100%{transform:translate(0,-34px);opacity:0}}';
-      mv+='<g class="rv mv" data-at="'+at+'" style="transform:translate('+p[0].toFixed(1)+'px,'+(p[1]-30).toFixed(1)+'px)"><g style="animation:'+id+' 3.4s ease-out infinite'+(delay?';animation-delay:-'+delay+'s':'')+'"><circle r="6" fill="'+COL.roofgold+'"/><text x="0" y="3" font-size="8" text-anchor="middle" fill="#8a6a12" font-family="sans-serif" font-weight="700">$</text></g></g>';
+      fx+='<g class="rv mv" data-at="'+at+'" style="transform:translate('+p[0].toFixed(1)+'px,'+(p[1]-30).toFixed(1)+'px)"><g style="animation:'+id+' 3.4s ease-out infinite'+(delay?';animation-delay:-'+delay+'s':'')+'"><circle r="6" fill="'+COL.roofgold+'"/><text x="0" y="3" font-size="8" text-anchor="middle" fill="#8a6a12" font-family="sans-serif" font-weight="700">$</text></g></g>';
     }
-    anim+='@keyframes travel{0%{offset-distance:0%}100%{offset-distance:100%}}'+
-          '@keyframes bob{0%,100%{transform:translateY(0)}25%{transform:translateY(-1.5px)}50%{transform:translateY(0)}75%{transform:translateY(-1.5px)}}';
 
     /* ---- the living loop ---- */
-    // customers keep arriving from the island's edge to Sales, staggered
-    traffic(walkG(C6.sales,'',0.94),[-0.12,0.5],[0.44,0.5],WALK,1200,0);
-    traffic(walkG(C6.sales,'',0.9), [-0.12,0.5],[0.44,0.5],WALK,6400,7);
-    // department workers commuting to HQ and back
-    commuter([0.26,0.32],[0.5,0.5],C6.eng,'eng',9000);
-    commuter([0.28,0.72],[0.5,0.5],C6.finance,'finance',9600);
-    commuter([0.72,0.68],[0.5,0.5],C6.support,'support',10200);
-    commuter([0.55,0.16],[0.5,0.5],C6.mktg,'mktg',10800);
-    commuter([0.74,0.34],[0.5,0.5],C6.ops,'ops',11400);
-    // delivery carts running the main road
-    traffic(cart(C6.ops),        [0.96,0.5],[0.74,0.4],DRIVE,6200,0);
-    traffic(cart(shade(C6.ops,-.06)),[0.04,0.5],[0.5,0.5],DRIVE,11000,4);
-    // goods & paperwork tossed between departments
-    parcel(mailG,[0.44,0.5],[0.74,0.34],12600,4.6,40);   // sales → ops
-    parcel(pkgG, [0.74,0.34],[0.28,0.72],12900,5.4,54);  // ops → finance (fulfill)
-    parcel(mailG,[0.72,0.68],[0.5,0.5], 13200,4.4,36);   // support → hq
-    // revenue rising across the world
-    coin([0.44,0.42],2600,0);
-    coin([0.28,0.66],13500,0);
-    coin([0.5,0.44], 13900,1.1);
-    coin([0.72,0.62],14300,0.6);
+    customer(C6.sales,1200); customer(C6.sales,6400);      // customers arriving to Sales
+    commuter([0.26,0.32],[0.5,0.5],C6.eng,9000);           // departments commuting to HQ
+    commuter([0.28,0.72],[0.5,0.5],C6.finance,9600);
+    commuter([0.72,0.68],[0.5,0.5],C6.support,10200);
+    commuter([0.55,0.16],[0.5,0.5],C6.mktg,10800);
+    commuter([0.74,0.34],[0.5,0.5],C6.ops,11400);
+    cartRun(C6.ops,[0.96,0.5],[0.74,0.4],6200);            // delivery carts on the main road
+    cartRun(shade(C6.ops,-.06),[0.04,0.5],[0.5,0.5],11000);
+    parcel(mailG,[0.44,0.5],[0.74,0.34],12600,4.6,40);     // sales → ops
+    parcel(pkgG, [0.74,0.34],[0.28,0.72],12900,5.4,54);    // ops → finance (fulfill)
+    parcel(mailG,[0.72,0.68],[0.5,0.5], 13200,4.4,36);     // support → hq
+    coin([0.44,0.42],2600,0); coin([0.28,0.66],13500,0);   // revenue rising
+    coin([0.5,0.44],13900,1.1); coin([0.72,0.62],14300,0.6);
 
-    var frag='<g>'+base+'<g class="rv" data-at="4600">'+roadSvg+'</g>'+objs.map(function(o){return o.svg;}).join("")+mv+'</g>';
+    // layers: static ground (back) · depth-sorted sprites (middle) · FX (front)
+    var bldSVG=objs.map(function(o){return '<g class="sprite bld rv" data-at="'+o.at+'" data-gy="'+o.gy.toFixed(1)+'">'+o.svg+'</g>';}).join("");
+    var frag='<defs>'+pathDefs+'</defs>'
+      +'<g class="back">'+base+'<g class="rv" data-at="4600">'+roadSvg+'</g></g>'
+      +'<g id="hero-spr">'+bldSVG+moverSVG+'</g>'
+      +'<g class="overlay">'+fx+'</g>';
     svgEl.innerHTML='<style>'+anim+' #hero .win{fill:var(--window)} :root[data-theme="dark"] #hero .win{filter:drop-shadow(0 0 3px #FFCF6E)}</style>'+frag;
 
-    // timeline driver
-    var nodes=[].slice.call(svgEl.querySelectorAll('.rv'));
-    function reset(){nodes.forEach(function(n){n.classList.remove('on');});}
-    function play(){nodes.forEach(function(n){var at=+n.getAttribute('data-at');setTimeout(function(){n.classList.add('on');},at);});}
-    if(reduce){nodes.forEach(function(n){n.classList.add('on');});return;}
-    var LOOP=20000;
-    function cycle(){reset();play();setTimeout(function(){ // fade out near end
+    // gather sortable sprites (buildings/trees are fixed depth; movers update each frame)
+    var host=document.getElementById('hero-spr');
+    var spr=[];
+    [].slice.call(host.querySelectorAll('.bld')).forEach(function(n){spr.push({node:n,gy:+n.getAttribute('data-gy')});});
+    movers.forEach(function(m){
+      m.node=document.getElementById(m.id); m.inner=m.node.firstChild;
+      m.path=document.getElementById(m.pid); m.len=m.path.getTotalLength();
+      m.durMs=Math.max(5000,m.len/m.speed*1000);
+      spr.push(m);
+    });
+    function depthSort(){spr.sort(function(a,b){return a.gy-b.gy;});for(var j=0;j<spr.length;j++)host.appendChild(spr[j].node);}
+
+    var nodes=[].slice.call(svgEl.querySelectorAll('.rv'));   // buildings/trees/roads/FX reveal
+    if(reduce){
+      nodes.forEach(function(n){n.classList.add('on');});
+      movers.forEach(function(m){var pt=m.path.getPointAtLength(0);m.node.style.opacity=1;m.node.setAttribute('transform','translate('+pt.x.toFixed(1)+' '+pt.y.toFixed(1)+')');m.gy=pt.y;});
+      depthSort();
+      return;
+    }
+    var LOOP=20000, t0=(window.performance&&performance.now)?performance.now():0;
+    function frame(now){
+      var lt=(now-t0)%LOOP;
+      for(var i=0;i<movers.length;i++){var m=movers[i],el=m.node;
+        if(lt<m.at){el.style.opacity=0;el.style.display='none';m.gy=-1;continue;}
+        el.style.display='';
+        el.style.opacity=Math.min(1,(lt-m.at)/380);
+        var p=((lt-m.at)/m.durMs)%1, pt=m.path.getPointAtLength(p*m.len);
+        el.setAttribute('transform','translate('+pt.x.toFixed(1)+' '+pt.y.toFixed(1)+')');
+        m.gy=pt.y;
+        if(m.type==='walk'){m.inner.setAttribute('transform','translate(0 '+(-1.4*Math.abs(Math.sin(lt/150+m.phase))).toFixed(2)+')');} // footstep bob
+      }
+      depthSort();
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+
+    // reveal timeline (buildings/trees/roads/FX) — same 20s cadence, world builds then rebuilds
+    function play(){nodes.forEach(function(n){n.classList.remove('on');var at=+n.getAttribute('data-at')||0;setTimeout(function(){n.classList.add('on');},at);});}
+    function cycle(){play();setTimeout(function(){
         nodes.slice().reverse().forEach(function(n,i){setTimeout(function(){n.classList.remove('on');},i*40);});
       },LOOP-1400);
       setTimeout(cycle,LOOP);}
