@@ -118,6 +118,22 @@ net = r.json() if r.status_code == 200 else {}
 check("stats network", r.status_code == 200 and "nodes" in net and "edges" in net and "recent" in net,
       f"nodes={len(net.get('nodes', []))} edges={len(net.get('edges', []))}")
 
+# 15. fleet SSE stream — connect, read first event, confirm the multiplexed handshake
+try:
+    fr = requests.get(BASE + "/stream/fleet", stream=True, timeout=25,
+                      headers={"Accept": "text/event-stream"})
+    ctype = fr.headers.get("content-type", "")
+    first = ""
+    for line in fr.iter_lines(decode_unicode=True):
+        if line:
+            first = line
+            break
+    fr.close()
+    check("fleet stream connect", fr.status_code == 200 and "text/event-stream" in ctype and "CONNECTED" in first,
+          f"status={fr.status_code} first={first[:60]}")
+except Exception as e:
+    check("fleet stream connect", False, str(e)[:80])
+
 passed = sum(1 for _, ok in results if ok)
 emit(f"\n=== {passed}/{len(results)} checks passed ===")
 with open("railway_smoke.txt", "w") as f:
