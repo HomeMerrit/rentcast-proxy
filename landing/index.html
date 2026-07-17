@@ -58,6 +58,8 @@ section{position:relative;z-index:1}
 .hero-cta{display:flex;gap:12px;justify-content:center;margin-top:26px;flex-wrap:wrap;align-items:center}
 .stage{margin:14px auto 0;max-width:1120px;position:relative}
 .stage svg{width:100%;height:auto;display:block;overflow:visible}
+#hero3d{width:100%;display:block;min-height:280px;touch-action:pan-y}
+.stage-fallback{padding:80px 20px;text-align:center;color:var(--ink-3)}
 .liveflag{position:absolute;top:12px;left:50%;transform:translateX(-50%);display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);background:color-mix(in srgb,var(--panel) 70%,transparent);border:1px solid var(--line);border-radius:20px;padding:5px 12px;backdrop-filter:blur(6px)}
 .liveflag .dot{width:7px;height:7px;border-radius:50%;background:var(--coral)}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
@@ -130,7 +132,8 @@ section{position:relative;z-index:1}
     </div>
     <div class="stage">
       <span class="liveflag"><span class="dot"></span> watch it work</span>
-      <svg id="hero" viewBox="0 0 1120 720" role="img" aria-label="A living company: workers, buildings, roads and deliveries appear and move as a small company builds and runs itself."></svg>
+      <canvas id="hero3d" role="img" aria-label="A living 3D company: a customer's task moves through the Sales, Operations and Finance teams and becomes revenue."></canvas>
+      <noscript><div class="stage-fallback">An interactive 3D world of your company at work.</div></noscript>
     </div>
   </div>
 </section>
@@ -418,7 +421,7 @@ section{position:relative;z-index:1}
     }
     requestAnimationFrame(frame);
   }
-  buildHero();
+  /* hero is now rendered in real 3D (see hero3d.js); the SVG hero is retired */
 
   /* ---- shared depth-sorted mini-scene: same occlusion engine as the hero ---- */
   function sortedScene(el, place, islandD, roadSvg, blds, trees, residents, movers){
@@ -507,5 +510,8 @@ section{position:relative;z-index:1}
     document.getElementById("logo").innerHTML=s;})();
 })();
 </script>
+
+<script type="importmap">{"imports":{"three":"./vendor/three.module.min.js","three/addons/":"./vendor/addons/"}}</script>
+<script type="module" src="./hero3d.js"></script>
 
 </html>
