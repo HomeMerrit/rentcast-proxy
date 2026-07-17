@@ -43,7 +43,8 @@ async def platform_agent_card(db: AsyncSession = Depends(get_db)):
         select(Agent).options(selectinload(Agent.skills)).order_by(Agent.created_at)
     )
     agents = result.scalars().all()
-    base_url = "http://localhost:8000"
+    import os
+    base_url = os.environ.get("PUBLIC_BASE_URL", "http://localhost:8000")
     return {
         "name": "AgentOS Platform",
         "description": "Multi-agent AI platform",
@@ -64,7 +65,8 @@ async def agent_card(agent_id: UUID, db: AsyncSession = Depends(get_db)):
     agent = result.scalar_one_or_none()
     if not agent:
         raise HTTPException(404, "Agent not found")
-    base_url = "http://localhost:8000"
+    import os
+    base_url = os.environ.get("PUBLIC_BASE_URL", "http://localhost:8000")
     return _build_agent_card(agent, base_url)
 
 

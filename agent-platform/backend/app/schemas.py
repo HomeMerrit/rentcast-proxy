@@ -1,7 +1,7 @@
 from __future__ import annotations
 import uuid
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 from pydantic import BaseModel, ConfigDict, model_validator
 
 class AgentSkillOut(BaseModel):
@@ -21,6 +21,7 @@ class WorkLogOut(BaseModel):
     reflection: Optional[str] = None
     success: bool
     tokens_used: int
+    cost_usd: Optional[float] = None
     duration_ms: Optional[int] = None
     started_at: datetime
     finished_at: Optional[datetime] = None
@@ -51,6 +52,8 @@ class AgentOut(BaseModel):
     department: str
     bio: Optional[str] = None
     avatar_seed: str
+    avatar_url: Optional[str] = None
+    company_id: Optional[uuid.UUID] = None
     model: str
     status: str
     current_task: Optional[str] = None
@@ -66,7 +69,26 @@ class AgentCreate(BaseModel):
     department: str
     bio: Optional[str] = None
     avatar_seed: str
+    avatar_url: Optional[str] = None
+    company_id: Optional[uuid.UUID] = None
     model: str = "claude-sonnet-5"
+
+class AgentUpdate(BaseModel):
+    name: Optional[str] = None
+    title: Optional[str] = None
+    department: Optional[str] = None
+    bio: Optional[str] = None
+    avatar_seed: Optional[str] = None
+    avatar_url: Optional[str] = None
+    model: Optional[str] = None
+
+class SkillItem(BaseModel):
+    skill: str
+    proficiency: int = 50
+
+class SkillsAdd(BaseModel):
+    # Accept either ["name", ...] or [{"skill": "...", "proficiency": 60}, ...]
+    skills: list[Union[str, SkillItem]]
 
 class AgentStatusUpdate(BaseModel):
     status: str
@@ -112,3 +134,46 @@ class EvalResultOut(BaseModel):
     skill_updates: dict = {}
     created_at: datetime
     model_config = ConfigDict(from_attributes=True)
+
+
+# ---------- Company + documents ----------
+
+class CompanyCreate(BaseModel):
+    name: str
+    industry: Optional[str] = None
+    description: Optional[str] = None
+    website: Optional[str] = None
+    logo_url: Optional[str] = None
+    size: Optional[str] = None
+
+class CompanyUpdate(BaseModel):
+    name: Optional[str] = None
+    industry: Optional[str] = None
+    description: Optional[str] = None
+    website: Optional[str] = None
+    logo_url: Optional[str] = None
+    size: Optional[str] = None
+
+class CompanyOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: uuid.UUID
+    name: str
+    industry: Optional[str] = None
+    description: Optional[str] = None
+    website: Optional[str] = None
+    logo_url: Optional[str] = None
+    size: Optional[str] = None
+    created_at: datetime
+    updated_at: datetime
+
+class DocumentOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: uuid.UUID
+    company_id: Optional[uuid.UUID] = None
+    agent_id: Optional[uuid.UUID] = None
+    filename: str
+    content_type: Optional[str] = None
+    size_bytes: int
+    status: str
+    chunk_count: int
+    created_at: datetime

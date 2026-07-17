@@ -3,10 +3,11 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from .routers import agents, stream, comms, work_log, memory, a2a, evals
+from .routers import agents, stream, comms, work_log, memory, a2a, evals, skills, company
 from .routers import auth as auth_router
 from .database import engine, Base
-from .models_db import EvalResult, AgentConfig, APIKey  # noqa: F401
+from .models_db import EvalResult, AgentConfig, APIKey, Company, Document  # noqa: F401
+from .migrations import run_migrations
 from .config import settings
 import logging
 
@@ -16,6 +17,8 @@ logger = logging.getLogger("agentos")
 async def lifespan(app: FastAPI):
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+    # Apply additive column migrations to existing tables (create_all won't).
+    await run_migrations(engine)
     # Startup warnings
     if not settings.anthropic_api_key:
         logger.warning("ANTHROPIC_API_KEY is not set — agents will fail to run")
@@ -41,8 +44,8 @@ if settings.cors_origins:
 app.add_middleware(
     CORSMiddleware,
     allow_origins=_cors_origins,
-    # Allow any Railway-hosted frontend (e.g. frontend-production-xxxx.up.railway.app)
-    allow_origin_regex=r"https://.*\.up\.railway\.app",
+    # Allow any Railway- or Vercel-hosted frontend (previews + production)
+    allow_origin_regex=r"https://.*\.(up\.railway\.app|vercel\.app)",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -56,6 +59,8 @@ app.include_router(memory.router, prefix="/agents", tags=["memory"])
 app.include_router(a2a.router, tags=["a2a"])
 app.include_router(evals.router, prefix="/agents", tags=["evals"])
 app.include_router(auth_router.router, prefix="/auth", tags=["auth"])
+app.include_router(skills.router, tags=["skills"])
+app.include_router(company.router, tags=["company"])
 
 @app.get("/health")
 async def health():

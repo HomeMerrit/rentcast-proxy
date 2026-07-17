@@ -51,6 +51,8 @@ export interface Agent {
   department: string;
   bio?: string;
   avatar_seed: string;
+  avatar_url?: string | null;
+  company_id?: string | null;
   model: string;
   status: AgentStatus;
   current_task?: string;
@@ -61,6 +63,34 @@ export interface Agent {
   skills: AgentSkill[];
   recent_work?: WorkLogEntry[];
   recent_comms?: AgentComm[];
+}
+
+export interface Company {
+  id: string;
+  name: string;
+  industry?: string | null;
+  description?: string | null;
+  website?: string | null;
+  size?: string | null;
+  logo_url?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CompanyDocument {
+  id: string;
+  company_id?: string | null;
+  agent_id?: string | null;
+  filename: string;
+  content_type?: string | null;
+  size_bytes: number;
+  status: string;
+  chunk_count: number;
+  created_at: string;
+}
+
+export interface SkillCatalog {
+  departments: { department: string; skills: string[] }[];
 }
 
 export interface Memory {

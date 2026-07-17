@@ -1,4 +1,8 @@
+import Link from "next/link";
+import { Plus, Activity } from "lucide-react";
 import { AgentCard } from "./AgentCard";
+import { Logo } from "./brand/Logo";
+import HumanInbox from "./HumanInbox";
 import type { Agent } from "@/types/agent";
 
 interface Props {
@@ -6,48 +10,86 @@ interface Props {
 }
 
 export function TeamDashboard({ agents }: Props) {
-  const active = agents.filter(
-    (a) => a.status === "active" || a.status === "thinking"
-  ).length;
+  const active = agents.filter((a) => a.status === "active" || a.status === "thinking").length;
+  const totalTasks = agents.reduce((s, a) => s + (a.task_count || 0), 0);
+  const totalSuccess = agents.reduce((s, a) => s + (a.success_count || 0), 0);
+  const successRate = totalTasks ? Math.round((totalSuccess / totalTasks) * 100) : 0;
 
   return (
-    <div className="min-h-screen bg-gray-950">
-      {/* Top bar */}
-      <header className="border-b border-gray-800 bg-gray-900/80 backdrop-blur sticky top-0 z-10">
-        <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
+    <div className="app-backdrop min-h-screen">
+      <header className="sticky top-0 z-30 border-b border-line bg-canvas/80 backdrop-blur-xl">
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
           <div className="flex items-center gap-3">
-            <span className="text-lg font-bold text-gray-100">AgentOS</span>
-            <span className="px-2 py-0.5 text-xs bg-brand-900/60 text-brand-500 border border-brand-500/30 rounded-full">
+            <Logo />
+            <span className="hidden items-center gap-1.5 rounded-full border border-line bg-white/[0.03] px-2.5 py-1 text-2xs font-medium text-positive sm:inline-flex">
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-positive opacity-75" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-positive" />
+              </span>
               {active} active
             </span>
           </div>
-          <div className="text-sm text-gray-600">{agents.length} agents</div>
+          <div className="flex items-center gap-2">
+            <HumanInbox />
+            <Link
+              href="/agents/new"
+              className="inline-flex h-9 items-center gap-1.5 rounded-xl bg-iris-gradient px-3.5 text-sm font-medium text-white shadow-[0_8px_24px_-10px_rgba(114,87,255,0.8)] transition-transform active:scale-95"
+            >
+              <Plus className="h-4 w-4" /> New agent
+            </Link>
+          </div>
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-6 py-8">
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-100">Your AI Team</h1>
-          <p className="text-gray-500 mt-1 text-sm">
-            Working 24/7 — click any agent to see their profile
-          </p>
-        </div>
-
-        {agents.length === 0 ? (
-          <div className="text-center py-16">
-            <p className="text-gray-600 text-lg">No agents found.</p>
-            <p className="text-gray-700 text-sm mt-2">
-              Make sure the backend is reachable and has agents registered.
+      <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+        <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p className="eyebrow">Your workforce</p>
+            <h1 className="mt-1 font-display text-2xl font-semibold tracking-tight text-content sm:text-3xl">
+              AI Team
+            </h1>
+            <p className="mt-1 text-sm text-content-muted">
+              Working around the clock — open any agent to see them think, act and learn.
             </p>
           </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {agents.map((agent) => (
-              <AgentCard key={agent.id} agent={agent} />
-            ))}
+          <div className="flex gap-2.5">
+            <Stat label="Agents" value={agents.length} />
+            <Stat label="Tasks" value={totalTasks} />
+            <Stat label="Success" value={`${successRate}%`} accent />
           </div>
-        )}
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {agents.map((agent, i) => (
+            <div key={agent.id} className="animate-fade-up" style={{ animationDelay: `${i * 40}ms` }}>
+              <AgentCard agent={agent} />
+            </div>
+          ))}
+          <Link
+            href="/agents/new"
+            className="group flex min-h-[168px] flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-line-strong bg-white/[0.01] text-content-subtle transition-all hover:border-iris-400/50 hover:bg-iris-500/[0.04] hover:text-iris-300"
+          >
+            <span className="grid h-11 w-11 place-items-center rounded-xl bg-white/[0.04] transition-colors group-hover:bg-iris-soft">
+              <Plus className="h-5 w-5" />
+            </span>
+            <span className="text-sm font-medium">Hire another agent</span>
+          </Link>
+        </div>
       </main>
+    </div>
+  );
+}
+
+function Stat({ label, value, accent }: { label: string; value: string | number; accent?: boolean }) {
+  return (
+    <div className="rounded-xl border border-line bg-surface px-3.5 py-2 text-center">
+      <p className={`font-display text-lg font-semibold tabular-nums ${accent ? "text-gradient" : "text-content"}`}>
+        {value}
+      </p>
+      <p className="flex items-center justify-center gap-1 text-2xs text-content-subtle">
+        {label === "Success" && <Activity className="h-2.5 w-2.5" />}
+        {label}
+      </p>
     </div>
   );
 }

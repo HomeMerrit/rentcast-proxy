@@ -27,6 +27,7 @@ async def _run_task_async(
     from ..agents.base_agent import BaseAgent
     from ..agents.publisher import AgentEventPublisher
     from ..models_db import Agent, WorkLog
+    from ..pricing import cost_for
 
     started_at = datetime.now(timezone.utc)
 
@@ -82,6 +83,7 @@ async def _run_task_async(
                     reflection=result_data["reflection"],
                     success=result_data["success"],
                     tokens_used=result_data["tokens_used"],
+                    cost_usd=cost_for(model, result_data["tokens_used"]),
                     duration_ms=result_data["duration_ms"],
                     started_at=started_at,
                     finished_at=finished_at,

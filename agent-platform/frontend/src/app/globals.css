@@ -3,17 +3,67 @@
 @tailwind utilities;
 
 :root {
-  --foreground: 248 250 252;
-  --background: 2 6 23;
+  color-scheme: dark;
 }
 
 * {
   box-sizing: border-box;
 }
 
+html {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
 body {
-  color: rgb(var(--foreground));
-  background: rgb(var(--background));
+  color: theme("colors.content.DEFAULT");
+  background-color: theme("colors.canvas");
+  min-height: 100vh;
+}
+
+::selection {
+  background: rgba(114, 87, 255, 0.32);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: none;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.16);
+  background-clip: content-box;
+}
+
+@layer components {
+  .glass {
+    @apply bg-surface/80 border border-line backdrop-blur-xl;
+  }
+  .card {
+    @apply rounded-2xl bg-surface border border-line shadow-card;
+  }
+  .card-raised {
+    @apply rounded-2xl bg-surface-raised border border-line shadow-raised;
+  }
+  .text-gradient {
+    @apply bg-iris-gradient bg-clip-text text-transparent;
+  }
+  .eyebrow {
+    @apply text-2xs font-medium uppercase tracking-[0.14em] text-content-subtle;
+  }
 }
 
 @layer utilities {
@@ -23,5 +73,39 @@ body {
   }
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
+  }
+  .app-backdrop {
+    background-image: theme("backgroundImage.radial-iris"),
+      theme("backgroundImage.grid-faint");
+    background-size: auto, 44px 44px;
+    background-position: center top, center top;
+    background-repeat: no-repeat, repeat;
+  }
+  .shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+  .shimmer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.06),
+      transparent
+    );
+    animation: shimmer 1.8s infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
   }
 }

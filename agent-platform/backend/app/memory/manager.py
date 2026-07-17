@@ -18,6 +18,7 @@ class MemoryManager:
 
     def __init__(self):
         self._client: Optional[AsyncQdrantClient] = None
+        self._embedder = None  # cached fastembed model (loading it is expensive)
 
     async def _get_client(self) -> AsyncQdrantClient:
         if self._client is None:
@@ -39,10 +40,16 @@ class MemoryManager:
                 )
         return self._client
 
+    def _get_embedder(self):
+        """Load the fastembed model once and reuse it (loading is expensive)."""
+        if self._embedder is None:
+            from fastembed import TextEmbedding
+            self._embedder = TextEmbedding("BAAI/bge-small-en-v1.5")
+        return self._embedder
+
     async def _embed(self, text: str) -> list[float]:
         """Embed text using fastembed (bundled with qdrant-client[fastembed])."""
-        from fastembed import TextEmbedding
-        embedder = TextEmbedding("BAAI/bge-small-en-v1.5")
+        embedder = self._get_embedder()
         vectors = list(embedder.embed([text]))
         return vectors[0].tolist()
 
