@@ -20,7 +20,9 @@ class Agent(Base):
     success_count: Mapped[int] = mapped_column(Integer, default=0)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.utcnow)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.utcnow)
-    skills: Mapped[list["AgentSkill"]] = relationship("AgentSkill", back_populates="agent", cascade="all, delete")
+    # lazy="selectin" so AgentOut serialization (create/update/run endpoints) never triggers
+    # an async lazy-load outside the greenlet, which would raise MissingGreenlet -> HTTP 500.
+    skills: Mapped[list["AgentSkill"]] = relationship("AgentSkill", back_populates="agent", cascade="all, delete", lazy="selectin")
     work_log: Mapped[list["WorkLog"]] = relationship("WorkLog", back_populates="agent", cascade="all, delete")
 
 class AgentSkill(Base):
