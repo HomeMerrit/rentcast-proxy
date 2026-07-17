@@ -121,14 +121,19 @@ async def add_skills(agent_id: UUID, body: SkillsAdd, db: AsyncSession = Depends
     for item in body.skills:
         if isinstance(item, str):
             name, prof = item, 50
-        else:
+        elif isinstance(item, dict):
+            name, prof = item.get("skill"), item.get("proficiency", 50)
+        else:  # SkillItem
             name, prof = item.skill, item.proficiency
         if not name or name.lower() in existing:
             continue
         existing.add(name.lower())
-        db.add(AgentSkill(agent_id=agent_id, skill=name, proficiency=max(0, min(100, prof))))
+        # Append to the relationship so the in-session collection reflects the change
+        # (session uses expire_on_commit=False, so a bare db.add would leave it stale).
+        agent.skills.append(AgentSkill(skill=name, proficiency=max(0, min(100, int(prof)))))
     await db.commit()
-    return await _get_agent_with_skills(agent_id, db)
+    await db.refresh(agent, ["skills"])
+    return agent
 
 
 @router.delete("/{agent_id}/skills/{skill_id}", status_code=204)
