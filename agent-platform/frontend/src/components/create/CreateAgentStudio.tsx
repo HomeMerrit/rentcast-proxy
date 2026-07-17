@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Sparkles, ArrowRight, Building2, Cpu } from "lucide-react";
 import { api } from "@/lib/api";
@@ -29,10 +29,16 @@ export function CreateAgentStudio({
   compact?: boolean;
 }) {
   const toast = useToast();
-  const [avatar, setAvatar] = useState<AvatarValue>({
-    avatar_seed: Math.random().toString(36).slice(2, 10),
-    avatar_url: null,
-  });
+  // Stable seed on first render (server + client match); randomize after mount
+  // to avoid a hydration mismatch from Math.random() in the initializer.
+  const [avatar, setAvatar] = useState<AvatarValue>({ avatar_seed: "new-agent", avatar_url: null });
+  useEffect(() => {
+    setAvatar((v) =>
+      v.avatar_seed === "new-agent" && !v.avatar_url
+        ? { ...v, avatar_seed: Math.random().toString(36).slice(2, 10) }
+        : v
+    );
+  }, []);
   const [name, setName] = useState("");
   const [title, setTitle] = useState("");
   const [department, setDepartment] = useState("");
