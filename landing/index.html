@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Build a company that builds itself</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+:root{
+  --bg-1:#E9F0EF; --bg-2:#F7F2EA; --ink:#241F18; --ink-2:#5C554A; --ink-3:#8C8474;
+  --panel:#FFFFFF; --line:rgba(36,31,24,.10); --line-2:rgba(36,31,24,.16);
+  --coral:#ED7150; --coral-d:#CE5330; --gold:#F0BE4D;
+  --sales:#5A97D6; --support:#4FB0AA; --finance:#E6AE3C; --ops:#E08A5B; --eng:#8B79D4; --mktg:#E06A9A;
+  --window:rgba(64,84,104,.28);
+  --shadow-s:0 1px 2px rgba(30,24,16,.06),0 8px 22px -12px rgba(30,24,16,.22);
+  --shadow-m:0 2px 4px rgba(30,24,16,.06),0 22px 46px -22px rgba(30,24,16,.30);
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",system-ui,Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg-1:#20273f; --bg-2:#171c2e; --ink:#F3EFE6; --ink-2:#B7B1A4; --ink-3:#847E71;
+    --panel:#212840; --line:rgba(206,214,235,.12); --line-2:rgba(206,214,235,.18);
+    --coral:#F5825F; --gold:#F5CB63; --window:#FFD98A;
+    --shadow-s:0 1px 2px rgba(0,0,0,.3),0 10px 24px -12px rgba(0,0,0,.5);
+    --shadow-m:0 2px 6px rgba(0,0,0,.35),0 26px 50px -24px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="light"]{--bg-1:#E9F0EF;--bg-2:#F7F2EA;--ink:#241F18;--ink-2:#5C554A;--ink-3:#8C8474;--panel:#FFFFFF;--line:rgba(36,31,24,.10);--line-2:rgba(36,31,24,.16);--coral:#ED7150;--gold:#F0BE4D;--window:rgba(64,84,104,.28);--shadow-s:0 1px 2px rgba(30,24,16,.06),0 8px 22px -12px rgba(30,24,16,.22);--shadow-m:0 2px 4px rgba(30,24,16,.06),0 22px 46px -22px rgba(30,24,16,.30);}
+:root[data-theme="dark"]{--bg-1:#20273f;--bg-2:#171c2e;--ink:#F3EFE6;--ink-2:#B7B1A4;--ink-3:#847E71;--panel:#212840;--line:rgba(206,214,235,.12);--line-2:rgba(206,214,235,.18);--coral:#F5825F;--gold:#F5CB63;--window:#FFD98A;--shadow-s:0 1px 2px rgba(0,0,0,.3),0 10px 24px -12px rgba(0,0,0,.5);--shadow-m:0 2px 6px rgba(0,0,0,.35),0 26px 50px -24px rgba(0,0,0,.6);}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;background:var(--bg-2)}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;color:var(--ink);font-family:var(--font);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;background:linear-gradient(180deg,var(--bg-1),var(--bg-2) 55%);background-attachment:fixed;}
+.wrap{max-width:1160px;margin:0 auto;padding:0 26px}
+h1,h2,h3{margin:0;font-weight:800;letter-spacing:-.03em;text-wrap:balance}
+p{margin:0}
+a{color:inherit;text-decoration:none}
+.eyebrow{font-family:var(--mono);text-transform:uppercase;letter-spacing:.22em;font-size:11px;color:var(--ink-3);font-weight:600}
+
+.bar{position:sticky;top:0;z-index:60;backdrop-filter:blur(12px);background:color-mix(in srgb,var(--bg-2) 74%,transparent);border-bottom:1px solid var(--line)}
+.bar-in{max-width:1160px;margin:0 auto;padding:0 26px;height:64px;display:flex;align-items:center;justify-content:space-between}
+.brandlk{display:flex;align-items:center;gap:11px}
+.wordmark{font-weight:800;font-size:19px;letter-spacing:-.02em}
+.barbtns{display:flex;align-items:center;gap:10px}
+.ttoggle{width:38px;height:38px;border-radius:11px;border:1px solid var(--line-2);background:var(--panel);cursor:pointer;display:grid;place-items:center;font-size:15px;box-shadow:var(--shadow-s)}
+.btn{font-weight:600;font-size:15px;border-radius:13px;padding:12px 20px;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:9px;transition:transform .14s,box-shadow .14s}
+.btn-p{background:var(--coral);color:#fff;box-shadow:0 10px 24px -10px var(--coral-d,#CE5330)}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 16px 30px -10px var(--coral-d,#CE5330)}
+.btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--line-2)}
+.btn-ghost:hover{background:color-mix(in srgb,var(--ink) 5%,transparent)}
+.btn-link{background:transparent;color:var(--ink-2);padding:12px 6px}
+.btn-link:hover{color:var(--ink)}
+
+section{position:relative;z-index:1}
+.hero{padding:52px 0 8px;text-align:center}
+.hero h1{font-size:clamp(38px,6.4vw,74px);line-height:.98;letter-spacing:-.04em}
+.hero .sub{font-size:clamp(16px,2vw,20px);color:var(--ink-2);max-width:30ch;margin:20px auto 0;font-weight:450}
+.hero-cta{display:flex;gap:12px;justify-content:center;margin-top:26px;flex-wrap:wrap;align-items:center}
+.stage{margin:14px auto 0;max-width:1120px;position:relative}
+.stage svg{width:100%;height:auto;display:block;overflow:visible}
+.liveflag{position:absolute;top:12px;left:50%;transform:translateX(-50%);display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);background:color-mix(in srgb,var(--panel) 70%,transparent);border:1px solid var(--line);border-radius:20px;padding:5px 12px;backdrop-filter:blur(6px)}
+.liveflag .dot{width:7px;height:7px;border-radius:50%;background:var(--coral)}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.liveflag .dot{animation:blink 1.8s ease-in-out infinite}
+
+.band{padding:92px 0;border-top:1px solid var(--line)}
+.band.soft{background:color-mix(in srgb,var(--panel) 34%,transparent)}
+.sec-head{max-width:660px}
+.sec-head.center{margin:0 auto;text-align:center}
+.sec-head h2{font-size:clamp(28px,4.4vw,46px);line-height:1.02;letter-spacing:-.03em}
+.sec-head p{color:var(--ink-2);font-size:18px;margin-top:14px;font-weight:450}
+
+/* in-world workers — each in their own district */
+.team{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:40px}
+@media(max-width:820px){.team{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:460px){.team{grid-template-columns:repeat(2,1fr)}}
+.tw{text-align:center;padding:10px 4px 14px;border-radius:18px;transition:background .18s,transform .18s}
+.tw:hover{background:color-mix(in srgb,var(--panel) 55%,transparent);transform:translateY(-4px)}
+.tw svg{width:100%;height:auto;display:block}
+.tw .n{font-weight:700;font-size:14px;margin-top:2px}
+.tw .j{font-size:12px;color:var(--ink-3)}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:center}
+@media(max-width:860px){.two{grid-template-columns:1fr;gap:26px}}
+.visual{border-radius:26px;overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow-m);background:linear-gradient(180deg,color-mix(in srgb,var(--bg-1) 70%,var(--panel)),var(--panel))}
+.visual svg{width:100%;height:auto;display:block}
+
+.growth{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:44px}
+@media(max-width:820px){.growth{grid-template-columns:repeat(2,1fr)}}
+.grow{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:14px;box-shadow:var(--shadow-s);text-align:center}
+.grow svg{width:100%;height:auto;display:block}
+.grow .n{font-weight:700;font-size:15px;margin-top:8px}
+
+.final{padding:112px 0 120px;text-align:center}
+.final h2{font-size:clamp(32px,5.2vw,58px);line-height:1;letter-spacing:-.035em}
+.final .sub{color:var(--ink-2);font-size:18px;margin-top:16px}
+.final .hero-cta{margin-top:32px}
+
+.foot{border-top:1px solid var(--line);padding:34px 0 64px;color:var(--ink-3);font-size:12.5px}
+.foot .ns{font-weight:700;color:var(--ink-2);font-size:14px;letter-spacing:-.01em}
+.foot .src{font-family:var(--mono);font-size:11px;line-height:1.9;margin-top:12px;max-width:80ch}
+:focus-visible{outline:2.5px solid var(--coral);outline-offset:3px;border-radius:8px}
+
+/* reveal + motion */
+.rv{opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .8s cubic-bezier(.18,1.25,.4,1)}
+.rv.on{opacity:1;transform:translateY(0)}
+@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}.mv{display:none}}
+</style>
+
+<div class="bar">
+  <div class="bar-in">
+    <div class="brandlk">
+      <svg width="30" height="30" viewBox="0 0 40 40" aria-hidden="true" id="logo"></svg>
+      <span class="wordmark">Atlas</span>
+    </div>
+    <div class="barbtns">
+      <button class="ttoggle" id="tbtn" aria-label="Toggle day and night"><span id="ticon">🌙</span></button>
+      <a class="btn btn-p" href="#start">Start Building</a>
+    </div>
+  </div>
+</div>
+
+<section class="hero">
+  <div class="wrap">
+    <h1>Build a company<br/>that builds itself.</h1>
+    <p class="sub">Your business, brought to life.</p>
+    <div class="hero-cta">
+      <a class="btn btn-p" href="#start">Start Building</a>
+      <a class="btn btn-link" href="#start" aria-label="Watch a 60 second demo">▶&nbsp; Watch 60s demo</a>
+    </div>
+    <div class="stage">
+      <span class="liveflag"><span class="dot"></span> watch it grow</span>
+      <svg id="hero" viewBox="0 0 1120 720" role="img" aria-label="A living company: workers, buildings, roads and deliveries appear and move as a small company builds and runs itself."></svg>
+    </div>
+  </div>
+</section>
+
+<section class="band soft">
+  <div class="wrap">
+    <div class="sec-head center">
+      <p class="eyebrow">The team</p>
+      <h2>Every worker has a job.</h2>
+      <p>Hire one, hire a hundred. Each shows up in your world — recognizable at a glance, with real work to do.</p>
+    </div>
+    <div class="team" id="team"></div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap two">
+    <div class="sec-head">
+      <p class="eyebrow">The economy</p>
+      <h2>You don't have workers. You have an economy.</h2>
+      <p>A customer arrives. Sales talks. Finance invoices. Operations fulfills. Support follows up. Revenue appears — and the company grows. You watch value being made.</p>
+    </div>
+    <div class="visual"><svg id="econWorld" viewBox="0 0 640 460" aria-hidden="true"></svg></div>
+  </div>
+</section>
+
+<section class="band soft">
+  <div class="wrap two">
+    <div class="visual" style="order:-1"><svg id="glanceWorld" viewBox="0 0 640 460" aria-hidden="true"></svg></div>
+    <div class="sec-head">
+      <p class="eyebrow">The view</p>
+      <h2>See your business at a glance.</h2>
+      <p>Not charts. Not dashboards. A living organization you can actually look at — and understand in a second.</p>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <div class="sec-head center">
+      <p class="eyebrow">The growth</p>
+      <h2>Start small.</h2>
+      <p>One worker. Then a few. Then a whole company working together. The same world, growing naturally — and you watch it happen.</p>
+    </div>
+    <div class="growth" id="growth"></div>
+  </div>
+</section>
+
+<section class="final" id="start">
+  <div class="wrap">
+    <h2>Build something<br/>that keeps working.</h2>
+    <p class="sub">Most software helps you manage work. This helps work manage itself.</p>
+    <div class="hero-cta">
+      <a class="btn btn-p" href="#start" style="font-size:16px;padding:15px 26px">Start Building</a>
+      <a class="btn btn-ghost" href="#start" style="font-size:16px;padding:15px 24px">Watch 60s demo</a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="ns">Build a company that builds itself.</div>
+    <p class="src">Concept · living-world direction · Apple × LEGO × Tiny Glade × Monument Valley. The world is the product: value is created in front of you. Grounded in Resnick "low floor, high ceiling, wide walls" · the IKEA effect · calm ambient motion over game mechanics.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root=document.documentElement,key="atlas-theme";
+  function sysDark(){return window.matchMedia&&window.matchMedia("(prefers-color-scheme:dark)").matches;}
+  function isDark(){var c=root.getAttribute("data-theme");return c?c==="dark":sysDark();}
+  try{var s=localStorage.getItem(key);if(s)root.setAttribute("data-theme",s);}catch(e){}
+  function icon(){document.getElementById("ticon").textContent=isDark()?"☀️":"🌙";}
+  icon();
+  document.getElementById("tbtn").addEventListener("click",function(){root.setAttribute("data-theme",isDark()?"light":"dark");try{localStorage.setItem(key,isDark()?"dark":"light");}catch(e){}icon();});
+  var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion:reduce)").matches;
+
+  function shade(hex,f){var c=parseInt(hex.slice(1),16),r=(c>>16)&255,g=(c>>8)&255,b=c&255,t=f<0?0:255,a=Math.abs(f);
+    r=Math.round((t-r)*a)+r;g=Math.round((t-g)*a)+g;b=Math.round((t-b)*a)+b;return "#"+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);}
+  function P(a){return a.map(function(p){return p[0].toFixed(1)+","+p[1].toFixed(1)}).join(" ");}
+  function mid(a,b){return [(a[0]+b[0])/2,(a[1]+b[1])/2];}
+  function up(p,h){return [p[0],p[1]-h];}
+  function lerp(a,b,t){return [a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t];}
+  // bilinear point on a face defined by origin o, right-vec a, down-vec b, at (x,y) in [0,1]
+  function fp(o,a,b,x,y){return [o[0]+a[0]*x+b[0]*y, o[1]+a[1]*x+b[1]*y];}
+
+  function world(ISX,ISY,WX,WY){return function(u,v){return [ISX+(u-v)*WX, ISY+(u+v)*WY];};}
+
+  function island(place,D,grass,soil){
+    var top=place(0,0),right=place(1,0),bot=place(1,1),left=place(0,1);
+    var L=[left,bot,[bot[0],bot[1]+D],[left[0],left[1]+D]];
+    var R=[bot,right,[right[0],right[1]+D],[bot[0],bot[1]+D]];
+    return '<polygon points="'+P(L)+'" fill="'+soil+'"/>'+
+           '<polygon points="'+P(R)+'" fill="'+shade(soil,-.16)+'"/>'+
+           '<polygon points="'+P([top,right,bot,left])+'" fill="'+shade(grass,.05)+'"/>';
+  }
+
+  // base isometric box; returns corners + wall svg (no roof)
+  function box(place,u,v,su,H,wall){
+    var A=place(u-su,v-su),B=place(u+su,v-su),C=place(u+su,v+su),D=place(u-su,v+su);
+    var At=up(A,H),Bt=up(B,H),Ct=up(C,H),Dt=up(D,H);
+    var left=shade(wall,-.03),rightC=shade(wall,-.17);
+    var s='<polygon points="'+P([C,D,Dt,Ct])+'" fill="'+left+'"/>'+
+          '<polygon points="'+P([B,C,Ct,Bt])+'" fill="'+rightC+'"/>';
+    return {A:A,B:B,C:C,D:D,At:At,Bt:Bt,Ct:Ct,Dt:Dt,walls:s,wall:wall};
+  }
+  function flatRoof(bx,col){return '<polygon points="'+P([bx.At,bx.Bt,bx.Ct,bx.Dt])+'" fill="'+(col||shade(bx.wall,.09))+'"/>';}
+  function windows(bx,rows){ // on right wall (Bt-Ct-C-B)
+    var o=bx.Bt,a=[bx.Ct[0]-bx.Bt[0],bx.Ct[1]-bx.Bt[1]],b=[bx.B[0]-bx.Bt[0],bx.B[1]-bx.Bt[1]];
+    var s="",cols=2;
+    for(var r=0;r<rows;r++)for(var c=0;c<cols;c++){
+      var x=(c+.5)/cols,y=(r+.55)/rows,ww=.62/cols,wh=.5/rows;
+      var p0=fp(o,a,b,x-ww/2,y-wh/2),p1=fp(o,a,b,x+ww/2,y-wh/2),p2=fp(o,a,b,x+ww/2,y+wh/2),p3=fp(o,a,b,x-ww/2,y+wh/2);
+      s+='<polygon class="win" points="'+P([p0,p1,p2,p3])+'" fill="var(--window)"/>';
+    }
+    return s;
+  }
+  function gable(bx,col,rh){
+    var r1=up(mid(bx.At,bx.Dt),rh),r2=up(mid(bx.Bt,bx.Ct),rh);
+    return '<polygon points="'+P([bx.Dt,bx.Ct,r2,r1])+'" fill="'+shade(col,-.05)+'"/>'+
+           '<polygon points="'+P([bx.At,bx.Bt,r2,r1])+'" fill="'+col+'"/>'+
+           '<polygon points="'+P([bx.At,bx.Dt,r1])+'" fill="'+shade(col,-.12)+'"/>'+
+           '<polygon points="'+P([bx.Bt,bx.Ct,r2])+'" fill="'+shade(col,-.18)+'"/>';
+  }
+
+  var COL={cream:'#F0E6D4',HQ:'#EFE4D0',roofgold:'#EDBE5E',grass:'#93C489',soil:'#C7A278'};
+
+  /* ---- department buildings (readable architecture) ---- */
+  function deptBuilding(place,u,v,type){
+    var c={sales:'#5A97D6',support:'#4FB0AA',finance:'#E6AE3C',ops:'#E08A5B',eng:'#8B79D4',mktg:'#E06A9A',hq:'#EFE4D0'}[type];
+    var s="",bx;
+    if(type==='sales'){ // glass office: tall, lots of windows, flat roof
+      bx=box(place,u,v,0.12,72,c); s+=bx.walls+windows(bx,3)+flatRoof(bx,shade(c,.12));
+      s+='<polygon points="'+P([bx.At,bx.Bt,bx.Ct,bx.Dt])+'" fill="'+shade(c,.05)+'" opacity=".5"/>';
+    } else if(type==='finance'){ // vault: solid, round door, gold trim
+      bx=box(place,u,v,0.115,54,c); s+=bx.walls+flatRoof(bx,shade(c,.1));
+      var o=bx.Bt,a=[bx.Ct[0]-bx.Bt[0],bx.Ct[1]-bx.Bt[1]],b=[bx.B[0]-bx.Bt[0],bx.B[1]-bx.Bt[1]];
+      var ctr=fp(o,a,b,.5,.58),rr=Math.abs(a[0])*0.3+8;
+      s+='<circle cx="'+ctr[0].toFixed(1)+'" cy="'+ctr[1].toFixed(1)+'" r="'+rr.toFixed(1)+'" fill="'+shade(c,-.28)+'"/>';
+      s+='<circle cx="'+ctr[0].toFixed(1)+'" cy="'+ctr[1].toFixed(1)+'" r="'+(rr*.62).toFixed(1)+'" fill="none" stroke="'+shade(c,.2)+'" stroke-width="3"/>';
+    } else if(type==='ops'){ // warehouse: wide, gable roof, roll door
+      bx=box(place,u,v,0.14,40,c); s+=bx.walls+gable(bx,shade(c,.06),26);
+      var o=bx.Bt,a=[bx.Ct[0]-bx.Bt[0],bx.Ct[1]-bx.Bt[1]],b=[bx.B[0]-bx.Bt[0],bx.B[1]-bx.Bt[1]];
+      var d0=fp(o,a,b,.28,.35),d1=fp(o,a,b,.72,.35),d2=fp(o,a,b,.72,1),d3=fp(o,a,b,.28,1);
+      s+='<polygon points="'+P([d0,d1,d2,d3])+'" fill="'+shade(c,-.24)+'"/>';
+    } else if(type==='eng'){ // tech lab: solar panels on roof + antenna
+      bx=box(place,u,v,0.12,58,c); s+=bx.walls+windows(bx,2)+flatRoof(bx,shade(c,-.02));
+      var o=bx.At,a=[bx.Bt[0]-bx.At[0],bx.Bt[1]-bx.At[1]],b=[bx.Dt[0]-bx.At[0],bx.Dt[1]-bx.At[1]];
+      for(var i=0;i<2;i++)for(var j=0;j<2;j++){var x=.28+i*.44,y=.28+j*.44,pw=.32,ph=.32;
+        s+='<polygon points="'+P([fp(o,a,b,x-pw/2,y-ph/2),fp(o,a,b,x+pw/2,y-ph/2),fp(o,a,b,x+pw/2,y+ph/2),fp(o,a,b,x-pw/2,y+ph/2)])+'" fill="#2E4468"/>';}
+      var tip=up(fp(o,a,b,.5,.5),22);s+='<line x1="'+fp(o,a,b,.5,.5)[0].toFixed(1)+'" y1="'+fp(o,a,b,.5,.5)[1].toFixed(1)+'" x2="'+tip[0].toFixed(1)+'" y2="'+tip[1].toFixed(1)+'" stroke="'+shade(c,-.3)+'" stroke-width="2.5"/><circle cx="'+tip[0].toFixed(1)+'" cy="'+tip[1].toFixed(1)+'" r="3.4" fill="'+COL.roofgold+'"/>';
+    } else if(type==='mktg'){ // creative studio: slanted skylight roof
+      bx=box(place,u,v,0.11,50,c); s+=bx.walls+windows(bx,2);
+      var r1=up(bx.At,20),r2=up(bx.Bt,20);
+      s+='<polygon points="'+P([bx.At,bx.Bt,bx.Ct,bx.Dt])+'" fill="'+shade(c,.08)+'"/>';
+      s+='<polygon points="'+P([bx.Dt,bx.Ct,r2,r1])+'" fill="'+shade(c,.16)+'"/>';
+      s+='<polygon points="'+P([bx.At,r1,r2,bx.Bt])+'" fill="'+shade(c,-.06)+'"/>';
+    } else if(type==='support'){ // rounded dome office
+      bx=box(place,u,v,0.11,48,c); s+=bx.walls+windows(bx,2)+flatRoof(bx,shade(c,.1));
+      var ct=mid(bx.At,bx.Ct);s+='<ellipse cx="'+ct[0].toFixed(1)+'" cy="'+ct[1].toFixed(1)+'" rx="'+(Math.abs(bx.Bt[0]-bx.Dt[0])/2*.7).toFixed(1)+'" ry="14" fill="'+shade(c,.14)+'"/>';
+    } else { // hq house
+      bx=box(place,u,v,0.13,52,c); s+=bx.walls+windows(bx,2)+gable(bx,COL.roofgold,26);
+    }
+    return {svg:s, key:(u+v)};
+  }
+
+  function tree(place,u,v){var b=place(u,v);
+    return {svg:'<rect x="'+(b[0]-3)+'" y="'+(b[1]-16)+'" width="6" height="16" rx="2" fill="#9C7A50"/>'+
+      '<circle cx="'+b[0]+'" cy="'+(b[1]-24)+'" r="15" fill="#8FBE79"/>'+
+      '<circle cx="'+(b[0]+7)+'" cy="'+(b[1]-20)+'" r="9" fill="#7FB06B"/>'+
+      '<circle cx="'+(b[0]-7)+'" cy="'+(b[1]-19)+'" r="10" fill="#9FCB88"/>', key:(u+v)};}
+
+  // worker peg with role-distinct silhouette accessory
+  function peg(pt,color,scale,role){
+    scale=scale||1;var b=pt,w=8*scale,h=19*scale,head=6*scale;
+    var s='<ellipse cx="'+b[0]+'" cy="'+(b[1]+1)+'" rx="'+(w*1.05)+'" ry="'+(3.2*scale)+'" fill="rgba(20,16,10,.16)"/>';
+    s+='<path d="M'+(b[0]-w)+' '+b[1]+' q0 -'+(h*0.62)+' '+w+' -'+(h*0.62)+' q'+w+' 0 '+w+' '+(h*0.62)+' Z" fill="'+color+'"/>';
+    var neckY=b[1]-h*0.62;
+    // role silhouette
+    if(role==='sales'){s+='<rect x="'+(b[0]+w*0.5)+'" y="'+(b[1]-h*0.36)+'" width="'+(6*scale)+'" height="'+(5*scale)+'" rx="1" fill="'+shade(color,-.25)+'"/>';}
+    else if(role==='eng'){s+='<rect x="'+(b[0]-w-3*scale)+'" y="'+(b[1]-h*0.5)+'" width="'+(4.5*scale)+'" height="'+(9*scale)+'" rx="2" fill="'+shade(color,-.25)+'"/>';}
+    else if(role==='finance'){s+='<circle cx="'+(b[0]+w*0.7)+'" cy="'+(b[1]-h*0.2)+'" r="'+(3.6*scale)+'" fill="'+COL.roofgold+'"/>';}
+    else if(role==='mktg'){s+='<path d="M'+(b[0]+w*0.4)+' '+(neckY-2*scale)+' l'+(8*scale)+' -'+(4*scale)+' l0 '+(9*scale)+' Z" fill="'+shade(color,-.15)+'"/>';}
+    s+='<circle cx="'+b[0]+'" cy="'+(neckY-head*0.5)+'" r="'+head+'" fill="#F4D9B8"/>';
+    if(role==='support'){s+='<path d="M'+(b[0]-head-1)+' '+(neckY-head*0.5)+' a'+(head+1)+' '+(head+1)+' 0 0 1 '+((head+1)*2)+' 0" fill="none" stroke="'+shade(color,-.2)+'" stroke-width="'+(2*scale)+'"/><rect x="'+(b[0]+head-1)+'" y="'+(neckY-head*0.5)+'" width="'+(3*scale)+'" height="'+(5*scale)+'" rx="1.5" fill="'+shade(color,-.2)+'"/>';}
+    s+='<path d="M'+(b[0]-head)+' '+(neckY-head*0.5)+' a'+head+' '+head+' 0 0 1 '+(head*2)+' 0 Z" fill="'+shade(color,-.3)+'" opacity=".5"/>';
+    return s;
+  }
+
+  function road(place,pts,hw){var left=[],right=[];for(var i=0;i<pts.length;i++){var u=pts[i][0],v=pts[i][1];left.push(place(u+hw,v-hw));right.push(place(u-hw,v+hw));}
+    return '<polygon points="'+P(left.concat(right.reverse()))+'" fill="#E9DEC6"/>';}
+
+  var C6={sales:'#5A97D6',support:'#4FB0AA',finance:'#E6AE3C',ops:'#E08A5B',eng:'#8B79D4',mktg:'#E06A9A'};
+
+  /* ============ HERO: living, self-building company ============ */
+  function buildHero(){
+    var place=world(560,64,360,180),svgEl=document.getElementById("hero");
+    var base=island(place,84,COL.grass,COL.soil);
+    // roads (revealed step)
+    var roadSvg=road(place,[[0.06,0.5],[0.94,0.5]],0.05)+road(place,[[0.5,0.06],[0.5,0.94]],0.05);
+
+    // buildings with narrative reveal order/time
+    var builds=[
+      {u:0.44,v:0.5,type:'sales',at:200},
+      {u:0.5,v:0.5,type:'hq',at:11200},
+      {u:0.74,v:0.34,type:'ops',at:5600},
+      {u:0.72,v:0.68,type:'support',at:7000},
+      {u:0.26,v:0.32,type:'eng',at:8200},
+      {u:0.28,v:0.72,type:'finance',at:9200},
+      {u:0.55,v:0.16,type:'mktg',at:10200}
+    ];
+    var trees=[[0.16,0.5,11800],[0.86,0.52,12000],[0.5,0.9,12200],[0.64,0.82,12400],[0.38,0.86,12600],[0.12,0.7,12800]];
+    // depth-sorted static objects (each wrapped as reveal group)
+    var objs=[];
+    builds.forEach(function(bd){var g=deptBuilding(place,bd.u,bd.v,bd.type);objs.push({key:bd.key||g.key,at:bd.at,svg:'<g class="rv" data-at="'+bd.at+'">'+g.svg+'</g>'});});
+    trees.forEach(function(t){var g=tree(place,t[0],t[1]);objs.push({key:g.key,at:t[2],svg:'<g class="rv" data-at="'+t[2]+'">'+g.svg+'</g>'});});
+    objs.sort(function(a,b){return a.key-b.key;});
+
+    // continuous movers (revealed at times, then loop)
+    var anim="",mv="";
+    function walkPath(id,p0,p1,color,role,dur,at){
+      var dx=(p1[0]-p0[0]).toFixed(1),dy=(p1[1]-p0[1]).toFixed(1);
+      anim+='@keyframes '+id+'{0%{transform:translate(0,0)}47%{transform:translate('+dx+'px,'+dy+'px)}53%{transform:translate('+dx+'px,'+dy+'px)}100%{transform:translate(0,0)}}';
+      mv+='<g class="rv mv" data-at="'+at+'" style="transform:translate('+p0[0].toFixed(1)+'px,'+p0[1].toFixed(1)+'px)"><g style="animation:'+id+' '+dur+'s ease-in-out infinite">'+peg([0,0],color,0.95,role)+'</g></g>';
+    }
+    function flow(id,p0,p1,at,dur,kind,color){
+      var dx=(p1[0]-p0[0]).toFixed(1),dy=(p1[1]-p0[1]).toFixed(1),mxy=(-40).toFixed(1);
+      var glyph = kind==='coin'?'<circle r="6" fill="'+COL.roofgold+'"/><text x="0" y="3" font-size="8" text-anchor="middle" fill="#8a6a12" font-family="sans-serif" font-weight="700">$</text>'
+        : kind==='mail'?'<rect x="-8" y="-6" width="16" height="11" rx="2" fill="#fff" stroke="#D8CBB2"/><path d="M-8 -5 L0 1 L8 -5" fill="none" stroke="#C9A24E" stroke-width="1.3"/>'
+        : '<rect x="-6" y="-9" width="12" height="9" rx="2" fill="#D9A46A"/><rect x="-6" y="-9" width="12" height="3.5" fill="#C58B4E"/>';
+      if(kind==='coin'){anim+='@keyframes '+id+'{0%{transform:translate(0,0);opacity:0}12%{opacity:1}60%{opacity:1}100%{transform:translate(0,-34px);opacity:0}}';}
+      else{anim+='@keyframes '+id+'{0%{transform:translate(0,0);opacity:0}10%{opacity:1}50%{transform:translate('+(dx/2)+'px,'+mxy+'px)}90%{opacity:1}100%{transform:translate('+dx+'px,'+dy+'px);opacity:0}}';}
+      mv+='<g class="rv mv" data-at="'+at+'" style="transform:translate('+p0[0].toFixed(1)+'px,'+(p0[1]-24).toFixed(1)+'px)"><g style="animation:'+id+' '+dur+'s ease-in-out infinite">'+glyph+'</g></g>';
+    }
+    // narrative movers
+    var salesPt=place(0.44,0.6), edge=place(-0.08,0.5), hqPt=place(0.5,0.62);
+    walkPath('cust',edge,salesPt,C6.sales,'',6.5,1200);         // customer arrives → sales
+    flow('coin1',place(0.44,0.42),place(0.44,0.42),2600,3.2,'coin');   // money appears
+    walkPath('w2',place(0.5,0.16),place(0.5,0.84),C6.mktg,'mktg',12,10600); // marketing walks
+    walkPath('w3',place(0.12,0.5),place(0.88,0.5),C6.ops,'ops',13,12200);   // ops walks main road
+    walkPath('w4',place(0.74,0.34),place(0.72,0.68),C6.support,'support',9,12400);
+    flow('mail1',place(0.44,0.5),place(0.74,0.34),12600,5,'mail');   // sales→ops
+    flow('pkg1',place(0.74,0.34),place(0.28,0.72),12800,6,'pkg');    // ops→finance fulfill
+    flow('coin2',place(0.28,0.72),place(0.28,0.72),13400,3.2,'coin'); // revenue
+    flow('mail2',place(0.72,0.68),place(0.5,0.5),13200,5,'mail');    // support→hq
+
+    var frag='<g>'+base+'<g class="rv" data-at="4600">'+roadSvg+'</g>'+objs.map(function(o){return o.svg;}).join("")+mv+'</g>';
+    svgEl.innerHTML='<style>'+anim+' #hero .win{fill:var(--window)} :root[data-theme="dark"] #hero .win{filter:drop-shadow(0 0 3px #FFCF6E)}</style>'+frag;
+
+    // timeline driver
+    var nodes=[].slice.call(svgEl.querySelectorAll('.rv'));
+    function reset(){nodes.forEach(function(n){n.classList.remove('on');});}
+    function play(){nodes.forEach(function(n){var at=+n.getAttribute('data-at');setTimeout(function(){n.classList.add('on');},at);});}
+    if(reduce){nodes.forEach(function(n){n.classList.add('on');});return;}
+    var LOOP=20000;
+    function cycle(){reset();play();setTimeout(function(){ // fade out near end
+        nodes.slice().reverse().forEach(function(n,i){setTimeout(function(){n.classList.remove('on');},i*40);});
+      },LOOP-1400);
+      setTimeout(cycle,LOOP);}
+    cycle();
+  }
+  buildHero();
+
+  /* ---- small static worlds for econ + glance sections ---- */
+  function smallWorld(id){
+    var place=world(320,60,220,110);var svg=island(place,56,COL.grass,COL.soil);
+    svg+=road(place,[[0.08,0.5],[0.92,0.5]],0.05)+road(place,[[0.5,0.1],[0.5,0.9]],0.05);
+    var objs=[];
+    [['sales',0.44,0.46],['ops',0.74,0.32],['support',0.72,0.7],['eng',0.26,0.32],['finance',0.28,0.72],['mktg',0.54,0.16]].forEach(function(d){
+      var g=deptBuilding(place,d[1],d[2],d[0]);objs.push(g);});
+    objs.push(tree(place,0.14,0.5));objs.push(tree(place,0.88,0.52));objs.push(tree(place,0.5,0.9));
+    objs.sort(function(a,b){return a.key-b.key;});
+    svg+=objs.map(function(o){return o.svg;}).join("");
+    // a couple ambient pegs
+    svg+=peg(place(0.44,0.6),C6.sales,0.9,'sales')+peg(place(0.6,0.56),C6.finance,0.9,'finance');
+    var mv="",anim="";
+    if(!reduce){var p0=place(0.14,0.5),p1=place(0.86,0.5),dx=(p1[0]-p0[0]).toFixed(1),dy=(p1[1]-p0[1]).toFixed(1);
+      anim='@keyframes '+id+'m{0%{transform:translate(0,0)}48%{transform:translate('+dx+'px,'+dy+'px)}52%{transform:translate('+dx+'px,'+dy+'px)}100%{transform:translate(0,0)}}';
+      mv='<g style="transform:translate('+p0[0].toFixed(1)+'px,'+p0[1].toFixed(1)+'px)"><g style="animation:'+id+'m 12s ease-in-out infinite">'+peg([0,0],C6.support,0.9,'support')+'</g></g>';}
+    document.getElementById(id).innerHTML='<style>'+anim+' #'+id+' .win{fill:var(--window)}</style><g>'+svg+'</g>'+mv;
+  }
+  smallWorld("econWorld");smallWorld("glanceWorld");
+
+  /* ---- growth minis ---- */
+  function miniIsland(id,items){
+    var place=world(120,24,86,43);var svg=island(place,30,COL.grass,COL.soil);
+    var objs=[];items.forEach(function(d){objs.push(deptBuilding(place,d[1],d[2],d[0]));});
+    objs.sort(function(a,b){return a.key-b.key;});svg+=objs.map(function(o){return o.svg;}).join("");
+    document.getElementById(id).innerHTML='<style>#'+id+' .win{fill:var(--window)}</style><g>'+svg+'</g>';
+  }
+  var G=[
+    ["g1",[['sales',0.5,0.5]],"One worker"],
+    ["g2",[['sales',0.4,0.42],['ops',0.66,0.5],['support',0.5,0.68]],"A small team"],
+    ["g3",[['sales',0.38,0.4],['ops',0.66,0.34],['support',0.7,0.66],['eng',0.3,0.66],['finance',0.5,0.2],['mktg',0.52,0.78]],"A company"],
+    ["g4",[['sales',0.34,0.36],['ops',0.62,0.3],['support',0.74,0.56],['eng',0.26,0.6],['finance',0.5,0.16],['mktg',0.5,0.82],['hq',0.5,0.5],['support',0.2,0.4],['ops',0.78,0.78]],"A city at work"]
+  ];
+  document.getElementById("growth").innerHTML=G.map(function(g){return '<div class="grow"><svg id="'+g[0]+'" viewBox="0 0 240 190" aria-hidden="true"></svg><div class="n">'+g[2]+'</div></div>';}).join("");
+  G.forEach(function(g){miniIsland(g[0],g[1]);});
+
+  /* ---- workers: each in their own district (in-world, not SaaS cards) ---- */
+  function vignette(role){
+    var place=world(80,58,58,29);
+    var svg=island(place,22,COL.grass,COL.soil);
+    var g=deptBuilding(place,0.56,0.56,role);
+    svg+=g.svg;
+    svg+=peg(place(0.26,0.42),C6[role],1.35,role);
+    return '<svg viewBox="0 0 160 152" aria-hidden="true"><style>.win{fill:var(--window)}</style><g>'+svg+'</g></svg>';
+  }
+  var TEAM=[['sales','Sales','closes deals'],['support','Support','answers customers'],['finance','Finance','tracks the money'],['ops','Operations','keeps it running'],['eng','Engineering','builds the product'],['mktg','Marketing','brings people in']];
+  document.getElementById("team").innerHTML=TEAM.map(function(t){
+    return '<div class="tw">'+vignette(t[0])+'<div class="n">'+t[1]+'</div><div class="j">'+t[2]+'</div></div>';
+  }).join("");
+
+  /* logo */
+  (function(){var s='<polygon points="20,6 32,12.5 20,19 8,12.5" fill="'+COL.roofgold+'"/>'+
+    '<polygon points="8,12.5 20,19 20,32 8,25.5" fill="'+shade(COL.cream,-.02)+'"/>'+
+    '<polygon points="20,19 32,12.5 32,25.5 20,32" fill="'+shade(COL.cream,-.15)+'"/>'+
+    '<polygon points="22,22 28,18.7 28,24 22,27.3" fill="'+COL.coral+'" opacity=".9"/>';
+    document.getElementById("logo").innerHTML=s;})();
+})();
+</script>
+
+</html>
