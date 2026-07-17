@@ -1,0 +1,40 @@
+name: Railway Smoke Test
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout platform branch
+        uses: actions/checkout@v4
+        with:
+          ref: claude/airtable-hyper-agent-research-et2uba
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Setup Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install deps
+        run: pip install requests
+      - name: Run smoke test
+        run: python3 scripts/railway_smoke.py
+      - name: Commit smoke result
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ -f railway_smoke.txt ]; then
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git config user.name "github-actions[bot]"
+            git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
+            cp railway_smoke.txt scripts/railway_smoke_output.txt
+            git add scripts/railway_smoke_output.txt
+            git diff --cached --quiet || git commit -m "chore: railway smoke result [skip ci]"
+            git push origin claude/airtable-hyper-agent-research-et2uba
+          fi
