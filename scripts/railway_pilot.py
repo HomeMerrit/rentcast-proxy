@@ -44,7 +44,7 @@ agent_body = {
     "department": "Research",
     "bio": "Pilot agent created to validate the live deployment.",
     "avatar_seed": "ada-" + suffix,
-    "model": "claude-sonnet-5-20251001",
+    "model": "claude-sonnet-5",
 }
 r = show("POST /agents/", requests.post(BASE + "/agents/", json=agent_body, timeout=25))
 if r.status_code not in (200, 201):
@@ -67,7 +67,7 @@ show("GET /agents/{id}", requests.get(BASE + "/agents/" + agent_id, timeout=25))
 emit("\n[6] Dispatch a task (queues to Celery via Redis)")
 run_body = {"task_type": "research",
             "task_input": {"prompt": "In one sentence, confirm you are an AgentOS agent running live on Railway."},
-            "model": "claude-sonnet-5-20251001"}
+            "model": "claude-sonnet-5"}
 r = show("POST /agents/{id}/run", requests.post(BASE + "/agents/" + agent_id + "/run", json=run_body, timeout=25))
 task_id = r.json().get("task_id") if r.status_code == 200 else None
 emit("  task_id: " + str(task_id))
