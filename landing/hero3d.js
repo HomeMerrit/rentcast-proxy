@@ -183,7 +183,8 @@ function boot(){
   const ptr={x:0,y:0}, ptrT={x:0,y:0};
   window.addEventListener('pointermove',e=>{ const r=CANVAS.getBoundingClientRect(); ptrT.x=((e.clientX-r.left)/r.width-0.5); ptrT.y=((e.clientY-r.top)/r.height-0.5); });
 
-  const RISE=1.15, RISE_D=1.6, tmp=new THREE.Vector3();
+  const easeOutCubic=t=>1-Math.pow(1-t,3);
+  const APPEAR=1.15, DROP=3.4, tmp=new THREE.Vector3();
   function updateBuildings(lt){
     buildings.forEach(B=>{
       let top=-1;
@@ -191,17 +192,23 @@ function boot(){
         const at=lvl.userData.at;
         if(lt>=at){
           lvl.visible=true; top++;
-          const p=clamp01((lt-at)/RISE), e=easeOutBack(p);
-          lvl.position.y=lvl.userData.finalY-(1-e)*RISE_D;
-          setOpacity(lvl, clamp01((lt-at)/(RISE*0.7)));
-          lvl.userData.people.forEach((c,k)=>{ const pp=clamp01((lt-at-0.25-k*0.16)/0.5); c.visible=pp>0; c.scale.setScalar(easeOutBack(pp)); });
+          const p=clamp01((lt-at)/APPEAR), e=easeOutBack(p), ec=easeOutCubic(p);
+          lvl.position.y = lvl.userData.finalY + (1-e)*DROP;   // drops in from above and overshoots into place
+          lvl.rotation.y = (1-ec)*0.7;                          // a quick settle turn as it lands
+          const s=0.9+0.1*e; lvl.scale.set(s,1,s);              // scale-in
+          setOpacity(lvl, clamp01((lt-at)/(APPEAR*0.4)));
+          lvl.userData.people.forEach((c,k)=>{ const pp=clamp01((lt-at-0.55-k*0.14)/0.5); c.visible=pp>0; c.scale.setScalar(easeOutBack(pp)); }); // team pops in after the floor lands
         } else lvl.visible=false;
       });
+      // roof: a full 360° spin as it slots into place on every level-up
       if(top>=0){
         const ty=B.floors[top].userData.finalY+FH+0.13;
-        if(!B.roof.visible){ B.roof.visible=true; B.roof.position.y=ty; }  // snap on (re)appear
-        else B.roof.position.y += (ty-B.roof.position.y)*0.16;             // rise smoothly when a floor is added
-      } else B.roof.visible=false;
+        if(B._top!==top){ B._top=top; B.roof.userData.spinAt=lt; }   // re-trigger the flourish whenever a floor is added
+        B.roof.visible=true;
+        const st=B.roof.userData.spinAt, sp=(st==null)?1:clamp01((lt-st)/0.95), es=easeOutCubic(sp);
+        B.roof.rotation.y = es*Math.PI*2;                            // one clean rotation, settling square
+        B.roof.position.y = ty + (1-es)*2.4;                         // descends while it spins
+      } else { B.roof.visible=false; B._top=-1; }
     });
   }
 
