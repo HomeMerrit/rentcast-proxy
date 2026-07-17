@@ -24,23 +24,7 @@
     Logged in as info@sellfi.com 👋
   [exit 0]
 
-  Deploying services: backend, celery, celery-beat
-
-=== Deploy backend ===
-
-  $ railway link --project 311fa837-720a-4a33-9439-28e7c853bd7a --environment ef95ba5f-eb20-436b-aff4-948e751c199d --service a7402d3d-8436-4578-80ae-41e7bede5bb4   (cwd=/home/runner/work/rentcast-proxy/rentcast-proxy/agent-platform/backend)
-    Project agentos-platform linked successfully! 🎉
-    > Select a workspace sellfi's Projects
-    > Select a project agentos-platform
-    > Select an environment production
-    > Select a service backend
-  [exit 0]
-
-  $ railway up --detach   (cwd=/home/runner/work/rentcast-proxy/rentcast-proxy/agent-platform/backend)
-    Indexing...
-    Uploading...
-      Build Logs: https://railway.com/project/311fa837-720a-4a33-9439-28e7c853bd7a/service/a7402d3d-8436-4578-80ae-41e7bede5bb4?id=6696f88d-9652-48da-be55-1a7aee571a35&
-  [exit 0]
+  Deploying services: celery, celery-beat, backend
 
 === Deploy celery ===
 
@@ -55,7 +39,7 @@
   $ railway up --detach   (cwd=/home/runner/work/rentcast-proxy/rentcast-proxy/agent-platform/backend)
     Indexing...
     Uploading...
-      Build Logs: https://railway.com/project/311fa837-720a-4a33-9439-28e7c853bd7a/service/1403ebc4-65e8-4137-91c3-4a6a0f31af46?id=fa828545-2c05-47eb-ae89-7ddec8aee4a1&
+      Build Logs: https://railway.com/project/311fa837-720a-4a33-9439-28e7c853bd7a/service/1403ebc4-65e8-4137-91c3-4a6a0f31af46?id=e61e3554-a589-4d92-b0d0-caa7cf4aa62b&
   [exit 0]
 
 === Deploy celery-beat ===
@@ -71,13 +55,29 @@
   $ railway up --detach   (cwd=/home/runner/work/rentcast-proxy/rentcast-proxy/agent-platform/backend)
     Indexing...
     Uploading...
-      Build Logs: https://railway.com/project/311fa837-720a-4a33-9439-28e7c853bd7a/service/01aefb60-2429-47bc-85ca-da2b6b2f114e?id=59191d00-6889-4ff3-ba16-e1cfea59fc3a&
+      Build Logs: https://railway.com/project/311fa837-720a-4a33-9439-28e7c853bd7a/service/01aefb60-2429-47bc-85ca-da2b6b2f114e?id=5c445600-1bab-4630-8fb1-06407dc49393&
+  [exit 0]
+
+=== Deploy backend ===
+
+  $ railway link --project 311fa837-720a-4a33-9439-28e7c853bd7a --environment ef95ba5f-eb20-436b-aff4-948e751c199d --service a7402d3d-8436-4578-80ae-41e7bede5bb4   (cwd=/home/runner/work/rentcast-proxy/rentcast-proxy/agent-platform/backend)
+    Project agentos-platform linked successfully! 🎉
+    > Select a workspace sellfi's Projects
+    > Select a project agentos-platform
+    > Select an environment production
+    > Select a service backend
+  [exit 0]
+
+  $ railway up --detach   (cwd=/home/runner/work/rentcast-proxy/rentcast-proxy/agent-platform/backend)
+    Indexing...
+    Uploading...
+      Build Logs: https://railway.com/project/311fa837-720a-4a33-9439-28e7c853bd7a/service/a7402d3d-8436-4578-80ae-41e7bede5bb4?id=2399d917-bd92-47b2-9ce1-2050721df19f&
   [exit 0]
 
 === Poll deployment status (30s) ===
   celery-beat    DEPLOYING
   frontend       SUCCESS
-  celery         SUCCESS
+  celery         DEPLOYING
   Redis          SUCCESS
   Postgres       SUCCESS
   backend        DEPLOYING
