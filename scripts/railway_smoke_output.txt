@@ -11,6 +11,10 @@
   PASS agent patch  200
   PASS company documents list
   PASS agent delete  204
+  PASS stats overview  agents=5 cost=0.0
+  PASS stats agents  200
+  PASS stats activity  200
+  PASS stats timeseries  points=14
 
-=== 12/12 checks passed ===
-RESULT=PASS 12/12
+=== 16/16 checks passed ===
+RESULT=PASS 16/16
