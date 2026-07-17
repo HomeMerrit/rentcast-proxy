@@ -1,0 +1,46 @@
+name: Railway Pilot and Finalize
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout platform branch
+        uses: actions/checkout@v4
+        with:
+          ref: claude/airtable-hyper-agent-research-et2uba
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Setup Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install deps
+        run: pip install requests
+      - name: Run pilot
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: python3 scripts/railway_pilot.py
+      - name: Finalize (dedupe domains + wire frontend)
+        if: always()
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: python3 scripts/railway_finalize.py
+      - name: Commit outputs
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
+          [ -f railway_pilot.txt ] && cp railway_pilot.txt scripts/railway_pilot_output.txt || true
+          [ -f railway_finalize.txt ] && cp railway_finalize.txt scripts/railway_finalize_output.txt || true
+          git add scripts/railway_pilot_output.txt scripts/railway_finalize_output.txt 2>/dev/null || true
+          git diff --cached --quiet || git commit -m "chore: railway pilot + finalize [skip ci]"
+          git push origin claude/airtable-hyper-agent-research-et2uba || true
