@@ -263,27 +263,30 @@ section{position:relative;z-index:1}
     var c={sales:'#5A97D6',support:'#4FB0AA',finance:'#E6AE3C',ops:'#E08A5B',eng:'#8B79D4',mktg:'#E06A9A',hq:'#EFE4D0'}[type];
     var s="",bx;
     if(type==='sales'){ // glass office: tall, lots of windows, flat roof
-      bx=box(place,u,v,0.12,72,c); s+=bx.walls+windows(bx,3)+flatRoof(bx,shade(c,.12));
+      bx=box(place,u,v,0.115,58,c); s+=bx.walls+windows(bx,3)+flatRoof(bx,shade(c,.12));
       s+='<polygon points="'+P([bx.At,bx.Bt,bx.Ct,bx.Dt])+'" fill="'+shade(c,.05)+'" opacity=".5"/>';
     } else if(type==='finance'){ // vault: solid, round door, gold trim
-      bx=box(place,u,v,0.115,54,c); s+=bx.walls+flatRoof(bx,shade(c,.1));
+      bx=box(place,u,v,0.11,46,c); s+=bx.walls+flatRoof(bx,shade(c,.1));
       var o=bx.Bt,a=[bx.Ct[0]-bx.Bt[0],bx.Ct[1]-bx.Bt[1]],b=[bx.B[0]-bx.Bt[0],bx.B[1]-bx.Bt[1]];
-      var ctr=fp(o,a,b,.5,.58),rr=Math.abs(a[0])*0.3+8;
-      s+='<circle cx="'+ctr[0].toFixed(1)+'" cy="'+ctr[1].toFixed(1)+'" r="'+rr.toFixed(1)+'" fill="'+shade(c,-.28)+'"/>';
-      s+='<circle cx="'+ctr[0].toFixed(1)+'" cy="'+ctr[1].toFixed(1)+'" r="'+(rr*.62).toFixed(1)+'" fill="none" stroke="'+shade(c,.2)+'" stroke-width="3"/>';
+      var ctr=fp(o,a,b,.5,.6),rr=Math.abs(a[0])*0.26+7;
+      s+='<circle cx="'+ctr[0].toFixed(1)+'" cy="'+ctr[1].toFixed(1)+'" r="'+rr.toFixed(1)+'" fill="'+shade(c,-.26)+'"/>';           // door plate
+      s+='<circle cx="'+ctr[0].toFixed(1)+'" cy="'+ctr[1].toFixed(1)+'" r="'+(rr*0.72).toFixed(1)+'" fill="'+shade(c,-.14)+'"/>';   // inset (solid, not a ring)
+      for(var kf=0;kf<4;kf++){var ang=kf*Math.PI/2+0.4,x1=ctr[0]+Math.cos(ang)*rr*0.2,y1=ctr[1]+Math.sin(ang)*rr*0.2,x2=ctr[0]+Math.cos(ang)*rr*0.66,y2=ctr[1]+Math.sin(ang)*rr*0.66;
+        s+='<line x1="'+x1.toFixed(1)+'" y1="'+y1.toFixed(1)+'" x2="'+x2.toFixed(1)+'" y2="'+y2.toFixed(1)+'" stroke="'+shade(c,-.32)+'" stroke-width="2" stroke-linecap="round"/>';}
+      s+='<circle cx="'+ctr[0].toFixed(1)+'" cy="'+ctr[1].toFixed(1)+'" r="'+(rr*0.18).toFixed(1)+'" fill="'+shade(c,.16)+'"/>';    // hub
     } else if(type==='ops'){ // warehouse: wide, gable roof, roll door
       bx=box(place,u,v,0.14,40,c); s+=bx.walls+gable(bx,shade(c,.06),26);
       var o=bx.Bt,a=[bx.Ct[0]-bx.Bt[0],bx.Ct[1]-bx.Bt[1]],b=[bx.B[0]-bx.Bt[0],bx.B[1]-bx.Bt[1]];
       var d0=fp(o,a,b,.28,.35),d1=fp(o,a,b,.72,.35),d2=fp(o,a,b,.72,1),d3=fp(o,a,b,.28,1);
       s+='<polygon points="'+P([d0,d1,d2,d3])+'" fill="'+shade(c,-.24)+'"/>';
     } else if(type==='eng'){ // tech lab: solar panels on roof + antenna
-      bx=box(place,u,v,0.12,58,c); s+=bx.walls+windows(bx,2)+flatRoof(bx,shade(c,-.02));
+      bx=box(place,u,v,0.115,48,c); s+=bx.walls+windows(bx,2)+flatRoof(bx,shade(c,-.02));
       var o=bx.At,a=[bx.Bt[0]-bx.At[0],bx.Bt[1]-bx.At[1]],b=[bx.Dt[0]-bx.At[0],bx.Dt[1]-bx.At[1]];
       for(var i=0;i<2;i++)for(var j=0;j<2;j++){var x=.28+i*.44,y=.28+j*.44,pw=.32,ph=.32;
         s+='<polygon points="'+P([fp(o,a,b,x-pw/2,y-ph/2),fp(o,a,b,x+pw/2,y-ph/2),fp(o,a,b,x+pw/2,y+ph/2),fp(o,a,b,x-pw/2,y+ph/2)])+'" fill="#2E4468"/>';}
       var tip=up(fp(o,a,b,.5,.5),22);s+='<line x1="'+fp(o,a,b,.5,.5)[0].toFixed(1)+'" y1="'+fp(o,a,b,.5,.5)[1].toFixed(1)+'" x2="'+tip[0].toFixed(1)+'" y2="'+tip[1].toFixed(1)+'" stroke="'+shade(c,-.3)+'" stroke-width="2.5"/><circle cx="'+tip[0].toFixed(1)+'" cy="'+tip[1].toFixed(1)+'" r="3.4" fill="'+COL.roofgold+'"/>';
     } else if(type==='mktg'){ // creative studio: slanted skylight roof
-      bx=box(place,u,v,0.11,50,c); s+=bx.walls+windows(bx,2);
+      bx=box(place,u,v,0.11,44,c); s+=bx.walls+windows(bx,2);
       var r1=up(bx.At,20),r2=up(bx.Bt,20);
       s+='<polygon points="'+P([bx.At,bx.Bt,bx.Ct,bx.Dt])+'" fill="'+shade(c,.08)+'"/>';
       s+='<polygon points="'+P([bx.Dt,bx.Ct,r2,r1])+'" fill="'+shade(c,.16)+'"/>';
@@ -292,7 +295,7 @@ section{position:relative;z-index:1}
       bx=box(place,u,v,0.11,48,c); s+=bx.walls+windows(bx,2)+flatRoof(bx,shade(c,.1));
       var ct=mid(bx.At,bx.Ct);s+='<ellipse cx="'+ct[0].toFixed(1)+'" cy="'+ct[1].toFixed(1)+'" rx="'+(Math.abs(bx.Bt[0]-bx.Dt[0])/2*.7).toFixed(1)+'" ry="14" fill="'+shade(c,.14)+'"/>';
     } else { // hq house
-      bx=box(place,u,v,0.13,52,c); s+=bx.walls+windows(bx,2)+gable(bx,COL.roofgold,26);
+      bx=box(place,u,v,0.12,46,c); s+=bx.walls+windows(bx,2)+gable(bx,COL.roofgold,22);
     }
     return {svg:s, key:(u+v), gy:bx.C[1]};
   }
@@ -334,17 +337,17 @@ section{position:relative;z-index:1}
     // roads (revealed step)
     var roadSvg=road(place,[[0.06,0.5],[0.94,0.5]],0.05)+road(place,[[0.5,0.06],[0.5,0.94]],0.05);
 
-    // buildings with narrative reveal order/time
+    // buildings with narrative reveal order/time — spread into distinct districts for breathing room
     var builds=[
-      {u:0.44,v:0.5,type:'sales',at:200},
-      {u:0.5,v:0.5,type:'hq',at:11200},
-      {u:0.74,v:0.34,type:'ops',at:5600},
-      {u:0.72,v:0.68,type:'support',at:7000},
-      {u:0.26,v:0.32,type:'eng',at:8200},
-      {u:0.28,v:0.72,type:'finance',at:9200},
-      {u:0.55,v:0.16,type:'mktg',at:10200}
+      {u:0.42,v:0.60,type:'sales',at:200},
+      {u:0.60,v:0.38,type:'hq',at:11200},
+      {u:0.82,v:0.28,type:'ops',at:5600},
+      {u:0.80,v:0.74,type:'support',at:7000},
+      {u:0.18,v:0.28,type:'eng',at:8200},
+      {u:0.20,v:0.74,type:'finance',at:9200},
+      {u:0.50,v:0.12,type:'mktg',at:10200}
     ];
-    var trees=[[0.16,0.5,11800],[0.86,0.52,12000],[0.5,0.9,12200],[0.64,0.82,12400],[0.38,0.86,12600],[0.12,0.7,12800]];
+    var trees=[[0.5,0.92,11800],[0.10,0.52,12000],[0.90,0.5,12200],[0.30,0.9,12400],[0.68,0.9,12600],[0.12,0.88,12800]];
     // depth-sorted static objects (each wrapped as reveal group)
     var objs=[];
     builds.forEach(function(bd){var g=deptBuilding(place,bd.u,bd.v,bd.type);objs.push({key:g.key,at:bd.at,gy:g.gy,svg:g.svg});});
@@ -393,7 +396,7 @@ section{position:relative;z-index:1}
       movers.push({id:id,pid:pid,at:at,speed:speed,type:type,phase:(mseq*1.7)%6.283,gy:-1});
     }
     function commuter(aUV,bUV,color,at){reg(peg([0,0],color,0.92),proj(routeUV(dock(aUV),dock(bUV))),WALK,at,'walk');}
-    function customer(color,at){reg(peg([0,0],color,0.94),proj(routeUV([-0.12,0.5],[0.44,0.5])),WALK,at,'walk');}
+    function customer(color,at){reg(peg([0,0],color,0.94),proj(routeUV([-0.12,0.5],[0.46,0.52])),WALK,at,'walk');}
     function cartRun(color,aUV,bUV,at){reg(cart(color),proj(routeUV(aUV,bUV)),DRIVE,at,'cart');}
 
     // --- overlay FX (value + paperwork): CSS-driven, always above the scene ---
@@ -412,18 +415,18 @@ section{position:relative;z-index:1}
 
     /* ---- the living loop ---- */
     customer(C6.sales,1200); customer(C6.sales,6400);      // customers arriving to Sales
-    commuter([0.26,0.32],[0.5,0.5],C6.eng,9000);           // departments commuting to HQ
-    commuter([0.28,0.72],[0.5,0.5],C6.finance,9600);
-    commuter([0.72,0.68],[0.5,0.5],C6.support,10200);
-    commuter([0.55,0.16],[0.5,0.5],C6.mktg,10800);
-    commuter([0.74,0.34],[0.5,0.5],C6.ops,11400);
-    cartRun(C6.ops,[0.96,0.5],[0.74,0.4],6200);            // delivery carts on the main road
+    commuter([0.18,0.28],[0.5,0.5],C6.eng,9000);           // departments commuting to HQ
+    commuter([0.20,0.74],[0.5,0.5],C6.finance,9600);
+    commuter([0.80,0.74],[0.5,0.5],C6.support,10200);
+    commuter([0.50,0.12],[0.5,0.5],C6.mktg,10800);
+    commuter([0.82,0.28],[0.5,0.5],C6.ops,11400);
+    cartRun(C6.ops,[0.96,0.5],[0.82,0.32],6200);           // delivery carts on the main road
     cartRun(shade(C6.ops,-.06),[0.04,0.5],[0.5,0.5],11000);
-    parcel(mailG,[0.44,0.5],[0.74,0.34],12600,4.6,40);     // sales → ops
-    parcel(pkgG, [0.74,0.34],[0.28,0.72],12900,5.4,54);    // ops → finance (fulfill)
-    parcel(mailG,[0.72,0.68],[0.5,0.5], 13200,4.4,36);     // support → hq
-    coin([0.44,0.42],2600,0); coin([0.28,0.66],13500,0);   // revenue rising
-    coin([0.5,0.44],13900,1.1); coin([0.72,0.62],14300,0.6);
+    parcel(mailG,[0.42,0.60],[0.82,0.28],12600,4.6,40);    // sales → ops
+    parcel(pkgG, [0.82,0.28],[0.20,0.74],12900,5.4,54);    // ops → finance (fulfill)
+    parcel(mailG,[0.80,0.74],[0.60,0.40],13200,4.4,36);    // support → hq
+    coin([0.42,0.54],2600,0); coin([0.20,0.68],13500,0);   // revenue rising
+    coin([0.60,0.38],13900,1.1); coin([0.80,0.66],14300,0.6);
 
     // layers: static ground (back) · depth-sorted sprites (middle) · FX (front)
     var bldSVG=objs.map(function(o){return '<g class="sprite bld rv" data-at="'+o.at+'" data-gy="'+o.gy.toFixed(1)+'">'+o.svg+'</g>';}).join("");
@@ -479,24 +482,52 @@ section{position:relative;z-index:1}
   }
   buildHero();
 
-  /* ---- small static worlds for econ + glance sections ---- */
-  function smallWorld(id){
-    var place=world(320,60,220,110);var svg=island(place,56,COL.grass,COL.soil);
-    svg+=road(place,[[0.08,0.5],[0.92,0.5]],0.05)+road(place,[[0.5,0.1],[0.5,0.9]],0.05);
+  /* ---- shared depth-sorted mini-scene: same occlusion engine as the hero ---- */
+  function sortedScene(el, place, islandD, roadSvg, blds, trees, residents, movers){
+    function pdstr(pts){return 'M'+pts.map(function(p){return p[0].toFixed(1)+' '+p[1].toFixed(1);}).join(' L ');}
     var objs=[];
-    [['sales',0.44,0.46],['ops',0.74,0.32],['support',0.72,0.7],['eng',0.26,0.32],['finance',0.28,0.72],['mktg',0.54,0.16]].forEach(function(d){
-      var g=deptBuilding(place,d[1],d[2],d[0]);objs.push(g);});
-    objs.push(tree(place,0.14,0.5));objs.push(tree(place,0.88,0.52));objs.push(tree(place,0.5,0.9));
-    objs.sort(function(a,b){return a.key-b.key;});
-    svg+=objs.map(function(o){return o.svg;}).join("");
-    // a couple ambient pegs
-    svg+=peg(place(0.44,0.6),C6.sales,0.9,'sales')+peg(place(0.6,0.56),C6.finance,0.9,'finance');
-    var mv="",anim="";
-    if(!reduce&&window.CSS&&CSS.supports&&CSS.supports('offset-path','path("M0 0 L1 1")')){
-      var p0=place(0.14,0.5),p1=place(0.86,0.5),d='M'+p0[0].toFixed(1)+' '+p0[1].toFixed(1)+' L '+p1[0].toFixed(1)+' '+p1[1].toFixed(1)+' L '+p0[0].toFixed(1)+' '+p0[1].toFixed(1);
-      anim='@keyframes '+id+'m{0%{offset-distance:0%}100%{offset-distance:100%}}@keyframes '+id+'b{0%,100%{transform:translateY(0)}25%{transform:translateY(-1.4px)}50%{transform:translateY(0)}75%{transform:translateY(-1.4px)}}';
-      mv='<g style="offset-path:path(\''+d+'\');offset-rotate:0deg;animation:'+id+'m 13s linear infinite"><g style="animation:'+id+'b .52s ease-in-out infinite">'+peg([0,0],C6.support,0.9,'support')+'</g></g>';}
-    document.getElementById(id).innerHTML='<style>'+anim+' #'+id+' .win{fill:var(--window)}</style><g>'+svg+'</g>'+mv;
+    blds.forEach(function(d){var g=deptBuilding(place,d[1],d[2],d[0]);objs.push({gy:g.gy,svg:g.svg});});
+    trees.forEach(function(t){var g=tree(place,t[0],t[1]);objs.push({gy:g.gy,svg:g.svg});});
+    residents.forEach(function(r){objs.push({gy:place(r[1],r[2])[1],svg:peg(place(r[1],r[2]),C6[r[0]]||r[0],r[3]||0.85)});});
+    var pathDefs="",moverSVG="",M=[],k=0;
+    movers.forEach(function(m){
+      var pid=el.id+'_p'+k, mid=el.id+'_m'+k; k++;
+      var trip=m.pts.concat(m.pts.slice(0,-1).reverse());
+      pathDefs+='<path id="'+pid+'" d="'+pdstr(trip)+'" fill="none"/>';
+      moverSVG+='<g class="sprite" id="'+mid+'" style="opacity:0"><g class="mvin">'+peg([0,0],C6[m.color]||m.color,m.scale||0.85)+'</g></g>';
+      M.push({id:mid,pid:pid,speed:m.speed,type:m.type||'walk',phase:(k*1.7)%6.283,gy:-1});
+    });
+    var sprSVG=objs.map(function(o){return '<g class="sprite bld" data-gy="'+o.gy.toFixed(1)+'">'+o.svg+'</g>';}).join("");
+    el.innerHTML='<style>#'+el.id+' .win{fill:var(--window)} :root[data-theme="dark"] #'+el.id+' .win{filter:drop-shadow(0 0 3px #FFCF6E)}</style>'
+      +'<defs>'+pathDefs+'</defs>'
+      +'<g class="back">'+island(place,islandD,COL.grass,COL.soil)+roadSvg+'</g>'
+      +'<g id="'+el.id+'-spr">'+sprSVG+moverSVG+'</g>';
+    var host=document.getElementById(el.id+'-spr'), spr=[];
+    [].slice.call(host.querySelectorAll('.bld')).forEach(function(n){spr.push({node:n,gy:+n.getAttribute('data-gy')});});
+    M.forEach(function(m){m.node=document.getElementById(m.id);m.inner=m.node.firstChild;m.path=document.getElementById(m.pid);m.len=m.path.getTotalLength();m.durMs=Math.max(5000,m.len/m.speed*1000);spr.push(m);});
+    function ds(){spr.sort(function(a,b){return a.gy-b.gy;});for(var j=0;j<spr.length;j++)host.appendChild(spr[j].node);}
+    if(reduce){M.forEach(function(m){var pt=m.path.getPointAtLength(0);m.node.style.opacity=1;m.node.setAttribute('transform','translate('+pt.x.toFixed(1)+' '+pt.y.toFixed(1)+')');m.gy=pt.y;});ds();return;}
+    var t0=(window.performance&&performance.now)?performance.now():0;
+    function fr(now){var lt=now-t0;
+      for(var i=0;i<M.length;i++){var m=M[i];m.node.style.opacity=1;
+        var p=(lt/m.durMs)%1, pt=m.path.getPointAtLength(p*m.len);
+        m.node.setAttribute('transform','translate('+pt.x.toFixed(1)+' '+pt.y.toFixed(1)+')');m.gy=pt.y;
+        if(m.type==='walk')m.inner.setAttribute('transform','translate(0 '+(-1.3*Math.abs(Math.sin(lt/150+m.phase))).toFixed(2)+')');
+      }
+      ds(); requestAnimationFrame(fr);
+    }
+    requestAnimationFrame(fr);
+  }
+
+  /* ---- small worlds for econ + glance sections (now depth-sorted, matching the hero) ---- */
+  function smallWorld(id){
+    var el=document.getElementById(id), place=world(320,58,220,110);
+    var roadSvg=road(place,[[0.08,0.5],[0.92,0.5]],0.05)+road(place,[[0.5,0.1],[0.5,0.9]],0.05);
+    var blds=[['sales',0.40,0.40],['ops',0.78,0.26],['support',0.78,0.74],['eng',0.22,0.26],['finance',0.22,0.74],['mktg',0.52,0.12]];
+    var trees=[[0.12,0.5],[0.9,0.52],[0.5,0.92]];
+    var residents=[['sales',0.5,0.6,0.85],['finance',0.62,0.5,0.8]];   // stand on the open plaza, not stuck to a wall
+    var movers=[{pts:[place(0.14,0.5),place(0.86,0.5)],speed:24,color:'support',scale:0.85}];
+    sortedScene(el,place,56,roadSvg,blds,trees,residents,movers);
   }
   smallWorld("econWorld");smallWorld("glanceWorld");
 
@@ -518,11 +549,11 @@ section{position:relative;z-index:1}
 
   /* ---- workers: each in their own district (in-world, not SaaS cards) ---- */
   function vignette(role){
-    var place=world(80,58,58,29);
+    var place=world(80,54,58,29);
     var svg=island(place,22,COL.grass,COL.soil);
-    var g=deptBuilding(place,0.56,0.56,role);
-    svg+=g.svg;
-    svg+=peg(place(0.26,0.42),C6[role],1.35,role);
+    var g=deptBuilding(place,0.62,0.46,role);            // building set back
+    var cit=peg(place(0.30,0.66),C6[role],1.25,role);    // citizen stands on the grass in front, with a gap
+    svg+=g.svg+cit;                                       // building first, citizen (in front) after
     return '<svg viewBox="0 0 160 152" aria-hidden="true"><style>.win{fill:var(--window)}</style><g>'+svg+'</g></svg>';
   }
   var TEAM=[['sales','Sales','closes deals'],['support','Support','answers customers'],['finance','Finance','tracks the money'],['ops','Operations','keeps it running'],['eng','Engineering','builds the product'],['mktg','Marketing','brings people in']];
