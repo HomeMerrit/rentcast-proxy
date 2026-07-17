@@ -1,18 +1,14 @@
 Project: agentos-platform
 
 === SERVICE STATUS + DOMAINS ===
-  backend       SUCCESS        backend-production-a20b.up.railway.app, backend-production-6557.up.railway.app, backend-production-3a48.up.railway.app
-  frontend      SUCCESS        frontend-production-a9cc3.up.railway.app, frontend-production-d351.up.railway.app, frontend-production-c115.up.railway.app
+  backend       SUCCESS        backend-production-a20b.up.railway.app
+  frontend      SUCCESS        frontend-production-a9cc3.up.railway.app
   celery        SUCCESS        (no domain)
   celery-beat   SUCCESS        (no domain)
   qdrant        SUCCESS        (no domain)
 
 === HTTP PROBES (from runner) ===
   200  https://backend-production-a20b.up.railway.app/health   {"status":"ok","auth_required":false}
-  200  https://backend-production-6557.up.railway.app/health   {"status":"ok","auth_required":false}
-  200  https://backend-production-3a48.up.railway.app/health   {"status":"ok","auth_required":false}
-  200  https://frontend-production-a9cc3.up.railway.app/   <!DOCTYPE html><!--BdKcnEjuz0X7appKmvqat--><html lang="en" class="dark"><head><meta charSet="utf-8"/><meta name="viewpor
-  200  https://frontend-production-d351.up.railway.app/   <!DOCTYPE html><!--BdKcnEjuz0X7appKmvqat--><html lang="en" class="dark"><head><meta charSet="utf-8"/><meta name="viewpor
-  200  https://frontend-production-c115.up.railway.app/   <!DOCTYPE html><!--BdKcnEjuz0X7appKmvqat--><html lang="en" class="dark"><head><meta charSet="utf-8"/><meta name="viewpor
-JSON={"backend": {"status": "SUCCESS", "domains": ["backend-production-a20b.up.railway.app", "backend-production-6557.up.railway.app", "backend-production-3a48.up.railway.app"]}, "frontend": {"status": "SUCCESS", "domains": ["frontend-production-a9cc3.up.railway.app", "frontend-production-d351.up.railway.app", "frontend-production-c115.up.railway.app"]}, "celery": {"status": "SUCCESS", "domains": []}, "celery-beat": {"status": "SUCCESS", "domains": []}, "qdrant": {"status": "SUCCESS", "domains": []}}
-PROBES={"https://backend-production-a20b.up.railway.app/health": 200, "https://backend-production-6557.up.railway.app/health": 200, "https://backend-production-3a48.up.railway.app/health": 200, "https://frontend-production-a9cc3.up.railway.app/": 200, "https://frontend-production-d351.up.railway.app/": 200, "https://frontend-production-c115.up.railway.app/": 200}
+  200  https://frontend-production-a9cc3.up.railway.app/   <!DOCTYPE html><html lang="en" class="dark __variable_f367f3 __variable_6b9622 __variable_6d24ac"><head><meta charSet="u
+JSON={"backend": {"status": "SUCCESS", "domains": ["backend-production-a20b.up.railway.app"]}, "frontend": {"status": "SUCCESS", "domains": ["frontend-production-a9cc3.up.railway.app"]}, "celery": {"status": "SUCCESS", "domains": []}, "celery-beat": {"status": "SUCCESS", "domains": []}, "qdrant": {"status": "SUCCESS", "domains": []}}
+PROBES={"https://backend-production-a20b.up.railway.app/health": 200, "https://frontend-production-a9cc3.up.railway.app/": 200}
