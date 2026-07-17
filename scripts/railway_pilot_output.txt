@@ -7,6 +7,39 @@
   count before: 1
 
 [3] Create agent
-  POST /agents/ -> HTTP 500  Internal Server Error
-  ABORT: could not create agent
-RESULT=CREATE_FAILED
+  POST /agents/ -> HTTP 201  {"id": "790dfc13-6b82-4328-97ae-93b9d419dce7", "name": "Ada-1784249259", "title": "Research Analyst", "department": "Research", "bio": "Pilot agent created to validate the live deployment.", "avatar_seed": "ada-1784249259", "model": "claude-sonnet-5-20251001", "status": "idle", "current_task": null, "task_count": 0, "success_count": 0, "created_at": "2026-07-17T00:47:39.222484Z", "updated_at": "20
+  agent_id: 790dfc13-6b82-4328-97ae-93b9d419dce7
+
+[4] List agents (after) — proves Postgres persistence
+  count after: 2 (was 1)
+
+[5] Get agent by id
+  GET /agents/{id} -> HTTP 200  {"id": "790dfc13-6b82-4328-97ae-93b9d419dce7", "name": "Ada-1784249259", "title": "Research Analyst", "department": "Research", "bio": "Pilot agent created to validate the live deployment.", "avatar_seed": "ada-1784249259", "model": "claude-sonnet-5-20251001", "status": "idle", "current_task": null, "task_count": 0, "success_count": 0, "created_at": "2026-07-17T00:47:39.222484Z", "updated_at": "20
+
+[6] Dispatch a task (queues to Celery via Redis)
+  POST /agents/{id}/run -> HTTP 200  {"task_id": "6bbfc681-0369-4f55-b088-ad8a70fa71cb", "agent_id": "790dfc13-6b82-4328-97ae-93b9d419dce7", "status": "queued"}
+  task_id: 6bbfc681-0369-4f55-b088-ad8a70fa71cb
+
+[7] Poll work log for a result (up to 150s)
+  poll 1: no work-log yet
+  poll 2: no work-log yet
+  poll 3: no work-log yet
+  poll 4: no work-log yet
+  poll 5: no work-log yet
+  poll 6: no work-log yet
+  poll 7: no work-log yet
+  poll 8: no work-log yet
+  poll 9: no work-log yet
+  poll 10: no work-log yet
+  poll 11: no work-log yet
+  poll 12: no work-log yet
+  poll 13: no work-log yet
+  poll 14: no work-log yet
+  poll 15: no work-log yet
+
+[8] Final work log
+  (no work-log entry — Celery worker may still be processing or the LLM key is unset/invalid)
+
+[9] Agent after run
+  GET /agents/{id} -> HTTP 200  {"id": "790dfc13-6b82-4328-97ae-93b9d419dce7", "name": "Ada-1784249259", "title": "Research Analyst", "department": "Research", "bio": "Pilot agent created to validate the live deployment.", "avatar_seed": "ada-1784249259", "model": "claude-sonnet-5-20251001", "status": "error", "current_task": null, "task_count": 0, "success_count": 0, "created_at": "2026-07-17T00:47:39.222484Z", "updated_at": "2
+RESULT=DONE
