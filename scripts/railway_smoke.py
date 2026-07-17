@@ -113,6 +113,11 @@ ts = r.json() if r.status_code == 200 else {}
 check("stats timeseries", r.status_code == 200 and len(ts.get("series", [])) == 14,
       f"points={len(ts.get('series', []))}")
 
+r = requests.get(BASE + "/stats/network", timeout=25)
+net = r.json() if r.status_code == 200 else {}
+check("stats network", r.status_code == 200 and "nodes" in net and "edges" in net and "recent" in net,
+      f"nodes={len(net.get('nodes', []))} edges={len(net.get('edges', []))}")
+
 passed = sum(1 for _, ok in results if ok)
 emit(f"\n=== {passed}/{len(results)} checks passed ===")
 with open("railway_smoke.txt", "w") as f:
