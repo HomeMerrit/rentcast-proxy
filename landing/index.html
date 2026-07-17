@@ -129,7 +129,7 @@ section{position:relative;z-index:1}
       <a class="btn btn-link" href="#start" aria-label="Watch a 60 second demo">▶&nbsp; Watch 60s demo</a>
     </div>
     <div class="stage">
-      <span class="liveflag"><span class="dot"></span> watch it grow</span>
+      <span class="liveflag"><span class="dot"></span> watch it work</span>
       <svg id="hero" viewBox="0 0 1120 720" role="img" aria-label="A living company: workers, buildings, roads and deliveries appear and move as a small company builds and runs itself."></svg>
     </div>
   </div>
@@ -332,153 +332,91 @@ section{position:relative;z-index:1}
 
   /* ============ HERO: living, self-building company ============ */
   function buildHero(){
-    var place=world(560,64,360,180),svgEl=document.getElementById("hero");
+    var place=world(560,84,352,166),svgEl=document.getElementById("hero");
     var base=island(place,84,COL.grass,COL.soil);
-    // roads (revealed step)
-    var roadSvg=road(place,[[0.06,0.5],[0.94,0.5]],0.05)+road(place,[[0.5,0.06],[0.5,0.94]],0.05);
+    var pathSvg=road(place,[[0.04,0.76],[0.96,0.76]],0.045);
 
-    // buildings with narrative reveal order/time — spread into distinct districts for breathing room
-    var builds=[
-      {u:0.42,v:0.60,type:'sales',at:200},
-      {u:0.60,v:0.38,type:'hq',at:11200},
-      {u:0.82,v:0.28,type:'ops',at:5600},
-      {u:0.80,v:0.74,type:'support',at:7000},
-      {u:0.18,v:0.28,type:'eng',at:8200},
-      {u:0.20,v:0.74,type:'finance',at:9200},
-      {u:0.50,v:0.12,type:'mktg',at:10200}
-    ];
-    var trees=[[0.5,0.92,11800],[0.10,0.52,12000],[0.90,0.5,12200],[0.30,0.9,12400],[0.68,0.9,12600],[0.12,0.88,12800]];
-    // depth-sorted static objects (each wrapped as reveal group)
+    // open-corner "diorama" room (dollhouse cutaway) — floor + two back walls + a team at work inside
+    function room(u,v,su,H,color){
+      var A=place(u-su,v-su),B=place(u+su,v-su),C=place(u+su,v+su),D=place(u-su,v+su);
+      var At=up(A,H),Bt=up(B,H),Dt=up(D,H);
+      var s='<polygon points="'+P([A,B,C,D])+'" fill="#EAD8B6"/>';                          // wood floor
+      s+='<polygon points="'+P([A,D,Dt,At])+'" fill="'+shade(color,-.02)+'"/>';              // back-left wall
+      s+='<polygon points="'+P([A,B,Bt,At])+'" fill="'+shade(color,-.17)+'"/>';              // back-right wall
+      var o=At,a=[Bt[0]-At[0],Bt[1]-At[1]],b=[A[0]-At[0],A[1]-At[1]];
+      s+='<polygon points="'+P([fp(o,a,b,.30,.22),fp(o,a,b,.60,.22),fp(o,a,b,.60,.56),fp(o,a,b,.30,.56)])+'" fill="var(--window)"/>'; // window on back-right
+      var o2=At,a2=[A[0]-At[0],A[1]-At[1]],b2=[Dt[0]-At[0],Dt[1]-At[1]];
+      s+='<polygon points="'+P([fp(o2,a2,b2,.28,.28),fp(o2,a2,b2,.64,.28),fp(o2,a2,b2,.64,.5),fp(o2,a2,b2,.28,.5)])+'" fill="'+shade(color,.12)+'"/>'; // dept sign on back-left
+      function F(x,y){return [A[0]+(B[0]-A[0])*x+(D[0]-A[0])*y, A[1]+(B[1]-A[1])*x+(D[1]-A[1])*y];}
+      var spots=[[0.34,0.40],[0.64,0.52],[0.42,0.72]], items=[];
+      spots.forEach(function(sp){var dp=F(sp[0],sp[1]);
+        items.push({y:dp[1], svg:'<ellipse cx="'+dp[0].toFixed(1)+'" cy="'+(dp[1]+1).toFixed(1)+'" rx="10" ry="4.4" fill="'+shade(color,.15)+'"/>'   // desk pad
+          +'<rect x="'+(dp[0]-2).toFixed(1)+'" y="'+(dp[1]-12).toFixed(1)+'" width="8" height="6" rx="1" fill="'+shade(color,-.34)+'"/>'                // monitor
+          +peg(dp,color,0.76)});});                                                                                                                    // teammate
+      items.sort(function(p,q){return p.y-q.y;});
+      s+=items.map(function(it){return it.svg;}).join("");
+      return {svg:s, gy:C[1], entry:F(0.5,1.1), desks:[F(0.34,0.36),F(0.64,0.48),F(0.42,0.68)], money:up(F(0.5,0.42),22)};
+    }
+    var sales=room(0.22,0.68,0.15,56,C6.sales);   // rooms sit on one screen row (u+v≈0.9): clean left→right
+    var ops  =room(0.45,0.45,0.16,56,C6.ops);
+    var fin  =room(0.68,0.22,0.15,56,C6.finance);
+
+    // context skyline (solid) behind the campus + trees — all depth-sorted with the rooms
     var objs=[];
-    builds.forEach(function(bd){var g=deptBuilding(place,bd.u,bd.v,bd.type);objs.push({key:g.key,at:bd.at,gy:g.gy,svg:g.svg});});
-    trees.forEach(function(t){var g=tree(place,t[0],t[1]);objs.push({key:g.key,at:t[2],gy:g.gy,svg:g.svg});});
-    objs.sort(function(a,b){return a.key-b.key;});
+    [{u:0.12,v:0.18,type:'eng'},{u:0.40,v:0.10,type:'mktg'},{u:0.68,v:0.08,type:'support'}].forEach(function(d){var g=deptBuilding(place,d.u,d.v,d.type);objs.push({gy:g.gy,svg:g.svg});});
+    [sales,ops,fin].forEach(function(r){objs.push({gy:r.gy,svg:r.svg});});
+    [[0.06,0.55],[0.5,0.95],[0.9,0.42],[0.26,0.92],[0.74,0.62]].forEach(function(t){var g=tree(place,t[0],t[1]);objs.push({gy:g.gy,svg:g.svg});});
 
-    /* ===== movement + depth-sorted renderer (rAF) =====
-       Ground pieces are driven per-frame and the whole scene is re-sorted by
-       ground contact point every frame, so pieces genuinely pass BEHIND buildings. */
-    var anim="",fx="",fseq=0;
-    var WALK=42, DRIVE=78;                 // world speed in px/sec (calm)
-    var OP=!!(window.CSS&&CSS.supports&&CSS.supports('offset-path','path("M0 0 L1 1")'));
-    function proj(uv){return uv.map(function(p){return place(p[0],p[1]);});}
+    /* ===== task-story renderer: a customer's task flows through the teams, becomes money ===== */
     function pd(pts){return 'M'+pts.map(function(p){return p[0].toFixed(1)+' '+p[1].toFixed(1);}).join(' L ');}
-    // Manhattan route on the iso grid: out to the main street (v=.5), along it, then in.
-    function routeUV(a,b){
-      var p=[[a[0],a[1]]];
-      if(Math.abs(a[1]-0.5)>0.03)p.push([a[0],0.5]);
-      if(Math.abs(a[0]-b[0])>0.03)p.push([b[0],0.5]);
-      p.push([b[0],b[1]]);
-      return p;
+    var M=[], gsvg="", osvg="", defs="", k=0;
+    function mover(pts,glyph,at,dur,opt){
+      opt=opt||{};var id='m'+k,pid='mp'+k;k++;
+      var d=opt.loop?pts.concat(pts.slice(0,-1).reverse()):pts;
+      defs+='<path id="'+pid+'" d="'+pd(d)+'" fill="none"/>';
+      var g='<g id="'+id+'" style="opacity:0">'+(opt.bob?'<g class="mvin">'+glyph+'</g>':glyph)+'</g>';
+      if(opt.overlay)osvg+=g; else gsvg+=g;
+      M.push({id:id,pid:pid,at:at,dur:dur,loop:!!opt.loop,overlay:!!opt.overlay,bob:!!opt.bob,phase:(k*1.7)%6.283,gy:-1});
     }
-    // pull a building point out to its road-facing edge so a piece stops at the door, not on the roof
-    function dock(uv){
-      var du=Math.abs(uv[0]-0.5),dv=Math.abs(uv[1]-0.5);
-      if(Math.max(du,dv)<0.14)return uv;
-      var q=uv.slice();
-      if(dv>=du)q[1]=uv[1]+(uv[1]<0.5?1:-1)*0.13; else q[0]=uv[0]+(uv[0]<0.5?1:-1)*0.13;
-      return q;
-    }
-    function cart(color){return '<ellipse cx="0" cy="7" rx="15" ry="4.2" fill="rgba(20,16,10,.16)"/>'+
-      '<rect x="-13" y="-9" width="24" height="14" rx="3" fill="'+color+'"/>'+
-      '<rect x="-13" y="-9" width="24" height="4.6" rx="2.4" fill="'+shade(color,.14)+'"/>'+
-      '<rect x="-3" y="-4" width="6" height="9" rx="1.5" fill="'+shade(color,-.22)+'"/>'+
-      '<circle cx="-7" cy="6" r="3.1" fill="#2C2620"/><circle cx="7" cy="6" r="3.1" fill="#2C2620"/>';}
-    var mailG='<rect x="-8" y="-6" width="16" height="11" rx="2" fill="#fff" stroke="#D8CBB2"/><path d="M-8 -5 L0 1 L8 -5" fill="none" stroke="#C9A24E" stroke-width="1.3"/>';
-    var pkgG='<rect x="-6" y="-9" width="12" height="9" rx="2" fill="#D9A46A"/><rect x="-6" y="-9" width="12" height="3.5" fill="#C58B4E"/>';
+    var LOOP=14000;
+    var tokenG='<circle r="11" fill="'+COL.roofgold+'" opacity=".28"/><rect x="-7" y="-6" width="14" height="12" rx="2" fill="#fff" stroke="#C9A24E" stroke-width="1.3"/><path d="M-4 -2H4 M-4 1H4 M-4 4H1" stroke="#C9A24E" stroke-width="1.1"/>';
+    var coinG='<circle r="7.5" fill="'+COL.roofgold+'"/><text x="0" y="3" font-size="9" text-anchor="middle" fill="#8a6a12" font-family="sans-serif" font-weight="700">$</text>';
+    // customer arrives → Sales; then the task threads through Sales → Ops → Finance and becomes money
+    mover([place(-0.16,0.70),place(0.14,0.82)],peg([0,0],C6.sales,0.9),500,2400,{bob:true});
+    var jr=[place(0.14,0.82),sales.entry].concat(sales.desks,[sales.entry,ops.entry],ops.desks,[ops.entry,fin.entry],fin.desks,[fin.money]);
+    mover(jr,tokenG,2700,9000,{overlay:true});
+    mover([fin.money,up(fin.money,34)],coinG,11200,1700,{overlay:true});
+    mover([up(fin.money,5),up(fin.money,40)],coinG,11600,1700,{overlay:true});
 
-    // --- ground movers (pawns + carts): registered here, driven + depth-sorted in the rAF loop ---
-    var movers=[], moverSVG="", pathDefs="", mseq=0;
-    function reg(glyph,pts,speed,at,type){
-      var id='mvr'+mseq, pid='mpath'+mseq; mseq++;
-      var trip=pts.concat(pts.slice(0,-1).reverse());   // walk there, then back — a full commute
-      pathDefs+='<path id="'+pid+'" d="'+pd(trip)+'" fill="none"/>';
-      moverSVG+='<g class="sprite" id="'+id+'" style="opacity:0"><g class="mvin">'+glyph+'</g></g>';
-      movers.push({id:id,pid:pid,at:at,speed:speed,type:type,phase:(mseq*1.7)%6.283,gy:-1});
-    }
-    function commuter(aUV,bUV,color,at){reg(peg([0,0],color,0.92),proj(routeUV(dock(aUV),dock(bUV))),WALK,at,'walk');}
-    function customer(color,at){reg(peg([0,0],color,0.94),proj(routeUV([-0.12,0.5],[0.46,0.52])),WALK,at,'walk');}
-    function cartRun(color,aUV,bUV,at){reg(cart(color),proj(routeUV(aUV,bUV)),DRIVE,at,'cart');}
+    var frag='<defs>'+defs+'</defs>'
+      +'<g class="back">'+base+pathSvg+'</g>'
+      +'<g id="hero-spr">'+objs.map(function(o){return '<g class="sprite bld" data-gy="'+o.gy.toFixed(1)+'">'+o.svg+'</g>';}).join("")+gsvg+'</g>'
+      +'<g class="overlay">'+osvg+'</g>';
+    svgEl.innerHTML='<style>#hero .win{fill:var(--window)} :root[data-theme="dark"] #hero .win{filter:drop-shadow(0 0 3px #FFCF6E)}</style>'+frag;
 
-    // --- overlay FX (value + paperwork): CSS-driven, always above the scene ---
-    function parcel(glyph,aUV,bUV,at,dur,lift){
-      if(!OP)return;
-      var p0=place(aUV[0],aUV[1]),p1=place(bUV[0],bUV[1]);p0=[p0[0],p0[1]-24];p1=[p1[0],p1[1]-24];
-      var cx=((p0[0]+p1[0])/2).toFixed(1),cy=((p0[1]+p1[1])/2-(lift||46)).toFixed(1),id='fx'+(fseq++);
-      anim+='@keyframes '+id+'{0%{offset-distance:0%;opacity:0}9%{opacity:1}86%{opacity:1}100%{offset-distance:100%;opacity:0}}';
-      fx+='<g class="rv mv" data-at="'+at+'"><g style="offset-path:path(\'M'+p0[0].toFixed(1)+' '+p0[1].toFixed(1)+' Q '+cx+' '+cy+' '+p1[0].toFixed(1)+' '+p1[1].toFixed(1)+'\');offset-rotate:0deg;animation:'+id+' '+dur+'s linear infinite">'+glyph+'</g></g>';
-    }
-    function coin(uv,at,delay){
-      var p=place(uv[0],uv[1]),id='fx'+(fseq++);
-      anim+='@keyframes '+id+'{0%{transform:translate(0,0);opacity:0}14%{opacity:1}58%{opacity:1}100%{transform:translate(0,-34px);opacity:0}}';
-      fx+='<g class="rv mv" data-at="'+at+'" style="transform:translate('+p[0].toFixed(1)+'px,'+(p[1]-30).toFixed(1)+'px)"><g style="animation:'+id+' 3.4s ease-out infinite'+(delay?';animation-delay:-'+delay+'s':'')+'"><circle r="6" fill="'+COL.roofgold+'"/><text x="0" y="3" font-size="8" text-anchor="middle" fill="#8a6a12" font-family="sans-serif" font-weight="700">$</text></g></g>';
-    }
-
-    /* ---- the living loop ---- */
-    customer(C6.sales,1200); customer(C6.sales,6400);      // customers arriving to Sales
-    commuter([0.18,0.28],[0.5,0.5],C6.eng,9000);           // departments commuting to HQ
-    commuter([0.20,0.74],[0.5,0.5],C6.finance,9600);
-    commuter([0.80,0.74],[0.5,0.5],C6.support,10200);
-    commuter([0.50,0.12],[0.5,0.5],C6.mktg,10800);
-    commuter([0.82,0.28],[0.5,0.5],C6.ops,11400);
-    cartRun(C6.ops,[0.96,0.5],[0.82,0.32],6200);           // delivery carts on the main road
-    cartRun(shade(C6.ops,-.06),[0.04,0.5],[0.5,0.5],11000);
-    parcel(mailG,[0.42,0.60],[0.82,0.28],12600,4.6,40);    // sales → ops
-    parcel(pkgG, [0.82,0.28],[0.20,0.74],12900,5.4,54);    // ops → finance (fulfill)
-    parcel(mailG,[0.80,0.74],[0.60,0.40],13200,4.4,36);    // support → hq
-    coin([0.42,0.54],2600,0); coin([0.20,0.68],13500,0);   // revenue rising
-    coin([0.60,0.38],13900,1.1); coin([0.80,0.66],14300,0.6);
-
-    // layers: static ground (back) · depth-sorted sprites (middle) · FX (front)
-    var bldSVG=objs.map(function(o){return '<g class="sprite bld rv" data-at="'+o.at+'" data-gy="'+o.gy.toFixed(1)+'">'+o.svg+'</g>';}).join("");
-    var frag='<defs>'+pathDefs+'</defs>'
-      +'<g class="back">'+base+'<g class="rv" data-at="4600">'+roadSvg+'</g></g>'
-      +'<g id="hero-spr">'+bldSVG+moverSVG+'</g>'
-      +'<g class="overlay">'+fx+'</g>';
-    svgEl.innerHTML='<style>'+anim+' #hero .win{fill:var(--window)} :root[data-theme="dark"] #hero .win{filter:drop-shadow(0 0 3px #FFCF6E)}</style>'+frag;
-
-    // gather sortable sprites (buildings/trees are fixed depth; movers update each frame)
-    var host=document.getElementById('hero-spr');
-    var spr=[];
+    var host=document.getElementById('hero-spr'), spr=[];
     [].slice.call(host.querySelectorAll('.bld')).forEach(function(n){spr.push({node:n,gy:+n.getAttribute('data-gy')});});
-    movers.forEach(function(m){
-      m.node=document.getElementById(m.id); m.inner=m.node.firstChild;
-      m.path=document.getElementById(m.pid); m.len=m.path.getTotalLength();
-      m.durMs=Math.max(5000,m.len/m.speed*1000);
-      spr.push(m);
-    });
+    M.forEach(function(m){m.node=document.getElementById(m.id);m.inner=m.node.firstChild;m.path=document.getElementById(m.pid);m.len=m.path.getTotalLength();if(!m.overlay)spr.push(m);});
     function depthSort(){spr.sort(function(a,b){return a.gy-b.gy;});for(var j=0;j<spr.length;j++)host.appendChild(spr[j].node);}
-
-    var nodes=[].slice.call(svgEl.querySelectorAll('.rv'));   // buildings/trees/roads/FX reveal
     if(reduce){
-      nodes.forEach(function(n){n.classList.add('on');});
-      movers.forEach(function(m){var pt=m.path.getPointAtLength(0);m.node.style.opacity=1;m.node.setAttribute('transform','translate('+pt.x.toFixed(1)+' '+pt.y.toFixed(1)+')');m.gy=pt.y;});
-      depthSort();
-      return;
+      M.forEach(function(m){var pt=m.path.getPointAtLength(0);m.node.style.opacity=1;m.node.setAttribute('transform','translate('+pt.x.toFixed(1)+' '+pt.y.toFixed(1)+')');m.gy=pt.y;});
+      depthSort(); return;
     }
-    var LOOP=20000, t0=(window.performance&&performance.now)?performance.now():0;
-    function frame(now){
-      var lt=(now-t0)%LOOP;
-      for(var i=0;i<movers.length;i++){var m=movers[i],el=m.node;
-        if(lt<m.at){el.style.opacity=0;el.style.display='none';m.gy=-1;continue;}
-        el.style.display='';
-        el.style.opacity=Math.min(1,(lt-m.at)/380);
-        var p=((lt-m.at)/m.durMs)%1, pt=m.path.getPointAtLength(p*m.len);
-        el.setAttribute('transform','translate('+pt.x.toFixed(1)+' '+pt.y.toFixed(1)+')');
+    var t0=(window.performance&&performance.now)?performance.now():0;
+    function frame(now){var lt=(now-t0)%LOOP;
+      for(var i=0;i<M.length;i++){var m=M[i],e=m.node,local=lt-m.at;
+        if(local<0||(!m.loop&&local>m.dur)){e.style.opacity=0;e.style.display='none';m.gy=-1;continue;}
+        e.style.display='';
+        var p=m.loop?((local/m.dur)%1):Math.min(1,local/m.dur);
+        e.style.opacity=Math.min(1,local/300)*(m.loop?1:Math.min(1,(m.dur-local)/300));
+        var pt=m.path.getPointAtLength(p*m.len);
+        e.setAttribute('transform','translate('+pt.x.toFixed(1)+' '+pt.y.toFixed(1)+')');
         m.gy=pt.y;
-        if(m.type==='walk'){m.inner.setAttribute('transform','translate(0 '+(-1.4*Math.abs(Math.sin(lt/150+m.phase))).toFixed(2)+')');} // footstep bob
+        if(m.bob)m.inner.setAttribute('transform','translate(0 '+(-1.4*Math.abs(Math.sin(lt/150+m.phase))).toFixed(2)+')');
       }
-      depthSort();
-      requestAnimationFrame(frame);
+      depthSort(); requestAnimationFrame(frame);
     }
     requestAnimationFrame(frame);
-
-    // reveal timeline (buildings/trees/roads/FX) — same 20s cadence, world builds then rebuilds
-    function play(){nodes.forEach(function(n){n.classList.remove('on');var at=+n.getAttribute('data-at')||0;setTimeout(function(){n.classList.add('on');},at);});}
-    function cycle(){play();setTimeout(function(){
-        nodes.slice().reverse().forEach(function(n,i){setTimeout(function(){n.classList.remove('on');},i*40);});
-      },LOOP-1400);
-      setTimeout(cycle,LOOP);}
-    cycle();
   }
   buildHero();
 
