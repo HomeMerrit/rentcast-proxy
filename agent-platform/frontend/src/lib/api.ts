@@ -9,6 +9,10 @@ import type {
   Company,
   CompanyDocument,
   SkillCatalog,
+  StatsOverview,
+  AgentStat,
+  ActivityItem,
+  TimePoint,
 } from "@/types/agent";
 
 export const BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
@@ -141,5 +145,11 @@ export const api = {
   a2a: {
     card: (agentId: string) => apiFetch<AgentCard>(`/agents/${agentId}/card`),
     platformCard: () => apiFetch<Record<string, unknown>>("/.well-known/agent-card.json"),
+  },
+  stats: {
+    overview: () => apiFetch<StatsOverview>("/stats/overview"),
+    agents: () => apiFetch<AgentStat[]>("/stats/agents"),
+    activity: (limit = 40) => apiFetch<ActivityItem[]>(`/stats/activity?limit=${limit}`),
+    timeseries: (days = 14) => apiFetch<{ days: number; series: TimePoint[] }>(`/stats/timeseries?days=${days}`),
   },
 };

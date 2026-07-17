@@ -93,6 +93,63 @@ export interface SkillCatalog {
   departments: { department: string; skills: string[] }[];
 }
 
+export interface StatsOverview {
+  agents: number;
+  active: number;
+  idle: number;
+  error: number;
+  tasks: number;
+  success: number;
+  success_rate: number;
+  total_cost_usd: number;
+  total_tokens: number;
+  avg_eval: number | null;
+  departments: { department: string; agents: number; tasks: number; success: number }[];
+}
+
+export interface AgentStat {
+  id: string;
+  name: string;
+  title: string;
+  department: string;
+  status: AgentStatus;
+  avatar_seed: string;
+  avatar_url?: string | null;
+  current_task?: string | null;
+  task_count: number;
+  success_count: number;
+  success_rate: number;
+  cost_usd: number;
+  tokens: number;
+  avg_eval: number | null;
+  last_active: string | null;
+}
+
+export interface ActivityItem {
+  id: string;
+  agent_id: string;
+  agent_name: string;
+  avatar_seed: string;
+  avatar_url?: string | null;
+  department: string;
+  task_type: string;
+  success: boolean;
+  cost_usd: number;
+  tokens_used: number;
+  duration_ms?: number | null;
+  result_preview: string;
+  started_at: string | null;
+  finished_at: string | null;
+}
+
+export interface TimePoint {
+  date: string;
+  tasks: number;
+  cost: number;
+  tokens: number;
+  success: number;
+}
+
 export interface Memory {
   id: string;
   content: string;
