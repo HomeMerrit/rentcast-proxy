@@ -4,42 +4,37 @@
   GET /health -> HTTP 200  {"status": "ok", "auth_required": false}
 
 [2] List agents (before)
-  count before: 3
+  count before: 4
 
 [3] Create agent
-  POST /agents/ -> HTTP 201  {"id": "20f4227f-d381-4a49-87cb-0442610cb6e1", "name": "Ada-1784250316", "title": "Research Analyst", "department": "Research", "bio": "Pilot agent created to validate the live deployment.", "avatar_seed": "ada-1784250316", "model": "claude-sonnet-5", "status": "idle", "current_task": null, "task_count": 0, "success_count": 0, "created_at": "2026-07-17T01:05:17.035788Z", "updated_at": "2026-07-17T
-  agent_id: 20f4227f-d381-4a49-87cb-0442610cb6e1
+  POST /agents/ -> HTTP 201  {"id": "efa91e6c-af70-48e1-9393-47d902ef6cbd", "name": "Ada-1784251141", "title": "Research Analyst", "department": "Research", "bio": "Pilot agent created to validate the live deployment.", "avatar_seed": "ada-1784251141", "model": "claude-sonnet-5", "status": "idle", "current_task": null, "task_count": 0, "success_count": 0, "created_at": "2026-07-17T01:19:01.284140Z", "updated_at": "2026-07-17T
+  agent_id: efa91e6c-af70-48e1-9393-47d902ef6cbd
 
 [4] List agents (after) — proves Postgres persistence
-  count after: 4 (was 3)
+  count after: 5 (was 4)
 
 [5] Get agent by id
-  GET /agents/{id} -> HTTP 200  {"id": "20f4227f-d381-4a49-87cb-0442610cb6e1", "name": "Ada-1784250316", "title": "Research Analyst", "department": "Research", "bio": "Pilot agent created to validate the live deployment.", "avatar_seed": "ada-1784250316", "model": "claude-sonnet-5", "status": "idle", "current_task": null, "task_count": 0, "success_count": 0, "created_at": "2026-07-17T01:05:17.035788Z", "updated_at": "2026-07-17T
+  GET /agents/{id} -> HTTP 200  {"id": "efa91e6c-af70-48e1-9393-47d902ef6cbd", "name": "Ada-1784251141", "title": "Research Analyst", "department": "Research", "bio": "Pilot agent created to validate the live deployment.", "avatar_seed": "ada-1784251141", "model": "claude-sonnet-5", "status": "idle", "current_task": null, "task_count": 0, "success_count": 0, "created_at": "2026-07-17T01:19:01.284140Z", "updated_at": "2026-07-17T
 
 [6] Dispatch a task (queues to Celery via Redis)
-  POST /agents/{id}/run -> HTTP 200  {"task_id": "5f460a4c-42df-475b-9271-204092441d7e", "agent_id": "20f4227f-d381-4a49-87cb-0442610cb6e1", "status": "queued"}
-  task_id: 5f460a4c-42df-475b-9271-204092441d7e
+  POST /agents/{id}/run -> HTTP 200  {"task_id": "243d4b78-f417-4a52-b57e-578064cfbde5", "agent_id": "efa91e6c-af70-48e1-9393-47d902ef6cbd", "status": "queued"}
+  task_id: 243d4b78-f417-4a52-b57e-578064cfbde5
 
 [7] Poll work log for a result (up to 150s)
   poll 1: no work-log yet
-  poll 2: no work-log yet
-  poll 3: no work-log yet
-  poll 4: no work-log yet
-  poll 5: no work-log yet
-  poll 6: no work-log yet
-  poll 7: no work-log yet
-  poll 8: no work-log yet
-  poll 9: no work-log yet
-  poll 10: no work-log yet
-  poll 11: no work-log yet
-  poll 12: no work-log yet
-  poll 13: no work-log yet
-  poll 14: no work-log yet
-  poll 15: no work-log yet
+  poll 2: 1 log(s), finished=1
 
 [8] Final work log
-  (no work-log entry — Celery worker may still be processing or the LLM key is unset/invalid)
+  success=True tokens=1473 duration_ms=9253
+  result: I am an AgentOS agent running live on Railway, ready to assist with your tasks.
+
+**Reflection:** This was a simple self-identification task requiring no external tools—just a direct, one-sentence confirmation as requested.
+  reflection: **Reflection:**
+
+1. Yes, I completed the task fully—I provided a direct, one-sentence self-identification as requested, confirming I'm an AgentOS agent running on Railway.
+
+2. I could improve by adding slightly more context about my capabilities upfront, which might preempt follow-up questions and m
 
 [9] Agent after run
-  GET /agents/{id} -> HTTP 200  {"id": "20f4227f-d381-4a49-87cb-0442610cb6e1", "name": "Ada-1784250316", "title": "Research Analyst", "department": "Research", "bio": "Pilot agent created to validate the live deployment.", "avatar_seed": "ada-1784250316", "model": "claude-sonnet-5", "status": "error", "current_task": null, "task_count": 0, "success_count": 0, "created_at": "2026-07-17T01:05:17.035788Z", "updated_at": "2026-07-17
+  GET /agents/{id} -> HTTP 200  {"id": "efa91e6c-af70-48e1-9393-47d902ef6cbd", "name": "Ada-1784251141", "title": "Research Analyst", "department": "Research", "bio": "Pilot agent created to validate the live deployment.", "avatar_seed": "ada-1784251141", "model": "claude-sonnet-5", "status": "idle", "current_task": null, "task_count": 1, "success_count": 1, "created_at": "2026-07-17T01:19:01.284140Z", "updated_at": "2026-07-17T
 RESULT=DONE
