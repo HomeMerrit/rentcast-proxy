@@ -37,12 +37,13 @@ before = r.json() if r.status_code == 200 else []
 emit("  count before: " + str(len(before)))
 
 emit("\n[3] Create agent")
+suffix = str(int(time.time()))
 agent_body = {
-    "name": "Ada",
+    "name": "Ada-" + suffix,
     "title": "Research Analyst",
     "department": "Research",
     "bio": "Pilot agent created to validate the live deployment.",
-    "avatar_seed": "ada-pilot",
+    "avatar_seed": "ada-" + suffix,
     "model": "claude-sonnet-5-20251001",
 }
 r = show("POST /agents/", requests.post(BASE + "/agents/", json=agent_body, timeout=25))
