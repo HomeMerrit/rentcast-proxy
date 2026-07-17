@@ -6,28 +6,6 @@ Services: {"celery-beat": "01aefb60-2429-47bc-85ca-da2b6b2f114e", "frontend": "1
   scheduling build on Metal builder "builder-dmpfyc"
   image push
 ---- RUNTIME LOGS (backend) ----
-    File "/usr/local/lib/python3.12/site-packages/starlette/middleware/base.py", line 187, in __call__
-    File "/usr/local/lib/python3.12/site-packages/starlette/middleware/base.py", line 163, in call_next
-    File "/usr/local/lib/python3.12/site-packages/starlette/middleware/errors.py", line 165, in __call__
-      raise exc
-      await self.app(scope, receive, _send)
-      response = await self.dispatch_func(request, call_next)
-    File "/usr/local/lib/python3.12/site-packages/starlette/middleware/cors.py", line 85, in __call__
-                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-      await self.app(scope, receive, send)
-    File "/usr/local/lib/python3.12/site-packages/starlette/middleware/base.py", line 185, in __call__
-      with collapse_excgroups():
-           ^^^^^^^^^^^^^^^^^^^^
-      raise app_exc
-    File "/usr/local/lib/python3.12/site-packages/starlette/middleware/base.py", line 149, in coro
-    File "/usr/local/lib/python3.12/site-packages/starlette/routing.py", line 715, in __call__
-      await self.app(scope, receive_or_disconnect, send_no_error)
-      await self.middleware_stack(scope, receive, send)
-    File "/usr/local/lib/python3.12/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
-    File "/usr/local/lib/python3.12/site-packages/starlette/routing.py", line 735, in app
-      await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
-      await route.handle(scope, receive, send)
-    File "/usr/local/lib/python3.12/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
     File "/usr/local/lib/python3.12/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
     File "/usr/local/lib/python3.12/site-packages/starlette/routing.py", line 288, in handle
       await self.app(scope, receive, send)
@@ -85,8 +63,8 @@ Services: {"celery-beat": "01aefb60-2429-47bc-85ca-da2b6b2f114e", "frontend": "1
       rec.execute(self)
     File "/usr/local/lib/python3.12/site-packages/sqlalchemy/orm/unitofwork.py", line 642, in execute
     File "/usr/local/lib/python3.12/site-packages/sqlalchemy/sql/elements.py", line 515, in _execute_on_connection
-      util.preloaded.orm_persistence.save_obj(
       return connection._execute_clauseelement(
+      util.preloaded.orm_persistence.save_obj(
     File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1640, in _execute_clauseelement
     File "/usr/local/lib/python3.12/site-packages/sqlalchemy/orm/persistence.py", line 93, in save_obj
       _emit_insert_statements(
@@ -126,6 +104,28 @@ Services: {"celery-beat": "01aefb60-2429-47bc-85ca-da2b6b2f114e", "frontend": "1
   [SQL: INSERT INTO agents (id, name, title, department, bio, avatar_seed, model, status, current_task, task_count, success_count, created_at, updated_at) VALUES ($1::UUID, $2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR, $7::VARCHAR, $8::VARCHAR, $9::VARCHAR, $10::INTEGER, $11::INTEGER, $12::TIMESTAMP WITH TIME ZONE, $13::TIMESTAMP WITH TIME ZONE)]
   [parameters: (UUID('42106f0b-09c9-406b-9ed7-898d9935c39f'), 'Ada', 'Research Analyst', 'Research', 'Pilot agent created to validate the live deployment.', 'ada-pilot', 'claude-sonnet-5-20251001', 'idle', None, 0, 0, datetime.datetime(2026, 7, 17, 0, 39, 54, 800313), datetime.datetime(2026, 7, 17, 0, 39, 54, 800317))]
   (Background on this error at: https://sqlalche.me/e/20/gkpj)
+  INFO:     100.64.0.7:29424 - "GET /agents/790dfc13-6b82-4328-97ae-93b9d419dce7 HTTP/1.1" 200 OK
+  INFO:     100.64.0.4:61570 - "POST /agents/790dfc13-6b82-4328-97ae-93b9d419dce7/run HTTP/1.1" 200 OK
+  INFO:     100.64.0.3:60580 - "GET /agents/ HTTP/1.1" 200 OK
+  INFO:     100.64.0.6:27474 - "POST /agents/ HTTP/1.1" 201 Created
+  INFO:     100.64.0.2:40514 - "GET /agents/ HTTP/1.1" 200 OK
+  INFO:     100.64.0.5:22174 - "GET /health HTTP/1.1" 200 OK
+  INFO:     100.64.0.5:47046 - "GET /work-log/790dfc13-6b82-4328-97ae-93b9d419dce7?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.7:36162 - "GET /work-log/790dfc13-6b82-4328-97ae-93b9d419dce7?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.8:52842 - "GET /work-log/790dfc13-6b82-4328-97ae-93b9d419dce7?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.7:59612 - "GET /work-log/790dfc13-6b82-4328-97ae-93b9d419dce7?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.8:47464 - "GET /work-log/790dfc13-6b82-4328-97ae-93b9d419dce7?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.9:15692 - "GET /work-log/790dfc13-6b82-4328-97ae-93b9d419dce7?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.3:48960 - "GET /work-log/790dfc13-6b82-4328-97ae-93b9d419dce7?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.10:61658 - "GET /work-log/790dfc13-6b82-4328-97ae-93b9d419dce7?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.9:41544 - "GET /work-log/790dfc13-6b82-4328-97ae-93b9d419dce7?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.10:15358 - "GET /work-log/790dfc13-6b82-4328-97ae-93b9d419dce7?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.10:56580 - "GET /work-log/790dfc13-6b82-4328-97ae-93b9d419dce7?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.5:10052 - "GET /work-log/790dfc13-6b82-4328-97ae-93b9d419dce7?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.5:20964 - "GET /work-log/790dfc13-6b82-4328-97ae-93b9d419dce7?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.9:45424 - "GET /work-log/790dfc13-6b82-4328-97ae-93b9d419dce7?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.11:62136 - "GET /work-log/790dfc13-6b82-4328-97ae-93b9d419dce7?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.12:41004 - "GET /agents/790dfc13-6b82-4328-97ae-93b9d419dce7 HTTP/1.1" 200 OK
 
 ########## celery : SUCCESS (deployment 4875c050-6df9-4efb-8433-6ef3f7b31d20) ##########
 ---- BUILD LOGS (celery) ----
@@ -364,126 +364,126 @@ debconf: falling back to frontend: Noninteractive
   image push
   image push
 ---- RUNTIME LOGS (celery) ----
-  [2026-07-16 23:42:00,003: INFO/MainProcess] Task app.workers.agent_tasks.health_check[11b368a4-d645-4b63-b9e4-b0f029328670] received
-  [2026-07-16 23:42:00,006: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[11b368a4-d645-4b63-b9e4-b0f029328670] succeeded in 0.0015787547454237938s: {'status': 'ok'}
-  [2026-07-16 23:43:00,010: INFO/MainProcess] Task app.workers.agent_tasks.health_check[19517eff-ef14-45b4-a778-8178b8435d84] received
-  [2026-07-16 23:43:00,013: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[19517eff-ef14-45b4-a778-8178b8435d84] succeeded in 0.0023968471214175224s: {'status': 'ok'}
-  [2026-07-16 23:44:00,004: INFO/MainProcess] Task app.workers.agent_tasks.health_check[138566bc-81d4-4cb3-8e48-f557dafa3699] received
-  [2026-07-16 23:44:00,014: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[138566bc-81d4-4cb3-8e48-f557dafa3699] succeeded in 0.006015771999955177s: {'status': 'ok'}
-  [2026-07-16 23:45:00,003: INFO/MainProcess] Task app.workers.agent_tasks.health_check[039adcce-ed19-4320-bd1d-6f9116d5e562] received
-  [2026-07-16 23:45:00,006: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[039adcce-ed19-4320-bd1d-6f9116d5e562] succeeded in 0.0011901101097464561s: {'status': 'ok'}
-  [2026-07-16 23:46:00,005: INFO/MainProcess] Task app.workers.agent_tasks.health_check[0046baff-fec1-4c21-998f-e0fbf21f6940] received
-  [2026-07-16 23:46:00,008: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[0046baff-fec1-4c21-998f-e0fbf21f6940] succeeded in 0.0025612153112888336s: {'status': 'ok'}
-  [2026-07-16 23:47:00,003: INFO/MainProcess] Task app.workers.agent_tasks.health_check[e6c7a727-614e-4795-8893-4ec11a62d852] received
-  [2026-07-16 23:47:00,006: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[e6c7a727-614e-4795-8893-4ec11a62d852] succeeded in 0.0016718339174985886s: {'status': 'ok'}
-  [2026-07-16 23:48:00,004: INFO/MainProcess] Task app.workers.agent_tasks.health_check[40f29170-1b66-48a2-8a97-03fa01e9c975] received
-  [2026-07-16 23:48:00,008: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[40f29170-1b66-48a2-8a97-03fa01e9c975] succeeded in 0.0035139862447977066s: {'status': 'ok'}
-  [2026-07-16 23:49:00,007: INFO/MainProcess] Task app.workers.agent_tasks.health_check[74e8947a-36f9-47aa-a014-fd29c708ada4] received
-  [2026-07-16 23:49:00,011: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[74e8947a-36f9-47aa-a014-fd29c708ada4] succeeded in 0.0037526339292526245s: {'status': 'ok'}
-  [2026-07-16 23:50:00,004: INFO/MainProcess] Task app.workers.agent_tasks.health_check[fe531ae4-85df-42b4-8294-b0f0902ee194] received
-  [2026-07-16 23:50:00,009: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[fe531ae4-85df-42b4-8294-b0f0902ee194] succeeded in 0.004299519583582878s: {'status': 'ok'}
-  [2026-07-16 23:51:00,008: INFO/MainProcess] Task app.workers.agent_tasks.health_check[f7f6a046-3b6f-4da1-9b03-546501f37a0e] received
-  [2026-07-16 23:51:00,011: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[f7f6a046-3b6f-4da1-9b03-546501f37a0e] succeeded in 0.00213468074798584s: {'status': 'ok'}
-  [2026-07-16 23:52:00,002: INFO/MainProcess] Task app.workers.agent_tasks.health_check[954091a0-d92a-4d07-a18f-6906281456ce] received
-  [2026-07-16 23:52:00,007: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[954091a0-d92a-4d07-a18f-6906281456ce] succeeded in 0.0035197166725993156s: {'status': 'ok'}
-  [2026-07-16 23:53:00,003: INFO/MainProcess] Task app.workers.agent_tasks.health_check[8b99e2fc-186f-4481-be2f-e8cba8eb8397] received
-  [2026-07-16 23:53:00,006: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[8b99e2fc-186f-4481-be2f-e8cba8eb8397] succeeded in 0.0015014149248600006s: {'status': 'ok'}
-  [2026-07-16 23:54:00,005: INFO/MainProcess] Task app.workers.agent_tasks.health_check[a4935b07-3961-4eb9-b8de-984228348755] received
-  [2026-07-16 23:54:00,007: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[a4935b07-3961-4eb9-b8de-984228348755] succeeded in 0.0012150686234235764s: {'status': 'ok'}
-  [2026-07-16 23:55:00,003: INFO/MainProcess] Task app.workers.agent_tasks.health_check[1c3cab78-84de-4f9f-8532-41678f0d724b] received
-  [2026-07-16 23:55:00,007: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[1c3cab78-84de-4f9f-8532-41678f0d724b] succeeded in 0.0021454887464642525s: {'status': 'ok'}
-  [2026-07-16 23:56:00,004: INFO/MainProcess] Task app.workers.agent_tasks.health_check[03ade9a4-0cae-44ad-844a-4e7569146496] received
-  [2026-07-16 23:56:00,007: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[03ade9a4-0cae-44ad-844a-4e7569146496] succeeded in 0.0018908018246293068s: {'status': 'ok'}
-  [2026-07-16 23:57:00,006: INFO/MainProcess] Task app.workers.agent_tasks.health_check[32c721ad-2287-41de-bc67-65cde3912c78] received
-  [2026-07-16 23:57:00,008: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[32c721ad-2287-41de-bc67-65cde3912c78] succeeded in 0.0013782158493995667s: {'status': 'ok'}
-  [2026-07-16 23:58:00,005: INFO/MainProcess] Task app.workers.agent_tasks.health_check[8b2bf619-4e50-4f4e-93f6-a393735cb34f] received
-  [2026-07-16 23:58:00,006: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[8b2bf619-4e50-4f4e-93f6-a393735cb34f] succeeded in 0.000941520556807518s: {'status': 'ok'}
-  [2026-07-16 23:59:00,004: INFO/MainProcess] Task app.workers.agent_tasks.health_check[b66c9435-cfd0-4f4d-8d02-aa3175c7de14] received
-  [2026-07-16 23:59:00,006: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[b66c9435-cfd0-4f4d-8d02-aa3175c7de14] succeeded in 0.00106051005423069s: {'status': 'ok'}
-  [2026-07-17 00:00:00,004: INFO/MainProcess] Task app.workers.agent_tasks.run_reflexion_eval[cb6d2356-1924-4738-bf6a-9ee6d842966f] received
-  [2026-07-17 00:00:00,014: INFO/MainProcess] Task app.workers.agent_tasks.health_check[f982fe50-2564-4c55-af34-a8834019682a] received
-  [2026-07-17 00:00:00,262: INFO/ForkPoolWorker-1] Task app.workers.agent_tasks.health_check[f982fe50-2564-4c55-af34-a8834019682a] succeeded in 0.247273912653327s: {'status': 'ok'}
-  [2026-07-17 00:00:00,352: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.run_reflexion_eval[cb6d2356-1924-4738-bf6a-9ee6d842966f] succeeded in 0.3474952057003975s: {'evaluated': 0}
-  [2026-07-17 00:01:00,007: INFO/MainProcess] Task app.workers.agent_tasks.health_check[8942c768-f89f-4fa8-867b-944d8af71b93] received
-  [2026-07-17 00:01:00,010: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[8942c768-f89f-4fa8-867b-944d8af71b93] succeeded in 0.0015909941866993904s: {'status': 'ok'}
-  [2026-07-17 00:02:00,004: INFO/MainProcess] Task app.workers.agent_tasks.health_check[6f473261-6962-4027-a021-f4c262aa13fc] received
-  [2026-07-17 00:02:00,006: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[6f473261-6962-4027-a021-f4c262aa13fc] succeeded in 0.0015056366100907326s: {'status': 'ok'}
-  [2026-07-17 00:03:00,006: INFO/MainProcess] Task app.workers.agent_tasks.health_check[87d15b73-5dff-4f0f-bf34-067efb4a6deb] received
-  [2026-07-17 00:03:00,008: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[87d15b73-5dff-4f0f-bf34-067efb4a6deb] succeeded in 0.0012457473203539848s: {'status': 'ok'}
-  [2026-07-17 00:04:00,007: INFO/MainProcess] Task app.workers.agent_tasks.health_check[b7d85257-802e-4589-9b46-4c21fae297d0] received
-  [2026-07-17 00:04:00,011: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[b7d85257-802e-4589-9b46-4c21fae297d0] succeeded in 0.003517795354127884s: {'status': 'ok'}
-  [2026-07-17 00:05:00,011: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[e32512a5-7d04-4d0e-9867-95abfbd29aac] succeeded in 0.0014363471418619156s: {'status': 'ok'}
-  [2026-07-17 00:05:00,009: INFO/MainProcess] Task app.workers.agent_tasks.health_check[e32512a5-7d04-4d0e-9867-95abfbd29aac] received
-  [2026-07-17 00:06:00,012: INFO/MainProcess] Task app.workers.agent_tasks.health_check[8517faf3-0b92-433d-8fc8-f01d2add465a] received
-  [2026-07-17 00:06:00,014: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[8517faf3-0b92-433d-8fc8-f01d2add465a] succeeded in 0.0013540880754590034s: {'status': 'ok'}
-  [2026-07-17 00:07:00,005: INFO/MainProcess] Task app.workers.agent_tasks.health_check[425452a6-3647-4820-9f3d-301daa874941] received
-  [2026-07-17 00:07:00,007: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[425452a6-3647-4820-9f3d-301daa874941] succeeded in 0.0016904445365071297s: {'status': 'ok'}
-  [2026-07-17 00:08:00,004: INFO/MainProcess] Task app.workers.agent_tasks.health_check[f4d577c9-3591-4aae-98bc-3e1842dfc948] received
-  [2026-07-17 00:08:00,008: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[f4d577c9-3591-4aae-98bc-3e1842dfc948] succeeded in 0.0028937822207808495s: {'status': 'ok'}
-  [2026-07-17 00:09:00,003: INFO/MainProcess] Task app.workers.agent_tasks.health_check[324190cd-f1a7-4861-8c15-43a8ba09b9b7] received
-  [2026-07-17 00:09:00,005: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[324190cd-f1a7-4861-8c15-43a8ba09b9b7] succeeded in 0.0016169054433703423s: {'status': 'ok'}
-  [2026-07-17 00:10:00,005: INFO/MainProcess] Task app.workers.agent_tasks.health_check[2019e060-00c4-41ff-8f78-199b01f0243a] received
-  [2026-07-17 00:10:00,008: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[2019e060-00c4-41ff-8f78-199b01f0243a] succeeded in 0.00218821968883276s: {'status': 'ok'}
-  [2026-07-17 00:11:00,007: INFO/MainProcess] Task app.workers.agent_tasks.health_check[c67180dc-ca5d-46a9-8304-eb09032bee90] received
-  [2026-07-17 00:11:00,009: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[c67180dc-ca5d-46a9-8304-eb09032bee90] succeeded in 0.0011389078572392464s: {'status': 'ok'}
-  [2026-07-17 00:12:00,004: INFO/MainProcess] Task app.workers.agent_tasks.health_check[b1df7692-a67e-42f4-9c18-2adaae995785] received
-  [2026-07-17 00:12:00,006: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[b1df7692-a67e-42f4-9c18-2adaae995785] succeeded in 0.0012337090447545052s: {'status': 'ok'}
-  [2026-07-17 00:13:00,004: INFO/MainProcess] Task app.workers.agent_tasks.health_check[661237ab-1b0c-4732-ba73-a875a0889b79] received
-  [2026-07-17 00:13:00,007: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[661237ab-1b0c-4732-ba73-a875a0889b79] succeeded in 0.0013505471870303154s: {'status': 'ok'}
-  [2026-07-17 00:14:00,007: INFO/MainProcess] Task app.workers.agent_tasks.health_check[7ab42d24-86ad-4ea3-b0e7-3c6c303c21d6] received
-  [2026-07-17 00:14:00,009: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[7ab42d24-86ad-4ea3-b0e7-3c6c303c21d6] succeeded in 0.0011910190805792809s: {'status': 'ok'}
-  [2026-07-17 00:15:00,004: INFO/MainProcess] Task app.workers.agent_tasks.health_check[d488341b-3d9e-4c02-941b-6b422b996e33] received
-  [2026-07-17 00:15:00,006: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[d488341b-3d9e-4c02-941b-6b422b996e33] succeeded in 0.001403716392815113s: {'status': 'ok'}
-  [2026-07-17 00:16:00,004: INFO/MainProcess] Task app.workers.agent_tasks.health_check[b5e8e2d6-982e-452d-8140-07be5babe7e8] received
-  [2026-07-17 00:16:00,009: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[b5e8e2d6-982e-452d-8140-07be5babe7e8] succeeded in 0.004767074249684811s: {'status': 'ok'}
-  [2026-07-17 00:17:00,005: INFO/MainProcess] Task app.workers.agent_tasks.health_check[59a809b1-9354-4afe-a4b5-783e8735e454] received
-  [2026-07-17 00:17:00,008: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[59a809b1-9354-4afe-a4b5-783e8735e454] succeeded in 0.0014683958142995834s: {'status': 'ok'}
-  [2026-07-17 00:18:00,009: INFO/MainProcess] Task app.workers.agent_tasks.health_check[f6bf5d53-a239-416a-837c-ae30a3502ab3] received
-  [2026-07-17 00:18:00,014: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[f6bf5d53-a239-416a-837c-ae30a3502ab3] succeeded in 0.0040877219289541245s: {'status': 'ok'}
-  [2026-07-17 00:19:00,004: INFO/MainProcess] Task app.workers.agent_tasks.health_check[2bc983db-6f77-4c97-93e4-aefe081ebe82] received
-  [2026-07-17 00:19:00,006: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[2bc983db-6f77-4c97-93e4-aefe081ebe82] succeeded in 0.0016810353845357895s: {'status': 'ok'}
-  [2026-07-17 00:20:00,003: INFO/MainProcess] Task app.workers.agent_tasks.health_check[09c38e35-3ac5-4277-8b1d-65ba1ef1b52f] received
-  [2026-07-17 00:20:00,010: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[09c38e35-3ac5-4277-8b1d-65ba1ef1b52f] succeeded in 0.006003343500196934s: {'status': 'ok'}
-  [2026-07-17 00:21:00,008: INFO/MainProcess] Task app.workers.agent_tasks.health_check[d7547578-254b-484e-9e6c-5e83daca8094] received
-  [2026-07-17 00:21:00,019: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[d7547578-254b-484e-9e6c-5e83daca8094] succeeded in 0.010023154318332672s: {'status': 'ok'}
-  [2026-07-17 00:22:00,003: INFO/MainProcess] Task app.workers.agent_tasks.health_check[3d8e184a-5304-41ff-85e2-188a38ea9ee3] received
-  [2026-07-17 00:22:00,004: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[3d8e184a-5304-41ff-85e2-188a38ea9ee3] succeeded in 0.0013034269213676453s: {'status': 'ok'}
-  [2026-07-17 00:23:00,003: INFO/MainProcess] Task app.workers.agent_tasks.health_check[8126f53b-0695-4d29-98fb-7a372eee9acb] received
-  [2026-07-17 00:23:00,005: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[8126f53b-0695-4d29-98fb-7a372eee9acb] succeeded in 0.001423177309334278s: {'status': 'ok'}
-  [2026-07-17 00:24:00,010: INFO/MainProcess] Task app.workers.agent_tasks.health_check[af51aac9-03dc-4d2c-a31c-a005413a7951] received
-  [2026-07-17 00:24:00,011: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[af51aac9-03dc-4d2c-a31c-a005413a7951] succeeded in 0.0012240689247846603s: {'status': 'ok'}
-  [2026-07-17 00:25:00,006: INFO/MainProcess] Task app.workers.agent_tasks.health_check[53028794-58a7-4c59-b23c-9aed8592c345] received
-  [2026-07-17 00:25:00,008: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[53028794-58a7-4c59-b23c-9aed8592c345] succeeded in 0.001173708587884903s: {'status': 'ok'}
-  [2026-07-17 00:26:00,004: INFO/MainProcess] Task app.workers.agent_tasks.health_check[16682bb7-5f2b-404e-a583-4ade2b8aec68] received
-  [2026-07-17 00:26:00,007: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[16682bb7-5f2b-404e-a583-4ade2b8aec68] succeeded in 0.0021741297096014023s: {'status': 'ok'}
-  [2026-07-17 00:27:00,003: INFO/MainProcess] Task app.workers.agent_tasks.health_check[efa5ca6e-29a6-4c0a-82bd-c7a24adfdaf9] received
-  [2026-07-17 00:27:00,005: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[efa5ca6e-29a6-4c0a-82bd-c7a24adfdaf9] succeeded in 0.001205669716000557s: {'status': 'ok'}
-  [2026-07-17 00:28:00,006: INFO/MainProcess] Task app.workers.agent_tasks.health_check[6d8e83e6-acc4-4f17-863d-9ecf4f0f21f6] received
-  [2026-07-17 00:28:00,008: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[6d8e83e6-acc4-4f17-863d-9ecf4f0f21f6] succeeded in 0.0018906015902757645s: {'status': 'ok'}
-  [2026-07-17 00:29:00,005: INFO/MainProcess] Task app.workers.agent_tasks.health_check[7b16a422-ab1b-443a-8548-277b74b275d3] received
-  [2026-07-17 00:29:00,008: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[7b16a422-ab1b-443a-8548-277b74b275d3] succeeded in 0.0018172431737184525s: {'status': 'ok'}
-  [2026-07-17 00:30:00,015: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[14653b69-9b4e-4946-ad5f-d8971597c774] succeeded in 0.0028920425102114677s: {'status': 'ok'}
-  [2026-07-17 00:30:00,011: INFO/MainProcess] Task app.workers.agent_tasks.health_check[14653b69-9b4e-4946-ad5f-d8971597c774] received
-  [2026-07-17 00:31:00,005: INFO/MainProcess] Task app.workers.agent_tasks.health_check[9525f9f3-b0bd-4cf0-8ce4-33d9c6ed73fd] received
-  [2026-07-17 00:31:00,007: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[9525f9f3-b0bd-4cf0-8ce4-33d9c6ed73fd] succeeded in 0.0015702350065112114s: {'status': 'ok'}
-  [2026-07-17 00:32:00,003: INFO/MainProcess] Task app.workers.agent_tasks.health_check[89ad0623-d94c-4cb4-a4e5-feb2477a5dbc] received
-  [2026-07-17 00:32:00,007: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[89ad0623-d94c-4cb4-a4e5-feb2477a5dbc] succeeded in 0.003608006052672863s: {'status': 'ok'}
-  [2026-07-17 00:33:00,004: INFO/MainProcess] Task app.workers.agent_tasks.health_check[61cb5bd9-cc36-4829-8c1a-8ee15e537012] received
-  [2026-07-17 00:33:00,006: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[61cb5bd9-cc36-4829-8c1a-8ee15e537012] succeeded in 0.0011602584272623062s: {'status': 'ok'}
-  [2026-07-17 00:34:00,007: INFO/MainProcess] Task app.workers.agent_tasks.health_check[904d49b6-152e-4b20-9ac6-456618e84cde] received
-  [2026-07-17 00:34:00,010: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[904d49b6-152e-4b20-9ac6-456618e84cde] succeeded in 0.002220017835497856s: {'status': 'ok'}
-  [2026-07-17 00:35:00,005: INFO/MainProcess] Task app.workers.agent_tasks.health_check[40404261-e3e6-41f8-b5b6-d1a384f9b949] received
-  [2026-07-17 00:35:00,008: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[40404261-e3e6-41f8-b5b6-d1a384f9b949] succeeded in 0.0020450400188565254s: {'status': 'ok'}
-  [2026-07-17 00:36:00,004: INFO/MainProcess] Task app.workers.agent_tasks.health_check[b7219a29-0d65-468f-a915-37e32758b492] received
-  [2026-07-17 00:36:00,007: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[b7219a29-0d65-468f-a915-37e32758b492] succeeded in 0.002384497784078121s: {'status': 'ok'}
-  [2026-07-17 00:37:00,003: INFO/MainProcess] Task app.workers.agent_tasks.health_check[6bbff49d-0ab7-499d-94c6-f99ce3e7139a] received
-  [2026-07-17 00:37:00,008: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[6bbff49d-0ab7-499d-94c6-f99ce3e7139a] succeeded in 0.003696633502840996s: {'status': 'ok'}
-  [2026-07-17 00:38:00,008: INFO/MainProcess] Task app.workers.agent_tasks.health_check[66908994-68db-406f-b168-b105bcd74ebc] received
-  [2026-07-17 00:38:00,016: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[66908994-68db-406f-b168-b105bcd74ebc] succeeded in 0.006695317104458809s: {'status': 'ok'}
-  [2026-07-17 00:39:00,004: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[62c81849-4ff2-4ec8-ad8a-be931dcf37fb] succeeded in 0.0010036900639533997s: {'status': 'ok'}
-  [2026-07-17 00:39:00,003: INFO/MainProcess] Task app.workers.agent_tasks.health_check[62c81849-4ff2-4ec8-ad8a-be931dcf37fb] received
-  [2026-07-17 00:40:00,002: INFO/MainProcess] Task app.workers.agent_tasks.health_check[6c95a19f-c280-4c2d-9c4b-076486baa562] received
-  [2026-07-17 00:40:00,007: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[6c95a19f-c280-4c2d-9c4b-076486baa562] succeeded in 0.003917312249541283s: {'status': 'ok'}
+  [2026-07-17 00:45:00,006: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[6212ee4a-024b-4116-a375-a99c7670e096] succeeded in 0.0009615505114197731s: {'status': 'ok'}
+  [2026-07-17 00:46:00,004: INFO/MainProcess] Task app.workers.agent_tasks.health_check[544ce77a-9e09-4df8-b309-7dfa4172e7a3] received
+  [2026-07-17 00:46:00,007: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[544ce77a-9e09-4df8-b309-7dfa4172e7a3] succeeded in 0.0014664866030216217s: {'status': 'ok'}
+  [2026-07-17 00:47:00,005: INFO/MainProcess] Task app.workers.agent_tasks.health_check[850f61e6-d597-4733-876a-225012a91c3c] received
+  [2026-07-17 00:47:00,007: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[850f61e6-d597-4733-876a-225012a91c3c] succeeded in 0.0012884773313999176s: {'status': 'ok'}
+  [2026-07-17 00:47:39,865: INFO/MainProcess] Task app.workers.agent_tasks.run_agent_task[6bbfc681-0369-4f55-b088-ad8a70fa71cb] received
+  [2026-07-17 00:47:40,431: WARNING/ForkPoolWorker-2] /usr/local/lib/python3.12/site-packages/langgraph/checkpoint/base/__init__.py:18: LangChainPendingDeprecationWarning: The default value of `allowed_objects` will change in a future version. Pass an explicit value (e.g., allowed_objects='messages' or allowed_objects='core') to suppress this warning.
+    from langgraph.checkpoint.serde.jsonplus import JsonPlusSerializer
+  
+  [2026-07-17 00:47:43,131: INFO/ForkPoolWorker-2] HTTP Request: GET http://qdrant.railway.internal:6333 "HTTP/1.1 200 OK"
+  [2026-07-17 00:47:43,133: INFO/ForkPoolWorker-2] HTTP Request: GET http://qdrant.railway.internal:6333/collections "HTTP/1.1 200 OK"
+  [2026-07-17 00:47:43,158: INFO/ForkPoolWorker-2] HTTP Request: PUT http://qdrant.railway.internal:6333/collections/agent_memories "HTTP/1.1 200 OK"
+  [2026-07-17 00:47:43,251: INFO/ForkPoolWorker-2] HTTP Request: GET https://huggingface.co/api/agent-harnesses "HTTP/1.1 200 OK"
+  [2026-07-17 00:47:43,329: INFO/ForkPoolWorker-2] HTTP Request: GET https://huggingface.co/api/models/qdrant/bge-small-en-v1.5-onnx-q "HTTP/1.1 307 Temporary Redirect"
+  [2026-07-17 00:47:43,410: INFO/ForkPoolWorker-2] HTTP Request: GET https://huggingface.co/api/models/Qdrant/bge-small-en-v1.5-onnx-Q "HTTP/1.1 200 OK"
+  [2026-07-17 00:47:43,492: INFO/ForkPoolWorker-2] HTTP Request: GET https://huggingface.co/api/models/qdrant/bge-small-en-v1.5-onnx-q/tree/52398278842ec682c6f32300af41344b1c0b0bb2?recursive=false&expand=false "HTTP/1.1 307 Temporary Redirect"
+  [2026-07-17 00:47:43,576: INFO/ForkPoolWorker-2] HTTP Request: GET https://huggingface.co/api/models/Qdrant/bge-small-en-v1.5-onnx-Q/tree/52398278842ec682c6f32300af41344b1c0b0bb2?recursive=false&expand=false "HTTP/1.1 200 OK"
+  [2026-07-17 00:47:43,650: INFO/ForkPoolWorker-2] HTTP Request: GET https://huggingface.co/api/models/qdrant/bge-small-en-v1.5-onnx-q/revision/main "HTTP/1.1 307 Temporary Redirect"
+  [2026-07-17 00:47:43,730: INFO/ForkPoolWorker-2] HTTP Request: GET https://huggingface.co/api/models/Qdrant/bge-small-en-v1.5-onnx-Q/revision/main "HTTP/1.1 200 OK"
+  [2026-07-17 00:47:43,809: INFO/ForkPoolWorker-2] HTTP Request: GET https://huggingface.co/api/models/qdrant/bge-small-en-v1.5-onnx-q/tree/52398278842ec682c6f32300af41344b1c0b0bb2?recursive=true&expand=false "HTTP/1.1 307 Temporary Redirect"
+  [2026-07-17 00:47:43,892: INFO/ForkPoolWorker-2] HTTP Request: GET https://huggingface.co/api/models/Qdrant/bge-small-en-v1.5-onnx-Q/tree/52398278842ec682c6f32300af41344b1c0b0bb2?recursive=true&expand=false "HTTP/1.1 200 OK"
+  [2026-07-17 00:47:43,899: WARNING/ForkPoolWorker-2] Fetching 5 files:   0%|          | 0/5 [00:00<?, ?it/s]
+  [2026-07-17 00:47:43,972: INFO/ForkPoolWorker-2] HTTP Request: HEAD https://huggingface.co/qdrant/bge-small-en-v1.5-onnx-q/resolve/52398278842ec682c6f32300af41344b1c0b0bb2/config.json "HTTP/1.1 307 Temporary Redirect"
+  [2026-07-17 00:47:43,983: INFO/ForkPoolWorker-2] HTTP Request: HEAD https://huggingface.co/qdrant/bge-small-en-v1.5-onnx-q/resolve/52398278842ec682c6f32300af41344b1c0b0bb2/tokenizer.json "HTTP/1.1 307 Temporary Redirect"
+  [2026-07-17 00:47:43,988: INFO/ForkPoolWorker-2] HTTP Request: HEAD https://huggingface.co/qdrant/bge-small-en-v1.5-onnx-q/resolve/52398278842ec682c6f32300af41344b1c0b0bb2/special_tokens_map.json "HTTP/1.1 307 Temporary Redirect"
+  [2026-07-17 00:47:43,991: INFO/ForkPoolWorker-2] HTTP Request: HEAD https://huggingface.co/qdrant/bge-small-en-v1.5-onnx-q/resolve/52398278842ec682c6f32300af41344b1c0b0bb2/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+  [2026-07-17 00:47:44,049: INFO/ForkPoolWorker-2] HTTP Request: HEAD https://huggingface.co/Qdrant/bge-small-en-v1.5-onnx-Q/resolve/52398278842ec682c6f32300af41344b1c0b0bb2/config.json "HTTP/1.1 307 Temporary Redirect"
+  [2026-07-17 00:47:44,054: INFO/ForkPoolWorker-2] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qdrant/bge-small-en-v1.5-onnx-Q/52398278842ec682c6f32300af41344b1c0b0bb2/config.json "HTTP/1.1 200 OK"
+  [2026-07-17 00:47:44,059: INFO/ForkPoolWorker-2] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Qdrant/bge-small-en-v1.5-onnx-Q/52398278842ec682c6f32300af41344b1c0b0bb2/config.json "HTTP/1.1 200 OK"
+  [2026-07-17 00:47:44,060: WARNING/ForkPoolWorker-2] Fetching 5 files:  20%|##        | 1/5 [00:00<00:00,  6.19it/s]
+  [2026-07-17 00:47:44,061: INFO/ForkPoolWorker-2] HTTP Request: HEAD https://huggingface.co/Qdrant/bge-small-en-v1.5-onnx-Q/resolve/52398278842ec682c6f32300af41344b1c0b0bb2/tokenizer.json "HTTP/1.1 307 Temporary Redirect"
+  [2026-07-17 00:47:44,062: WARNING/ForkPoolWorker-2] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+  [2026-07-17 00:47:44,062: WARNING/ForkPoolWorker-2] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+  [2026-07-17 00:47:44,063: INFO/ForkPoolWorker-2] HTTP Request: HEAD https://huggingface.co/Qdrant/bge-small-en-v1.5-onnx-Q/resolve/52398278842ec682c6f32300af41344b1c0b0bb2/special_tokens_map.json "HTTP/1.1 307 Temporary Redirect"
+  [2026-07-17 00:47:44,066: INFO/ForkPoolWorker-2] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qdrant/bge-small-en-v1.5-onnx-Q/52398278842ec682c6f32300af41344b1c0b0bb2/tokenizer.json "HTTP/1.1 200 OK"
+  [2026-07-17 00:47:44,068: INFO/ForkPoolWorker-2] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qdrant/bge-small-en-v1.5-onnx-Q/52398278842ec682c6f32300af41344b1c0b0bb2/special_tokens_map.json "HTTP/1.1 200 OK"
+  [2026-07-17 00:47:44,069: INFO/ForkPoolWorker-2] HTTP Request: HEAD https://huggingface.co/Qdrant/bge-small-en-v1.5-onnx-Q/resolve/52398278842ec682c6f32300af41344b1c0b0bb2/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+  [2026-07-17 00:47:44,073: INFO/ForkPoolWorker-2] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Qdrant/bge-small-en-v1.5-onnx-Q/52398278842ec682c6f32300af41344b1c0b0bb2/tokenizer.json "HTTP/1.1 200 OK"
+  [2026-07-17 00:47:44,074: INFO/ForkPoolWorker-2] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qdrant/bge-small-en-v1.5-onnx-Q/52398278842ec682c6f32300af41344b1c0b0bb2/tokenizer_config.json "HTTP/1.1 200 OK"
+  [2026-07-17 00:47:44,077: INFO/ForkPoolWorker-2] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Qdrant/bge-small-en-v1.5-onnx-Q/52398278842ec682c6f32300af41344b1c0b0bb2/special_tokens_map.json "HTTP/1.1 200 OK"
+  [2026-07-17 00:47:44,081: INFO/ForkPoolWorker-2] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Qdrant/bge-small-en-v1.5-onnx-Q/52398278842ec682c6f32300af41344b1c0b0bb2/tokenizer_config.json "HTTP/1.1 200 OK"
+  [2026-07-17 00:47:45,041: WARNING/ForkPoolWorker-2] Fetching 5 files:  40%|####      | 2/5 [00:01<00:01,  1.55it/s]
+  [2026-07-17 00:47:45,041: WARNING/ForkPoolWorker-2] Fetching 5 files: 100%|##########| 5/5 [00:01<00:00,  4.38it/s]
+  [2026-07-17 00:47:46,259: INFO/ForkPoolWorker-2] HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 404 Not Found"
+  [2026-07-17 00:47:46,344: INFO/MainProcess] Task app.workers.agent_tasks.run_agent_task[6bbfc681-0369-4f55-b088-ad8a70fa71cb] received
+  [2026-07-17 00:47:46,353: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.run_agent_task[6bbfc681-0369-4f55-b088-ad8a70fa71cb] retry: Retry in 1s: NotFoundError("Error code: 404 - {'type': 'error', 'error': {'type': 'not_found_error', 'message': 'model: claude-sonnet-5-20251001'}, 'request_id': 'req_011Cd6i3p8hoJGap8T7VTb6U'}")
+  [2026-07-17 00:47:48,194: INFO/ForkPoolWorker-2] HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 404 Not Found"
+  [2026-07-17 00:47:48,226: INFO/MainProcess] Task app.workers.agent_tasks.run_agent_task[6bbfc681-0369-4f55-b088-ad8a70fa71cb] received
+  [2026-07-17 00:47:48,227: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.run_agent_task[6bbfc681-0369-4f55-b088-ad8a70fa71cb] retry: Retry in 2s: NotFoundError("Error code: 404 - {'type': 'error', 'error': {'type': 'not_found_error', 'message': 'model: claude-sonnet-5-20251001'}, 'request_id': 'req_011Cd6i3xGMWp193jRYstpJe'}")
+  [2026-07-17 00:47:51,144: INFO/ForkPoolWorker-2] HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 404 Not Found"
+  [2026-07-17 00:47:51,177: INFO/MainProcess] Task app.workers.agent_tasks.run_agent_task[6bbfc681-0369-4f55-b088-ad8a70fa71cb] received
+  [2026-07-17 00:47:51,178: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.run_agent_task[6bbfc681-0369-4f55-b088-ad8a70fa71cb] retry: Retry in 4s: NotFoundError("Error code: 404 - {'type': 'error', 'error': {'type': 'not_found_error', 'message': 'model: claude-sonnet-5-20251001'}, 'request_id': 'req_011Cd6i4B33tTn4m8iRrnr41'}")
+  [2026-07-17 00:47:56,063: INFO/ForkPoolWorker-2] HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 404 Not Found"
+  [2026-07-17 00:47:56,098: ERROR/ForkPoolWorker-2] Task app.workers.agent_tasks.run_agent_task[6bbfc681-0369-4f55-b088-ad8a70fa71cb] raised unexpected: AnthropicError("Error code: 404 - {'type': 'error', 'error': {'type': 'not_found_error', 'message': 'model: claude-sonnet-5-20251001'}, 'request_id': 'req_011Cd6i4Y4MFCRjnVeQDWdF7'}")
+  Traceback (most recent call last):
+    File "/usr/local/lib/python3.12/site-packages/celery/app/trace.py", line 453, in trace_task
+      R = retval = fun(*args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^
+    File "/usr/local/lib/python3.12/site-packages/celery/app/trace.py", line 736, in __protected_call__
+      return self.run(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/app/app/workers/agent_tasks.py", line 137, in run_agent_task
+      raise self.retry(exc=exc, countdown=2 ** self.request.retries)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/usr/local/lib/python3.12/site-packages/celery/app/task.py", line 736, in retry
+      raise_with_context(exc)
+    File "/app/app/workers/agent_tasks.py", line 135, in run_agent_task
+      return run_async(_run_task_async(agent_id, agent_name, task_type, task_input, model))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/app/app/workers/agent_tasks.py", line 15, in run_async
+      return loop.run_until_complete(coro)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/usr/local/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
+      return future.result()
+             ^^^^^^^^^^^^^^^
+    File "/app/app/workers/agent_tasks.py", line 62, in _run_task_async
+      result_data = await agent_runner.run(task_input)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/app/app/agents/base_agent.py", line 315, in run
+      final = await self.graph.ainvoke(initial)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/usr/local/lib/python3.12/site-packages/langgraph/pregel/__init__.py", line 1989, in ainvoke
+      async for chunk in self.astream(
+    File "/usr/local/lib/python3.12/site-packages/langgraph/pregel/__init__.py", line 1874, in astream
+      async for _ in runner.atick(
+    File "/usr/local/lib/python3.12/site-packages/langgraph/pregel/runner.py", line 362, in atick
+      await arun_with_retry(
+    File "/usr/local/lib/python3.12/site-packages/langgraph/pregel/retry.py", line 132, in arun_with_retry
+      return await task.proc.ainvoke(task.input, config)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/usr/local/lib/python3.12/site-packages/langgraph/utils/runnable.py", line 445, in ainvoke
+      input = await step.ainvoke(input, config, **kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/usr/local/lib/python3.12/site-packages/langgraph/utils/runnable.py", line 236, in ainvoke
+      ret = await asyncio.create_task(coro, context=context)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/app/app/agents/base_agent.py", line 170, in _think
+      async for chunk in self.llm_with_tools.astream(messages, config=stream_config):
+    File "/usr/local/lib/python3.12/site-packages/langchain_core/runnables/base.py", line 5924, in astream
+      async for item in self.bound.astream(
+    File "/usr/local/lib/python3.12/site-packages/langchain_core/language_models/chat_models.py", line 615, in astream
+      async for chunk in self._astream(
+    File "/usr/local/lib/python3.12/site-packages/langchain_anthropic/chat_models.py", line 747, in _astream
+      stream = await self._async_client.messages.create(**payload)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/usr/local/lib/python3.12/site-packages/anthropic/resources/messages/messages.py", line 2545, in create
+      return await self._post(
+             ^^^^^^^^^^^^^^^^^
+    File "/usr/local/lib/python3.12/site-packages/anthropic/_base_client.py", line 2276, in post
+      return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/usr/local/lib/python3.12/site-packages/anthropic/_base_client.py", line 1941, in request
+      raise self._make_status_error_from_response(response) from None
+  anthropic.AnthropicError: Error code: 404 - {'type': 'error', 'error': {'type': 'not_found_error', 'message': 'model: claude-sonnet-5-20251001'}, 'request_id': 'req_011Cd6i4Y4MFCRjnVeQDWdF7'}
+  [2026-07-17 00:48:00,006: INFO/MainProcess] Task app.workers.agent_tasks.health_check[d87b1ea9-2dc3-4656-8248-8edc26ed505f] received
+  [2026-07-17 00:48:00,009: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[d87b1ea9-2dc3-4656-8248-8edc26ed505f] succeeded in 0.0014770058915019035s: {'status': 'ok'}
+  [2026-07-17 00:49:00,009: INFO/MainProcess] Task app.workers.agent_tasks.health_check[261be69d-debf-4d49-932f-13692f23d3ba] received
+  [2026-07-17 00:49:00,010: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[261be69d-debf-4d49-932f-13692f23d3ba] succeeded in 0.0012960284948349s: {'status': 'ok'}
+  [2026-07-17 00:50:00,006: INFO/MainProcess] Task app.workers.agent_tasks.health_check[e0c26500-0848-49f3-b96f-5fc821f5f99b] received
+  [2026-07-17 00:50:00,008: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[e0c26500-0848-49f3-b96f-5fc821f5f99b] succeeded in 0.0014560455456376076s: {'status': 'ok'}
 
 ########## celery-beat : SUCCESS (deployment ed111d6c-25e1-46a0-a3f9-427f6fb720f3) ##########
 ---- BUILD LOGS (celery-beat) ----
@@ -795,6 +795,16 @@ debconf: falling back to frontend: Noninteractive
   [2026-07-17 00:38:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
   [2026-07-17 00:39:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
   [2026-07-17 00:40:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+  [2026-07-17 00:41:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+  [2026-07-17 00:42:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+  [2026-07-17 00:43:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+  [2026-07-17 00:44:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+  [2026-07-17 00:45:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+  [2026-07-17 00:46:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+  [2026-07-17 00:47:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+  [2026-07-17 00:48:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+  [2026-07-17 00:49:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+  [2026-07-17 00:50:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
 
 ########## frontend : SUCCESS (deployment d0a84500-cb87-4a98-aa7c-69283a3269ba) ##########
 ---- BUILD LOGS (frontend) ----
