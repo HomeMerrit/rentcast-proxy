@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from .routers import agents, stream, comms, work_log, memory, a2a, evals, skills, company
+from .routers import agents, stream, comms, work_log, memory, a2a, evals, skills, company, stats
 from .routers import auth as auth_router
 from .database import engine, Base
 from .models_db import EvalResult, AgentConfig, APIKey, Company, Document  # noqa: F401
@@ -61,6 +61,7 @@ app.include_router(evals.router, prefix="/agents", tags=["evals"])
 app.include_router(auth_router.router, prefix="/auth", tags=["auth"])
 app.include_router(skills.router, tags=["skills"])
 app.include_router(company.router, tags=["company"])
+app.include_router(stats.router, tags=["stats"])
 
 @app.get("/health")
 async def health():
