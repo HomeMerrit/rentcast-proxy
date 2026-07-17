@@ -407,36 +407,34 @@ export function AgentProfile({ agent }: Props) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-950">
+    <div className="app-backdrop min-h-screen">
       {/* Success toast */}
       {queued && (
-        <div className="fixed top-4 right-4 z-50 flex items-center gap-2.5 bg-emerald-950 border border-emerald-500/40 text-emerald-300 text-sm px-4 py-3 rounded-lg shadow-xl">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 flex-shrink-0" />
+        <div className="fixed top-4 right-4 z-50 flex items-center gap-2.5 rounded-xl border border-positive/40 bg-surface-overlay/95 px-4 py-3 text-sm text-positive shadow-raised backdrop-blur-xl">
+          <span className="h-2 w-2 flex-shrink-0 rounded-full bg-positive" />
           Task queued successfully!
         </div>
       )}
 
-      {/* Breadcrumb */}
-      <div className="bg-gray-900 border-b border-gray-800">
-        <div className="max-w-4xl mx-auto px-6 py-4 flex items-center gap-3">
-          <Link
-            href="/"
-            className="text-gray-600 hover:text-gray-300 text-sm transition-colors"
-          >
-            ← All Agents
+      {/* Header */}
+      <header className="sticky top-0 z-30 border-b border-line bg-canvas/80 backdrop-blur-xl">
+        <div className="mx-auto flex h-16 max-w-4xl items-center gap-3 px-4 sm:px-6">
+          <Link href="/" className="flex items-center gap-1.5 text-sm text-content-muted transition-colors hover:text-content">
+            <span aria-hidden>←</span> Agents
           </Link>
-          <span className="text-gray-700">/</span>
-          <span className="text-gray-400 text-sm">{agent.name}</span>
+          <span className="text-content-subtle">/</span>
+          <span className="text-sm text-content">{agent.name}</span>
         </div>
-      </div>
+      </header>
 
-      <div className="max-w-4xl mx-auto px-6 py-8 space-y-6">
+      <div className="mx-auto max-w-4xl space-y-6 px-4 py-8 sm:px-6">
 
         {/* ── Profile header card ───────────────────────────────────────── */}
-        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6">
+        <div className="rounded-2xl border border-line bg-surface-raised p-6 shadow-raised">
           <div className="flex items-start gap-6">
             <AgentAvatar
               seed={agent.avatar_seed}
+              url={agent.avatar_url}
               name={agent.name}
               status={liveStatus}
               size={96}
@@ -444,41 +442,41 @@ export function AgentProfile({ agent }: Props) {
 
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-3 flex-wrap">
-                <h1 className="text-2xl font-bold text-gray-100">{agent.name}</h1>
+                <h1 className="font-display text-2xl font-semibold text-content">{agent.name}</h1>
                 <StatusDot status={liveStatus} showLabel size="lg" />
               </div>
-              <p className="text-gray-400 mt-1">{agent.title}</p>
-              <p className="text-sm text-gray-600">
+              <p className="mt-1 text-content-muted">{agent.title}</p>
+              <p className="text-sm text-content-subtle">
                 {agent.department} · {agent.model}
               </p>
               {agent.bio && (
-                <p className="mt-3 text-gray-300 text-sm leading-relaxed">
+                <p className="mt-3 text-sm leading-relaxed text-content-muted">
                   {agent.bio}
                 </p>
               )}
 
               <div className="mt-4 flex items-center gap-6 text-sm">
                 <div className="text-center">
-                  <div className="text-xl font-bold text-gray-100">
+                  <div className="font-display text-xl font-semibold tabular-nums text-content">
                     {agent.task_count.toLocaleString()}
                   </div>
-                  <div className="text-gray-600 text-xs">Tasks</div>
+                  <div className="text-2xs text-content-subtle">Tasks</div>
                 </div>
                 <div className="text-center">
                   <div
-                    className={`text-xl font-bold ${
-                      rate >= 90 ? "text-emerald-500" : "text-amber-400"
+                    className={`font-display text-xl font-semibold tabular-nums ${
+                      rate >= 90 ? "text-positive" : rate > 0 ? "text-warning" : "text-content-subtle"
                     }`}
                   >
                     {rate}%
                   </div>
-                  <div className="text-gray-600 text-xs">Success Rate</div>
+                  <div className="text-2xs text-content-subtle">Success Rate</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-xl font-bold text-gray-100">
+                  <div className="font-display text-xl font-semibold tabular-nums text-content">
                     {agent.skills.length}
                   </div>
-                  <div className="text-gray-600 text-xs">Skills</div>
+                  <div className="text-2xs text-content-subtle">Skills</div>
                 </div>
                 {evalSummary && evalSummary.total_evals > 0 && (
                   <div className="flex items-center gap-1.5">
@@ -494,7 +492,7 @@ export function AgentProfile({ agent }: Props) {
               {showForm ? (
                 <button
                   onClick={closeForm}
-                  className="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 text-sm font-medium rounded-lg transition-colors"
+                  className="rounded-xl border border-line-strong bg-surface-overlay px-4 py-2 text-sm font-medium text-content transition-colors hover:bg-surface-raised"
                 >
                   Cancel
                 </button>
@@ -503,7 +501,7 @@ export function AgentProfile({ agent }: Props) {
                   onClick={openForm}
                   disabled={isAgentBusy}
                   title={isAgentBusy ? "Agent is currently busy" : "Queue a new task"}
-                  className="px-4 py-2 bg-brand-600 hover:bg-brand-500 disabled:bg-gray-800 disabled:text-gray-600 disabled:cursor-not-allowed text-white text-sm font-medium rounded-lg transition-colors"
+                  className="rounded-xl bg-iris-gradient px-4 py-2 text-sm font-medium text-white shadow-[0_8px_24px_-10px_rgba(114,87,255,0.8)] transition-transform active:scale-95 disabled:opacity-40"
                 >
                   {isAgentBusy ? "Agent busy…" : "Run Task"}
                 </button>
@@ -567,15 +565,15 @@ export function AgentProfile({ agent }: Props) {
         </div>
 
         {/* ── Tab navigation ────────────────────────────────────────────── */}
-        <div className="flex gap-1 rounded-lg bg-gray-100 dark:bg-gray-800 p-1">
+        <div className="flex gap-1 rounded-xl border border-line bg-surface p-1">
           {(["overview", "activity", "memories", "evals"] as const).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`flex-1 rounded-md py-1.5 text-sm font-medium capitalize transition-colors ${
+              className={`flex-1 rounded-lg py-1.5 text-sm font-medium capitalize transition-all ${
                 activeTab === tab
-                  ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm"
-                  : "text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                  ? "bg-surface-overlay text-content shadow-[0_1px_0_0_rgba(255,255,255,0.05)_inset]"
+                  : "text-content-subtle hover:text-content-muted"
               }`}
             >
               {tab === "activity"
@@ -591,7 +589,7 @@ export function AgentProfile({ agent }: Props) {
             {/* Skills */}
             {agent.skills.length > 0 && (
               <div>
-                <h2 className="text-lg font-semibold text-gray-200 mb-4">Skills</h2>
+                <h2 className="mb-4 font-display text-lg font-semibold text-content">Skills</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {agent.skills.map((s) => (
                     <SkillBadge key={s.id} skill={s} />
