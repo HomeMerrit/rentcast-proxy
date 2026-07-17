@@ -7,10 +7,10 @@
   PASS agent create  201
   PASS agent has avatar_url
   PASS agent linked to company
-  FAIL agent add skills  skills=[]
+  PASS agent add skills  skills=['Debugging', 'Testing']
   PASS agent patch  200
   PASS company documents list
   PASS agent delete  204
 
-=== 11/12 checks passed ===
-RESULT=FAIL 11/12
+=== 12/12 checks passed ===
+RESULT=PASS 12/12
