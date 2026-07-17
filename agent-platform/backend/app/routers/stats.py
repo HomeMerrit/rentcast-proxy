@@ -4,8 +4,9 @@ from datetime import datetime, timedelta, timezone
 from fastapi import APIRouter, Depends
 from sqlalchemy import select, func, desc, case
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import aliased
 from ..database import get_db
-from ..models_db import Agent, WorkLog, EvalResult
+from ..models_db import Agent, WorkLog, EvalResult, AgentComm
 
 router = APIRouter()
 
@@ -169,3 +170,75 @@ async def timeseries(days: int = 14, db: AsyncSession = Depends(get_db)):
         v = by_day.get(dkey, {"tasks": 0, "cost": 0.0, "tokens": 0, "success": 0})
         series.append({"date": dkey, **v})
     return {"days": days, "series": series}
+
+
+@router.get("/stats/network")
+async def network(db: AsyncSession = Depends(get_db)):
+    """Collaboration graph: agent nodes, aggregated inter-agent edges, recent A2A messages."""
+    agents = (await db.execute(select(Agent))).scalars().all()
+
+    # per-agent comm volume (sent + received, agent-to-agent only)
+    comm_counts: dict[str, int] = {}
+    edge_rows = (
+        await db.execute(
+            select(
+                AgentComm.from_agent_id,
+                AgentComm.to_agent_id,
+                func.count().label("count"),
+                func.max(AgentComm.created_at).label("last_at"),
+            )
+            .where(AgentComm.from_agent_id.isnot(None), AgentComm.to_agent_id.isnot(None))
+            .group_by(AgentComm.from_agent_id, AgentComm.to_agent_id)
+        )
+    ).all()
+
+    edges = []
+    for frm, to, count, last_at in edge_rows:
+        if frm is None or to is None:
+            continue
+        edges.append({
+            "from": str(frm),
+            "to": str(to),
+            "count": int(count),
+            "last_at": last_at.isoformat() if last_at else None,
+        })
+        comm_counts[str(frm)] = comm_counts.get(str(frm), 0) + int(count)
+        comm_counts[str(to)] = comm_counts.get(str(to), 0) + int(count)
+
+    nodes = [{
+        "id": str(a.id),
+        "name": a.name,
+        "title": a.title,
+        "department": a.department,
+        "status": a.status,
+        "avatar_seed": a.avatar_seed,
+        "avatar_url": a.avatar_url,
+        "task_count": a.task_count,
+        "comm_count": comm_counts.get(str(a.id), 0),
+    } for a in agents]
+
+    # recent inter-agent messages with names
+    FromA = aliased(Agent)
+    ToA = aliased(Agent)
+    recent_rows = (
+        await db.execute(
+            select(AgentComm, FromA.name, ToA.name)
+            .outerjoin(FromA, FromA.id == AgentComm.from_agent_id)
+            .outerjoin(ToA, ToA.id == AgentComm.to_agent_id)
+            .where(AgentComm.from_agent_id.isnot(None), AgentComm.to_agent_id.isnot(None))
+            .order_by(desc(AgentComm.created_at))
+            .limit(24)
+        )
+    ).all()
+    recent = [{
+        "id": str(c.id),
+        "from_id": str(c.from_agent_id) if c.from_agent_id else None,
+        "to_id": str(c.to_agent_id) if c.to_agent_id else None,
+        "from_name": fname,
+        "to_name": tname,
+        "message": (c.message or "")[:160],
+        "message_type": c.message_type,
+        "created_at": c.created_at.isoformat() if c.created_at else None,
+    } for c, fname, tname in recent_rows]
+
+    return {"nodes": nodes, "edges": edges, "recent": recent}
