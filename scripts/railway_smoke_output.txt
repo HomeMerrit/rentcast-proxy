@@ -1,0 +1,16 @@
+=== Smoke test against https://backend-production-a20b.up.railway.app ===
+  PASS health 200  200
+  PASS skills catalog  10 departments
+  PASS skills recommend Research  10 skills
+  PASS company create  201
+  PASS document upload+ingest  status=201 chunks=3
+  PASS agent create  201
+  PASS agent has avatar_url
+  PASS agent linked to company
+  FAIL agent add skills  skills=[]
+  PASS agent patch  200
+  PASS company documents list
+  PASS agent delete  204
+
+=== 11/12 checks passed ===
+RESULT=FAIL 11/12
