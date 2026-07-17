@@ -1,96 +1,71 @@
 Services: {"celery-beat": "01aefb60-2429-47bc-85ca-da2b6b2f114e", "frontend": "129956d5-6cf1-422f-9096-57d10d956837", "celery": "1403ebc4-65e8-4137-91c3-4a6a0f31af46", "Redis": "2066b31c-4654-45f0-bb24-d0f764005e64", "Postgres": "44c5d981-0795-4ac6-b80d-ac44ed3cd21d", "backend": "a7402d3d-8436-4578-80ae-41e7bede5bb4", "qdrant": "b3b21715-5351-44b6-bed7-811c5f854ac6"}
 
-########## backend : SUCCESS (deployment 6581cf5e-9524-44e3-a48b-19e3d39af597) ##########
+########## backend : SUCCESS (deployment 6696f88d-9652-48da-be55-1a7aee571a35) ##########
 ---- BUILD LOGS (backend) ----
   scheduling build on Metal builder "builder-dmpfyc"
   scheduling build on Metal builder "builder-dmpfyc"
   image push
 ---- RUNTIME LOGS (backend) ----
-    File "/usr/local/lib/python3.12/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
-    File "/usr/local/lib/python3.12/site-packages/starlette/routing.py", line 288, in handle
-      await self.app(scope, receive, send)
-      raise exc
-    File "/usr/local/lib/python3.12/site-packages/starlette/routing.py", line 76, in app
-    File "/usr/local/lib/python3.12/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
-      await wrap_app_handling_exceptions(app, request)(scope, receive, send)
-      await app(scope, receive, sender)
-               ^^^^^^^^^^^^^^^^^^^^^
-      raise exc
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 2028, in commit
-    File "/usr/local/lib/python3.12/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
-      await app(scope, receive, sender)
-    File "/usr/local/lib/python3.12/site-packages/starlette/routing.py", line 73, in app
-      response = await f(request)
-                 ^^^^^^^^^^^^^^^^
-    File "/usr/local/lib/python3.12/site-packages/fastapi/routing.py", line 301, in app
-      raw_response = await run_endpoint_function(
-                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    File "/usr/local/lib/python3.12/site-packages/fastapi/routing.py", line 212, in run_endpoint_function
-      return await dependant.call(**values)
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    File "/app/app/routers/agents.py", line 37, in create_agent
-      await db.commit()
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/ext/asyncio/session.py", line 1009, in commit
-      await greenlet_spawn(self.sync_session.commit)
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 203, in greenlet_spawn
-      result = context.switch(value)
-      with util.safe_reraise():
-      trans.commit(_to_root=True)
-           ^^^^^^^^^^^^^^^^^^^
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 4352, in flush
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 146, in __exit__
-    File "<string>", line 2, in commit
-      self._flush(objects)
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/orm/state_changes.py", line 139, in _go
-      raise exc_value.with_traceback(exc_tb)
-      ret_value = fn(self, *arg, **kw)
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 4487, in _flush
-                  ^^^^^^^^^^^^^^^^^^^^
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 1313, in commit
-      self._prepare_impl()
-    File "<string>", line 2, in _prepare_impl
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/orm/state_changes.py", line 139, in _go
-      ret_value = fn(self, *arg, **kw)
-                  ^^^^^^^^^^^^^^^^^^^^
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 1288, in _prepare_impl
-      self.session.flush()
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 4448, in _flush
-      flush_context.execute()
-      return meth(
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/orm/unitofwork.py", line 466, in execute
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-             ^^^^^
-      rec.execute(self)
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/orm/unitofwork.py", line 642, in execute
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/sql/elements.py", line 515, in _execute_on_connection
-      return connection._execute_clauseelement(
-      util.preloaded.orm_persistence.save_obj(
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1640, in _execute_clauseelement
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/orm/persistence.py", line 93, in save_obj
-      _emit_insert_statements(
-      ret = self._execute_context(
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/orm/persistence.py", line 1233, in _emit_insert_statements
-      result = connection.execute(
-            ^^^^^^^^^^^^^^^^^^^^^^
-               ^^^^^^^^^^^^^^^^^^^
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1418, in execute
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1846, in _execute_context
-      return self._exec_single_context(
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1986, in _exec_single_context
-      self._handle_dbapi_exception(
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 2355, in _handle_dbapi_exception
-      raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
-      self.dialect.do_execute(
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 941, in do_execute
-      cursor.execute(statement, parameters)
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 568, in execute
-      self._adapt_connection.await_(
+  Starting Container
+  INFO:     Application startup complete.
+  INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+  INFO:     Started server process [1]
+  INFO:     Waiting for application startup.
+  INFO:     100.64.0.2:43408 - "GET /health HTTP/1.1" 200 OK
+  INFO:     100.64.0.3:29964 - "GET /agents/ HTTP/1.1" 200 OK
+  INFO:     100.64.0.2:43408 - "POST /agents/ HTTP/1.1" 201 Created
+  INFO:     100.64.0.4:48212 - "GET /agents/ HTTP/1.1" 200 OK
+  INFO:     100.64.0.5:31126 - "GET /agents/aea7b301-0c7c-43b5-842c-07f8995973b2 HTTP/1.1" 200 OK
+  INFO:     100.64.0.6:41754 - "POST /agents/aea7b301-0c7c-43b5-842c-07f8995973b2/run HTTP/1.1" 200 OK
+  INFO:     100.64.0.7:51914 - "GET /work-log/aea7b301-0c7c-43b5-842c-07f8995973b2?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.4:60872 - "GET /work-log/aea7b301-0c7c-43b5-842c-07f8995973b2?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.8:13180 - "GET /work-log/aea7b301-0c7c-43b5-842c-07f8995973b2?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.3:11372 - "GET /work-log/aea7b301-0c7c-43b5-842c-07f8995973b2?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.8:19420 - "GET /work-log/aea7b301-0c7c-43b5-842c-07f8995973b2?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.9:33834 - "GET /work-log/aea7b301-0c7c-43b5-842c-07f8995973b2?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.2:51402 - "GET /work-log/aea7b301-0c7c-43b5-842c-07f8995973b2?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.3:58834 - "GET /work-log/aea7b301-0c7c-43b5-842c-07f8995973b2?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.10:50966 - "GET /work-log/aea7b301-0c7c-43b5-842c-07f8995973b2?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.11:22592 - "GET /work-log/aea7b301-0c7c-43b5-842c-07f8995973b2?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.8:42836 - "GET /work-log/aea7b301-0c7c-43b5-842c-07f8995973b2?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.7:56204 - "GET /work-log/aea7b301-0c7c-43b5-842c-07f8995973b2?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.12:31972 - "GET /work-log/aea7b301-0c7c-43b5-842c-07f8995973b2?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.7:47332 - "GET /work-log/aea7b301-0c7c-43b5-842c-07f8995973b2?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.13:22080 - "GET /work-log/aea7b301-0c7c-43b5-842c-07f8995973b2?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.4:27508 - "GET /agents/aea7b301-0c7c-43b5-842c-07f8995973b2 HTTP/1.1" 200 OK
+  INFO:     100.64.0.3:35018 - "GET /agents/ HTTP/1.1" 200 OK
+  INFO:     100.64.0.5:61298 - "GET /agents/20f4227f-d381-4a49-87cb-0442610cb6e1 HTTP/1.1" 200 OK
+  INFO:     100.64.0.15:56032 - "POST /agents/20f4227f-d381-4a49-87cb-0442610cb6e1/run HTTP/1.1" 200 OK
+  INFO:     100.64.0.14:42076 - "GET /health HTTP/1.1" 200 OK
+  INFO:     100.64.0.15:56032 - "GET /agents/ HTTP/1.1" 200 OK
+  INFO:     100.64.0.16:42348 - "POST /agents/ HTTP/1.1" 201 Created
+  INFO:     100.64.0.10:37246 - "GET /work-log/20f4227f-d381-4a49-87cb-0442610cb6e1?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.17:46018 - "GET /work-log/20f4227f-d381-4a49-87cb-0442610cb6e1?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.12:59050 - "GET /work-log/20f4227f-d381-4a49-87cb-0442610cb6e1?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.18:47816 - "GET /work-log/20f4227f-d381-4a49-87cb-0442610cb6e1?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.19:28764 - "GET /work-log/20f4227f-d381-4a49-87cb-0442610cb6e1?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.5:17574 - "GET /work-log/20f4227f-d381-4a49-87cb-0442610cb6e1?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.7:42034 - "GET /work-log/20f4227f-d381-4a49-87cb-0442610cb6e1?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.12:29474 - "GET /work-log/20f4227f-d381-4a49-87cb-0442610cb6e1?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.2:57602 - "GET /work-log/20f4227f-d381-4a49-87cb-0442610cb6e1?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.14:31714 - "GET /work-log/20f4227f-d381-4a49-87cb-0442610cb6e1?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.14:19176 - "GET /work-log/20f4227f-d381-4a49-87cb-0442610cb6e1?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.19:24766 - "GET /work-log/20f4227f-d381-4a49-87cb-0442610cb6e1?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.5:16506 - "GET /work-log/20f4227f-d381-4a49-87cb-0442610cb6e1?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.16:22926 - "GET /work-log/20f4227f-d381-4a49-87cb-0442610cb6e1?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.4:19216 - "GET /work-log/20f4227f-d381-4a49-87cb-0442610cb6e1?limit=5 HTTP/1.1" 200 OK
+  INFO:     100.64.0.5:62696 - "GET /agents/20f4227f-d381-4a49-87cb-0442610cb6e1 HTTP/1.1" 200 OK
+
+########## celery : SUCCESS (deployment fa828545-2c05-47eb-ae89-7ddec8aee4a1) ##########
+---- BUILD LOGS (celery) ----
+  scheduling build on Metal builder "builder-zteqqo"
+  scheduling build on Metal builder "builder-zteqqo"
+  image push
+---- RUNTIME LOGS (celery) ----
     File "/usr/local/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
       return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
       value = await result
               ^^^^^^^^^^^^
     File "/usr/local/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 546, in _prepare_and_execute
@@ -99,712 +74,149 @@ Services: {"celery-beat": "01aefb60-2429-47bc-85ca-da2b6b2f114e", "frontend": "1
       self._adapt_connection._handle_exception(error)
     File "/usr/local/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 780, in _handle_exception
       raise translated_error from error
-  sqlalchemy.exc.IntegrityError: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.UniqueViolationError'>: duplicate key value violates unique constraint "agents_name_key"
-  DETAIL:  Key (name)=(Ada) already exists.
-  [SQL: INSERT INTO agents (id, name, title, department, bio, avatar_seed, model, status, current_task, task_count, success_count, created_at, updated_at) VALUES ($1::UUID, $2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR, $7::VARCHAR, $8::VARCHAR, $9::VARCHAR, $10::INTEGER, $11::INTEGER, $12::TIMESTAMP WITH TIME ZONE, $13::TIMESTAMP WITH TIME ZONE)]
-  [parameters: (UUID('42106f0b-09c9-406b-9ed7-898d9935c39f'), 'Ada', 'Research Analyst', 'Research', 'Pilot agent created to validate the live deployment.', 'ada-pilot', 'claude-sonnet-5-20251001', 'idle', None, 0, 0, datetime.datetime(2026, 7, 17, 0, 39, 54, 800313), datetime.datetime(2026, 7, 17, 0, 39, 54, 800317))]
-  (Background on this error at: https://sqlalche.me/e/20/gkpj)
-  INFO:     100.64.0.7:29424 - "GET /agents/790dfc13-6b82-4328-97ae-93b9d419dce7 HTTP/1.1" 200 OK
-  INFO:     100.64.0.4:61570 - "POST /agents/790dfc13-6b82-4328-97ae-93b9d419dce7/run HTTP/1.1" 200 OK
-  INFO:     100.64.0.3:60580 - "GET /agents/ HTTP/1.1" 200 OK
-  INFO:     100.64.0.6:27474 - "POST /agents/ HTTP/1.1" 201 Created
-  INFO:     100.64.0.2:40514 - "GET /agents/ HTTP/1.1" 200 OK
-  INFO:     100.64.0.5:22174 - "GET /health HTTP/1.1" 200 OK
-  INFO:     100.64.0.5:47046 - "GET /work-log/790dfc13-6b82-4328-97ae-93b9d419dce7?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.7:36162 - "GET /work-log/790dfc13-6b82-4328-97ae-93b9d419dce7?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.8:52842 - "GET /work-log/790dfc13-6b82-4328-97ae-93b9d419dce7?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.7:59612 - "GET /work-log/790dfc13-6b82-4328-97ae-93b9d419dce7?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.8:47464 - "GET /work-log/790dfc13-6b82-4328-97ae-93b9d419dce7?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.9:15692 - "GET /work-log/790dfc13-6b82-4328-97ae-93b9d419dce7?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.3:48960 - "GET /work-log/790dfc13-6b82-4328-97ae-93b9d419dce7?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.10:61658 - "GET /work-log/790dfc13-6b82-4328-97ae-93b9d419dce7?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.9:41544 - "GET /work-log/790dfc13-6b82-4328-97ae-93b9d419dce7?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.10:15358 - "GET /work-log/790dfc13-6b82-4328-97ae-93b9d419dce7?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.10:56580 - "GET /work-log/790dfc13-6b82-4328-97ae-93b9d419dce7?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.5:10052 - "GET /work-log/790dfc13-6b82-4328-97ae-93b9d419dce7?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.5:20964 - "GET /work-log/790dfc13-6b82-4328-97ae-93b9d419dce7?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.9:45424 - "GET /work-log/790dfc13-6b82-4328-97ae-93b9d419dce7?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.11:62136 - "GET /work-log/790dfc13-6b82-4328-97ae-93b9d419dce7?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.12:41004 - "GET /agents/790dfc13-6b82-4328-97ae-93b9d419dce7 HTTP/1.1" 200 OK
-
-########## celery : SUCCESS (deployment 4875c050-6df9-4efb-8433-6ef3f7b31d20) ##########
----- BUILD LOGS (celery) ----
-  Setting up libpng16-16t64:amd64 (1.6.48-1+deb13u5) ...
-
-  Setting up libsensors5:amd64 (1:3.6.2-2) ...
-
-  Setting up libvulkan1:amd64 (1.4.309.0-1) ...
-
-  Setting up fonts-ipafont-gothic (00303-23) ...
-
-  update-alternatives: using /usr/share/fonts/opentype/ipafont-gothic/ipag.ttf to provide /usr/share/fonts/truetype/fonts-japanese-gothic.ttf (fonts-japanese-gothic.ttf) in auto mode
-
-  Setting up libxshmfence1:amd64 (1.3.3-1) ...
-
-  Setting up at-spi2-common (2.56.2-1+deb13u1) ...
-
-  Setting up libxcb-randr0:amd64 (1.17.0-2+b1) ...
-
-  Setting up fonts-liberation (1:2.1.5-3) ...
-
-  Setting up libx11-6:amd64 (2:1.8.12-1) ...
-
-  Setting up libthai-data (0.1.29-2) ...
-
-  Setting up libxkbfile1:amd64 (1:1.1.0-1+b4) ...
-
-  Setting up libdrm-common (2.4.124-2) ...
-
-  Setting up libxcomposite1:amd64 (1:0.4.6-1) ...
-
-  Setting up libxml2:amd64 (2.12.7+dfsg+really2.9.14-2.1+deb13u3) ...
-
-  Setting up fonts-unifont (1:15.1.01-1) ...
-
-  Setting up libxkbcommon0:amd64 (1.7.0-2) ...
-
-  Setting up libxcb-dri3-0:amd64 (1.17.0-2+b1) ...
-
-  Setting up libllvm19:amd64 (1:19.1.7-3+b1) ...
-
-  Setting up libx11-xcb1:amd64 (2:1.8.12-1) ...
-
-  Setting up libice6:amd64 (2:1.1.1-1) ...
-
-  Setting up libxdamage1:amd64 (1:1.1.6-1+b2) ...
-
-  Setting up libatk1.0-0t64:amd64 (2.56.2-1+deb13u1) ...
-
-  Setting up libxpm4:amd64 (1:3.5.17-1+deb13u1) ...
-
-  Setting up libxrender1:amd64 (1:0.9.12-1) ...
-
-  Setting up fontconfig-config (2.15.0-2.3) ...
-
-  debconf: unable to initialize frontend: Dialog
-debconf: (TERM is not set, so the dialog frontend is not usable.)
-debconf: falling back to frontend: Readline
-
-  debconf: unable to initialize frontend: Readline
-debconf: (Can't locate Term/ReadLine.pm in @INC (you may need to install the Term::ReadLine module) (@INC entries checked: /etc/perl /usr/local/lib/x86_64-linux-gnu/perl/5.40.1 /usr/local/share/perl/5.40.1 /usr/lib/x86_64-linux-gnu/perl5/5.40 /usr/share/perl5 /usr/lib/x86_64-linux-gnu/perl-base /usr/lib/x86_64-linux-gnu/perl/5.40 /usr/share/perl/5.40 /usr/local/lib/site_perl) at /usr/share/perl5/Debconf/FrontEnd/Readline.pm line 8.)
-debconf: falling back to frontend: Teletype
-
-  debconf: unable to initialize frontend: Teletype
-debconf: (This frontend requires a controlling tty.)
-debconf: falling back to frontend: Noninteractive
-
-  Setting up libavahi-common3:amd64 (0.8-16) ...
-
-  Setting up libxext6:amd64 (2:1.3.4-1+b3) ...
-
-  Setting up libnss3:amd64 (2:3.110-1+deb13u3) ...
-
-  Setting up libxxf86vm1:amd64 (1:1.1.4-1+b4) ...
-
-  Setting up libthai0:amd64 (0.1.29-2+b1) ...
-
-  Setting up libfreetype6:amd64 (2.13.3+dfsg-1+deb13u1) ...
-
-  Setting up libxfixes3:amd64 (1:6.0.0-2+b4) ...
-
-  Setting up libxrandr2:amd64 (2:1.5.4-1+b3) ...
-
-  Setting up libdrm2:amd64 (2.4.124-2) ...
-
-  Setting up libharfbuzz0b:amd64 (10.2.0-1+deb13u1) ...
-
-  Setting up libfontconfig1:amd64 (2.15.0-2.3) ...
-
-  Setting up libsm6:amd64 (2:1.2.6-1) ...
-
-  Setting up libxfont2:amd64 (1:2.0.6-1+deb13u1) ...
-
-  Setting up libavahi-client3:amd64 (0.8-16) ...
-
-  Setting up libdrm-amdgpu1:amd64 (2.4.124-2) ...
-
-  Setting up fontconfig (2.15.0-2.3) ...
-
-  Regenerating fonts cache... 
-  done.
-
-  Setting up libxi6:amd64 (2:1.8.2-1) ...
-
-  Setting up libpango-1.0-0:amd64 (1.56.3-1) ...
-
-  Setting up libdrm-intel1:amd64 (2.4.124-2) ...
-
-  Setting up fonts-wqy-zenhei (0.9.45-8) ...
-
-  Setting up xfonts-utils (1:7.7+7) ...
-
-  Setting up libcairo2:amd64 (1.18.4-1+b1) ...
-
-  Setting up libatspi2.0-0t64:amd64 (2.56.2-1+deb13u1) ...
-
-  Setting up libxt6t64:amd64 (1:1.2.1-1.2+b2) ...
-
-  Setting up libcups2t64:amd64 (2.4.10-3+deb13u2) ...
-
-  Setting up xfonts-scalable (1:1.0.3-1.3) ...
-
-  Setting up libatk-bridge2.0-0t64:amd64 (2.56.2-1+deb13u1) ...
-
-  Setting up mesa-libgallium:amd64 (25.0.7-2+deb13u1) ...
-
-  Setting up libxmu6:amd64 (2:1.1.3-3+b4) ...
-
-  Setting up libgbm1:amd64 (25.0.7-2+deb13u1) ...
-
-  Setting up libgl1-mesa-dri:amd64 (25.0.7-2+deb13u1) ...
-
-  Setting up libxaw7:amd64 (2:1.0.16-1) ...
-
-  Setting up libglx-mesa0:amd64 (25.0.7-2+deb13u1) ...
-
-  Setting up libglx0:amd64 (1.7.0-1+b2) ...
-
-  Setting up x11-xkb-utils (7.7+9) ...
-
-  Setting up libgl1:amd64 (1.7.0-1+b2) ...
-
-  Setting up xserver-common (2:21.1.16-1.3+deb13u3) ...
-
-  Setting up xvfb (2:21.1.16-1.3+deb13u3) ...
-
-  Processing triggers for libc-bin (2.41-12+deb13u3) ...
-
-  Downloading Chrome for Testing 149.0.7827.55 (playwright chromium v1228) from https://cdn.playwright.dev/builds/cft/149.0.7827.55/linux64/chrome-linux64.zip
-
-  |                                                                                |   0% of 177 MiB
-
-  |■■■■■■■■                                                                        |  10% of 177 MiB
-
-  |■■■■■■■■■■■■■■■■                                                                |  20% of 177 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 177 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 177 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 177 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 177 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 177 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 177 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 177 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 177 MiB
-
-  Chrome for Testing 149.0.7827.55 (playwright chromium v1228) downloaded to /root/.cache/ms-playwright/chromium-1228
-
-  Downloading FFmpeg (playwright ffmpeg v1011) from https://cdn.playwright.dev/dbazure/download/playwright/builds/ffmpeg/1011/ffmpeg-linux.zip
-
-  |                                                                                |   0% of 2.3 MiB
-
-  |■■■■■■■■                                                                        |  10% of 2.3 MiB
-
-  |■■■■■■■■■■■■■■■■                                                                |  20% of 2.3 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 2.3 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 2.3 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 2.3 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 2.3 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 2.3 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 2.3 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 2.3 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 2.3 MiB
-
-  FFmpeg (playwright ffmpeg v1011) downloaded to /root/.cache/ms-playwright/ffmpeg-1011
-
-  Downloading Chrome Headless Shell 149.0.7827.55 (playwright chromium-headless-shell v1228) from https://cdn.playwright.dev/builds/cft/149.0.7827.55/linux64/chrome-headless-shell-linux64.zip
-
-  |                                                                                |   0% of 114.2 MiB
-
-  |■■■■■■■■                                                                        |  10% of 114.2 MiB
-
-  |■■■■■■■■■■■■■■■■                                                                |  20% of 114.2 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 114.2 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 114.2 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 114.2 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 114.2 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 114.2 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 114.2 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 114.2 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 114.2 MiB
-
-  Chrome Headless Shell 149.0.7827.55 (playwright chromium-headless-shell v1228) downloaded to /root/.cache/ms-playwright/chromium_headless_shell-1228
-
-  [6/7] RUN playwright install chromium --with-deps
-  [7/7] COPY . .
-  [7/7] COPY . .
-  exporting to docker image format
-  exporting to docker image format
-  containerimage.descriptor: eyJtZWRpYVR5cGUiOiJhcHBsaWNhdGlvbi92bmQub2NpLmltYWdlLm1hbmlmZXN0LnYxK2pzb24iLCJkaWdlc3QiOiJzaGEyNTY6ZTZkMDVlYTIyZTQzMTk4MGMxZjk2ZjE3YWY4M2YyMGUxOTNlNWUwN2ZlMjEyNDMwNmUyNWQyOWQxNWY0OTU4NiIsInNpemUiOjIyMDEsImFubm90YXRpb25zIjp7Im9yZy5vcGVuY29udGFpbmVycy5pbWFnZS5jcmVhdGVkIjoiMjAyNi0wNy0xNlQyMzozOTozMFoifSwicGxhdGZvcm0iOnsiYXJjaGl0ZWN0dXJlIjoiYW1kNjQiLCJvcyI6ImxpbnV4In19
-  containerimage.config.digest: sha256:dfaf41c331df929c6c4ca22229eb8f7f76614dcf80b80811b26a3e57b7ac378c
-  containerimage.digest: sha256:e6d05ea22e431980c1f96f17af83f20e193e5e07fe2124306e25d29d15f49586
-  image push
-  image push
-  image push
----- RUNTIME LOGS (celery) ----
-  [2026-07-17 00:45:00,006: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[6212ee4a-024b-4116-a375-a99c7670e096] succeeded in 0.0009615505114197731s: {'status': 'ok'}
-  [2026-07-17 00:46:00,004: INFO/MainProcess] Task app.workers.agent_tasks.health_check[544ce77a-9e09-4df8-b309-7dfa4172e7a3] received
-  [2026-07-17 00:46:00,007: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[544ce77a-9e09-4df8-b309-7dfa4172e7a3] succeeded in 0.0014664866030216217s: {'status': 'ok'}
-  [2026-07-17 00:47:00,005: INFO/MainProcess] Task app.workers.agent_tasks.health_check[850f61e6-d597-4733-876a-225012a91c3c] received
-  [2026-07-17 00:47:00,007: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[850f61e6-d597-4733-876a-225012a91c3c] succeeded in 0.0012884773313999176s: {'status': 'ok'}
-  [2026-07-17 00:47:39,865: INFO/MainProcess] Task app.workers.agent_tasks.run_agent_task[6bbfc681-0369-4f55-b088-ad8a70fa71cb] received
-  [2026-07-17 00:47:40,431: WARNING/ForkPoolWorker-2] /usr/local/lib/python3.12/site-packages/langgraph/checkpoint/base/__init__.py:18: LangChainPendingDeprecationWarning: The default value of `allowed_objects` will change in a future version. Pass an explicit value (e.g., allowed_objects='messages' or allowed_objects='core') to suppress this warning.
-    from langgraph.checkpoint.serde.jsonplus import JsonPlusSerializer
+  sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.Error: <class 'asyncpg.exceptions.DataError'>: invalid input for query argument $6: [{'signature': 'EogDCokBCA8YAipAfKN5Vzfr... (expected str, got list)
   
-  [2026-07-17 00:47:43,131: INFO/ForkPoolWorker-2] HTTP Request: GET http://qdrant.railway.internal:6333 "HTTP/1.1 200 OK"
-  [2026-07-17 00:47:43,133: INFO/ForkPoolWorker-2] HTTP Request: GET http://qdrant.railway.internal:6333/collections "HTTP/1.1 200 OK"
-  [2026-07-17 00:47:43,158: INFO/ForkPoolWorker-2] HTTP Request: PUT http://qdrant.railway.internal:6333/collections/agent_memories "HTTP/1.1 200 OK"
-  [2026-07-17 00:47:43,251: INFO/ForkPoolWorker-2] HTTP Request: GET https://huggingface.co/api/agent-harnesses "HTTP/1.1 200 OK"
-  [2026-07-17 00:47:43,329: INFO/ForkPoolWorker-2] HTTP Request: GET https://huggingface.co/api/models/qdrant/bge-small-en-v1.5-onnx-q "HTTP/1.1 307 Temporary Redirect"
-  [2026-07-17 00:47:43,410: INFO/ForkPoolWorker-2] HTTP Request: GET https://huggingface.co/api/models/Qdrant/bge-small-en-v1.5-onnx-Q "HTTP/1.1 200 OK"
-  [2026-07-17 00:47:43,492: INFO/ForkPoolWorker-2] HTTP Request: GET https://huggingface.co/api/models/qdrant/bge-small-en-v1.5-onnx-q/tree/52398278842ec682c6f32300af41344b1c0b0bb2?recursive=false&expand=false "HTTP/1.1 307 Temporary Redirect"
-  [2026-07-17 00:47:43,576: INFO/ForkPoolWorker-2] HTTP Request: GET https://huggingface.co/api/models/Qdrant/bge-small-en-v1.5-onnx-Q/tree/52398278842ec682c6f32300af41344b1c0b0bb2?recursive=false&expand=false "HTTP/1.1 200 OK"
-  [2026-07-17 00:47:43,650: INFO/ForkPoolWorker-2] HTTP Request: GET https://huggingface.co/api/models/qdrant/bge-small-en-v1.5-onnx-q/revision/main "HTTP/1.1 307 Temporary Redirect"
-  [2026-07-17 00:47:43,730: INFO/ForkPoolWorker-2] HTTP Request: GET https://huggingface.co/api/models/Qdrant/bge-small-en-v1.5-onnx-Q/revision/main "HTTP/1.1 200 OK"
-  [2026-07-17 00:47:43,809: INFO/ForkPoolWorker-2] HTTP Request: GET https://huggingface.co/api/models/qdrant/bge-small-en-v1.5-onnx-q/tree/52398278842ec682c6f32300af41344b1c0b0bb2?recursive=true&expand=false "HTTP/1.1 307 Temporary Redirect"
-  [2026-07-17 00:47:43,892: INFO/ForkPoolWorker-2] HTTP Request: GET https://huggingface.co/api/models/Qdrant/bge-small-en-v1.5-onnx-Q/tree/52398278842ec682c6f32300af41344b1c0b0bb2?recursive=true&expand=false "HTTP/1.1 200 OK"
-  [2026-07-17 00:47:43,899: WARNING/ForkPoolWorker-2] Fetching 5 files:   0%|          | 0/5 [00:00<?, ?it/s]
-  [2026-07-17 00:47:43,972: INFO/ForkPoolWorker-2] HTTP Request: HEAD https://huggingface.co/qdrant/bge-small-en-v1.5-onnx-q/resolve/52398278842ec682c6f32300af41344b1c0b0bb2/config.json "HTTP/1.1 307 Temporary Redirect"
-  [2026-07-17 00:47:43,983: INFO/ForkPoolWorker-2] HTTP Request: HEAD https://huggingface.co/qdrant/bge-small-en-v1.5-onnx-q/resolve/52398278842ec682c6f32300af41344b1c0b0bb2/tokenizer.json "HTTP/1.1 307 Temporary Redirect"
-  [2026-07-17 00:47:43,988: INFO/ForkPoolWorker-2] HTTP Request: HEAD https://huggingface.co/qdrant/bge-small-en-v1.5-onnx-q/resolve/52398278842ec682c6f32300af41344b1c0b0bb2/special_tokens_map.json "HTTP/1.1 307 Temporary Redirect"
-  [2026-07-17 00:47:43,991: INFO/ForkPoolWorker-2] HTTP Request: HEAD https://huggingface.co/qdrant/bge-small-en-v1.5-onnx-q/resolve/52398278842ec682c6f32300af41344b1c0b0bb2/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
-  [2026-07-17 00:47:44,049: INFO/ForkPoolWorker-2] HTTP Request: HEAD https://huggingface.co/Qdrant/bge-small-en-v1.5-onnx-Q/resolve/52398278842ec682c6f32300af41344b1c0b0bb2/config.json "HTTP/1.1 307 Temporary Redirect"
-  [2026-07-17 00:47:44,054: INFO/ForkPoolWorker-2] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qdrant/bge-small-en-v1.5-onnx-Q/52398278842ec682c6f32300af41344b1c0b0bb2/config.json "HTTP/1.1 200 OK"
-  [2026-07-17 00:47:44,059: INFO/ForkPoolWorker-2] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Qdrant/bge-small-en-v1.5-onnx-Q/52398278842ec682c6f32300af41344b1c0b0bb2/config.json "HTTP/1.1 200 OK"
-  [2026-07-17 00:47:44,060: WARNING/ForkPoolWorker-2] Fetching 5 files:  20%|##        | 1/5 [00:00<00:00,  6.19it/s]
-  [2026-07-17 00:47:44,061: INFO/ForkPoolWorker-2] HTTP Request: HEAD https://huggingface.co/Qdrant/bge-small-en-v1.5-onnx-Q/resolve/52398278842ec682c6f32300af41344b1c0b0bb2/tokenizer.json "HTTP/1.1 307 Temporary Redirect"
-  [2026-07-17 00:47:44,062: WARNING/ForkPoolWorker-2] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-  [2026-07-17 00:47:44,062: WARNING/ForkPoolWorker-2] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-  [2026-07-17 00:47:44,063: INFO/ForkPoolWorker-2] HTTP Request: HEAD https://huggingface.co/Qdrant/bge-small-en-v1.5-onnx-Q/resolve/52398278842ec682c6f32300af41344b1c0b0bb2/special_tokens_map.json "HTTP/1.1 307 Temporary Redirect"
-  [2026-07-17 00:47:44,066: INFO/ForkPoolWorker-2] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qdrant/bge-small-en-v1.5-onnx-Q/52398278842ec682c6f32300af41344b1c0b0bb2/tokenizer.json "HTTP/1.1 200 OK"
-  [2026-07-17 00:47:44,068: INFO/ForkPoolWorker-2] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qdrant/bge-small-en-v1.5-onnx-Q/52398278842ec682c6f32300af41344b1c0b0bb2/special_tokens_map.json "HTTP/1.1 200 OK"
-  [2026-07-17 00:47:44,069: INFO/ForkPoolWorker-2] HTTP Request: HEAD https://huggingface.co/Qdrant/bge-small-en-v1.5-onnx-Q/resolve/52398278842ec682c6f32300af41344b1c0b0bb2/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
-  [2026-07-17 00:47:44,073: INFO/ForkPoolWorker-2] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Qdrant/bge-small-en-v1.5-onnx-Q/52398278842ec682c6f32300af41344b1c0b0bb2/tokenizer.json "HTTP/1.1 200 OK"
-  [2026-07-17 00:47:44,074: INFO/ForkPoolWorker-2] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qdrant/bge-small-en-v1.5-onnx-Q/52398278842ec682c6f32300af41344b1c0b0bb2/tokenizer_config.json "HTTP/1.1 200 OK"
-  [2026-07-17 00:47:44,077: INFO/ForkPoolWorker-2] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Qdrant/bge-small-en-v1.5-onnx-Q/52398278842ec682c6f32300af41344b1c0b0bb2/special_tokens_map.json "HTTP/1.1 200 OK"
-  [2026-07-17 00:47:44,081: INFO/ForkPoolWorker-2] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Qdrant/bge-small-en-v1.5-onnx-Q/52398278842ec682c6f32300af41344b1c0b0bb2/tokenizer_config.json "HTTP/1.1 200 OK"
-  [2026-07-17 00:47:45,041: WARNING/ForkPoolWorker-2] Fetching 5 files:  40%|####      | 2/5 [00:01<00:01,  1.55it/s]
-  [2026-07-17 00:47:45,041: WARNING/ForkPoolWorker-2] Fetching 5 files: 100%|##########| 5/5 [00:01<00:00,  4.38it/s]
-  [2026-07-17 00:47:46,259: INFO/ForkPoolWorker-2] HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 404 Not Found"
-  [2026-07-17 00:47:46,344: INFO/MainProcess] Task app.workers.agent_tasks.run_agent_task[6bbfc681-0369-4f55-b088-ad8a70fa71cb] received
-  [2026-07-17 00:47:46,353: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.run_agent_task[6bbfc681-0369-4f55-b088-ad8a70fa71cb] retry: Retry in 1s: NotFoundError("Error code: 404 - {'type': 'error', 'error': {'type': 'not_found_error', 'message': 'model: claude-sonnet-5-20251001'}, 'request_id': 'req_011Cd6i3p8hoJGap8T7VTb6U'}")
-  [2026-07-17 00:47:48,194: INFO/ForkPoolWorker-2] HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 404 Not Found"
-  [2026-07-17 00:47:48,226: INFO/MainProcess] Task app.workers.agent_tasks.run_agent_task[6bbfc681-0369-4f55-b088-ad8a70fa71cb] received
-  [2026-07-17 00:47:48,227: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.run_agent_task[6bbfc681-0369-4f55-b088-ad8a70fa71cb] retry: Retry in 2s: NotFoundError("Error code: 404 - {'type': 'error', 'error': {'type': 'not_found_error', 'message': 'model: claude-sonnet-5-20251001'}, 'request_id': 'req_011Cd6i3xGMWp193jRYstpJe'}")
-  [2026-07-17 00:47:51,144: INFO/ForkPoolWorker-2] HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 404 Not Found"
-  [2026-07-17 00:47:51,177: INFO/MainProcess] Task app.workers.agent_tasks.run_agent_task[6bbfc681-0369-4f55-b088-ad8a70fa71cb] received
-  [2026-07-17 00:47:51,178: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.run_agent_task[6bbfc681-0369-4f55-b088-ad8a70fa71cb] retry: Retry in 4s: NotFoundError("Error code: 404 - {'type': 'error', 'error': {'type': 'not_found_error', 'message': 'model: claude-sonnet-5-20251001'}, 'request_id': 'req_011Cd6i4B33tTn4m8iRrnr41'}")
-  [2026-07-17 00:47:56,063: INFO/ForkPoolWorker-2] HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 404 Not Found"
-  [2026-07-17 00:47:56,098: ERROR/ForkPoolWorker-2] Task app.workers.agent_tasks.run_agent_task[6bbfc681-0369-4f55-b088-ad8a70fa71cb] raised unexpected: AnthropicError("Error code: 404 - {'type': 'error', 'error': {'type': 'not_found_error', 'message': 'model: claude-sonnet-5-20251001'}, 'request_id': 'req_011Cd6i4Y4MFCRjnVeQDWdF7'}")
+  The above exception was the direct cause of the following exception:
+  
   Traceback (most recent call last):
     File "/usr/local/lib/python3.12/site-packages/celery/app/trace.py", line 453, in trace_task
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
       R = retval = fun(*args, **kwargs)
                    ^^^^^^^^^^^^^^^^^^^^
+    File "/app/app/workers/agent_tasks.py", line 15, in run_async
     File "/usr/local/lib/python3.12/site-packages/celery/app/trace.py", line 736, in __protected_call__
+      return loop.run_until_complete(coro)
       return self.run(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
              ^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/usr/local/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
     File "/app/app/workers/agent_tasks.py", line 137, in run_agent_task
+      return future.result()
       raise self.retry(exc=exc, countdown=2 ** self.request.retries)
+             ^^^^^^^^^^^^^^^
             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     File "/usr/local/lib/python3.12/site-packages/celery/app/task.py", line 736, in retry
       raise_with_context(exc)
     File "/app/app/workers/agent_tasks.py", line 135, in run_agent_task
       return run_async(_run_task_async(agent_id, agent_name, task_type, task_input, model))
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    File "/app/app/workers/agent_tasks.py", line 15, in run_async
-      return loop.run_until_complete(coro)
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    File "/usr/local/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
-      return future.result()
-             ^^^^^^^^^^^^^^^
-    File "/app/app/workers/agent_tasks.py", line 62, in _run_task_async
-      result_data = await agent_runner.run(task_input)
-                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    File "/app/app/agents/base_agent.py", line 315, in run
-      final = await self.graph.ainvoke(initial)
-              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    File "/usr/local/lib/python3.12/site-packages/langgraph/pregel/__init__.py", line 1989, in ainvoke
-      async for chunk in self.astream(
-    File "/usr/local/lib/python3.12/site-packages/langgraph/pregel/__init__.py", line 1874, in astream
-      async for _ in runner.atick(
-    File "/usr/local/lib/python3.12/site-packages/langgraph/pregel/runner.py", line 362, in atick
-      await arun_with_retry(
-    File "/usr/local/lib/python3.12/site-packages/langgraph/pregel/retry.py", line 132, in arun_with_retry
-      return await task.proc.ainvoke(task.input, config)
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    File "/usr/local/lib/python3.12/site-packages/langgraph/utils/runnable.py", line 445, in ainvoke
-      input = await step.ainvoke(input, config, **kwargs)
-              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    File "/usr/local/lib/python3.12/site-packages/langgraph/utils/runnable.py", line 236, in ainvoke
-      ret = await asyncio.create_task(coro, context=context)
-            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    File "/app/app/agents/base_agent.py", line 170, in _think
-      async for chunk in self.llm_with_tools.astream(messages, config=stream_config):
-    File "/usr/local/lib/python3.12/site-packages/langchain_core/runnables/base.py", line 5924, in astream
-      async for item in self.bound.astream(
-    File "/usr/local/lib/python3.12/site-packages/langchain_core/language_models/chat_models.py", line 615, in astream
-      async for chunk in self._astream(
-    File "/usr/local/lib/python3.12/site-packages/langchain_anthropic/chat_models.py", line 747, in _astream
-      stream = await self._async_client.messages.create(**payload)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    File "/usr/local/lib/python3.12/site-packages/anthropic/resources/messages/messages.py", line 2545, in create
-      return await self._post(
-             ^^^^^^^^^^^^^^^^^
-    File "/usr/local/lib/python3.12/site-packages/anthropic/_base_client.py", line 2276, in post
-      return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    File "/usr/local/lib/python3.12/site-packages/anthropic/_base_client.py", line 1941, in request
-      raise self._make_status_error_from_response(response) from None
-  anthropic.AnthropicError: Error code: 404 - {'type': 'error', 'error': {'type': 'not_found_error', 'message': 'model: claude-sonnet-5-20251001'}, 'request_id': 'req_011Cd6i4Y4MFCRjnVeQDWdF7'}
-  [2026-07-17 00:48:00,006: INFO/MainProcess] Task app.workers.agent_tasks.health_check[d87b1ea9-2dc3-4656-8248-8edc26ed505f] received
-  [2026-07-17 00:48:00,009: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[d87b1ea9-2dc3-4656-8248-8edc26ed505f] succeeded in 0.0014770058915019035s: {'status': 'ok'}
-  [2026-07-17 00:49:00,009: INFO/MainProcess] Task app.workers.agent_tasks.health_check[261be69d-debf-4d49-932f-13692f23d3ba] received
-  [2026-07-17 00:49:00,010: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[261be69d-debf-4d49-932f-13692f23d3ba] succeeded in 0.0012960284948349s: {'status': 'ok'}
-  [2026-07-17 00:50:00,006: INFO/MainProcess] Task app.workers.agent_tasks.health_check[e0c26500-0848-49f3-b96f-5fc821f5f99b] received
-  [2026-07-17 00:50:00,008: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[e0c26500-0848-49f3-b96f-5fc821f5f99b] succeeded in 0.0014560455456376076s: {'status': 'ok'}
+    File "/app/app/workers/agent_tasks.py", line 90, in _run_task_async
+      await db.commit()
+    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/ext/asyncio/session.py", line 1009, in commit
+    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 1288, in _prepare_impl
+                  ^^^^^^^^^^^^^^^^^^^^
+      await greenlet_spawn(self.sync_session.commit)
+    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 1313, in commit
+    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 203, in greenlet_spawn
+      self._prepare_impl()
+      result = context.switch(value)
+               ^^^^^^^^^^^^^^^^^^^^^
+    File "<string>", line 2, in _prepare_impl
+    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 2028, in commit
+    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/orm/state_changes.py", line 139, in _go
+      trans.commit(_to_root=True)
+      ret_value = fn(self, *arg, **kw)
+    File "<string>", line 2, in commit
+                  ^^^^^^^^^^^^^^^^^^^^
+    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/orm/state_changes.py", line 139, in _go
+      ret_value = fn(self, *arg, **kw)
+      self.session.flush()
+    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 4352, in flush
+      self._flush(objects)
+    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 4487, in _flush
+      with util.safe_reraise():
+           ^^^^^^^^^^^^^^^^^^^
+    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 146, in __exit__
+      raise exc_value.with_traceback(exc_tb)
+    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 4448, in _flush
+      flush_context.execute()
+    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/orm/unitofwork.py", line 466, in execute
+      rec.execute(self)
+    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/orm/unitofwork.py", line 642, in execute
+      util.preloaded.orm_persistence.save_obj(
+    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/orm/persistence.py", line 93, in save_obj
+      _emit_insert_statements(
+    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/orm/persistence.py", line 1233, in _emit_insert_statements
+      result = connection.execute(
+               ^^^^^^^^^^^^^^^^^^^
+    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1418, in execute
+      return meth(
+    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1986, in _exec_single_context
+             ^^^^^
+      self._handle_dbapi_exception(
+    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/sql/elements.py", line 515, in _execute_on_connection
+      ret = self._execute_context(
+    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 2355, in _handle_dbapi_exception
+      return connection._execute_clauseelement(
+            ^^^^^^^^^^^^^^^^^^^^^^
+      raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1846, in _execute_context
+    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1640, in _execute_clauseelement
+      return self._exec_single_context(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+      self.dialect.do_execute(
+    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 941, in do_execute
+      cursor.execute(statement, parameters)
+    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 568, in execute
+      self._adapt_connection.await_(
+    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
+      return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
+      value = await result
+              ^^^^^^^^^^^^
+    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 546, in _prepare_and_execute
+      self._handle_exception(error)
+    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 497, in _handle_exception
+      self._adapt_connection._handle_exception(error)
+    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 780, in _handle_exception
+      raise translated_error from error
+  sqlalchemy.exc.DBAPIError: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.DataError'>: invalid input for query argument $6: [{'signature': 'EogDCokBCA8YAipAfKN5Vzfr... (expected str, got list)
+  [SQL: INSERT INTO work_log (id, agent_id, task_type, task_input, result, reflection, success, tokens_used, duration_ms, started_at, finished_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::JSON, $5::VARCHAR, $6::VARCHAR, $7::BOOLEAN, $8::INTEGER, $9::INTEGER, $10::TIMESTAMP WITH TIME ZONE, $11::TIMESTAMP WITH TIME ZONE)]
+  [parameters: (UUID('ddcd37d5-18f7-42d2-80c7-449e89d9fa14'), UUID('20f4227f-d381-4a49-87cb-0442610cb6e1'), 'research', '{"prompt": "In one sentence, confirm you are an AgentOS agent running live on Railway."}', 'I am an AgentOS agent running live on Railway, ready to assist with your tasks.\n\n**Reflection:** This was a simple self-identification task requiring no external tools—just a direct, one-sentence confirmation as requested.', [{'signature': 'EogDCokBCA8YAipAfKN5Vzfr5+EgDY5XYAYHs0MEGYrpJxLUirM9lL2u2lMBSqMvTgx9BLjVmjuePV5+qQWiRwvbMtafiLhObuQ4SzIPY2xhdWRlLXNvbm5ldC01OABCCHRoaW ... (893 characters truncated) ...  more technical detail (e.g., specifics about the AgentOS/Railway setup) if the user indicates they want depth rather than brevity.', 'type': 'text'}], True, 1504, 7013, datetime.datetime(2026, 7, 17, 1, 5, 47, 641902, tzinfo=datetime.timezone.utc), datetime.datetime(2026, 7, 17, 1, 5, 54, 752736, tzinfo=datetime.timezone.utc))]
+  (Background on this error at: https://sqlalche.me/e/20/dbapi)
+  [2026-07-17 01:06:00,011: INFO/MainProcess] Task app.workers.agent_tasks.health_check[3c3c2189-2ba0-4a77-bfb2-a14c2be5b8eb] received
+  [2026-07-17 01:06:00,022: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[3c3c2189-2ba0-4a77-bfb2-a14c2be5b8eb] succeeded in 0.008926213718950748s: {'status': 'ok'}
+  [2026-07-17 01:07:00,009: INFO/MainProcess] Task app.workers.agent_tasks.health_check[43bd27d5-7d1a-45fc-a609-a7bb7e0bc414] received
+  [2026-07-17 01:07:00,011: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[43bd27d5-7d1a-45fc-a609-a7bb7e0bc414] succeeded in 0.0011940952390432358s: {'status': 'ok'}
+  [2026-07-17 01:08:00,007: INFO/MainProcess] Task app.workers.agent_tasks.health_check[0b0eaa85-a2f2-4d51-b40c-d74662235dcb] received
+  [2026-07-17 01:08:00,012: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[0b0eaa85-a2f2-4d51-b40c-d74662235dcb] succeeded in 0.003946528770029545s: {'status': 'ok'}
 
-########## celery-beat : SUCCESS (deployment ed111d6c-25e1-46a0-a3f9-427f6fb720f3) ##########
+########## celery-beat : SUCCESS (deployment 59191d00-6889-4ff3-ba16-e1cfea59fc3a) ##########
 ---- BUILD LOGS (celery-beat) ----
-  Setting up libpng16-16t64:amd64 (1.6.48-1+deb13u5) ...
-
-  Setting up libsensors5:amd64 (1:3.6.2-2) ...
-
-  Setting up libvulkan1:amd64 (1.4.309.0-1) ...
-
-  Setting up fonts-ipafont-gothic (00303-23) ...
-
-  update-alternatives: using /usr/share/fonts/opentype/ipafont-gothic/ipag.ttf to provide /usr/share/fonts/truetype/fonts-japanese-gothic.ttf (fonts-japanese-gothic.ttf) in auto mode
-
-  Setting up libxshmfence1:amd64 (1.3.3-1) ...
-
-  Setting up at-spi2-common (2.56.2-1+deb13u1) ...
-
-  Setting up libxcb-randr0:amd64 (1.17.0-2+b1) ...
-
-  Setting up fonts-liberation (1:2.1.5-3) ...
-
-  Setting up libx11-6:amd64 (2:1.8.12-1) ...
-
-  Setting up libthai-data (0.1.29-2) ...
-
-  Setting up libxkbfile1:amd64 (1:1.1.0-1+b4) ...
-
-  Setting up libdrm-common (2.4.124-2) ...
-
-  Setting up libxcomposite1:amd64 (1:0.4.6-1) ...
-
-  Setting up libxml2:amd64 (2.12.7+dfsg+really2.9.14-2.1+deb13u3) ...
-
-  Setting up fonts-unifont (1:15.1.01-1) ...
-
-  Setting up libxkbcommon0:amd64 (1.7.0-2) ...
-
-  Setting up libxcb-dri3-0:amd64 (1.17.0-2+b1) ...
-
-  Setting up libllvm19:amd64 (1:19.1.7-3+b1) ...
-
-  Setting up libx11-xcb1:amd64 (2:1.8.12-1) ...
-
-  Setting up libice6:amd64 (2:1.1.1-1) ...
-
-  Setting up libxdamage1:amd64 (1:1.1.6-1+b2) ...
-
-  Setting up libatk1.0-0t64:amd64 (2.56.2-1+deb13u1) ...
-
-  Setting up libxpm4:amd64 (1:3.5.17-1+deb13u1) ...
-
-  Setting up libxrender1:amd64 (1:0.9.12-1) ...
-
-  Setting up fontconfig-config (2.15.0-2.3) ...
-
-  debconf: unable to initialize frontend: Dialog
-debconf: (TERM is not set, so the dialog frontend is not usable.)
-debconf: falling back to frontend: Readline
-
-  debconf: unable to initialize frontend: Readline
-debconf: (Can't locate Term/ReadLine.pm in @INC (you may need to install the Term::ReadLine module) (@INC entries checked: /etc/perl /usr/local/lib/x86_64-linux-gnu/perl/5.40.1 /usr/local/share/perl/5.40.1 /usr/lib/x86_64-linux-gnu/perl5/5.40 /usr/share/perl5 /usr/lib/x86_64-linux-gnu/perl-base /usr/lib/x86_64-linux-gnu/perl/5.40 /usr/share/perl/5.40 /usr/local/lib/site_perl) at /usr/share/perl5/Debconf/FrontEnd/Readline.pm line 8.)
-debconf: falling back to frontend: Teletype
-
-  debconf: unable to initialize frontend: Teletype
-debconf: (This frontend requires a controlling tty.)
-debconf: falling back to frontend: Noninteractive
-
-  Setting up libavahi-common3:amd64 (0.8-16) ...
-
-  Setting up libxext6:amd64 (2:1.3.4-1+b3) ...
-
-  Setting up libnss3:amd64 (2:3.110-1+deb13u3) ...
-
-  Setting up libxxf86vm1:amd64 (1:1.1.4-1+b4) ...
-
-  Setting up libthai0:amd64 (0.1.29-2+b1) ...
-
-  Setting up libfreetype6:amd64 (2.13.3+dfsg-1+deb13u1) ...
-
-  Setting up libxfixes3:amd64 (1:6.0.0-2+b4) ...
-
-  Setting up libxrandr2:amd64 (2:1.5.4-1+b3) ...
-
-  Setting up libdrm2:amd64 (2.4.124-2) ...
-
-  Setting up libharfbuzz0b:amd64 (10.2.0-1+deb13u1) ...
-
-  Setting up libfontconfig1:amd64 (2.15.0-2.3) ...
-
-  Setting up libsm6:amd64 (2:1.2.6-1) ...
-
-  Setting up libxfont2:amd64 (1:2.0.6-1+deb13u1) ...
-
-  Setting up libavahi-client3:amd64 (0.8-16) ...
-
-  Setting up libdrm-amdgpu1:amd64 (2.4.124-2) ...
-
-  Setting up fontconfig (2.15.0-2.3) ...
-
-  Regenerating fonts cache... 
-  done.
-
-  Setting up libxi6:amd64 (2:1.8.2-1) ...
-
-  Setting up libpango-1.0-0:amd64 (1.56.3-1) ...
-
-  Setting up libdrm-intel1:amd64 (2.4.124-2) ...
-
-  Setting up fonts-wqy-zenhei (0.9.45-8) ...
-
-  Setting up xfonts-utils (1:7.7+7) ...
-
-  Setting up libcairo2:amd64 (1.18.4-1+b1) ...
-
-  Setting up libatspi2.0-0t64:amd64 (2.56.2-1+deb13u1) ...
-
-  Setting up libxt6t64:amd64 (1:1.2.1-1.2+b2) ...
-
-  Setting up libcups2t64:amd64 (2.4.10-3+deb13u2) ...
-
-  Setting up xfonts-scalable (1:1.0.3-1.3) ...
-
-  Setting up libatk-bridge2.0-0t64:amd64 (2.56.2-1+deb13u1) ...
-
-  Setting up mesa-libgallium:amd64 (25.0.7-2+deb13u1) ...
-
-  Setting up libxmu6:amd64 (2:1.1.3-3+b4) ...
-
-  Setting up libgbm1:amd64 (25.0.7-2+deb13u1) ...
-
-  Setting up libgl1-mesa-dri:amd64 (25.0.7-2+deb13u1) ...
-
-  Setting up libxaw7:amd64 (2:1.0.16-1) ...
-
-  Setting up libglx-mesa0:amd64 (25.0.7-2+deb13u1) ...
-
-  Setting up libglx0:amd64 (1.7.0-1+b2) ...
-
-  Setting up x11-xkb-utils (7.7+9) ...
-
-  Setting up libgl1:amd64 (1.7.0-1+b2) ...
-
-  Setting up xserver-common (2:21.1.16-1.3+deb13u3) ...
-
-  Setting up xvfb (2:21.1.16-1.3+deb13u3) ...
-
-  Processing triggers for libc-bin (2.41-12+deb13u3) ...
-
-  Downloading Chrome for Testing 149.0.7827.55 (playwright chromium v1228) from https://cdn.playwright.dev/builds/cft/149.0.7827.55/linux64/chrome-linux64.zip
-
-  |                                                                                |   0% of 177 MiB
-
-  |■■■■■■■■                                                                        |  10% of 177 MiB
-
-  |■■■■■■■■■■■■■■■■                                                                |  20% of 177 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 177 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 177 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 177 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 177 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 177 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 177 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 177 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 177 MiB
-
-  Chrome for Testing 149.0.7827.55 (playwright chromium v1228) downloaded to /root/.cache/ms-playwright/chromium-1228
-
-  Downloading FFmpeg (playwright ffmpeg v1011) from https://cdn.playwright.dev/dbazure/download/playwright/builds/ffmpeg/1011/ffmpeg-linux.zip
-
-  |                                                                                |   0% of 2.3 MiB
-
-  |■■■■■■■■                                                                        |  10% of 2.3 MiB
-
-  |■■■■■■■■■■■■■■■■                                                                |  20% of 2.3 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 2.3 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 2.3 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 2.3 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 2.3 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 2.3 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 2.3 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 2.3 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 2.3 MiB
-
-  FFmpeg (playwright ffmpeg v1011) downloaded to /root/.cache/ms-playwright/ffmpeg-1011
-
-  Downloading Chrome Headless Shell 149.0.7827.55 (playwright chromium-headless-shell v1228) from https://cdn.playwright.dev/builds/cft/149.0.7827.55/linux64/chrome-headless-shell-linux64.zip
-
-  |                                                                                |   0% of 114.2 MiB
-
-  |■■■■■■■■                                                                        |  10% of 114.2 MiB
-
-  |■■■■■■■■■■■■■■■■                                                                |  20% of 114.2 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 114.2 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 114.2 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 114.2 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 114.2 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 114.2 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 114.2 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 114.2 MiB
-
-  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 114.2 MiB
-
-  Chrome Headless Shell 149.0.7827.55 (playwright chromium-headless-shell v1228) downloaded to /root/.cache/ms-playwright/chromium_headless_shell-1228
-
-  [6/7] RUN playwright install chromium --with-deps
-  [7/7] COPY . .
-  [7/7] COPY . .
-  exporting to docker image format
-  exporting to docker image format
-  containerimage.config.digest: sha256:d29e352227ad5eb23d3d33e61aea441117dbc1c1de651033c03e628b8f379a31
-  containerimage.digest: sha256:2ef0842f72ce79b76c99eba0b6c250c7eb5da02d04708061afa7fb6ddfd2506a
-  containerimage.descriptor: eyJtZWRpYVR5cGUiOiJhcHBsaWNhdGlvbi92bmQub2NpLmltYWdlLm1hbmlmZXN0LnYxK2pzb24iLCJkaWdlc3QiOiJzaGEyNTY6MmVmMDg0MmY3MmNlNzliNzZjOTllYmEwYjZjMjUwYzdlYjVkYTAyZDA0NzA4MDYxYWZhN2ZiNmRkZmQyNTA2YSIsInNpemUiOjIyMDEsImFubm90YXRpb25zIjp7Im9yZy5vcGVuY29udGFpbmVycy5pbWFnZS5jcmVhdGVkIjoiMjAyNi0wNy0xNlQyMzozOTozN1oifSwicGxhdGZvcm0iOnsiYXJjaGl0ZWN0dXJlIjoiYW1kNjQiLCJvcyI6ImxpbnV4In19
-  image push
-  image push
+  scheduling build on Metal builder "builder-gxtevu"
+  scheduling build on Metal builder "builder-gxtevu"
   image push
 ---- RUNTIME LOGS (celery-beat) ----
   Starting Container
-  celery beat v5.4.0 (opalescent) is starting.
-  __    -    ... __   -        _
-  LocalTime -> 2026-07-16 23:40:32
-  Configuration ->
-      . broker -> redis://default:**@redis.railway.internal:6379//
-      . loader -> celery.loaders.app.AppLoader
-      . scheduler -> celery.beat.PersistentScheduler
       . db -> celerybeat-schedule
       . logfile -> [stderr]@%INFO
       . maxinterval -> 5.00 minutes (300s)
-  [2026-07-16 23:40:32,246: INFO/MainProcess] beat: Starting...
-  [2026-07-16 23:41:00,037: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-16 23:42:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-16 23:43:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-16 23:44:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-16 23:45:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-16 23:46:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-16 23:47:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-16 23:48:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-16 23:49:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-16 23:50:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-16 23:51:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-16 23:52:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-16 23:53:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-16 23:54:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-16 23:55:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-16 23:56:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-16 23:57:00,001: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-16 23:58:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-16 23:59:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:00:00,000: INFO/MainProcess] Scheduler: Sending due task reflexion-eval-every-hour (app.workers.agent_tasks.run_reflexion_eval)
-  [2026-07-17 00:00:00,006: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:01:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:02:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:03:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:04:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:05:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:06:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:07:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:08:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:09:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:10:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:11:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:12:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:13:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:14:00,002: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:15:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:16:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:17:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:18:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:19:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:20:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:21:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:22:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:23:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:24:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:25:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:26:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:27:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:28:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:29:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:30:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:31:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:32:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:33:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:34:00,001: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:35:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:36:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:37:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:38:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:39:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:40:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:41:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:42:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:43:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:44:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:45:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:46:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:47:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:48:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:49:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:50:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+  [2026-07-17 00:53:09,438: INFO/MainProcess] beat: Starting...
+  celery beat v5.4.0 (opalescent) is starting.
+      . broker -> redis://default:**@redis.railway.internal:6379//
+      . loader -> celery.loaders.app.AppLoader
+  __    -    ... __   -        _
+      . scheduler -> celery.beat.PersistentScheduler
+  LocalTime -> 2026-07-17 00:53:09
+  Configuration ->
+  [2026-07-17 00:54:00,042: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+  [2026-07-17 00:55:00,001: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+  [2026-07-17 00:56:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+  [2026-07-17 00:57:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+  [2026-07-17 00:58:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+  [2026-07-17 00:59:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+  [2026-07-17 01:00:00,000: INFO/MainProcess] Scheduler: Sending due task reflexion-eval-every-hour (app.workers.agent_tasks.run_reflexion_eval)
+  [2026-07-17 01:00:00,015: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+  [2026-07-17 01:01:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+  [2026-07-17 01:02:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+  [2026-07-17 01:03:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+  [2026-07-17 01:04:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+  [2026-07-17 01:05:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+  [2026-07-17 01:06:00,002: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+  [2026-07-17 01:07:00,002: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+  [2026-07-17 01:08:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
 
 ########## frontend : SUCCESS (deployment d0a84500-cb87-4a98-aa7c-69283a3269ba) ##########
 ---- BUILD LOGS (frontend) ----
