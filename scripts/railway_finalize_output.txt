@@ -1,0 +1,16 @@
+serviceDomainDelete args: ["id"]
+
+=== backend domains ===
+  keep:   backend-production-a20b.up.railway.app
+  delete: backend-production-6557.up.railway.app  -> ok
+  delete: backend-production-3a48.up.railway.app  -> ok
+
+=== frontend domains ===
+  keep:   frontend-production-a9cc3.up.railway.app
+  delete: frontend-production-d351.up.railway.app  -> ok
+  delete: frontend-production-c115.up.railway.app  -> ok
+
+=== Set frontend NEXT_PUBLIC_* -> https://backend-production-a20b.up.railway.app ===
+  frontend env set: ok
+KEPT_BACKEND=https://backend-production-a20b.up.railway.app
+KEPT_FRONTEND=https://frontend-production-a9cc3.up.railway.app

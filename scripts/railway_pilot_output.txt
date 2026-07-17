@@ -1,0 +1,12 @@
+=== Pilot against https://backend-production-a20b.up.railway.app ===
+
+[1] Health
+  GET /health -> HTTP 200  {"status": "ok", "auth_required": false}
+
+[2] List agents (before)
+  count before: 0
+
+[3] Create agent
+  POST /agents/ -> HTTP 500  Internal Server Error
+  ABORT: could not create agent
+RESULT=CREATE_FAILED
