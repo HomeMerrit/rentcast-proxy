@@ -16,6 +16,7 @@
   PASS stats activity  200
   PASS stats timeseries  points=14
   PASS stats network  nodes=5 edges=0
+  PASS fleet stream connect  status=200 first=data: {"type": "CONNECTED", "scope": "fleet"}
 
-=== 17/17 checks passed ===
-RESULT=PASS 17/17
+=== 18/18 checks passed ===
+RESULT=PASS 18/18
