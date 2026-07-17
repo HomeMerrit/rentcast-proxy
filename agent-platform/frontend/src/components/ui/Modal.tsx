@@ -48,7 +48,7 @@ export function Modal({
               <div className="flex items-center justify-between border-b border-line px-5 py-4">
                 <h3 className="font-display text-base font-semibold text-content">{title}</h3>
                 <button onClick={onClose} className="text-content-subtle hover:text-content">
-                  <X className="h-4.5 w-4.5" />
+                  <X className="h-[18px] w-[18px]" />
                 </button>
               </div>
             )}

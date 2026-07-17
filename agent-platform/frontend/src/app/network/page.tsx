@@ -29,10 +29,9 @@ export default function NetworkPage() {
           <div className="flex items-center gap-4">
             <Logo />
             <nav className="hidden items-center gap-1 sm:flex">
-              <Link href="/" className="rounded-lg px-3 py-1.5 text-sm text-content-muted transition-colors hover:bg-white/5 hover:text-content">
-                Command center
-              </Link>
+              <Link href="/" className="rounded-lg px-3 py-1.5 text-sm text-content-muted transition-colors hover:bg-white/5 hover:text-content">Command center</Link>
               <span className="rounded-lg bg-white/5 px-3 py-1.5 text-sm font-medium text-content">Network</span>
+              <Link href="/live" className="rounded-lg px-3 py-1.5 text-sm text-content-muted transition-colors hover:bg-white/5 hover:text-content">Live</Link>
             </nav>
           </div>
           <div className="flex items-center gap-2">

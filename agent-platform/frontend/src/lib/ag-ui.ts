@@ -113,3 +113,96 @@ export function useAgentStream(agentId: string, initialStatus: AgentStatus = "id
 
   return state;
 }
+
+// ── Fleet-wide live stream (all agents via /stream/fleet) ─────────────────────
+
+export interface FleetAgentLive {
+  status: AgentStatus;
+  currentMessage: string;
+  currentTool: string | null;
+  lastActivity: string | null;
+}
+
+export interface FleetState {
+  agents: Record<string, FleetAgentLive>;
+  events: AGUIEvent[];
+  isConnected: boolean;
+}
+
+export function useFleetStream() {
+  const [state, setState] = useState<FleetState>({ agents: {}, events: [], isConnected: false });
+  const esRef = useRef<EventSource | null>(null);
+  const reconnectTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const retryDelay = useRef(1000);
+
+  const connect = useCallback(() => {
+    if (esRef.current) esRef.current.close();
+    const es = new EventSource(`${STREAM_URL}/stream/fleet`);
+    esRef.current = es;
+
+    es.onopen = () => {
+      setState((s) => ({ ...s, isConnected: true }));
+      retryDelay.current = 1000;
+    };
+
+    es.onmessage = (e: MessageEvent) => {
+      try {
+        const event: AGUIEvent = JSON.parse(e.data);
+        const aid = event.agent_id;
+        if (!aid) return;
+        setState((s) => {
+          const prev: FleetAgentLive = s.agents[aid] ?? {
+            status: "idle", currentMessage: "", currentTool: null, lastActivity: null,
+          };
+          const next: FleetAgentLive = { ...prev, lastActivity: event.timestamp };
+          const d = event.data || {};
+          switch (event.type as AGUIEventType) {
+            case "RUN_STARTED":
+              next.status = "active"; next.currentMessage = ""; next.currentTool = null; break;
+            case "RUN_FINISHED":
+              next.status = "idle"; next.currentTool = null; break;
+            case "RUN_ERROR":
+              next.status = "error"; break;
+            case "TEXT_MESSAGE_START":
+              next.status = "active"; next.currentMessage = ""; break;
+            case "TEXT_MESSAGE_CONTENT":
+              next.currentMessage = (prev.currentMessage + ((d.delta as string) || "")).slice(-280); break;
+            case "TOOL_CALL_START":
+              next.status = "active"; next.currentTool = (d.tool_name as string) || "tool"; break;
+            case "TOOL_CALL_END":
+              next.currentTool = null; break;
+            case "STATE_SNAPSHOT":
+            case "STATE_DELTA":
+              if (d.status) next.status = d.status as AgentStatus; break;
+          }
+          return {
+            ...s,
+            isConnected: true,
+            agents: { ...s.agents, [aid]: next },
+            events: [...s.events.slice(-79), event],
+          };
+        });
+      } catch {
+        /* ignore malformed */
+      }
+    };
+
+    es.onerror = () => {
+      es.close();
+      setState((s) => ({ ...s, isConnected: false }));
+      if (reconnectTimer.current) clearTimeout(reconnectTimer.current);
+      reconnectTimer.current = setTimeout(connect, retryDelay.current);
+      retryDelay.current = Math.min(retryDelay.current * 2, 30000);
+    };
+  }, []);
+
+  useEffect(() => {
+    connect();
+    return () => {
+      if (esRef.current) esRef.current.close();
+      if (reconnectTimer.current) clearTimeout(reconnectTimer.current);
+    };
+  }, [connect]);
+
+  return state;
+}

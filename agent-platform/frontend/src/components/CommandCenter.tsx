@@ -89,9 +89,8 @@ export function CommandCenter() {
             <Logo />
             <nav className="hidden items-center gap-1 md:flex">
               <span className="rounded-lg bg-white/5 px-3 py-1.5 text-sm font-medium text-content">Command center</span>
-              <Link href="/network" className="rounded-lg px-3 py-1.5 text-sm text-content-muted transition-colors hover:bg-white/5 hover:text-content">
-                Network
-              </Link>
+              <Link href="/network" className="rounded-lg px-3 py-1.5 text-sm text-content-muted transition-colors hover:bg-white/5 hover:text-content">Network</Link>
+              <Link href="/live" className="rounded-lg px-3 py-1.5 text-sm text-content-muted transition-colors hover:bg-white/5 hover:text-content">Live</Link>
             </nav>
             <span className="hidden items-center gap-1.5 rounded-full border border-line bg-white/[0.03] px-2.5 py-1 text-2xs font-medium text-positive lg:inline-flex">
               <span className="relative flex h-1.5 w-1.5">
