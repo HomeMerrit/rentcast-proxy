@@ -150,6 +150,42 @@ export interface TimePoint {
   success: number;
 }
 
+export interface NetworkNode {
+  id: string;
+  name: string;
+  title: string;
+  department: string;
+  status: AgentStatus;
+  avatar_seed: string;
+  avatar_url?: string | null;
+  task_count: number;
+  comm_count: number;
+}
+
+export interface NetworkEdge {
+  from: string;
+  to: string;
+  count: number;
+  last_at: string | null;
+}
+
+export interface A2AMessage {
+  id: string;
+  from_id: string | null;
+  to_id: string | null;
+  from_name: string | null;
+  to_name: string | null;
+  message: string;
+  message_type: string;
+  created_at: string | null;
+}
+
+export interface NetworkGraph {
+  nodes: NetworkNode[];
+  edges: NetworkEdge[];
+  recent: A2AMessage[];
+}
+
 export interface Memory {
   id: string;
   content: string;

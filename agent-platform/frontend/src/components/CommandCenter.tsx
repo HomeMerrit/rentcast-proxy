@@ -85,9 +85,15 @@ export function CommandCenter() {
       {/* Header */}
       <header className="sticky top-0 z-30 border-b border-line bg-canvas/80 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
             <Logo />
-            <span className="hidden items-center gap-1.5 rounded-full border border-line bg-white/[0.03] px-2.5 py-1 text-2xs font-medium text-positive sm:inline-flex">
+            <nav className="hidden items-center gap-1 md:flex">
+              <span className="rounded-lg bg-white/5 px-3 py-1.5 text-sm font-medium text-content">Command center</span>
+              <Link href="/network" className="rounded-lg px-3 py-1.5 text-sm text-content-muted transition-colors hover:bg-white/5 hover:text-content">
+                Network
+              </Link>
+            </nav>
+            <span className="hidden items-center gap-1.5 rounded-full border border-line bg-white/[0.03] px-2.5 py-1 text-2xs font-medium text-positive lg:inline-flex">
               <span className="relative flex h-1.5 w-1.5">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-positive opacity-75" />
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-positive" />
