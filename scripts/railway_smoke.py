@@ -96,6 +96,23 @@ if aid:
     r = requests.delete(BASE + f"/agents/{aid}", timeout=25)
     check("agent delete", r.status_code == 204, str(r.status_code))
 
+# 11-14. Fleet stats endpoints (command center)
+r = requests.get(BASE + "/stats/overview", timeout=25)
+ov = r.json() if r.status_code == 200 else {}
+check("stats overview", r.status_code == 200 and "success_rate" in ov and "total_cost_usd" in ov,
+      f"agents={ov.get('agents')} cost={ov.get('total_cost_usd')}")
+
+r = requests.get(BASE + "/stats/agents", timeout=25)
+check("stats agents", r.status_code == 200 and isinstance(r.json(), list), str(r.status_code))
+
+r = requests.get(BASE + "/stats/activity?limit=10", timeout=25)
+check("stats activity", r.status_code == 200 and isinstance(r.json(), list), str(r.status_code))
+
+r = requests.get(BASE + "/stats/timeseries?days=14", timeout=25)
+ts = r.json() if r.status_code == 200 else {}
+check("stats timeseries", r.status_code == 200 and len(ts.get("series", [])) == 14,
+      f"points={len(ts.get('series', []))}")
+
 passed = sum(1 for _, ok in results if ok)
 emit(f"\n=== {passed}/{len(results)} checks passed ===")
 with open("railway_smoke.txt", "w") as f:
