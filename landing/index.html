@@ -303,21 +303,24 @@ section{position:relative;z-index:1}
       '<circle cx="'+(b[0]+7)+'" cy="'+(b[1]-20)+'" r="9" fill="#7FB06B"/>'+
       '<circle cx="'+(b[0]-7)+'" cy="'+(b[1]-19)+'" r="10" fill="#9FCB88"/>', key:(u+v)};}
 
-  // worker peg with role-distinct silhouette accessory
+  // worker = chess pawn, kept in its department color (identity by color, not shape)
   function peg(pt,color,scale,role){
-    scale=scale||1;var b=pt,w=8*scale,h=19*scale,head=6*scale;
-    var s='<ellipse cx="'+b[0]+'" cy="'+(b[1]+1)+'" rx="'+(w*1.05)+'" ry="'+(3.2*scale)+'" fill="rgba(20,16,10,.16)"/>';
-    s+='<path d="M'+(b[0]-w)+' '+b[1]+' q0 -'+(h*0.62)+' '+w+' -'+(h*0.62)+' q'+w+' 0 '+w+' '+(h*0.62)+' Z" fill="'+color+'"/>';
-    var neckY=b[1]-h*0.62;
-    // role silhouette
-    if(role==='sales'){s+='<rect x="'+(b[0]+w*0.5)+'" y="'+(b[1]-h*0.36)+'" width="'+(6*scale)+'" height="'+(5*scale)+'" rx="1" fill="'+shade(color,-.25)+'"/>';}
-    else if(role==='eng'){s+='<rect x="'+(b[0]-w-3*scale)+'" y="'+(b[1]-h*0.5)+'" width="'+(4.5*scale)+'" height="'+(9*scale)+'" rx="2" fill="'+shade(color,-.25)+'"/>';}
-    else if(role==='finance'){s+='<circle cx="'+(b[0]+w*0.7)+'" cy="'+(b[1]-h*0.2)+'" r="'+(3.6*scale)+'" fill="'+COL.roofgold+'"/>';}
-    else if(role==='mktg'){s+='<path d="M'+(b[0]+w*0.4)+' '+(neckY-2*scale)+' l'+(8*scale)+' -'+(4*scale)+' l0 '+(9*scale)+' Z" fill="'+shade(color,-.15)+'"/>';}
-    s+='<circle cx="'+b[0]+'" cy="'+(neckY-head*0.5)+'" r="'+head+'" fill="#F4D9B8"/>';
-    if(role==='support'){s+='<path d="M'+(b[0]-head-1)+' '+(neckY-head*0.5)+' a'+(head+1)+' '+(head+1)+' 0 0 1 '+((head+1)*2)+' 0" fill="none" stroke="'+shade(color,-.2)+'" stroke-width="'+(2*scale)+'"/><rect x="'+(b[0]+head-1)+'" y="'+(neckY-head*0.5)+'" width="'+(3*scale)+'" height="'+(5*scale)+'" rx="1.5" fill="'+shade(color,-.2)+'"/>';}
-    s+='<path d="M'+(b[0]-head)+' '+(neckY-head*0.5)+' a'+head+' '+head+' 0 0 1 '+(head*2)+' 0 Z" fill="'+shade(color,-.3)+'" opacity=".5"/>';
-    return s;
+    scale=scale||1;var s=scale,x=pt[0],y=pt[1];
+    function n(v){return (Math.round(v*10)/10);}
+    var dark=shade(color,-.16), lite=shade(color,.26), ring=shade(color,-.07);
+    var o='<ellipse cx="'+n(x)+'" cy="'+n(y+1.6)+'" rx="'+n(7.6*s)+'" ry="'+n(3*s)+'" fill="rgba(20,16,10,.16)"/>'; // ground shadow
+    // flared base
+    o+='<path d="M'+n(x-7*s)+' '+n(y)+' Q '+n(x-7.4*s)+' '+n(y-4*s)+' '+n(x-3.2*s)+' '+n(y-5.6*s)+' L '+n(x+3.2*s)+' '+n(y-5.6*s)+' Q '+n(x+7.4*s)+' '+n(y-4*s)+' '+n(x+7*s)+' '+n(y)+' Z" fill="'+color+'"/>';
+    // bell body
+    o+='<path d="M'+n(x-4.4*s)+' '+n(y-5.6*s)+' Q '+n(x-5*s)+' '+n(y-12*s)+' '+n(x-2.2*s)+' '+n(y-13.6*s)+' L '+n(x+2.2*s)+' '+n(y-13.6*s)+' Q '+n(x+5*s)+' '+n(y-12*s)+' '+n(x+4.4*s)+' '+n(y-5.6*s)+' Z" fill="'+color+'"/>';
+    // collar + head
+    o+='<ellipse cx="'+n(x)+'" cy="'+n(y-13.6*s)+'" rx="'+n(4.3*s)+'" ry="'+n(1.7*s)+'" fill="'+ring+'"/>';
+    o+='<circle cx="'+n(x)+'" cy="'+n(y-17.7*s)+'" r="'+n(4.3*s)+'" fill="'+color+'"/>';
+    // right-side volume shade (light from the front-left, matching the buildings)
+    o+='<path d="M'+n(x)+' '+n(y)+' Q '+n(x+7.4*s)+' '+n(y-4*s)+' '+n(x+3.2*s)+' '+n(y-5.6*s)+' Q '+n(x+5*s)+' '+n(y-12*s)+' '+n(x+2.2*s)+' '+n(y-13.6*s)+' L '+n(x)+' '+n(y-13.6*s)+' Z" fill="'+dark+'" opacity=".5"/>';
+    o+='<path d="M'+n(x)+' '+n(y-22*s)+' a'+n(4.3*s)+' '+n(4.3*s)+' 0 0 1 0 '+n(8.6*s)+' Z" fill="'+dark+'" opacity=".45"/>';
+    o+='<circle cx="'+n(x-1.4*s)+'" cy="'+n(y-18.9*s)+'" r="'+n(1.7*s)+'" fill="'+lite+'" opacity=".85"/>'; // head highlight
+    return o;
   }
 
   function road(place,pts,hw){var left=[],right=[];for(var i=0;i<pts.length;i++){var u=pts[i][0],v=pts[i][1];left.push(place(u+hw,v-hw));right.push(place(u-hw,v+hw));}
