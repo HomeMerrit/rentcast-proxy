@@ -15,6 +15,7 @@
   PASS stats agents  200
   PASS stats activity  200
   PASS stats timeseries  points=14
+  PASS stats network  nodes=5 edges=0
 
-=== 16/16 checks passed ===
-RESULT=PASS 16/16
+=== 17/17 checks passed ===
+RESULT=PASS 17/17
