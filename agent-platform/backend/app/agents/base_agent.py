@@ -266,18 +266,37 @@ class BaseAgent:
             "tool_iterations": state.get("tool_iterations", 0) + 1,
         }
 
+    @staticmethod
+    def _content_text(content) -> str:
+        """Flatten a LangChain message content (str or list of blocks) to plain text.
+        Claude responses can be a list of content blocks (e.g. text + thinking), so the
+        raw value must not be stored directly in a string DB column."""
+        if isinstance(content, str):
+            return content
+        if isinstance(content, list):
+            parts = []
+            for block in content:
+                if isinstance(block, dict):
+                    if block.get("type") == "text" or "text" in block:
+                        parts.append(block.get("text", ""))
+                elif isinstance(block, str):
+                    parts.append(block)
+            return "".join(parts)
+        return str(content) if content is not None else ""
+
     async def _reflect(self, state: AgentState) -> dict:
         reflect_messages = list(state["messages"]) + [HumanMessage(content=REFLECT_PROMPT)]
         response = await self.llm.ainvoke(reflect_messages)
         tokens = response.usage_metadata.get("total_tokens", 0) if response.usage_metadata else 0
+        reflection_text = self._content_text(response.content)
         if self._publisher:
             await self._publisher.publish("CUSTOM", {
                 "subtype": "REFLECTION",
-                "content": response.content,
+                "content": reflection_text,
             })
         return {
             "messages": [response],
-            "reflection": response.content,
+            "reflection": reflection_text,
             "tokens_used": state.get("tokens_used", 0) + tokens,
         }
 
