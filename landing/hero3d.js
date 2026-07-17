@@ -87,20 +87,26 @@ function boot(){
     return g;
   }
 
-  // ---- one FLOOR of a building: a cutaway level with a small team ----
+  // ---- one FLOOR of a building: a clean, modern cutaway level with a small team ----
   const FH=2.35, FS=5.0;
   function floorLevel(color, teamN){
     const g=new THREE.Group();
-    const slab=box(FS,0.34,FS,0.12,COL.floor,{rough:0.9}); slab.position.y=0.17; g.add(slab);
-    const wallH=FH-0.34;
-    const wl=box(0.26,wallH,FS,0.09,color,{rough:0.85}); wl.position.set(-FS/2+0.13,0.34+wallH/2,0); g.add(wl);
-    const wr=box(FS,wallH,0.26,0.09,darker(color),{rough:0.85}); wr.position.set(0,0.34+wallH/2,-FS/2+0.13); g.add(wr);
-    const win=box(1.5,0.95,0.06,0.05,COL.screen,{emissive:0xBFE0FF,ei:0.28,rough:0.3,metal:0.1}); win.position.set(0.55,0.34+wallH*0.6,-FS/2+0.26); g.add(win);
+    const slab=box(FS,0.3,FS,0.1,0xF4EAD6,{rough:0.85}); slab.position.y=0.15; g.add(slab);
+    // colored floor-plate fascia on the two open edges (modern, and you can count floors)
+    const fa=box(FS,0.16,0.09,0.03,color,{rough:0.55}); fa.position.set(0,0.3,FS/2-0.045); g.add(fa);
+    const fb=box(0.09,0.16,FS,0.03,color,{rough:0.55}); fb.position.set(FS/2-0.045,0.3,0); g.add(fb);
+    const wallH=FH-0.3;
+    const wl=box(0.22,wallH,FS,0.07,color,{rough:0.7}); wl.position.set(-FS/2+0.11,0.3+wallH/2,0); g.add(wl);
+    const wr=box(FS,wallH,0.22,0.07,darker(color,0.92),{rough:0.7}); wr.position.set(0,0.3+wallH/2,-FS/2+0.11); g.add(wr);
+    // glass ribbon window across the back-right wall, with slim mullions
+    const gw=FS-1.1, gy=0.3+wallH*0.54, gz=-FS/2+0.2;
+    const glass=box(gw,0.78,0.05,0.02,COL.screen,{emissive:0xCFE6FF,ei:0.32,rough:0.18,metal:0.2,env:0.7}); glass.position.set(0.15,gy,gz); g.add(glass);
+    for(let m=-1;m<=1;m++){const mul=box(0.05,0.82,0.09,0.02,darker(color,0.86),{rough:0.7}); mul.position.set(0.15+m*gw/3,gy,gz+0.02); g.add(mul);}
     const spots=[[-1.0,0.85],[0.85,0.15],[-0.1,-0.85]].slice(0,teamN);
     const people=[];
     spots.forEach(s=>{
-      const dk=desk(color); dk.position.set(s[0],0.34,s[1]-0.5); dk.rotation.y=0.5; g.add(dk);
-      const c=citizen(color); c.position.set(s[0],0.34,s[1]); c.userData.bob=Math.random()*6.28; g.add(c); people.push(c);
+      const dk=desk(color); dk.position.set(s[0],0.3,s[1]-0.5); dk.rotation.y=0.5; g.add(dk);
+      const c=citizen(color); c.position.set(s[0],0.3,s[1]); c.userData.bob=Math.random()*6.28; g.add(c); people.push(c);
     });
     g.userData.people=people;
     return g;
@@ -118,20 +124,17 @@ function boot(){
       const lvl=floorLevel(color,fd.team);
       lvl.userData.finalY=0.2+i*FH; lvl.userData.at=fd.at; lvl.visible=false; grp.add(lvl); return lvl;
     });
-    const roof=new THREE.Mesh(new THREE.ConeGeometry(FS*0.52,FS*0.34,4),mat(lighter(color),{rough:0.8}));
-    roof.rotation.y=Math.PI/4; roof.castShadow=true; roof.visible=false; roof.position.set(0,0,0); grp.add(roof);
+    // modern FLAT roof: thin slab + parapet cap + a small rooftop detail (skylight)
+    const roof=new THREE.Group();
+    const rslab=box(FS+0.12,0.26,FS+0.12,0.09,darker(color,0.8),{rough:0.75}); roof.add(rslab);
+    const rcap=box(FS-0.5,0.12,FS-0.5,0.05,lighter(color,1.04),{rough:0.6}); rcap.position.y=0.19; roof.add(rcap);
+    const sky=box(1.3,0.12,0.9,0.04,COL.screen,{emissive:0xCFE6FF,ei:0.32,rough:0.18,metal:0.2,env:0.7}); sky.position.set(-0.7,0.25,0.5); roof.add(sky);
+    const vent=box(0.55,0.42,0.55,0.07,0xCFC7B6,{rough:0.85}); vent.position.set(1.05,0.4,-0.7); roof.add(vent);
+    roof.visible=false; grp.add(roof);
     const b={grp,floors,roof,x,z,color}; buildings.push(b); return b;
   }
 
-  // ---- static background skyline (framing) ----
-  function bgTower(x,z,w,h,color){
-    const g=new THREE.Group(); g.position.set(x,0,z);
-    const b=box(w,h,w,0.25,color,{rough:0.9}); b.position.y=0.2+h/2; g.add(b);
-    const roof=new THREE.Mesh(new THREE.ConeGeometry(w*0.8,w*0.62,4),mat(lighter(color),{rough:0.85}));
-    roof.castShadow=true; roof.rotation.y=Math.PI/4; roof.position.y=0.2+h+w*0.31; g.add(roof); root.add(g);
-  }
-  bgTower(-11,-8.5,2.6,2.4,COL.eng); bgTower(11,-8,2.6,2.2,COL.mktg);
-
+  // ---- a few clean trees for warmth (kept minimal) ----
   function tree(x,z,s=1){
     const g=new THREE.Group(); g.position.set(x,0.2,z); g.scale.setScalar(s);
     const t=new THREE.Mesh(new THREE.CylinderGeometry(0.16,0.2,1,8),mat(COL.trunk,{rough:1})); t.position.y=0.5; t.castShadow=true; g.add(t);
@@ -139,7 +142,7 @@ function boot(){
     const f2=new THREE.Mesh(new THREE.IcosahedronGeometry(0.6,1),mat(COL.leaf2,{rough:0.9})); f2.position.set(0.5,1.1,0.2); f2.castShadow=true; g.add(f2);
     root.add(g);
   }
-  tree(-12,6,1.1); tree(12,5.5,1.0); tree(0,9.5,1.2); tree(-6.5,9.5,0.9); tree(7,9.5,1.05);
+  tree(-11.5,5.5,1.05); tree(11.5,4.5,1.0); tree(-8,8.5,0.85); tree(8.5,8,0.95);
 
   // ---- the growth timeline (seconds within the loop) ----
   const LOOP=21.0;
@@ -195,7 +198,7 @@ function boot(){
         } else lvl.visible=false;
       });
       if(top>=0){
-        const ty=B.floors[top].userData.finalY+FH+0.24+FS*0.17;
+        const ty=B.floors[top].userData.finalY+FH+0.13;
         if(!B.roof.visible){ B.roof.visible=true; B.roof.position.y=ty; }  // snap on (re)appear
         else B.roof.position.y += (ty-B.roof.position.y)*0.16;             // rise smoothly when a floor is added
       } else B.roof.visible=false;
@@ -219,7 +222,7 @@ function boot(){
     updateBuildings(lt);
 
     // idle bob of everyone currently visible
-    buildings.forEach(B=>B.floors.forEach(lvl=>{ if(lvl.visible) lvl.userData.people.forEach(c=>{ if(c.visible) c.position.y=0.34+Math.sin(el*2.1+c.userData.bob)*0.03; }); }));
+    buildings.forEach(B=>B.floors.forEach(lvl=>{ if(lvl.visible) lvl.userData.people.forEach(c=>{ if(c.visible) c.position.y=0.3+Math.sin(el*2.1+c.userData.bob)*0.03; }); }));
 
     // task token
     if(lt>=tokenStart && lt<=tokenStart+tokenDur){
