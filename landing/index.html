@@ -349,33 +349,91 @@ section{position:relative;z-index:1}
     trees.forEach(function(t){var g=tree(place,t[0],t[1]);objs.push({key:g.key,at:t[2],svg:'<g class="rv" data-at="'+t[2]+'">'+g.svg+'</g>'});});
     objs.sort(function(a,b){return a.key-b.key;});
 
-    // continuous movers (revealed at times, then loop)
-    var anim="",mv="";
-    function walkPath(id,p0,p1,color,role,dur,at){
-      var dx=(p1[0]-p0[0]).toFixed(1),dy=(p1[1]-p0[1]).toFixed(1);
-      anim+='@keyframes '+id+'{0%{transform:translate(0,0)}47%{transform:translate('+dx+'px,'+dy+'px)}53%{transform:translate('+dx+'px,'+dy+'px)}100%{transform:translate(0,0)}}';
-      mv+='<g class="rv mv" data-at="'+at+'" style="transform:translate('+p0[0].toFixed(1)+'px,'+p0[1].toFixed(1)+'px)"><g style="animation:'+id+' '+dur+'s ease-in-out infinite">'+peg([0,0],color,0.95,role)+'</g></g>';
+    /* ===== motion system: constant-speed path-following on the road grid ===== */
+    var anim="",mv="",mid=0;
+    var WALK=42, DRIVE=78;                 // world speed in px/sec (calm)
+    var OP=!!(window.CSS&&CSS.supports&&CSS.supports('offset-path','path("M0 0 L1 1")'));
+    function proj(uv){return uv.map(function(p){return place(p[0],p[1]);});}
+    function plen(pts){var L=0;for(var i=1;i<pts.length;i++)L+=Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]);return L;}
+    function pd(pts){return 'M'+pts.map(function(p){return p[0].toFixed(1)+' '+p[1].toFixed(1);}).join(' L ');}
+    // Manhattan route on the iso grid: out to the main street (v=.5), along it, then in.
+    function routeUV(a,b){
+      var p=[[a[0],a[1]]];
+      if(Math.abs(a[1]-0.5)>0.03)p.push([a[0],0.5]);
+      if(Math.abs(a[0]-b[0])>0.03)p.push([b[0],0.5]);
+      p.push([b[0],b[1]]);
+      return p;
     }
-    function flow(id,p0,p1,at,dur,kind,color){
-      var dx=(p1[0]-p0[0]).toFixed(1),dy=(p1[1]-p0[1]).toFixed(1),mxy=(-40).toFixed(1);
-      var glyph = kind==='coin'?'<circle r="6" fill="'+COL.roofgold+'"/><text x="0" y="3" font-size="8" text-anchor="middle" fill="#8a6a12" font-family="sans-serif" font-weight="700">$</text>'
-        : kind==='mail'?'<rect x="-8" y="-6" width="16" height="11" rx="2" fill="#fff" stroke="#D8CBB2"/><path d="M-8 -5 L0 1 L8 -5" fill="none" stroke="#C9A24E" stroke-width="1.3"/>'
-        : '<rect x="-6" y="-9" width="12" height="9" rx="2" fill="#D9A46A"/><rect x="-6" y="-9" width="12" height="3.5" fill="#C58B4E"/>';
-      if(kind==='coin'){anim+='@keyframes '+id+'{0%{transform:translate(0,0);opacity:0}12%{opacity:1}60%{opacity:1}100%{transform:translate(0,-34px);opacity:0}}';}
-      else{anim+='@keyframes '+id+'{0%{transform:translate(0,0);opacity:0}10%{opacity:1}50%{transform:translate('+(dx/2)+'px,'+mxy+'px)}90%{opacity:1}100%{transform:translate('+dx+'px,'+dy+'px);opacity:0}}';}
-      mv+='<g class="rv mv" data-at="'+at+'" style="transform:translate('+p0[0].toFixed(1)+'px,'+(p0[1]-24).toFixed(1)+'px)"><g style="animation:'+id+' '+dur+'s ease-in-out infinite">'+glyph+'</g></g>';
+    // glyph wrapped so it walks upright with a footstep bob
+    function walkG(color,role,scale){return '<g style="animation:bob .52s ease-in-out infinite">'+peg([0,0],color,scale||0.92,role)+'</g>';}
+    function cart(color){return '<ellipse cx="0" cy="7" rx="15" ry="4.2" fill="rgba(20,16,10,.16)"/>'+
+      '<rect x="-13" y="-9" width="24" height="14" rx="3" fill="'+color+'"/>'+
+      '<rect x="-13" y="-9" width="24" height="4.6" rx="2.4" fill="'+shade(color,.14)+'"/>'+
+      '<rect x="-3" y="-4" width="6" height="9" rx="1.5" fill="'+shade(color,-.22)+'"/>'+
+      '<circle cx="-7" cy="6" r="3.1" fill="#2C2620"/><circle cx="7" cy="6" r="3.1" fill="#2C2620"/>';}
+    var mailG='<rect x="-8" y="-6" width="16" height="11" rx="2" fill="#fff" stroke="#D8CBB2"/><path d="M-8 -5 L0 1 L8 -5" fill="none" stroke="#C9A24E" stroke-width="1.3"/>';
+    var pkgG='<rect x="-6" y="-9" width="12" height="9" rx="2" fill="#D9A46A"/><rect x="-6" y="-9" width="12" height="3.5" fill="#C58B4E"/>';
+    // pull a building point out to its road-facing edge so a peg stops at the door, not on the roof
+    function dock(uv){
+      var du=Math.abs(uv[0]-0.5),dv=Math.abs(uv[1]-0.5);
+      if(Math.max(du,dv)<0.14)return uv;
+      var q=uv.slice();
+      if(dv>=du)q[1]=uv[1]+(uv[1]<0.5?1:-1)*0.13; else q[0]=uv[0]+(uv[0]<0.5?1:-1)*0.13;
+      return q;
     }
-    // narrative movers
-    var salesPt=place(0.44,0.6), edge=place(-0.08,0.5), hqPt=place(0.5,0.62);
-    walkPath('cust',edge,salesPt,C6.sales,'',6.5,1200);         // customer arrives → sales
-    flow('coin1',place(0.44,0.42),place(0.44,0.42),2600,3.2,'coin');   // money appears
-    walkPath('w2',place(0.5,0.16),place(0.5,0.84),C6.mktg,'mktg',12,10600); // marketing walks
-    walkPath('w3',place(0.12,0.5),place(0.88,0.5),C6.ops,'ops',13,12200);   // ops walks main road
-    walkPath('w4',place(0.74,0.34),place(0.72,0.68),C6.support,'support',9,12400);
-    flow('mail1',place(0.44,0.5),place(0.74,0.34),12600,5,'mail');   // sales→ops
-    flow('pkg1',place(0.74,0.34),place(0.28,0.72),12800,6,'pkg');    // ops→finance fulfill
-    flow('coin2',place(0.28,0.72),place(0.28,0.72),13400,3.2,'coin'); // revenue
-    flow('mail2',place(0.72,0.68),place(0.5,0.5),13200,5,'mail');    // support→hq
+    // worker commuting a→b→a along the roads, constant speed
+    function commuter(aUV,bUV,color,role,at,scale){
+      if(!OP)return;
+      var scr=proj(routeUV(dock(aUV),dock(bUV))), trip=scr.concat(scr.slice(0,-1).reverse());
+      var dur=Math.max(6,plen(trip)/WALK).toFixed(1);
+      mv+='<g class="rv mv" data-at="'+at+'"><g style="offset-path:path(\''+pd(trip)+'\');offset-rotate:0deg;animation:travel '+dur+'s linear infinite">'+walkG(color,role,scale)+'</g></g>';
+    }
+    // continuous one-way traffic (customers arriving, carts delivering) that loops a→b→a
+    function traffic(glyph,aUV,bUV,speed,at,delay){
+      if(!OP)return;
+      var scr=proj(routeUV(aUV,bUV)), trip=scr.concat(scr.slice(0,-1).reverse());
+      var dur=Math.max(5,plen(trip)/speed).toFixed(1);
+      mv+='<g class="rv mv" data-at="'+at+'"><g style="offset-path:path(\''+pd(trip)+'\');offset-rotate:0deg;animation:travel '+dur+'s linear infinite'+(delay?';animation-delay:-'+delay+'s':'')+'">'+glyph+'</g></g>';
+    }
+    // parcel tossed on a gravity arc between two buildings
+    function parcel(glyph,aUV,bUV,at,dur,lift){
+      if(!OP)return;
+      var p0=place(aUV[0],aUV[1]),p1=place(bUV[0],bUV[1]);p0=[p0[0],p0[1]-24];p1=[p1[0],p1[1]-24];
+      var cx=((p0[0]+p1[0])/2).toFixed(1),cy=((p0[1]+p1[1])/2-(lift||46)).toFixed(1),id='fl'+(mid++);
+      anim+='@keyframes '+id+'{0%{offset-distance:0%;opacity:0}9%{opacity:1}86%{opacity:1}100%{offset-distance:100%;opacity:0}}';
+      mv+='<g class="rv mv" data-at="'+at+'"><g style="offset-path:path(\'M'+p0[0].toFixed(1)+' '+p0[1].toFixed(1)+' Q '+cx+' '+cy+' '+p1[0].toFixed(1)+' '+p1[1].toFixed(1)+'\');offset-rotate:0deg;animation:'+id+' '+dur+'s linear infinite">'+glyph+'</g></g>';
+    }
+    // value rising from a building (revenue lands)
+    function coin(uv,at,delay){
+      var p=place(uv[0],uv[1]),id='rs'+(mid++);
+      anim+='@keyframes '+id+'{0%{transform:translate(0,0);opacity:0}14%{opacity:1}58%{opacity:1}100%{transform:translate(0,-34px);opacity:0}}';
+      mv+='<g class="rv mv" data-at="'+at+'" style="transform:translate('+p[0].toFixed(1)+'px,'+(p[1]-30).toFixed(1)+'px)"><g style="animation:'+id+' 3.4s ease-out infinite'+(delay?';animation-delay:-'+delay+'s':'')+'"><circle r="6" fill="'+COL.roofgold+'"/><text x="0" y="3" font-size="8" text-anchor="middle" fill="#8a6a12" font-family="sans-serif" font-weight="700">$</text></g></g>';
+    }
+    anim+='@keyframes travel{0%{offset-distance:0%}100%{offset-distance:100%}}'+
+          '@keyframes bob{0%,100%{transform:translateY(0)}25%{transform:translateY(-1.5px)}50%{transform:translateY(0)}75%{transform:translateY(-1.5px)}}';
+
+    /* ---- the living loop ---- */
+    // customers keep arriving from the island's edge to Sales, staggered
+    traffic(walkG(C6.sales,'',0.94),[-0.12,0.5],[0.44,0.5],WALK,1200,0);
+    traffic(walkG(C6.sales,'',0.9), [-0.12,0.5],[0.44,0.5],WALK,6400,7);
+    // department workers commuting to HQ and back
+    commuter([0.26,0.32],[0.5,0.5],C6.eng,'eng',9000);
+    commuter([0.28,0.72],[0.5,0.5],C6.finance,'finance',9600);
+    commuter([0.72,0.68],[0.5,0.5],C6.support,'support',10200);
+    commuter([0.55,0.16],[0.5,0.5],C6.mktg,'mktg',10800);
+    commuter([0.74,0.34],[0.5,0.5],C6.ops,'ops',11400);
+    // delivery carts running the main road
+    traffic(cart(C6.ops),        [0.96,0.5],[0.74,0.4],DRIVE,6200,0);
+    traffic(cart(shade(C6.ops,-.06)),[0.04,0.5],[0.5,0.5],DRIVE,11000,4);
+    // goods & paperwork tossed between departments
+    parcel(mailG,[0.44,0.5],[0.74,0.34],12600,4.6,40);   // sales → ops
+    parcel(pkgG, [0.74,0.34],[0.28,0.72],12900,5.4,54);  // ops → finance (fulfill)
+    parcel(mailG,[0.72,0.68],[0.5,0.5], 13200,4.4,36);   // support → hq
+    // revenue rising across the world
+    coin([0.44,0.42],2600,0);
+    coin([0.28,0.66],13500,0);
+    coin([0.5,0.44], 13900,1.1);
+    coin([0.72,0.62],14300,0.6);
 
     var frag='<g>'+base+'<g class="rv" data-at="4600">'+roadSvg+'</g>'+objs.map(function(o){return o.svg;}).join("")+mv+'</g>';
     svgEl.innerHTML='<style>'+anim+' #hero .win{fill:var(--window)} :root[data-theme="dark"] #hero .win{filter:drop-shadow(0 0 3px #FFCF6E)}</style>'+frag;
@@ -407,9 +465,10 @@ section{position:relative;z-index:1}
     // a couple ambient pegs
     svg+=peg(place(0.44,0.6),C6.sales,0.9,'sales')+peg(place(0.6,0.56),C6.finance,0.9,'finance');
     var mv="",anim="";
-    if(!reduce){var p0=place(0.14,0.5),p1=place(0.86,0.5),dx=(p1[0]-p0[0]).toFixed(1),dy=(p1[1]-p0[1]).toFixed(1);
-      anim='@keyframes '+id+'m{0%{transform:translate(0,0)}48%{transform:translate('+dx+'px,'+dy+'px)}52%{transform:translate('+dx+'px,'+dy+'px)}100%{transform:translate(0,0)}}';
-      mv='<g style="transform:translate('+p0[0].toFixed(1)+'px,'+p0[1].toFixed(1)+'px)"><g style="animation:'+id+'m 12s ease-in-out infinite">'+peg([0,0],C6.support,0.9,'support')+'</g></g>';}
+    if(!reduce&&window.CSS&&CSS.supports&&CSS.supports('offset-path','path("M0 0 L1 1")')){
+      var p0=place(0.14,0.5),p1=place(0.86,0.5),d='M'+p0[0].toFixed(1)+' '+p0[1].toFixed(1)+' L '+p1[0].toFixed(1)+' '+p1[1].toFixed(1)+' L '+p0[0].toFixed(1)+' '+p0[1].toFixed(1);
+      anim='@keyframes '+id+'m{0%{offset-distance:0%}100%{offset-distance:100%}}@keyframes '+id+'b{0%,100%{transform:translateY(0)}25%{transform:translateY(-1.4px)}50%{transform:translateY(0)}75%{transform:translateY(-1.4px)}}';
+      mv='<g style="offset-path:path(\''+d+'\');offset-rotate:0deg;animation:'+id+'m 13s linear infinite"><g style="animation:'+id+'b .52s ease-in-out infinite">'+peg([0,0],C6.support,0.9,'support')+'</g></g>';}
     document.getElementById(id).innerHTML='<style>'+anim+' #'+id+' .win{fill:var(--window)}</style><g>'+svg+'</g>'+mv;
   }
   smallWorld("econWorld");smallWorld("glanceWorld");
