@@ -1,0 +1,55 @@
+name: Railway Deploy Code
+
+on:
+  workflow_dispatch:
+    inputs:
+      services:
+        description: 'Comma-separated services to deploy (default: all code services)'
+        required: false
+        default: 'backend,celery,celery-beat,frontend'
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout platform branch
+        uses: actions/checkout@v4
+        with:
+          ref: claude/airtable-hyper-agent-research-et2uba
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Setup Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+      - name: Install deps
+        run: pip install requests
+      - name: Deploy code to Railway
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          DEPLOY_SERVICES: ${{ inputs.services }}
+        run: python3 scripts/railway_deploy_code.py
+      - name: Commit deploy log to repo
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
+          git add scripts/railway_deploy_log.txt scripts/railway_deploy_result.txt 2>/dev/null || true
+          [ -f railway_deploy_log.txt ] && cp railway_deploy_log.txt scripts/railway_deploy_log.txt
+          [ -f railway_deploy_result.txt ] && cp railway_deploy_result.txt scripts/railway_deploy_result.txt
+          git add scripts/railway_deploy_log.txt scripts/railway_deploy_result.txt 2>/dev/null || true
+          git diff --cached --quiet || git commit -m "chore: railway deploy result [skip ci]"
+          git push origin claude/airtable-hyper-agent-research-et2uba || true
