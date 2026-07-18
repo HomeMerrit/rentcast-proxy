@@ -188,11 +188,14 @@ export interface WorldOpts {
   animate?: boolean;
   width?: number;      // world placer X spread
   showWorkers?: boolean;
+  interactive?: boolean; // buildings become clickable (the world is the nav)
 }
+
+const escAttr = (s: string) => (s || "").replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
 
 // Builds a full company scene. Returns the inner <svg> markup + a viewBox.
 export function renderCompany(opts: WorldOpts): { inner: string; viewBox: string } {
-  const { buildings, id, animate = true, showWorkers = true } = opts;
+  const { buildings, id, animate = true, showWorkers = true, interactive = false } = opts;
   const place = world(560, 70, 360, 176);
   const vb = "40 48 1040 470";
 
@@ -209,7 +212,8 @@ export function renderCompany(opts: WorldOpts): { inner: string; viewBox: string
     const t = deptType(b.dept);
     const grow = b.count / maxCount;
     const g = deptBuilding(place, u, v, t, grow);
-    objs.push({ key: g.key, svg: g.svg });
+    const wrapped = `<g class="b-hit" data-team="${escAttr(b.dept)}"><title>${escAttr(b.dept)}</title>${g.svg}</g>`;
+    objs.push({ key: g.key, svg: wrapped });
     placed.push({ u, v, type: t, color: DEPT_COLOR[t], count: b.count, active: !!b.active });
   });
 
@@ -251,8 +255,11 @@ export function renderCompany(opts: WorldOpts): { inner: string; viewBox: string
     css += `@media (prefers-reduced-motion:reduce){#${id} [style*="animation"]{animation:none!important}}`;
   }
 
+  const hit = interactive
+    ? `#${id} .b-hit{cursor:pointer;transition:opacity .15s,transform .15s;transform-box:fill-box;transform-origin:center} #${id} .b-hit:hover{opacity:.94}`
+    : "";
   const inner =
-    `<style>${css} #${id} .win{fill:var(--window,rgba(64,84,104,.28))}</style>` +
+    `<style>${css}${hit} #${id} .win{fill:var(--window,rgba(64,84,104,.28))}</style>` +
     "<g>" + base + roads + objs.map((o) => o.svg).join("") + movers + "</g>";
   return { inner, viewBox: vb };
 }

@@ -1,5 +1,5 @@
 "use client";
-import { useId, useMemo } from "react";
+import { useId, useMemo, type MouseEvent } from "react";
 import { renderCompany, type Building } from "@/lib/world";
 
 /**
@@ -12,19 +12,30 @@ export function LivingWorld({
   animate = true,
   showWorkers = true,
   className,
+  onPick,
 }: {
   buildings: Building[];
   animate?: boolean;
   showWorkers?: boolean;
   className?: string;
+  /** When set, buildings become clickable and this fires with the team name. */
+  onPick?: (team: string) => void;
 }) {
   const rawId = useId();
   const id = "world" + rawId.replace(/[^a-zA-Z0-9]/g, "");
 
   const { inner, viewBox } = useMemo(
-    () => renderCompany({ buildings, id, animate, showWorkers }),
-    [buildings, id, animate, showWorkers]
+    () => renderCompany({ buildings, id, animate, showWorkers, interactive: !!onPick }),
+    [buildings, id, animate, showWorkers, onPick]
   );
+
+  const handleClick = onPick
+    ? (e: MouseEvent) => {
+        const g = (e.target as Element).closest("[data-team]");
+        const team = g?.getAttribute("data-team");
+        if (team) onPick(team);
+      }
+    : undefined;
 
   return (
     <svg
@@ -34,6 +45,7 @@ export function LivingWorld({
       aria-label="Your company as a living world — each building is a team, each figure a worker."
       className={className}
       style={{ width: "100%", height: "auto", display: "block", overflow: "visible" }}
+      onClick={handleClick}
       dangerouslySetInnerHTML={{ __html: inner }}
     />
   );
