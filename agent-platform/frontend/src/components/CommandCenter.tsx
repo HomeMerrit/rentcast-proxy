@@ -4,13 +4,14 @@ import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
 import {
   Plus, Search, DollarSign, Activity, Users, Zap, Gauge, TrendingUp,
-  CheckCircle2, XCircle, ArrowUpDown,
+  CheckCircle2, XCircle, ArrowUpDown, Briefcase, ArrowRight, Radio,
 } from "lucide-react";
 import { Logo } from "./brand/Logo";
 import HumanInbox from "./HumanInbox";
 import { AccountMenu } from "./AccountMenu";
 import { AgentAvatar } from "./AgentAvatar";
 import { StatusDot } from "./StatusDot";
+import { RunTaskDialog } from "./RunTaskDialog";
 import { AreaChart } from "./charts/AreaChart";
 import { BarList, RadialGauge, Sparkline, Segmented } from "./charts/mini";
 import { Card, Banner, Skeleton } from "./ui";
@@ -36,6 +37,7 @@ export function CommandCenter() {
   const [sort, setSort] = useState<SortKey>("task_count");
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
+  const [jobOpen, setJobOpen] = useState(false);
 
   const load = async () => {
     // allSettled so one flaky endpoint doesn't blank the whole board; the banner
@@ -64,6 +66,16 @@ export function CommandCenter() {
     () => Array.from(new Set(agents.map((a) => a.department))).sort(),
     [agents]
   );
+
+  // Next-step spine: pick a target agent (idle first) and read the fleet's
+  // state so the dashboard always proposes one clear next action.
+  const target = useMemo(
+    () => agents.find((a) => a.status === "idle") ?? agents[0] ?? null,
+    [agents]
+  );
+  const agentCount = overview?.agents ?? agents.length;
+  const totalTasks = overview?.tasks ?? 0;
+  const activeCount = overview?.active ?? 0;
 
   const filtered = useMemo(() => {
     let list = agents.filter((a) => {
@@ -132,6 +144,28 @@ export function CommandCenter() {
           <Banner tone="danger" onRetry={load} className="mb-4">
             Can&apos;t reach the server right now — showing the last data we have. It will retry automatically.
           </Banner>
+        )}
+
+        {/* Next step — always one clear action */}
+        <div className="mb-4">
+          <NextStep
+            loaded={loaded}
+            agentCount={agentCount}
+            totalTasks={totalTasks}
+            activeCount={activeCount}
+            targetName={target?.name ?? null}
+            onGiveJob={() => setJobOpen(true)}
+          />
+        </div>
+
+        {target && (
+          <RunTaskDialog
+            agentId={target.id}
+            agentName={target.name}
+            open={jobOpen}
+            onClose={() => setJobOpen(false)}
+            onQueued={() => load()}
+          />
         )}
 
         {/* KPI row */}
@@ -329,6 +363,122 @@ export function CommandCenter() {
           </div>
         </Card>
       </main>
+    </div>
+  );
+}
+
+function NextStep({
+  loaded, agentCount, totalTasks, activeCount, targetName, onGiveJob,
+}: {
+  loaded: boolean;
+  agentCount: number;
+  totalTasks: number;
+  activeCount: number;
+  targetName: string | null;
+  onGiveJob: () => void;
+}) {
+  if (!loaded) return <Skeleton className="h-[68px] w-full rounded-2xl" />;
+
+  // No agents yet → hire (rare: root redirects to onboarding, but be safe).
+  if (agentCount === 0) {
+    return (
+      <Prompt
+        eyebrow="Start here"
+        title="Hire your first agent"
+        body="Your workforce is empty. Bring on your first AI employee — it takes about a minute."
+        primary={
+          <Link href="/agents/new" className={primaryBtn}>
+            <Plus className="h-4 w-4" /> Hire an agent
+          </Link>
+        }
+      />
+    );
+  }
+
+  // Agents hired but no work done → the key first-run moment.
+  if (totalTasks === 0) {
+    return (
+      <Prompt
+        eyebrow="Next step"
+        title={targetName ? `Give ${targetName} their first job` : "Give your team their first job"}
+        body="Your team is hired — now put them to work. Pick a job in plain English and watch them go."
+        primary={
+          <button onClick={onGiveJob} className={primaryBtn}>
+            <Briefcase className="h-4 w-4" /> Give a job
+          </button>
+        }
+      />
+    );
+  }
+
+  // Something is running → celebrate + point at the live floor.
+  if (activeCount > 0) {
+    return (
+      <div className="flex items-center gap-3 rounded-xl border border-positive/30 bg-positive-soft px-4 py-3">
+        <span className="relative flex h-2 w-2 shrink-0">
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-positive opacity-75" />
+          <span className="relative inline-flex h-2 w-2 rounded-full bg-positive" />
+        </span>
+        <p className="text-sm text-content">
+          <span className="font-medium">{activeCount} agent{activeCount > 1 ? "s" : ""} working now.</span>{" "}
+          <span className="text-content-muted">Watch them think and hand off in real time.</span>
+        </p>
+        <Link
+          href="/live"
+          className="ml-auto inline-flex items-center gap-1.5 rounded-lg border border-line bg-surface px-3 py-1.5 text-xs font-medium text-content transition-colors hover:border-line-strong"
+        >
+          <Radio className="h-3.5 w-3.5 text-positive" /> Watch live
+        </Link>
+      </div>
+    );
+  }
+
+  // Established & idle → a slim, low-profile nudge (less is more).
+  return (
+    <div className="flex flex-wrap items-center gap-3 rounded-xl border border-line bg-surface px-4 py-3">
+      <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-iris-soft text-iris-500">
+        <Briefcase className="h-4 w-4" />
+      </span>
+      <p className="text-sm text-content">
+        Your team is ready for the next task.
+      </p>
+      <div className="ml-auto flex items-center gap-2">
+        <button
+          onClick={onGiveJob}
+          className="inline-flex items-center gap-1.5 rounded-lg bg-iris-gradient px-3 py-1.5 text-xs font-medium text-white shadow-[0_8px_24px_-12px_rgba(237,113,80,0.8)] transition-transform active:scale-95"
+        >
+          <Briefcase className="h-3.5 w-3.5" /> Give a job
+        </button>
+        <Link
+          href="/agents/new"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-surface px-3 py-1.5 text-xs font-medium text-content-muted transition-colors hover:border-line-strong hover:text-content"
+        >
+          <Plus className="h-3.5 w-3.5" /> Hire a teammate
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+const primaryBtn =
+  "inline-flex items-center gap-1.5 rounded-xl bg-iris-gradient px-4 py-2 text-sm font-medium text-white shadow-[0_8px_24px_-10px_rgba(237,113,80,0.8)] transition-transform active:scale-95";
+
+function Prompt({
+  eyebrow, title, body, primary,
+}: {
+  eyebrow: string; title: string; body: string; primary: React.ReactNode;
+}) {
+  return (
+    <div className="relative overflow-hidden rounded-2xl border border-iris-200 bg-iris-soft p-5 sm:p-6">
+      <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-iris-500/10 blur-3xl" />
+      <div className="relative flex flex-wrap items-center justify-between gap-4">
+        <div className="min-w-0">
+          <p className="text-2xs font-medium uppercase tracking-[0.14em] text-iris-600">{eyebrow}</p>
+          <h2 className="mt-1 font-display text-xl font-semibold tracking-tight text-content">{title}</h2>
+          <p className="mt-1 max-w-xl text-sm text-content-muted">{body}</p>
+        </div>
+        <div className="shrink-0">{primary}</div>
+      </div>
     </div>
   );
 }
