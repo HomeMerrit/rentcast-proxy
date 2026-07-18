@@ -1,0 +1,18 @@
+# Minimal dependency set for the CI test gate.
+#
+# The tenancy / auth / rate-limit tests import only the light routers (auth, a2a,
+# company) and the tenancy/rate-limit modules — never the agent runtime
+# (langgraph, qdrant, e2b, browser-use). Installing the full requirements.txt in
+# CI would pull hundreds of MB and fastembed model downloads for no test value,
+# so we pin just the shared subset here. Versions match requirements.txt.
+fastapi==0.115.5
+sqlalchemy[asyncio]==2.0.36
+asyncpg==0.30.0
+greenlet>=3.0
+pydantic==2.10.3
+pydantic-settings==2.6.1
+redis==5.2.1
+httpx==0.28.1
+python-multipart==0.0.18
+pytest>=8
+pytest-asyncio>=0.24
