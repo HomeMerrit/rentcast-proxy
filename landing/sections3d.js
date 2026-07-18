@@ -124,13 +124,17 @@ function init(){
   // up front (unobstructed) with two teammates at desks behind. Everyone reads.
   function workerVignette(parent,color,peopleArr){
     const g=new THREE.Group();
-    const plate=box(4.6,0.3,2.4,0.5,lighter(color,1.16),{rough:0.72}); plate.position.y=0.15; g.add(plate);
-    const band=box(4.7,0.16,2.5,0.05,color,{rough:0.5}); band.position.y=0.28; g.add(band);
+    // a raised stage with a crisp front face + dark plinth line so the base reads
+    // as a clean edge against the ground instead of blending into it
+    const base=box(4.6,0.5,2.4,0.10,lighter(color,1.14),{rough:0.72}); base.position.y=0.27; g.add(base);       // platform body (0.02 .. 0.52)
+    const plinth=box(4.70,0.14,2.50,0.04,darker(color,0.74),{rough:0.5}); plinth.position.y=0.07; g.add(plinth); // crisp dark base line at the ground
+    const topband=box(4.66,0.10,2.46,0.04,color,{rough:0.5}); topband.position.y=0.52; g.add(topband);           // dept colour line at the top edge
+    const deck=box(4.5,0.08,2.3,0.05,lighter(color,1.20),{rough:0.7}); deck.position.y=0.55; g.add(deck);        // deck the workers stand on
     // three teammates, all the SAME size, standing in a clean row facing forward
-    const S=1.25;
+    const topY=0.58, S=1.25;
     [-1.35,0.0,1.35].forEach(x=>{
-      const c=person(color,false); c.position.set(x,0.3,0); c.scale.setScalar(S); g.add(c);
-      peopleArr.push({o:c, y:0.3, phase:Math.random()*6.28, seated:false});
+      const c=person(color,false); c.position.set(x,topY,0); c.scale.setScalar(S); g.add(c);
+      peopleArr.push({o:c, y:topY, phase:Math.random()*6.28, seated:false});
     });
     parent.add(g); return g;
   }
