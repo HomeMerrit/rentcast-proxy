@@ -32,10 +32,12 @@ async def _run_task_async(
     started_at = datetime.now(timezone.utc)
 
     # Set agent status to active in DB before publishing
+    agent_org_id: str | None = None
     async with AsyncTaskSession() as db:
         result = await db.execute(select(Agent).where(Agent.id == UUID(agent_id)))
         agent_row = result.scalar_one_or_none()
         if agent_row:
+            agent_org_id = str(agent_row.org_id) if agent_row.org_id else None
             agent_row.status = "active"
             agent_row.current_task = task_type
             await db.commit()
@@ -50,7 +52,7 @@ async def _run_task_async(
             from ..tools.browser import browse_web
             from ..tools.a2a_tools import create_a2a_tools
 
-            a2a_tools = create_a2a_tools(agent_id, agent_name, publisher=publisher)
+            a2a_tools = create_a2a_tools(agent_id, agent_name, publisher=publisher, org_id=agent_org_id)
             agent_runner = BaseAgent(
                 agent_id=agent_id,
                 agent_name=agent_name,

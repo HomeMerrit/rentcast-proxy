@@ -6,8 +6,14 @@ from typing import Optional
 from ..agents.publisher import AgentEventPublisher
 
 
-def create_a2a_tools(agent_id: str, agent_name: str, publisher: Optional[AgentEventPublisher] = None) -> list:
-    """Create A2A tools with agent context bound via closure."""
+def create_a2a_tools(agent_id: str, agent_name: str, publisher: Optional[AgentEventPublisher] = None, org_id: Optional[str] = None) -> list:
+    """Create A2A tools with agent context bound via closure.
+
+    org_id scopes agent-to-agent delegation to the sender's organization so an
+    agent can never message or trigger another tenant's agents.
+    """
+    import uuid as _uuid
+    _org_uuid = _uuid.UUID(org_id) if org_id else None
 
     @tool
     async def send_to_agent(target_agent_name: str, task: str) -> str:
@@ -21,12 +27,16 @@ def create_a2a_tools(agent_id: str, agent_name: str, publisher: Optional[AgentEv
         from ..workers.celery_app import celery_app
         from sqlalchemy import select
 
+        def _scoped(stmt):
+            # Only ever resolve targets inside the sender's org.
+            return stmt.where(Agent.org_id == _org_uuid) if _org_uuid is not None else stmt
+
         async with AsyncTaskSession() as db:
-            result = await db.execute(select(Agent).where(Agent.name == target_agent_name))
+            result = await db.execute(_scoped(select(Agent).where(Agent.name == target_agent_name)))
             target = result.scalar_one_or_none()
             if not target:
-                # Try partial match
-                result = await db.execute(select(Agent).where(Agent.name.ilike(f"%{target_agent_name}%")))
+                # Try partial match (still org-scoped)
+                result = await db.execute(_scoped(select(Agent).where(Agent.name.ilike(f"%{target_agent_name}%"))))
                 target = result.scalar_one_or_none()
             if not target:
                 return f"Agent '{target_agent_name}' not found. Available agents can be listed via the API."

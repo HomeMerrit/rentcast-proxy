@@ -25,6 +25,7 @@ from app.migrations import run_migrations
 from app.models_db import Organization, Agent, APIKey, User
 from app.tenancy import get_current_org, assert_agent_in_org
 from app.routers import auth as auth_router
+from app.routers import a2a as a2a_router
 
 DB_URL = os.environ["DATABASE_URL"]
 test_engine = create_async_engine(DB_URL, poolclass=NullPool)
@@ -39,6 +40,7 @@ async def _override_get_db():
 def _make_app() -> FastAPI:
     app = FastAPI()
     app.include_router(auth_router.router, prefix="/auth")
+    app.include_router(a2a_router.router)  # A2A card + tasks/send (root prefix)
 
     @app.get("/agents-test/{agent_id}")
     async def read_agent(agent_id: uuid.UUID, db: AsyncSession = Depends(get_db), org: Organization = Depends(get_current_org)):
@@ -132,3 +134,26 @@ async def test_keys_listing_scoped_to_org(client):
     assert ra.status_code == 200
     # Org A sees exactly its own one key, not B's.
     assert len(ra.json()) == 1
+
+
+async def test_a2a_card_and_send_are_org_scoped(client):
+    a = await _signup(client, "Org A", "a@a.com")
+    b = await _signup(client, "Org B", "b@b.com")
+    agent_id = await _seed_agent(a["org_id"], "A-Delegate")
+    rpc = {"jsonrpc": "2.0", "id": "1", "method": "tasks/send",
+           "params": {"message": {"parts": [{"type": "text", "text": "hi"}]}}}
+
+    # No key -> 401 on both the card and tasks/send.
+    assert (await client.get(f"/agents/{agent_id}/card")).status_code == 401
+    assert (await client.post(f"/agents/{agent_id}/a2a", json=rpc)).status_code == 401
+
+    # Org B (wrong tenant) -> 404, never triggers org A's agent.
+    hb = {"Authorization": f"Bearer {b['key']}"}
+    assert (await client.get(f"/agents/{agent_id}/card", headers=hb)).status_code == 404
+    assert (await client.post(f"/agents/{agent_id}/a2a", json=rpc, headers=hb)).status_code == 404
+
+    # Org A can read its own agent's card.
+    ha = {"Authorization": f"Bearer {a['key']}"}
+    rc = await client.get(f"/agents/{agent_id}/card", headers=ha)
+    assert rc.status_code == 200
+    assert rc.json()["name"] == "A-Delegate"

@@ -6,7 +6,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 from ..database import get_db
 from ..models_db import Agent, Organization
-from ..tenancy import get_current_org
+from ..tenancy import get_current_org, assert_agent_in_org
 from ..config import settings
 
 router = APIRouter()
@@ -27,7 +27,7 @@ def _build_agent_card(agent: Agent, base_url: str) -> dict:
             }
             for s in (agent.skills or [])
         ],
-        "authentication": {"schemes": []},
+        "authentication": {"schemes": ["bearer"]},
         "metadata": {
             "department": agent.department,
             "title": agent.title,
@@ -58,10 +58,10 @@ async def platform_agent_card(db: AsyncSession = Depends(get_db), org: Organizat
 
 
 @router.get("/agents/{agent_id}/card")
-async def agent_card(agent_id: UUID, db: AsyncSession = Depends(get_db)):
-    """Individual agent card (A2A discovery)."""
+async def agent_card(agent_id: UUID, db: AsyncSession = Depends(get_db), org: Organization = Depends(get_current_org)):
+    """Individual agent card (A2A discovery), scoped to the caller's org."""
     result = await db.execute(
-        select(Agent).where(Agent.id == agent_id).options(selectinload(Agent.skills))
+        select(Agent).where(Agent.id == agent_id, Agent.org_id == org.id).options(selectinload(Agent.skills))
     )
     agent = result.scalar_one_or_none()
     if not agent:
@@ -72,9 +72,10 @@ async def agent_card(agent_id: UUID, db: AsyncSession = Depends(get_db)):
 
 
 @router.post("/agents/{agent_id}/a2a")
-async def a2a_receive(agent_id: UUID, body: dict, db: AsyncSession = Depends(get_db)):
+async def a2a_receive(agent_id: UUID, body: dict, db: AsyncSession = Depends(get_db), org: Organization = Depends(get_current_org)):
     """
-    A2A JSON-RPC 2.0 endpoint — receives tasks from external agents.
+    A2A JSON-RPC 2.0 endpoint — receives tasks. Requires a valid org key and only
+    triggers agents that belong to the caller's organization.
     Supports: tasks/send
     """
     jsonrpc = body.get("jsonrpc", "2.0")
@@ -88,10 +89,8 @@ async def a2a_receive(agent_id: UUID, body: dict, db: AsyncSession = Depends(get
     if method != "tasks/send":
         return error_response(-32601, f"Method not found: {method}")
 
-    result = await db.execute(select(Agent).where(Agent.id == agent_id))
-    agent = result.scalar_one_or_none()
-    if not agent:
-        return error_response(-32602, "Agent not found")
+    # 404 (via assert) rather than leaking cross-tenant existence.
+    agent = await assert_agent_in_org(agent_id, org, db)
 
     # Extract text from A2A message format
     message = params.get("message", {})
