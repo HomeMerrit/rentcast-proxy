@@ -6,7 +6,8 @@ from sqlalchemy import select, func, desc, case
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import aliased
 from ..database import get_db
-from ..models_db import Agent, WorkLog, EvalResult, AgentComm
+from ..models_db import Agent, WorkLog, EvalResult, AgentComm, Organization
+from ..tenancy import get_current_org
 
 router = APIRouter()
 
@@ -18,15 +19,25 @@ def _rate(success, total):
 
 
 @router.get("/stats/overview")
-async def overview(db: AsyncSession = Depends(get_db)):
-    total_agents = await db.scalar(select(func.count(Agent.id))) or 0
-    active = await db.scalar(select(func.count(Agent.id)).where(Agent.status.in_(ACTIVE))) or 0
-    error = await db.scalar(select(func.count(Agent.id)).where(Agent.status == "error")) or 0
-    tasks = await db.scalar(select(func.coalesce(func.sum(Agent.task_count), 0))) or 0
-    success = await db.scalar(select(func.coalesce(func.sum(Agent.success_count), 0))) or 0
-    cost = await db.scalar(select(func.coalesce(func.sum(WorkLog.cost_usd), 0.0))) or 0.0
-    tokens = await db.scalar(select(func.coalesce(func.sum(WorkLog.tokens_used), 0))) or 0
-    avg_eval = await db.scalar(select(func.avg(EvalResult.score)))
+async def overview(db: AsyncSession = Depends(get_db), org: Organization = Depends(get_current_org)):
+    scoped = Agent.org_id == org.id
+    total_agents = await db.scalar(select(func.count(Agent.id)).where(scoped)) or 0
+    active = await db.scalar(select(func.count(Agent.id)).where(scoped, Agent.status.in_(ACTIVE))) or 0
+    error = await db.scalar(select(func.count(Agent.id)).where(scoped, Agent.status == "error")) or 0
+    tasks = await db.scalar(select(func.coalesce(func.sum(Agent.task_count), 0)).where(scoped)) or 0
+    success = await db.scalar(select(func.coalesce(func.sum(Agent.success_count), 0)).where(scoped)) or 0
+    cost = await db.scalar(
+        select(func.coalesce(func.sum(WorkLog.cost_usd), 0.0))
+        .select_from(WorkLog).join(Agent, Agent.id == WorkLog.agent_id).where(scoped)
+    ) or 0.0
+    tokens = await db.scalar(
+        select(func.coalesce(func.sum(WorkLog.tokens_used), 0))
+        .select_from(WorkLog).join(Agent, Agent.id == WorkLog.agent_id).where(scoped)
+    ) or 0
+    avg_eval = await db.scalar(
+        select(func.avg(EvalResult.score))
+        .select_from(EvalResult).join(Agent, Agent.id == EvalResult.agent_id).where(scoped)
+    )
 
     dept_rows = (
         await db.execute(
@@ -35,7 +46,7 @@ async def overview(db: AsyncSession = Depends(get_db)):
                 func.count(Agent.id),
                 func.coalesce(func.sum(Agent.task_count), 0),
                 func.coalesce(func.sum(Agent.success_count), 0),
-            ).group_by(Agent.department).order_by(desc(func.count(Agent.id)))
+            ).where(scoped).group_by(Agent.department).order_by(desc(func.count(Agent.id)))
         )
     ).all()
     departments = [
@@ -59,7 +70,7 @@ async def overview(db: AsyncSession = Depends(get_db)):
 
 
 @router.get("/stats/agents")
-async def agent_stats(db: AsyncSession = Depends(get_db)):
+async def agent_stats(db: AsyncSession = Depends(get_db), org: Organization = Depends(get_current_org)):
     cost_sub = (
         select(
             WorkLog.agent_id.label("aid"),
@@ -81,6 +92,7 @@ async def agent_stats(db: AsyncSession = Depends(get_db)):
             )
             .outerjoin(cost_sub, cost_sub.c.aid == Agent.id)
             .outerjoin(eval_sub, eval_sub.c.aid == Agent.id)
+            .where(Agent.org_id == org.id)
             .order_by(desc(Agent.task_count))
         )
     ).all()
@@ -108,11 +120,12 @@ async def agent_stats(db: AsyncSession = Depends(get_db)):
 
 
 @router.get("/stats/activity")
-async def activity(limit: int = 40, db: AsyncSession = Depends(get_db)):
+async def activity(limit: int = 40, db: AsyncSession = Depends(get_db), org: Organization = Depends(get_current_org)):
     rows = (
         await db.execute(
             select(WorkLog, Agent.name, Agent.avatar_seed, Agent.avatar_url, Agent.department)
             .join(Agent, Agent.id == WorkLog.agent_id)
+            .where(Agent.org_id == org.id)
             .order_by(desc(WorkLog.started_at))
             .limit(min(limit, 100))
         )
@@ -139,7 +152,7 @@ async def activity(limit: int = 40, db: AsyncSession = Depends(get_db)):
 
 
 @router.get("/stats/timeseries")
-async def timeseries(days: int = 14, db: AsyncSession = Depends(get_db)):
+async def timeseries(days: int = 14, db: AsyncSession = Depends(get_db), org: Organization = Depends(get_current_org)):
     days = max(1, min(days, 90))
     since = datetime.now(timezone.utc) - timedelta(days=days)
     day = func.date_trunc("day", WorkLog.started_at).label("day")
@@ -152,7 +165,8 @@ async def timeseries(days: int = 14, db: AsyncSession = Depends(get_db)):
                 func.coalesce(func.sum(WorkLog.tokens_used), 0).label("tokens"),
                 func.coalesce(func.sum(case((WorkLog.success, 1), else_=0)), 0).label("success"),
             )
-            .where(WorkLog.started_at >= since)
+            .select_from(WorkLog).join(Agent, Agent.id == WorkLog.agent_id)
+            .where(WorkLog.started_at >= since, Agent.org_id == org.id)
             .group_by(day)
             .order_by(day)
         )
@@ -173,11 +187,12 @@ async def timeseries(days: int = 14, db: AsyncSession = Depends(get_db)):
 
 
 @router.get("/stats/network")
-async def network(db: AsyncSession = Depends(get_db)):
+async def network(db: AsyncSession = Depends(get_db), org: Organization = Depends(get_current_org)):
     """Collaboration graph: agent nodes, aggregated inter-agent edges, recent A2A messages."""
-    agents = (await db.execute(select(Agent))).scalars().all()
+    agents = (await db.execute(select(Agent).where(Agent.org_id == org.id))).scalars().all()
+    org_ids = {a.id for a in agents}
 
-    # per-agent comm volume (sent + received, agent-to-agent only)
+    # per-agent comm volume (sent + received, agent-to-agent only, within this org)
     comm_counts: dict[str, int] = {}
     edge_rows = (
         await db.execute(
@@ -187,10 +202,13 @@ async def network(db: AsyncSession = Depends(get_db)):
                 func.count().label("count"),
                 func.max(AgentComm.created_at).label("last_at"),
             )
-            .where(AgentComm.from_agent_id.isnot(None), AgentComm.to_agent_id.isnot(None))
+            .where(
+                AgentComm.from_agent_id.in_(org_ids) if org_ids else False,
+                AgentComm.to_agent_id.in_(org_ids) if org_ids else False,
+            )
             .group_by(AgentComm.from_agent_id, AgentComm.to_agent_id)
         )
-    ).all()
+    ).all() if org_ids else []
 
     edges = []
     for frm, to, count, last_at in edge_rows:
@@ -225,11 +243,14 @@ async def network(db: AsyncSession = Depends(get_db)):
             select(AgentComm, FromA.name, ToA.name)
             .outerjoin(FromA, FromA.id == AgentComm.from_agent_id)
             .outerjoin(ToA, ToA.id == AgentComm.to_agent_id)
-            .where(AgentComm.from_agent_id.isnot(None), AgentComm.to_agent_id.isnot(None))
+            .where(
+                AgentComm.from_agent_id.in_(org_ids),
+                AgentComm.to_agent_id.in_(org_ids),
+            )
             .order_by(desc(AgentComm.created_at))
             .limit(24)
         )
-    ).all()
+    ).all() if org_ids else []
     recent = [{
         "id": str(c.id),
         "from_id": str(c.from_agent_id) if c.from_agent_id else None,

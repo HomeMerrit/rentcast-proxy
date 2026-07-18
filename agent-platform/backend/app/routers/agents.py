@@ -4,9 +4,11 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
+from sqlalchemy.exc import IntegrityError
 import redis.asyncio as aioredis
 from ..database import get_db
-from ..models_db import Agent, AgentSkill
+from ..models_db import Agent, AgentSkill, Organization
+from ..tenancy import get_current_org, assert_agent_in_org
 from ..schemas import (
     AgentOut, AgentCreate, AgentStatusUpdate, RunTaskRequest, RunTaskResponse,
     AgentUpdate, SkillsAdd, SkillItem,
@@ -19,14 +21,17 @@ def redis_client():
     return aioredis.from_url(settings.redis_url, decode_responses=True)
 
 @router.get("/", response_model=list[AgentOut])
-async def list_agents(db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(Agent).options(selectinload(Agent.skills)).order_by(Agent.created_at))
+async def list_agents(db: AsyncSession = Depends(get_db), org: Organization = Depends(get_current_org)):
+    result = await db.execute(
+        select(Agent).where(Agent.org_id == org.id).options(selectinload(Agent.skills)).order_by(Agent.created_at)
+    )
     return result.scalars().all()
 
 @router.get("/{agent_id}", response_model=AgentOut)
-async def get_agent(agent_id: UUID, db: AsyncSession = Depends(get_db)):
+async def get_agent(agent_id: UUID, db: AsyncSession = Depends(get_db), org: Organization = Depends(get_current_org)):
     result = await db.execute(
-        select(Agent).where(Agent.id == agent_id).options(selectinload(Agent.skills), selectinload(Agent.work_log))
+        select(Agent).where(Agent.id == agent_id, Agent.org_id == org.id)
+        .options(selectinload(Agent.skills), selectinload(Agent.work_log))
     )
     agent = result.scalar_one_or_none()
     if not agent:
@@ -34,20 +39,21 @@ async def get_agent(agent_id: UUID, db: AsyncSession = Depends(get_db)):
     return agent
 
 @router.post("/", response_model=AgentOut, status_code=201)
-async def create_agent(body: AgentCreate, db: AsyncSession = Depends(get_db)):
-    agent = Agent(**body.model_dump())
+async def create_agent(body: AgentCreate, db: AsyncSession = Depends(get_db), org: Organization = Depends(get_current_org)):
+    agent = Agent(**body.model_dump(), org_id=org.id)
     db.add(agent)
-    await db.commit()
+    try:
+        await db.commit()
+    except IntegrityError:
+        await db.rollback()
+        raise HTTPException(409, "An agent with that name already exists in your organization")
     await db.refresh(agent)
     return agent
 
 @router.post("/{agent_id}/run", response_model=RunTaskResponse)
-async def run_task(agent_id: UUID, body: RunTaskRequest, db: AsyncSession = Depends(get_db)):
+async def run_task(agent_id: UUID, body: RunTaskRequest, db: AsyncSession = Depends(get_db), org: Organization = Depends(get_current_org)):
     from ..workers.agent_tasks import run_agent_task
-    result = await db.execute(select(Agent).where(Agent.id == agent_id))
-    agent = result.scalar_one_or_none()
-    if not agent:
-        raise HTTPException(404, "Agent not found")
+    agent = await assert_agent_in_org(agent_id, org, db)
 
     task = run_agent_task.delay(
         str(agent_id),
@@ -60,11 +66,8 @@ async def run_task(agent_id: UUID, body: RunTaskRequest, db: AsyncSession = Depe
 
 
 @router.patch("/{agent_id}/status", response_model=AgentOut)
-async def update_status(agent_id: UUID, body: AgentStatusUpdate, db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(Agent).where(Agent.id == agent_id))
-    agent = result.scalar_one_or_none()
-    if not agent:
-        raise HTTPException(404, "Agent not found")
+async def update_status(agent_id: UUID, body: AgentStatusUpdate, db: AsyncSession = Depends(get_db), org: Organization = Depends(get_current_org)):
+    agent = await assert_agent_in_org(agent_id, org, db)
 
     agent.status = body.status
     if body.current_task is not None:
@@ -85,9 +88,9 @@ async def update_status(agent_id: UUID, body: AgentStatusUpdate, db: AsyncSessio
     return agent
 
 
-async def _get_agent_with_skills(agent_id: UUID, db: AsyncSession) -> Agent:
+async def _get_agent_with_skills(agent_id: UUID, org: Organization, db: AsyncSession) -> Agent:
     result = await db.execute(
-        select(Agent).where(Agent.id == agent_id).options(selectinload(Agent.skills))
+        select(Agent).where(Agent.id == agent_id, Agent.org_id == org.id).options(selectinload(Agent.skills))
     )
     agent = result.scalar_one_or_none()
     if not agent:
@@ -96,27 +99,28 @@ async def _get_agent_with_skills(agent_id: UUID, db: AsyncSession) -> Agent:
 
 
 @router.patch("/{agent_id}", response_model=AgentOut)
-async def update_agent(agent_id: UUID, body: AgentUpdate, db: AsyncSession = Depends(get_db)):
-    agent = await _get_agent_with_skills(agent_id, db)
+async def update_agent(agent_id: UUID, body: AgentUpdate, db: AsyncSession = Depends(get_db), org: Organization = Depends(get_current_org)):
+    agent = await _get_agent_with_skills(agent_id, org, db)
     for field, value in body.model_dump(exclude_unset=True).items():
         setattr(agent, field, value)
-    await db.commit()
-    return await _get_agent_with_skills(agent_id, db)
+    try:
+        await db.commit()
+    except IntegrityError:
+        await db.rollback()
+        raise HTTPException(409, "An agent with that name already exists in your organization")
+    return await _get_agent_with_skills(agent_id, org, db)
 
 
 @router.delete("/{agent_id}", status_code=204)
-async def delete_agent(agent_id: UUID, db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(Agent).where(Agent.id == agent_id))
-    agent = result.scalar_one_or_none()
-    if not agent:
-        raise HTTPException(404, "Agent not found")
+async def delete_agent(agent_id: UUID, db: AsyncSession = Depends(get_db), org: Organization = Depends(get_current_org)):
+    agent = await assert_agent_in_org(agent_id, org, db)
     await db.delete(agent)
     await db.commit()
 
 
 @router.post("/{agent_id}/skills", response_model=AgentOut)
-async def add_skills(agent_id: UUID, body: SkillsAdd, db: AsyncSession = Depends(get_db)):
-    agent = await _get_agent_with_skills(agent_id, db)
+async def add_skills(agent_id: UUID, body: SkillsAdd, db: AsyncSession = Depends(get_db), org: Organization = Depends(get_current_org)):
+    agent = await _get_agent_with_skills(agent_id, org, db)
     existing = {s.skill.lower() for s in agent.skills}
     for item in body.skills:
         if isinstance(item, str):
@@ -137,7 +141,9 @@ async def add_skills(agent_id: UUID, body: SkillsAdd, db: AsyncSession = Depends
 
 
 @router.delete("/{agent_id}/skills/{skill_id}", status_code=204)
-async def delete_skill(agent_id: UUID, skill_id: UUID, db: AsyncSession = Depends(get_db)):
+async def delete_skill(agent_id: UUID, skill_id: UUID, db: AsyncSession = Depends(get_db), org: Organization = Depends(get_current_org)):
+    # Confirm the agent is in the caller's org before touching its skills.
+    await assert_agent_in_org(agent_id, org, db)
     result = await db.execute(
         select(AgentSkill).where(AgentSkill.id == skill_id, AgentSkill.agent_id == agent_id)
     )

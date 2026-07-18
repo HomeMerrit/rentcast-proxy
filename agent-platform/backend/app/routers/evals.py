@@ -3,14 +3,16 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
 from ..database import get_db
-from ..models_db import EvalResult, AgentConfig, Agent
+from ..models_db import EvalResult, AgentConfig, Agent, Organization
+from ..tenancy import get_current_org, assert_agent_in_org
 from ..schemas import EvalResultOut
 
 router = APIRouter()
 
 
 @router.get("/{agent_id}/evals", response_model=list[EvalResultOut])
-async def list_evals(agent_id: UUID, limit: int = 20, db: AsyncSession = Depends(get_db)):
+async def list_evals(agent_id: UUID, limit: int = 20, db: AsyncSession = Depends(get_db), org: Organization = Depends(get_current_org)):
+    await assert_agent_in_org(agent_id, org, db)
     r = await db.execute(
         select(EvalResult).where(EvalResult.agent_id == agent_id)
         .order_by(EvalResult.created_at.desc()).limit(limit)
@@ -19,7 +21,8 @@ async def list_evals(agent_id: UUID, limit: int = 20, db: AsyncSession = Depends
 
 
 @router.get("/{agent_id}/evals/summary")
-async def eval_summary(agent_id: UUID, db: AsyncSession = Depends(get_db)):
+async def eval_summary(agent_id: UUID, db: AsyncSession = Depends(get_db), org: Organization = Depends(get_current_org)):
+    await assert_agent_in_org(agent_id, org, db)
     r = await db.execute(
         select(
             func.avg(EvalResult.score).label("avg_score"),
@@ -45,7 +48,8 @@ async def eval_summary(agent_id: UUID, db: AsyncSession = Depends(get_db)):
 
 
 @router.get("/{agent_id}/config")
-async def get_agent_config(agent_id: UUID, db: AsyncSession = Depends(get_db)):
+async def get_agent_config(agent_id: UUID, db: AsyncSession = Depends(get_db), org: Organization = Depends(get_current_org)):
+    await assert_agent_in_org(agent_id, org, db)
     r = await db.execute(
         select(AgentConfig).where(
             AgentConfig.agent_id == agent_id,
@@ -67,11 +71,8 @@ async def get_agent_config(agent_id: UUID, db: AsyncSession = Depends(get_db)):
 
 
 @router.post("/{agent_id}/evolve")
-async def trigger_evolution(agent_id: UUID, db: AsyncSession = Depends(get_db)):
-    r = await db.execute(select(Agent).where(Agent.id == agent_id))
-    agent = r.scalar_one_or_none()
-    if not agent:
-        raise HTTPException(404, "Agent not found")
+async def trigger_evolution(agent_id: UUID, db: AsyncSession = Depends(get_db), org: Organization = Depends(get_current_org)):
+    agent = await assert_agent_in_org(agent_id, org, db)
     from ..workers.agent_tasks import run_evolution_for_agent
     run_evolution_for_agent.delay(str(agent_id), agent.name, agent.title)
     return {"status": "evolution_triggered", "agent_id": str(agent_id)}

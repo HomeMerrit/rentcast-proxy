@@ -6,7 +6,7 @@ from fastapi.responses import JSONResponse
 from .routers import agents, stream, comms, work_log, memory, a2a, evals, skills, company, stats
 from .routers import auth as auth_router
 from .database import engine, Base
-from .models_db import EvalResult, AgentConfig, APIKey, Company, Document  # noqa: F401
+from .models_db import EvalResult, AgentConfig, APIKey, Company, Document, Organization, User  # noqa: F401
 from .migrations import run_migrations
 from .config import settings
 import logging

@@ -5,7 +5,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 from ..database import get_db
-from ..models_db import Agent
+from ..models_db import Agent, Organization
+from ..tenancy import get_current_org
 from ..config import settings
 
 router = APIRouter()
@@ -37,10 +38,10 @@ def _build_agent_card(agent: Agent, base_url: str) -> dict:
 
 
 @router.get("/.well-known/agent-card.json")
-async def platform_agent_card(db: AsyncSession = Depends(get_db)):
-    """Platform-level A2A agent card listing all agents."""
+async def platform_agent_card(db: AsyncSession = Depends(get_db), org: Organization = Depends(get_current_org)):
+    """Platform-level A2A agent card listing this org's agents (scoped to the caller's tenant)."""
     result = await db.execute(
-        select(Agent).options(selectinload(Agent.skills)).order_by(Agent.created_at)
+        select(Agent).where(Agent.org_id == org.id).options(selectinload(Agent.skills)).order_by(Agent.created_at)
     )
     agents = result.scalars().all()
     import os

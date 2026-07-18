@@ -1,14 +1,39 @@
 import uuid
 from datetime import datetime
-from sqlalchemy import String, Integer, Boolean, Text, ForeignKey, DateTime, JSON, Float, Column, func
+from sqlalchemy import String, Integer, Boolean, Text, ForeignKey, DateTime, JSON, Float, Column, func, UniqueConstraint
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .database import Base
 
+
+class Organization(Base):
+    """A tenant. Every agent, company, document and API key belongs to exactly one org."""
+    __tablename__ = "organizations"
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    name: Mapped[str] = mapped_column(String, nullable=False)
+    slug: Mapped[str | None] = mapped_column(String, unique=True, nullable=True)
+    plan: Mapped[str] = mapped_column(String, default="pilot")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.utcnow)
+
+
+class User(Base):
+    """A member of an organization. Authenticates via an org-scoped API key."""
+    __tablename__ = "users"
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    org_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("organizations.id", ondelete="CASCADE"), nullable=False)
+    email: Mapped[str] = mapped_column(String, unique=True, nullable=False, index=True)
+    name: Mapped[str | None] = mapped_column(String, nullable=True)
+    role: Mapped[str] = mapped_column(String, default="owner")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.utcnow)
+
+
 class Agent(Base):
     __tablename__ = "agents"
+    # Agent names are unique per organization, not globally (two tenants may both have a "Maya").
+    __table_args__ = (UniqueConstraint("org_id", "name", name="uq_agents_org_name"),)
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    name: Mapped[str] = mapped_column(String, unique=True, nullable=False)
+    org_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), ForeignKey("organizations.id", ondelete="CASCADE"), nullable=True, index=True)
+    name: Mapped[str] = mapped_column(String, nullable=False)
     title: Mapped[str] = mapped_column(String, nullable=False)
     department: Mapped[str] = mapped_column(String, nullable=False)
     bio: Mapped[str | None] = mapped_column(Text)
@@ -101,6 +126,7 @@ class AgentConfig(Base):
 class APIKey(Base):
     __tablename__ = "api_keys"
     id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    org_id = Column(UUID(as_uuid=True), ForeignKey("organizations.id", ondelete="CASCADE"), nullable=True, index=True)
     name = Column(String, nullable=False)
     key_hash = Column(String, unique=True, nullable=False, index=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
@@ -111,6 +137,7 @@ class APIKey(Base):
 class Company(Base):
     __tablename__ = "companies"
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    org_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), ForeignKey("organizations.id", ondelete="CASCADE"), nullable=True, index=True)
     name: Mapped[str] = mapped_column(String, nullable=False)
     industry: Mapped[str | None] = mapped_column(String, nullable=True)
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
@@ -124,6 +151,7 @@ class Company(Base):
 class Document(Base):
     __tablename__ = "documents"
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    org_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), ForeignKey("organizations.id", ondelete="CASCADE"), nullable=True, index=True)
     company_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), ForeignKey("companies.id", ondelete="CASCADE"), nullable=True)
     agent_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), ForeignKey("agents.id", ondelete="SET NULL"), nullable=True)
     filename: Mapped[str] = mapped_column(String, nullable=False)

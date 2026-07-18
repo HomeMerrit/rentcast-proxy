@@ -15,6 +15,10 @@ class Settings(BaseSettings):
     enable_rate_limit: bool = False
     # Comma-separated extra CORS origins (in addition to localhost + *.up.railway.app)
     cors_origins: str = ""
+    # Default organization used to scope data when auth is disabled (pilots/dev) and to
+    # backfill pre-tenancy rows. Every tenant-owned row belongs to exactly one org.
+    default_org_id: str = "00000000-0000-0000-0000-000000000001"
+    default_org_name: str = "Default workspace"
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 

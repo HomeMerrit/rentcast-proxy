@@ -4,11 +4,20 @@ from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from ..database import get_db
-from ..models_db import Company, Document
+from ..models_db import Company, Document, Organization
+from ..tenancy import get_current_org
 from ..schemas import CompanyCreate, CompanyUpdate, CompanyOut, DocumentOut
 from ..memory.manager import memory_manager
 
 router = APIRouter()
+
+
+async def _get_company_in_org(company_id: UUID, org: Organization, db: AsyncSession) -> Company:
+    result = await db.execute(select(Company).where(Company.id == company_id, Company.org_id == org.id))
+    company = result.scalar_one_or_none()
+    if not company:
+        raise HTTPException(404, "Company not found")
+    return company
 
 CHUNK_SIZE = 1000
 
@@ -31,8 +40,8 @@ def _chunk_text(text: str, size: int = CHUNK_SIZE) -> list[str]:
 
 
 @router.post("/company", response_model=CompanyOut, status_code=201)
-async def create_company(body: CompanyCreate, db: AsyncSession = Depends(get_db)):
-    company = Company(**body.model_dump())
+async def create_company(body: CompanyCreate, db: AsyncSession = Depends(get_db), org: Organization = Depends(get_current_org)):
+    company = Company(**body.model_dump(), org_id=org.id)
     db.add(company)
     await db.commit()
     await db.refresh(company)
@@ -40,26 +49,19 @@ async def create_company(body: CompanyCreate, db: AsyncSession = Depends(get_db)
 
 
 @router.get("/company", response_model=list[CompanyOut])
-async def list_companies(db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(Company).order_by(Company.created_at))
+async def list_companies(db: AsyncSession = Depends(get_db), org: Organization = Depends(get_current_org)):
+    result = await db.execute(select(Company).where(Company.org_id == org.id).order_by(Company.created_at))
     return result.scalars().all()
 
 
 @router.get("/company/{company_id}", response_model=CompanyOut)
-async def get_company(company_id: UUID, db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(Company).where(Company.id == company_id))
-    company = result.scalar_one_or_none()
-    if not company:
-        raise HTTPException(404, "Company not found")
-    return company
+async def get_company(company_id: UUID, db: AsyncSession = Depends(get_db), org: Organization = Depends(get_current_org)):
+    return await _get_company_in_org(company_id, org, db)
 
 
 @router.patch("/company/{company_id}", response_model=CompanyOut)
-async def update_company(company_id: UUID, body: CompanyUpdate, db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(Company).where(Company.id == company_id))
-    company = result.scalar_one_or_none()
-    if not company:
-        raise HTTPException(404, "Company not found")
+async def update_company(company_id: UUID, body: CompanyUpdate, db: AsyncSession = Depends(get_db), org: Organization = Depends(get_current_org)):
+    company = await _get_company_in_org(company_id, org, db)
     for field, value in body.model_dump(exclude_unset=True).items():
         setattr(company, field, value)
     await db.commit()
@@ -72,11 +74,9 @@ async def upload_documents(
     company_id: UUID,
     files: list[UploadFile] = File(...),
     db: AsyncSession = Depends(get_db),
+    org: Organization = Depends(get_current_org),
 ):
-    result = await db.execute(select(Company).where(Company.id == company_id))
-    company = result.scalar_one_or_none()
-    if not company:
-        raise HTTPException(404, "Company not found")
+    company = await _get_company_in_org(company_id, org, db)
 
     created: list[Document] = []
     namespace = str(company_id)
@@ -107,6 +107,7 @@ async def upload_documents(
             status = "stored"
 
         doc = Document(
+            org_id=org.id,
             company_id=company_id,
             filename=filename,
             content_type=content_type,
@@ -124,8 +125,9 @@ async def upload_documents(
 
 
 @router.get("/company/{company_id}/documents", response_model=list[DocumentOut])
-async def list_documents(company_id: UUID, db: AsyncSession = Depends(get_db)):
+async def list_documents(company_id: UUID, db: AsyncSession = Depends(get_db), org: Organization = Depends(get_current_org)):
+    await _get_company_in_org(company_id, org, db)
     result = await db.execute(
-        select(Document).where(Document.company_id == company_id).order_by(Document.created_at)
+        select(Document).where(Document.company_id == company_id, Document.org_id == org.id).order_by(Document.created_at)
     )
     return result.scalars().all()
