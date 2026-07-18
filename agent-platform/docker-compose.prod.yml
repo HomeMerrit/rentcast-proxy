@@ -47,8 +47,9 @@ services:
       QDRANT_PORT: 6333
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
       ENVIRONMENT: production
-      REQUIRE_AUTH: ${REQUIRE_AUTH:-false}
-      ENABLE_RATE_LIMIT: ${ENABLE_RATE_LIMIT:-false}
+      REQUIRE_AUTH: ${REQUIRE_AUTH:-true}
+      ENABLE_RATE_LIMIT: ${ENABLE_RATE_LIMIT:-true}
+      RATE_LIMIT_PER_MINUTE: ${RATE_LIMIT_PER_MINUTE:-120}
       LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
       LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
       LANGFUSE_HOST: ${LANGFUSE_HOST:-https://cloud.langfuse.com}
@@ -107,7 +108,7 @@ services:
     restart: unless-stopped
     environment:
       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://backend:8000}
-      NEXT_PUBLIC_REQUIRE_AUTH: ${NEXT_PUBLIC_REQUIRE_AUTH:-false}
+      NEXT_PUBLIC_REQUIRE_AUTH: ${NEXT_PUBLIC_REQUIRE_AUTH:-true}
     ports:
       - "3000:3000"
     depends_on:

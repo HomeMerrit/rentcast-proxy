@@ -26,7 +26,18 @@ async def lifespan(app: FastAPI):
         logger.info("Auth is ENABLED — all endpoints require a valid API key")
     else:
         logger.info("Auth is DISABLED — set REQUIRE_AUTH=true in production")
+    # Rate limiter: one shared Redis client, only when enabled.
+    app.state.limiter_redis = None
+    if settings.enable_rate_limit:
+        try:
+            import redis.asyncio as aioredis
+            app.state.limiter_redis = aioredis.from_url(settings.redis_url, decode_responses=True)
+            logger.info("Rate limiting ENABLED — %s req/min per key", settings.rate_limit_per_minute)
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("Rate limiter init failed (continuing without it): %s", exc)
     yield
+    if app.state.limiter_redis is not None:
+        await app.state.limiter_redis.aclose()
 
 app = FastAPI(title="AgentOS API", version="0.1.0", lifespan=lifespan)
 
@@ -36,6 +47,10 @@ async def request_id_middleware(request: Request, call_next):
     response = await call_next(request)
     response.headers["X-Request-ID"] = request_id
     return response
+
+# Per-key rate limiting (no-op unless ENABLE_RATE_LIMIT=true).
+from .rate_limit import rate_limit_middleware  # noqa: E402
+app.middleware("http")(rate_limit_middleware)
 
 _cors_origins = ["http://localhost:3000", "http://localhost:3001"]
 if settings.cors_origins:

@@ -11,6 +11,14 @@ async def execute_python(code: str) -> str:
     """Execute Python code and return the output. Use for data analysis, calculations, etc."""
     if settings.e2b_api_key:
         return await _run_e2b(code)
+    # No sandbox configured. The raw-subprocess fallback runs UNSANDBOXED code, so it
+    # is only ever allowed outside production. In production we refuse rather than
+    # execute untrusted agent-generated code on the host.
+    if settings.environment == "production":
+        return (
+            "Code execution is unavailable: no secure sandbox is configured. "
+            "An administrator must set E2B_API_KEY to enable sandboxed execution."
+        )
     return await _run_subprocess(code)
 
 

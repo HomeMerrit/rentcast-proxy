@@ -13,6 +13,11 @@ class Settings(BaseSettings):
     langfuse_host: str = "https://cloud.langfuse.com"
     require_auth: bool = False
     enable_rate_limit: bool = False
+    # Fixed-window request budget per API key (or per client IP when unauthenticated).
+    rate_limit_per_minute: int = 120
+    # Document upload guards.
+    max_upload_mb: int = 8
+    max_upload_files: int = 25
     # Comma-separated extra CORS origins (in addition to localhost + *.up.railway.app)
     cors_origins: str = ""
     # Default organization used to scope data when auth is disabled (pilots/dev) and to

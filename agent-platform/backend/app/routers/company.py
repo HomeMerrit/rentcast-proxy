@@ -8,6 +8,7 @@ from ..models_db import Company, Document, Organization
 from ..tenancy import get_current_org
 from ..schemas import CompanyCreate, CompanyUpdate, CompanyOut, DocumentOut
 from ..memory.manager import memory_manager
+from ..config import settings
 
 router = APIRouter()
 
@@ -78,12 +79,18 @@ async def upload_documents(
 ):
     company = await _get_company_in_org(company_id, org, db)
 
+    if len(files) > settings.max_upload_files:
+        raise HTTPException(413, f"Too many files at once (max {settings.max_upload_files}).")
+
     created: list[Document] = []
     namespace = str(company_id)
+    max_bytes = settings.max_upload_mb * 1024 * 1024
 
     for upload in files:
         raw = await upload.read()
         size_bytes = len(raw)
+        if size_bytes > max_bytes:
+            raise HTTPException(413, f"'{upload.filename or 'file'}' exceeds the {settings.max_upload_mb}MB limit.")
         content_type = upload.content_type
         filename = upload.filename or "untitled"
 
