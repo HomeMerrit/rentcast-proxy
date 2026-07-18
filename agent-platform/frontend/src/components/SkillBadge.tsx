@@ -11,9 +11,9 @@ export function SkillBadge({ skill }: Props) {
     skill.proficiency >= 60 ? "Intermediate" : "Learning";
 
   const barColor =
-    skill.proficiency >= 90 ? "bg-emerald-500" :
+    skill.proficiency >= 90 ? "bg-positive" :
     skill.proficiency >= 75 ? "bg-iris-400" :
-    skill.proficiency >= 60 ? "bg-amber-400" : "bg-content-muted";
+    skill.proficiency >= 60 ? "bg-warning" : "bg-content-muted";
 
   return (
     <div className="bg-surface border border-line rounded-lg p-3 space-y-2">

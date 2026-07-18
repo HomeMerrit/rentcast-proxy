@@ -2,10 +2,10 @@ import { cn } from "@/lib/utils";
 import type { AgentStatus } from "@/types/agent";
 
 const STATUS_CONFIG: Record<AgentStatus, { color: string; pulse: boolean; label: string }> = {
-  active: { color: "bg-emerald-500", pulse: true, label: "Active" },
-  thinking: { color: "bg-amber-400", pulse: true, label: "Thinking" },
+  active: { color: "bg-positive", pulse: true, label: "Active" },
+  thinking: { color: "bg-warning", pulse: true, label: "Thinking" },
   idle: { color: "bg-content-muted", pulse: false, label: "Idle" },
-  error: { color: "bg-red-500", pulse: false, label: "Error" },
+  error: { color: "bg-danger", pulse: false, label: "Error" },
   offline: { color: "bg-content-subtle", pulse: false, label: "Offline" },
 };
 

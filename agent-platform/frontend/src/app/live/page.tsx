@@ -1,12 +1,13 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { Plus, Radio, Play, Wrench, CheckCircle2, AlertTriangle, Zap } from "lucide-react";
+import { Plus, Radio, Briefcase, Wrench, CheckCircle2, AlertTriangle, Zap } from "lucide-react";
 import { Logo } from "@/components/brand/Logo";
 import HumanInbox from "@/components/HumanInbox";
 import { AgentAvatar } from "@/components/AgentAvatar";
 import { StatusDot } from "@/components/StatusDot";
-import { Card, Badge, Button, Select } from "@/components/ui";
+import { RunTaskDialog } from "@/components/RunTaskDialog";
+import { Card, Button, Select } from "@/components/ui";
 import { useFleetStream } from "@/lib/ag-ui";
 import { api } from "@/lib/api";
 import { cn } from "@/lib/utils";
@@ -33,8 +34,7 @@ function describe(e: AGUIEvent): { text: string; tone: string } {
 export default function LivePage() {
   const [agents, setAgents] = useState<Agent[]>([]);
   const [runAgent, setRunAgent] = useState("");
-  const [runType, setRunType] = useState("research");
-  const [running, setRunning] = useState(false);
+  const [jobOpen, setJobOpen] = useState(false);
   const fleet = useFleetStream();
 
   useEffect(() => {
@@ -52,18 +52,6 @@ export default function LivePage() {
   }, [agents, fleet.agents]);
 
   const liveCount = Object.values(fleet.agents).filter((a) => a.status === "active" || a.status === "thinking").length;
-
-  const runTask = async () => {
-    if (!runAgent) return;
-    setRunning(true);
-    try {
-      await api.agents.run(runAgent, runType, { prompt: `Perform a ${runType} task and summarize the result.` });
-    } catch {
-      /* surfaced via stream / ignore */
-    } finally {
-      setTimeout(() => setRunning(false), 800);
-    }
-  };
 
   const namedEvents = fleet.events
     .filter((e) => describe(e).text)
@@ -112,17 +100,25 @@ export default function LivePage() {
                 {agents.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}
               </Select>
             </div>
-            <input
-              value={runType}
-              onChange={(e) => setRunType(e.target.value)}
-              className="h-9 w-28 rounded-xl border border-line bg-surface-inset px-3 text-sm text-content outline-none focus:border-iris-400/50"
-              placeholder="task type"
-            />
-            <Button size="md" onClick={runTask} loading={running} disabled={!runAgent} icon={<Play className="h-4 w-4" />}>
-              Run
+            <Button
+              size="md"
+              onClick={() => runAgent && setJobOpen(true)}
+              disabled={!runAgent}
+              icon={<Briefcase className="h-4 w-4" />}
+            >
+              Give a job
             </Button>
           </div>
         </div>
+
+        {runAgent && (
+          <RunTaskDialog
+            agentId={runAgent}
+            agentName={nameFor(runAgent)}
+            open={jobOpen}
+            onClose={() => setJobOpen(false)}
+          />
+        )}
 
         <div className="grid gap-3 lg:grid-cols-[1fr_320px]">
           {/* agent tiles */}

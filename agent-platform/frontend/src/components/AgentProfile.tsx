@@ -1,9 +1,11 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
+import { Zap, Check } from "lucide-react";
 import { AgentAvatar } from "./AgentAvatar";
 import { SkillBadge } from "./SkillBadge";
 import { WorkLogFeed } from "./WorkLogFeed";
 import { StatusDot } from "./StatusDot";
+import { RunTaskDialog } from "./RunTaskDialog";
 import { useAgentStream } from "@/lib/ag-ui";
 import { successRate } from "@/lib/utils";
 import { api } from "@/lib/api";
@@ -14,19 +16,19 @@ interface Props {
   agent: Agent;
 }
 
-// ── Color maps for event log ──────────────────────────────────────────────────
+// ── Color maps for event log (warm brand tokens only) ─────────────────────────
 
 const EVENT_TEXT: Partial<Record<AGUIEventType, string>> = {
   RUN_STARTED: "text-aqua-400",
-  RUN_FINISHED: "text-emerald-400",
+  RUN_FINISHED: "text-positive",
   RUN_ERROR: "text-danger",
-  TEXT_MESSAGE_START: "text-emerald-300",
-  TEXT_MESSAGE_CONTENT: "text-emerald-300",
-  TEXT_MESSAGE_END: "text-emerald-300",
-  TOOL_CALL_START: "text-amber-400",
-  TOOL_CALL_ARGS: "text-amber-300",
-  TOOL_CALL_END: "text-amber-400",
-  TOOL_CALL_RESULT: "text-cyan-500",
+  TEXT_MESSAGE_START: "text-positive",
+  TEXT_MESSAGE_CONTENT: "text-positive",
+  TEXT_MESSAGE_END: "text-positive",
+  TOOL_CALL_START: "text-warning",
+  TOOL_CALL_ARGS: "text-warning",
+  TOOL_CALL_END: "text-warning",
+  TOOL_CALL_RESULT: "text-aqua",
   STATE_SNAPSHOT: "text-content-muted",
   STATE_DELTA: "text-content-muted",
   CUSTOM: "text-iris-400",
@@ -121,8 +123,8 @@ function MemoriesPanel({ agentId }: { agentId: string }) {
       {/* Search */}
       <input
         type="text"
-        placeholder="Search memories semantically..."
-        className="w-full rounded-lg border border-line dark:border-line-strong bg-white dark:bg-surface-inset px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-iris-400"
+        placeholder="Search memories…"
+        className="w-full rounded-lg border border-line bg-surface-inset px-3 py-2 text-sm text-content placeholder:text-content-subtle outline-none focus:border-iris-400/60"
         value={search}
         onChange={(e) => {
           setSearch(e.target.value);
@@ -132,7 +134,7 @@ function MemoriesPanel({ agentId }: { agentId: string }) {
 
       {/* Memory list */}
       {loading ? (
-        <p className="text-sm text-content-muted">Loading memories...</p>
+        <p className="text-sm text-content-muted">Loading memories…</p>
       ) : memories.length === 0 ? (
         <p className="text-sm text-content-muted">
           No memories yet. Memories are stored automatically after each task.
@@ -142,27 +144,23 @@ function MemoriesPanel({ agentId }: { agentId: string }) {
           {memories.map((m) => (
             <div
               key={m.id}
-              className="flex gap-3 rounded-lg border border-line dark:border-line-strong p-3"
+              className="flex gap-3 rounded-lg border border-line bg-surface-inset p-3"
             >
-              <div className="flex-1 min-w-0">
-                <p className="text-sm text-content dark:text-content leading-relaxed">
-                  {m.content}
-                </p>
+              <div className="min-w-0 flex-1">
+                <p className="text-sm leading-relaxed text-content">{m.content}</p>
                 <div className="mt-1 flex gap-2 text-xs text-content-muted">
                   {m.task_type && (
-                    <span className="rounded-full bg-surface-inset dark:bg-surface-inset px-2 py-0.5">
+                    <span className="rounded-full bg-content/[0.05] px-2 py-0.5">
                       {m.task_type}
                     </span>
                   )}
-                  {m.score !== undefined && (
-                    <span>score: {m.score.toFixed(2)}</span>
-                  )}
+                  {m.score !== undefined && <span>score: {m.score.toFixed(2)}</span>}
                   <span>{new Date(m.created_at).toLocaleDateString()}</span>
                 </div>
               </div>
               <button
                 onClick={() => handleDelete(m.id)}
-                className="shrink-0 text-content hover:text-danger transition-colors text-sm"
+                className="shrink-0 text-content-subtle transition-colors hover:text-danger"
                 title="Delete memory"
               >
                 ×
@@ -180,10 +178,10 @@ function MemoriesPanel({ agentId }: { agentId: string }) {
 function ScoreBadge({ score }: { score: number }) {
   const color =
     score >= 80
-      ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
+      ? "bg-positive-soft text-positive"
       : score >= 60
-      ? "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400"
-      : "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-danger";
+      ? "bg-warning-soft text-warning"
+      : "bg-danger-soft text-danger";
   return (
     <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${color}`}>
       {score}/100
@@ -222,48 +220,62 @@ function EvalPanel({ agentId }: { agentId: string }) {
     setTimeout(() => setEvolved(false), 4000);
   };
 
-  if (loading) return <p className="text-sm text-content-muted">Loading evals...</p>;
+  if (loading) return <p className="text-sm text-content-muted">Loading evals…</p>;
+
+  const trendTone =
+    summary && summary.avg_score >= 80
+      ? "bg-positive"
+      : summary && summary.avg_score >= 60
+      ? "bg-warning"
+      : "bg-danger";
+  const trendLabel =
+    summary && summary.avg_score >= 80
+      ? "Strong"
+      : summary && summary.avg_score >= 60
+      ? "Improving"
+      : "Needs work";
 
   return (
     <div className="space-y-4">
       {/* Summary stats */}
       {summary && summary.total_evals > 0 && (
         <div className="grid grid-cols-3 gap-3">
-          <div className="rounded-lg border border-line dark:border-line-strong p-3 text-center">
-            <div className="text-2xl font-bold text-content dark:text-white">{summary.avg_score}</div>
-            <div className="text-xs text-content-subtle mt-0.5">Avg Score</div>
+          <div className="rounded-lg border border-line p-3 text-center">
+            <div className="font-display text-2xl font-semibold text-content">{summary.avg_score}</div>
+            <div className="mt-0.5 text-xs text-content-subtle">Avg score</div>
           </div>
-          <div className="rounded-lg border border-line dark:border-line-strong p-3 text-center">
-            <div className="text-2xl font-bold text-content dark:text-white">{summary.total_evals}</div>
-            <div className="text-xs text-content-subtle mt-0.5">Total Evals</div>
+          <div className="rounded-lg border border-line p-3 text-center">
+            <div className="font-display text-2xl font-semibold text-content">{summary.total_evals}</div>
+            <div className="mt-0.5 text-xs text-content-subtle">Total evals</div>
           </div>
-          <div className="rounded-lg border border-line dark:border-line-strong p-3 text-center">
-            <div className="text-2xl font-bold" style={{ color: summary.avg_score >= 80 ? '#4E9E63' : summary.avg_score >= 60 ? '#E6AE3C' : '#E8705C' }}>
-              {summary.avg_score >= 80 ? '🟢' : summary.avg_score >= 60 ? '🟡' : '🔴'}
-            </div>
-            <div className="text-xs text-content-subtle mt-0.5">Trend</div>
+          <div className="flex flex-col items-center justify-center rounded-lg border border-line p-3 text-center">
+            <span className="inline-flex items-center gap-1.5 text-sm font-medium text-content">
+              <span className={`h-2 w-2 rounded-full ${trendTone}`} />
+              {trendLabel}
+            </span>
+            <div className="mt-0.5 text-xs text-content-subtle">Trend</div>
           </div>
         </div>
       )}
 
       {/* Evolution status */}
       {config && config.generation > 0 && (
-        <div className="rounded-lg bg-iris-50 dark:bg-iris-900/30 border border-iris-200 dark:border-iris-800 p-3">
+        <div className="rounded-lg border border-iris-200 bg-iris-50 p-3">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs font-medium text-iris-600 dark:text-iris-300">
-                System Prompt · Generation {config.generation}
+              <p className="text-xs font-medium text-iris-600">
+                System prompt · Generation {config.generation}
               </p>
               {config.eval_score && (
-                <p className="text-xs text-iris-400 mt-0.5">Triggered at avg score: {config.eval_score.toFixed(1)}</p>
+                <p className="mt-0.5 text-xs text-iris-500">
+                  Triggered at avg score: {config.eval_score.toFixed(1)}
+                </p>
               )}
             </div>
-            <span className="text-xs bg-iris-100 dark:bg-iris-900/40 text-iris-600 dark:text-iris-300 rounded-full px-2 py-0.5">
-              Evolved
-            </span>
+            <span className="rounded-full bg-iris-100 px-2 py-0.5 text-xs text-iris-600">Evolved</span>
           </div>
           {config.value && (
-            <p className="mt-2 text-xs text-iris-500 dark:text-iris-400 italic line-clamp-2">{config.value}</p>
+            <p className="mt-2 line-clamp-2 text-xs italic text-iris-500">{config.value}</p>
           )}
         </div>
       )}
@@ -272,9 +284,15 @@ function EvalPanel({ agentId }: { agentId: string }) {
       <button
         onClick={handleEvolve}
         disabled={evolving}
-        className="w-full rounded-lg border border-iris-300 dark:border-iris-700 py-2 text-sm font-medium text-iris-600 dark:text-iris-400 hover:bg-iris-50 dark:hover:bg-iris-900/30 disabled:opacity-50 transition-colors"
+        className="inline-flex w-full items-center justify-center gap-1.5 rounded-lg border border-iris-300 py-2 text-sm font-medium text-iris-600 transition-colors hover:bg-iris-50 disabled:opacity-50"
       >
-        {evolved ? '✓ Evolution triggered!' : evolving ? 'Triggering...' : '⚡ Evolve Agent Prompt'}
+        {evolved ? (
+          <><Check className="h-4 w-4" /> Evolution triggered</>
+        ) : evolving ? (
+          "Triggering…"
+        ) : (
+          <><Zap className="h-4 w-4" /> Evolve agent prompt</>
+        )}
       </button>
 
       {/* Recent evals list */}
@@ -285,21 +303,21 @@ function EvalPanel({ agentId }: { agentId: string }) {
       ) : (
         <div className="space-y-2">
           {evals.map((e) => (
-            <div key={e.id} className="rounded-lg border border-line dark:border-line-strong p-3">
+            <div key={e.id} className="rounded-lg border border-line p-3">
               <div className="flex items-start justify-between gap-2">
-                <div className="flex-1 min-w-0">
+                <div className="min-w-0 flex-1">
                   {e.reasoning && (
-                    <p className="text-sm text-content-subtle dark:text-content leading-relaxed">{e.reasoning}</p>
+                    <p className="text-sm leading-relaxed text-content-muted">{e.reasoning}</p>
                   )}
                   {Object.keys(e.skill_updates).length > 0 && (
                     <div className="mt-1.5 flex flex-wrap gap-1">
                       {Object.entries(e.skill_updates).map(([skill, delta]) => (
                         <span
                           key={skill}
-                          className={`text-xs rounded-full px-2 py-0.5 ${
+                          className={`rounded-full px-2 py-0.5 text-xs ${
                             delta > 0
-                              ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
-                              : "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-danger"
+                              ? "bg-positive-soft text-positive"
+                              : "bg-danger-soft text-danger"
                           }`}
                         >
                           {skill} {delta > 0 ? `+${delta}` : delta}
@@ -308,7 +326,7 @@ function EvalPanel({ agentId }: { agentId: string }) {
                     </div>
                   )}
                 </div>
-                <div className="shrink-0 flex flex-col items-end gap-1">
+                <div className="flex shrink-0 flex-col items-end gap-1">
                   <ScoreBadge score={e.score} />
                   <span className="text-xs text-content-muted">
                     {new Date(e.created_at).toLocaleDateString()}
@@ -350,71 +368,22 @@ export function AgentProfile({ agent }: Props) {
     api.evals.summary(agent.id).then(setEvalSummary).catch(() => {});
   }, [agent.id]);
 
-  // Run Task form
-  const [showForm, setShowForm] = useState(false);
-  const [taskType, setTaskType] = useState("");
-  const [taskInput, setTaskInput] = useState('{"topic": ""}');
-  const [submitting, setSubmitting] = useState(false);
-  const [queued, setQueued] = useState(false);
-  const [runError, setRunError] = useState<string | null>(null);
-
-  const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Give-a-job dialog
+  const [runOpen, setRunOpen] = useState(false);
 
   // Recent events: last 20, newest first
   const recentEvents = [...events].reverse().slice(0, 20);
 
   const isAgentBusy = liveStatus === "active" || liveStatus === "thinking";
 
-  function openForm() {
-    setShowForm(true);
-    setRunError(null);
-  }
-  function closeForm() {
-    setShowForm(false);
-    setRunError(null);
-  }
-
-  async function handleRunTask(e: React.FormEvent) {
-    e.preventDefault();
-    setRunError(null);
-
-    let parsedInput: Record<string, unknown> = {};
-    try {
-      parsedInput = JSON.parse(taskInput);
-    } catch {
-      setRunError("Invalid JSON in task input");
-      return;
-    }
-    if (!taskType.trim()) {
-      setRunError("Task type is required");
-      return;
-    }
-
-    setSubmitting(true);
-    try {
-      await api.agents.run(agent.id, taskType.trim(), parsedInput);
-      closeForm();
-      setTaskType("");
-      setTaskInput('{"topic": ""}');
-      setQueued(true);
-      if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
-      toastTimerRef.current = setTimeout(() => setQueued(false), 4000);
-    } catch (err) {
-      setRunError(err instanceof Error ? err.message : "Failed to queue task");
-    } finally {
-      setSubmitting(false);
-    }
-  }
-
   return (
     <div className="app-backdrop min-h-screen">
-      {/* Success toast */}
-      {queued && (
-        <div className="fixed top-4 right-4 z-50 flex items-center gap-2.5 rounded-xl border border-positive/40 bg-surface-overlay/95 px-4 py-3 text-sm text-positive shadow-raised backdrop-blur-xl">
-          <span className="h-2 w-2 flex-shrink-0 rounded-full bg-positive" />
-          Task queued successfully!
-        </div>
-      )}
+      <RunTaskDialog
+        agentId={agent.id}
+        agentName={agent.name}
+        open={runOpen}
+        onClose={() => setRunOpen(false)}
+      />
 
       {/* Header */}
       <header className="sticky top-0 z-30 border-b border-line bg-canvas/80 backdrop-blur-xl">
@@ -440,8 +409,8 @@ export function AgentProfile({ agent }: Props) {
               size={96}
             />
 
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-3 flex-wrap">
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-3">
                 <h1 className="font-display text-2xl font-semibold text-content">{agent.name}</h1>
                 <StatusDot status={liveStatus} showLabel size="lg" />
               </div>
@@ -450,9 +419,7 @@ export function AgentProfile({ agent }: Props) {
                 {agent.department} · {agent.model}
               </p>
               {agent.bio && (
-                <p className="mt-3 text-sm leading-relaxed text-content-muted">
-                  {agent.bio}
-                </p>
+                <p className="mt-3 text-sm leading-relaxed text-content-muted">{agent.bio}</p>
               )}
 
               <div className="mt-4 flex items-center gap-6 text-sm">
@@ -470,7 +437,7 @@ export function AgentProfile({ agent }: Props) {
                   >
                     {rate}%
                   </div>
-                  <div className="text-2xs text-content-subtle">Success Rate</div>
+                  <div className="text-2xs text-content-subtle">Success rate</div>
                 </div>
                 <div className="text-center">
                   <div className="font-display text-xl font-semibold tabular-nums text-content">
@@ -487,81 +454,18 @@ export function AgentProfile({ agent }: Props) {
               </div>
             </div>
 
-            {/* Run Task button */}
+            {/* Give-a-job button */}
             <div className="flex-shrink-0">
-              {showForm ? (
-                <button
-                  onClick={closeForm}
-                  className="rounded-xl border border-line-strong bg-surface-overlay px-4 py-2 text-sm font-medium text-content transition-colors hover:bg-surface-raised"
-                >
-                  Cancel
-                </button>
-              ) : (
-                <button
-                  onClick={openForm}
-                  disabled={isAgentBusy}
-                  title={isAgentBusy ? "Agent is currently busy" : "Queue a new task"}
-                  className="rounded-xl bg-iris-gradient px-4 py-2 text-sm font-medium text-white shadow-[0_8px_24px_-10px_rgba(237,113,80,0.8)] transition-transform active:scale-95 disabled:opacity-40"
-                >
-                  {isAgentBusy ? "Agent busy…" : "Run Task"}
-                </button>
-              )}
+              <button
+                onClick={() => setRunOpen(true)}
+                disabled={isAgentBusy}
+                title={isAgentBusy ? "This agent is busy right now" : "Give this agent a job"}
+                className="rounded-xl bg-iris-gradient px-4 py-2 text-sm font-medium text-white shadow-[0_8px_24px_-10px_rgba(237,113,80,0.8)] transition-transform active:scale-95 disabled:opacity-40"
+              >
+                {isAgentBusy ? "Working…" : "Give a job"}
+              </button>
             </div>
           </div>
-
-          {/* ── Run Task inline form ────────────────────────────────────── */}
-          {showForm && (
-            <form
-              onSubmit={handleRunTask}
-              className="mt-5 pt-5 border-t border-line space-y-4"
-            >
-              <div>
-                <label className="block text-xs font-medium text-content-subtle mb-1.5">
-                  Task Type
-                </label>
-                <input
-                  type="text"
-                  value={taskType}
-                  onChange={(e) => setTaskType(e.target.value)}
-                  placeholder="research, analyze, write..."
-                  required
-                  className="w-full bg-surface-inset border border-line-strong rounded-lg px-3 py-2 text-sm text-content placeholder-content-subtle focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/30 transition-colors"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-content-subtle mb-1.5">
-                  Task Input{" "}
-                  <span className="text-content-subtle font-normal">(JSON)</span>
-                </label>
-                <textarea
-                  value={taskInput}
-                  onChange={(e) => setTaskInput(e.target.value)}
-                  placeholder='{"topic": "AI trends"}'
-                  rows={3}
-                  className="w-full bg-surface-inset border border-line-strong rounded-lg px-3 py-2 text-sm text-content placeholder-content-subtle font-mono focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/30 transition-colors resize-none"
-                />
-              </div>
-              {runError && (
-                <p className="text-danger text-xs">{runError}</p>
-              )}
-              <div className="flex items-center gap-3">
-                <button
-                  type="submit"
-                  disabled={submitting || !taskType.trim()}
-                  className="px-4 py-2 bg-iris-500 hover:bg-iris-400 disabled:bg-surface-inset disabled:text-content-subtle disabled:cursor-not-allowed text-white text-sm font-medium rounded-lg transition-colors"
-                >
-                  {submitting ? "Queueing…" : "Queue Task"}
-                </button>
-                <button
-                  type="button"
-                  onClick={closeForm}
-                  className="text-sm text-content-subtle hover:text-content-muted transition-colors"
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          )}
         </div>
 
         {/* ── Tab navigation ────────────────────────────────────────────── */}
@@ -572,13 +476,11 @@ export function AgentProfile({ agent }: Props) {
               onClick={() => setActiveTab(tab)}
               className={`flex-1 rounded-lg py-1.5 text-sm font-medium capitalize transition-all ${
                 activeTab === tab
-                  ? "bg-surface-overlay text-content shadow-[0_1px_0_0_rgba(255,255,255,0.05)_inset]"
+                  ? "bg-surface-overlay text-content shadow-[0_1px_0_0_rgba(255,255,255,0.6)_inset]"
                   : "text-content-subtle hover:text-content-muted"
               }`}
             >
-              {tab === "activity"
-                ? "Live Activity"
-                : tab.charAt(0).toUpperCase() + tab.slice(1)}
+              {tab === "activity" ? "Live Activity" : tab.charAt(0).toUpperCase() + tab.slice(1)}
             </button>
           ))}
         </div>
@@ -590,7 +492,7 @@ export function AgentProfile({ agent }: Props) {
             {agent.skills.length > 0 && (
               <div>
                 <h2 className="mb-4 font-display text-lg font-semibold text-content">Skills</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                   {agent.skills.map((s) => (
                     <SkillBadge key={s.id} skill={s} />
                   ))}
@@ -600,23 +502,20 @@ export function AgentProfile({ agent }: Props) {
 
             {/* Work History */}
             <div>
-              <h2 className="text-lg font-semibold text-content mb-4">Work History</h2>
+              <h2 className="mb-4 font-display text-lg font-semibold text-content">Work history</h2>
               <WorkLogFeed entries={agent.recent_work ?? []} />
             </div>
 
             {/* Recent Communications */}
             {(agent.recent_comms?.length ?? 0) > 0 && (
               <div>
-                <h2 className="text-lg font-semibold text-content mb-4">
-                  Recent Communications
+                <h2 className="mb-4 font-display text-lg font-semibold text-content">
+                  Recent communications
                 </h2>
                 <div className="space-y-3">
                   {agent.recent_comms!.map((c) => (
-                    <div
-                      key={c.id}
-                      className="bg-surface border border-line rounded-lg p-4"
-                    >
-                      <div className="flex items-center gap-2 text-xs text-content-subtle mb-2">
+                    <div key={c.id} className="rounded-lg border border-line bg-surface p-4">
+                      <div className="mb-2 flex items-center gap-2 text-xs text-content-subtle">
                         <span>{c.from_agent_name ?? "Human"}</span>
                         <span>→</span>
                         <span>{c.to_agent_name ?? "Human"}</span>
@@ -638,20 +537,20 @@ export function AgentProfile({ agent }: Props) {
 
         {/* ── Live Activity tab ─────────────────────────────────────────── */}
         {activeTab === "activity" && (
-          <div className="bg-surface border border-line rounded-2xl overflow-hidden">
+          <div className="overflow-hidden rounded-2xl border border-line bg-surface">
             {/* Header */}
-            <div className="px-5 py-3 border-b border-line flex items-center gap-2.5">
+            <div className="flex items-center gap-2.5 border-b border-line px-5 py-3">
               <span className="relative flex flex-shrink-0">
                 {isConnected && (
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-60" />
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-positive opacity-60" />
                 )}
                 <span
-                  className={`relative inline-flex rounded-full w-2 h-2 ${
-                    isConnected ? "bg-emerald-500" : "bg-content-subtle"
+                  className={`relative inline-flex h-2 w-2 rounded-full ${
+                    isConnected ? "bg-positive" : "bg-content-subtle"
                   }`}
                 />
               </span>
-              <h2 className="text-sm font-semibold text-content">Live Activity</h2>
+              <h2 className="text-sm font-semibold text-content">Live activity</h2>
               <span className="text-xs text-content-subtle">
                 {isConnected ? "Connected" : "Connecting…"}
               </span>
@@ -664,17 +563,14 @@ export function AgentProfile({ agent }: Props) {
 
             {/* Retrieved memories */}
             {retrievedMemories.length > 0 && (
-              <div className="px-5 py-3 border-b border-line">
-                <div className="rounded-lg bg-iris-50 dark:bg-iris-900/30 border border-iris-200 dark:border-iris-800 p-3">
-                  <p className="text-xs font-medium text-iris-600 dark:text-iris-300 mb-1">
+              <div className="border-b border-line px-5 py-3">
+                <div className="rounded-lg border border-iris-200 bg-iris-50 p-3">
+                  <p className="mb-1 text-xs font-medium text-iris-600">
                     Retrieved {retrievedMemories.length} relevant memories
                   </p>
                   <ul className="space-y-1">
                     {retrievedMemories.map((m, i) => (
-                      <li
-                        key={i}
-                        className="text-xs text-iris-500 dark:text-iris-400 truncate"
-                      >
+                      <li key={i} className="truncate text-xs text-iris-500">
                         • {m}
                       </li>
                     ))}
@@ -685,11 +581,9 @@ export function AgentProfile({ agent }: Props) {
 
             {/* Streaming message bubble */}
             {currentMessage && (
-              <div className="px-5 py-4 bg-canvas border-b border-line">
-                <p className="text-xs text-emerald-600 font-medium mb-2 tracking-wider">
-                  STREAMING
-                </p>
-                <p className="text-sm text-emerald-300 font-mono leading-relaxed whitespace-pre-wrap break-words">
+              <div className="border-b border-line bg-surface-inset px-5 py-4">
+                <p className="mb-2 text-xs font-medium tracking-wider text-positive">STREAMING</p>
+                <p className="whitespace-pre-wrap break-words font-mono text-sm leading-relaxed text-content">
                   {currentMessage}
                   <span className="animate-pulse">▋</span>
                 </p>
@@ -698,9 +592,9 @@ export function AgentProfile({ agent }: Props) {
 
             {/* Active tool chip */}
             {currentTool && !currentMessage && (
-              <div className="px-5 py-3 border-b border-line">
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-500/10 text-amber-400 text-xs font-medium rounded-full border border-amber-500/25">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse flex-shrink-0" />
+              <div className="border-b border-line px-5 py-3">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-warning/25 bg-warning-soft px-2.5 py-1 text-xs font-medium text-warning">
+                  <span className="h-1.5 w-1.5 flex-shrink-0 animate-pulse rounded-full bg-warning" />
                   Using tool: {currentTool}
                 </span>
               </div>
@@ -708,8 +602,8 @@ export function AgentProfile({ agent }: Props) {
 
             {/* Static current_task (only when no live message/tool) */}
             {!currentMessage && !currentTool && agent.current_task && (
-              <div className="px-5 py-3 border-b border-line">
-                <p className="text-xs text-content-subtle italic">{agent.current_task}</p>
+              <div className="border-b border-line px-5 py-3">
+                <p className="text-xs italic text-content-subtle">{agent.current_task}</p>
               </div>
             )}
 
@@ -717,28 +611,24 @@ export function AgentProfile({ agent }: Props) {
             <div className="max-h-64 overflow-y-auto">
               {recentEvents.length === 0 ? (
                 <div className="px-5 py-10 text-center text-xs text-content-subtle">
-                  {isConnected
-                    ? "Waiting for activity…"
-                    : "Connecting to stream…"}
+                  {isConnected ? "Waiting for activity…" : "Connecting to stream…"}
                 </div>
               ) : (
                 <div className="divide-y divide-line/50">
                   {recentEvents.map((ev, i) => (
                     <div
                       key={i}
-                      className="px-5 py-2 flex items-start gap-3 text-xs hover:bg-surface-inset/20 transition-colors"
+                      className="flex items-start gap-3 px-5 py-2 text-xs transition-colors hover:bg-surface-inset/40"
                     >
-                      <span className="text-content-subtle font-mono flex-shrink-0 mt-px tabular-nums">
+                      <span className="mt-px flex-shrink-0 font-mono tabular-nums text-content-subtle">
                         {timeLabel(ev.timestamp)}
                       </span>
                       <span
-                        className={`flex-shrink-0 font-mono font-semibold mt-px ${eventTextColor(ev.type)}`}
+                        className={`mt-px flex-shrink-0 font-mono font-semibold ${eventTextColor(ev.type)}`}
                       >
                         {ev.type}
                       </span>
-                      <span className="text-content-subtle truncate mt-px">
-                        {describeEvent(ev)}
-                      </span>
+                      <span className="mt-px truncate text-content-subtle">{describeEvent(ev)}</span>
                     </div>
                   ))}
                 </div>
@@ -749,20 +639,19 @@ export function AgentProfile({ agent }: Props) {
 
         {/* ── Memories tab ──────────────────────────────────────────────── */}
         {activeTab === "memories" && (
-          <div className="bg-surface border border-line rounded-2xl p-6">
-            <h2 className="text-lg font-semibold text-content mb-4">Memories</h2>
+          <div className="rounded-2xl border border-line bg-surface p-6">
+            <h2 className="mb-4 text-lg font-semibold text-content">Memories</h2>
             <MemoriesPanel agentId={agent.id} />
           </div>
         )}
 
         {/* ── Evals tab ─────────────────────────────────────────────────── */}
         {activeTab === "evals" && (
-          <div className="bg-surface border border-line rounded-2xl p-6">
-            <h2 className="text-lg font-semibold text-content mb-4">Evaluations</h2>
+          <div className="rounded-2xl border border-line bg-surface p-6">
+            <h2 className="mb-4 text-lg font-semibold text-content">Evaluations</h2>
             <EvalPanel agentId={agent.id} />
           </div>
         )}
-
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 export default function Loading() {
   return (
-    <div className="min-h-screen bg-canvas flex items-center justify-center">
-      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-brand-500" />
+    <div className="app-backdrop flex min-h-screen items-center justify-center">
+      <div className="h-12 w-12 animate-spin rounded-full border-2 border-line border-t-iris-500" />
     </div>
   );
 }
