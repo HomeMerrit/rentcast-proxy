@@ -101,13 +101,14 @@ export function ApeAgent({
           <mesh position={[-0.5, 0.14, 0.62]} material={mats.hi}><sphereGeometry args={[0.045, 16, 16]} /></mesh>
           <mesh position={[0.42, 0.14, 0.62]} material={mats.hi}><sphereGeometry args={[0.045, 16, 16]} /></mesh>
 
-          {/* muzzle (projects forward) + nostrils */}
-          <group position={[0, -0.38, 0.69]}>
-            <RoundedBox args={[0.94, 0.55, 0.32]} radius={0.08} smoothness={5} material={mats.body} />
-            <RoundedBox args={[0.105, 0.135, 0.025]} radius={0.02} smoothness={4} position={[-0.22, 0.02, 0.17]} material={mats.nostril} />
-            <RoundedBox args={[0.105, 0.135, 0.025]} radius={0.02} smoothness={4} position={[0.22, 0.02, 0.17]} material={mats.nostril} />
+          {/* muzzle — one big, wide, flat block filling the lower face, its top
+              just under the eyes, with two square nostrils near the top. Reads
+              as an ape muzzle (not a rounded bear snout). Projects past the brow. */}
+          <group position={[0, -0.44, 0.66]}>
+            <RoundedBox args={[1.06, 0.66, 0.46]} radius={0.1} smoothness={5} material={mats.body} castShadow />
+            <RoundedBox args={[0.14, 0.17, 0.07]} radius={0.03} smoothness={4} position={[-0.2, 0.16, 0.24]} material={mats.nostril} />
+            <RoundedBox args={[0.14, 0.17, 0.07]} radius={0.03} smoothness={4} position={[0.2, 0.16, 0.24]} material={mats.nostril} />
           </group>
-          <RoundedBox args={[0.78, 0.16, 0.25]} radius={0.055} smoothness={5} position={[0, -0.7, 0.63]} material={mats.body} />
 
           {/* ears — rectangular with a recessed square center */}
           <group position={[-1.08, -0.03, 0]}>
