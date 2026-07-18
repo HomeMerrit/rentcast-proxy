@@ -1,11 +1,11 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Building2, Sparkles, ArrowRight, ArrowLeft, Rocket, Users, Brain,
-  Network, SkipForward,
+  Network, SkipForward, FileText, Pencil,
 } from "lucide-react";
 import { Logo } from "@/components/brand/Logo";
 import { Button, Field, Input, Textarea, Select, Card, Stepper, useToast } from "@/components/ui";
@@ -20,6 +20,17 @@ const INDUSTRIES = [
   "Marketing", "Consulting", "Education", "Legal", "Other",
 ];
 
+// Persisted so a refresh or a return trip resumes exactly where you left off.
+// Files themselves can't be serialized, so only the ingested count is kept.
+const STORAGE_KEY = "ao.onboarding.v1";
+type Persisted = {
+  mode: Mode | null;
+  step: number;
+  biz: { name: string; industry: string; description: string; website: string; size: string };
+  company: Company | null;
+  docCount: number;
+};
+
 export default function OnboardingPage() {
   const router = useRouter();
   const toast = useToast();
@@ -28,14 +39,70 @@ export default function OnboardingPage() {
   const [company, setCompany] = useState<Company | null>(null);
   const [biz, setBiz] = useState({ name: "", industry: "", description: "", website: "", size: "" });
   const [files, setFiles] = useState<File[]>([]);
+  const [docCount, setDocCount] = useState(0);
   const [busy, setBusy] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
 
   const steps = useMemo(
-    () => (mode === "company" ? ["Business", "Knowledge", "First agent"] : ["First agent"]),
+    () => (mode === "company" ? ["Business", "Knowledge", "Review", "First agent"] : ["First agent"]),
     [mode]
   );
   // step 0 = welcome; steps 1..n map to `steps`
   const flowIndex = step - 1;
+
+  // --- Resume: hydrate from localStorage once on mount ---
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const saved = JSON.parse(raw) as Persisted;
+        if (saved.step > 0) {
+          setMode(saved.mode);
+          setStep(saved.step);
+          setBiz(saved.biz);
+          setCompany(saved.company);
+          setDocCount(saved.docCount ?? 0);
+          toast({ tone: "info", title: "Welcome back", description: "Picking up where you left off." });
+        }
+      }
+    } catch {
+      /* corrupt state — ignore and start fresh */
+    }
+    setHydrated(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // --- Resume: persist on every meaningful change (after hydration) ---
+  const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => {
+    if (!hydrated) return;
+    if (saveTimer.current) clearTimeout(saveTimer.current);
+    saveTimer.current = setTimeout(() => {
+      try {
+        if (step <= 0) {
+          localStorage.removeItem(STORAGE_KEY);
+        } else {
+          const payload: Persisted = { mode, step, biz, company, docCount };
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+        }
+      } catch {
+        /* storage unavailable — non-fatal */
+      }
+    }, 200);
+  }, [hydrated, mode, step, biz, company, docCount]);
+
+  const clearSaved = () => {
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch {
+      /* ignore */
+    }
+  };
+
+  const goWorkspace = () => {
+    clearSaved();
+    router.push("/");
+  };
 
   const start = (m: Mode) => {
     setMode(m);
@@ -66,6 +133,7 @@ export default function OnboardingPage() {
       setBusy(true);
       try {
         const docs = await api.company.uploadDocuments(company.id, files);
+        setDocCount((n) => n + docs.length);
         toast({
           tone: "success",
           title: "Knowledge ingested",
@@ -77,7 +145,7 @@ export default function OnboardingPage() {
         setBusy(false);
       }
     }
-    setStep(3);
+    setStep(3); // -> Review
   };
 
   return (
@@ -94,6 +162,13 @@ export default function OnboardingPage() {
       </header>
 
       <div className="relative z-10 mx-auto max-w-6xl px-4 pb-16">
+        {/* Wait for localStorage hydration so a resumed session doesn't flash the welcome screen. */}
+        {!hydrated ? (
+          <div className="flex min-h-[50vh] items-center justify-center">
+            <div className="h-6 w-6 animate-spin rounded-full border-2 border-line border-t-iris-400" />
+          </div>
+        ) : (
+        <>
         {step > 0 && (
           <div className="mx-auto mb-8 mt-2 max-w-3xl">
             <Stepper steps={steps} current={flowIndex} />
@@ -220,8 +295,43 @@ export default function OnboardingPage() {
             </StepShell>
           )}
 
+          {/* ---------- REVIEW ---------- */}
+          {step === 3 && mode === "company" && (
+            <StepShell
+              key="review"
+              title="Review your setup"
+              subtitle="Make sure everything looks right before you hire your first agent. You can go back and edit."
+            >
+              <Card className="divide-y divide-line p-0">
+                <ReviewRow
+                  icon={<Building2 className="h-4 w-4" />}
+                  label="Company"
+                  value={company?.name || biz.name || "—"}
+                  meta={[biz.industry, biz.size].filter(Boolean).join(" · ") || undefined}
+                  onEdit={() => setStep(1)}
+                />
+                {biz.description ? (
+                  <ReviewRow
+                    icon={<FileText className="h-4 w-4" />}
+                    label="What you do"
+                    value={biz.description}
+                    onEdit={() => setStep(1)}
+                  />
+                ) : null}
+                <ReviewRow
+                  icon={<Brain className="h-4 w-4" />}
+                  label="Knowledge"
+                  value={docCount ? `${docCount} document${docCount > 1 ? "s" : ""} ingested` : "No documents added"}
+                  meta={docCount ? "Your agents can reference these" : "You can add these later"}
+                  onEdit={() => setStep(2)}
+                />
+              </Card>
+              <FlowNav onBack={() => setStep(2)} onNext={() => setStep(4)} nextLabel="Looks good — hire my first agent" />
+            </StepShell>
+          )}
+
           {/* ---------- HIRE FIRST AGENT ---------- */}
-          {((step === 3 && mode === "company") || (step === 1 && mode === "scratch")) && (
+          {((step === 4 && mode === "company") || (step === 1 && mode === "scratch")) && (
             <StepShell
               key="hire"
               title="Hire your first agent"
@@ -236,13 +346,14 @@ export default function OnboardingPage() {
                 companyId={company?.id ?? null}
                 compact
                 onCreated={() => {
+                  clearSaved();
                   toast({ tone: "success", title: "You're all set!", description: "Taking you to your workspace…" });
                   setTimeout(() => router.push("/"), 700);
                 }}
               />
               <div className="mt-4 text-center">
                 <button
-                  onClick={() => router.push("/")}
+                  onClick={goWorkspace}
                   className="text-xs text-content-subtle hover:text-content-muted"
                 >
                   I&apos;ll do this later — go to my workspace
@@ -251,6 +362,8 @@ export default function OnboardingPage() {
             </StepShell>
           )}
         </AnimatePresence>
+        </>
+        )}
       </div>
     </main>
   );
@@ -285,6 +398,31 @@ function ChoiceCard({
       <p className="mt-1.5 text-sm text-content-muted">{desc}</p>
       <ArrowRight className="mt-4 h-5 w-5 text-content-subtle transition-all group-hover:translate-x-1 group-hover:text-iris-300" />
     </motion.button>
+  );
+}
+
+function ReviewRow({
+  icon, label, value, meta, onEdit,
+}: {
+  icon: React.ReactNode; label: string; value: string; meta?: string; onEdit: () => void;
+}) {
+  return (
+    <div className="flex items-start gap-3 p-4">
+      <span className="mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-iris-soft text-iris-300">
+        {icon}
+      </span>
+      <div className="min-w-0 flex-1">
+        <p className="text-2xs font-medium uppercase tracking-wide text-content-subtle">{label}</p>
+        <p className="mt-0.5 truncate text-sm font-medium text-content">{value}</p>
+        {meta ? <p className="mt-0.5 text-xs text-content-muted">{meta}</p> : null}
+      </div>
+      <button
+        onClick={onEdit}
+        className="inline-flex shrink-0 items-center gap-1 rounded-lg px-2 py-1 text-xs text-content-muted hover:bg-content/[0.05] hover:text-content"
+      >
+        <Pencil className="h-3 w-3" /> Edit
+      </button>
+    </div>
   );
 }
 
