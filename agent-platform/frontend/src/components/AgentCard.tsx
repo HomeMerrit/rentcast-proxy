@@ -42,7 +42,7 @@ export function AgentCard({ agent }: { agent: Agent }) {
         {agent.skills.length > 0 && (
           <div className="mt-3.5 flex flex-wrap gap-1.5">
             {agent.skills.slice(0, 3).map((s) => (
-              <span key={s.id} className="rounded-md border border-line bg-white/[0.03] px-2 py-0.5 text-2xs text-content-muted">
+              <span key={s.id} className="rounded-md border border-line bg-content/[0.04] px-2 py-0.5 text-2xs text-content-muted">
                 {s.skill}
               </span>
             ))}

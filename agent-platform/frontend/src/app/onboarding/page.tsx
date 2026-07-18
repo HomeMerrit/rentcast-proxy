@@ -114,7 +114,7 @@ export default function OnboardingPage() {
               <motion.span
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="inline-flex items-center gap-1.5 rounded-full border border-line bg-white/[0.03] px-3 py-1 text-2xs font-medium text-content-muted"
+                className="inline-flex items-center gap-1.5 rounded-full border border-line bg-content/[0.04] px-3 py-1 text-2xs font-medium text-content-muted"
               >
                 <Sparkles className="h-3 w-3 text-iris-300" /> Welcome to your AI workforce
               </motion.span>
@@ -276,7 +276,7 @@ function ChoiceCard({
     >
       <div
         className={`mb-4 grid h-12 w-12 place-items-center rounded-xl ${
-          primary ? "bg-iris-gradient text-white shadow-glow" : "bg-white/[0.04] text-content"
+          primary ? "bg-iris-gradient text-white shadow-glow" : "bg-content/[0.05] text-content"
         }`}
       >
         {icon}
@@ -290,7 +290,7 @@ function ChoiceCard({
 
 function Highlight({ icon, label }: { icon: React.ReactNode; label: string }) {
   return (
-    <div className="flex items-center gap-2.5 rounded-xl border border-line bg-white/[0.02] px-3.5 py-3">
+    <div className="flex items-center gap-2.5 rounded-xl border border-line bg-content/[0.03] px-3.5 py-3">
       <span className="grid h-8 w-8 place-items-center rounded-lg bg-iris-soft text-iris-300">{icon}</span>
       <span className="text-xs font-medium text-content-muted">{label}</span>
     </div>

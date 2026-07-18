@@ -12,8 +12,8 @@ const variants: Record<Variant, string> = {
   secondary:
     "bg-surface-overlay text-content border border-line-strong hover:bg-surface-raised hover:border-line-strong active:scale-[0.985]",
   outline:
-    "bg-transparent text-content border border-line-strong hover:bg-white/5 active:scale-[0.985]",
-  ghost: "bg-transparent text-content-muted hover:bg-white/5 hover:text-content",
+    "bg-transparent text-content border border-line-strong hover:bg-content/5 active:scale-[0.985]",
+  ghost: "bg-transparent text-content-muted hover:bg-content/5 hover:text-content",
   danger:
     "bg-danger/90 text-white hover:bg-danger active:scale-[0.985] shadow-[0_8px_24px_-12px_rgba(251,113,133,0.8)]",
 };

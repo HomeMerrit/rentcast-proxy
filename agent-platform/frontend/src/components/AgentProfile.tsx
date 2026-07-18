@@ -548,7 +548,7 @@ export function AgentProfile({ agent }: Props) {
                 <button
                   type="submit"
                   disabled={submitting || !taskType.trim()}
-                  className="px-4 py-2 bg-brand-600 hover:bg-brand-500 disabled:bg-surface-inset disabled:text-content-subtle disabled:cursor-not-allowed text-white text-sm font-medium rounded-lg transition-colors"
+                  className="px-4 py-2 bg-iris-500 hover:bg-iris-400 disabled:bg-surface-inset disabled:text-content-subtle disabled:cursor-not-allowed text-white text-sm font-medium rounded-lg transition-colors"
                 >
                   {submitting ? "Queueing…" : "Queue Task"}
                 </button>

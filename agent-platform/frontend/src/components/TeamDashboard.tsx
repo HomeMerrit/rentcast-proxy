@@ -21,7 +21,7 @@ export function TeamDashboard({ agents }: Props) {
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
           <div className="flex items-center gap-3">
             <Logo />
-            <span className="hidden items-center gap-1.5 rounded-full border border-line bg-white/[0.03] px-2.5 py-1 text-2xs font-medium text-positive sm:inline-flex">
+            <span className="hidden items-center gap-1.5 rounded-full border border-line bg-content/[0.04] px-2.5 py-1 text-2xs font-medium text-positive sm:inline-flex">
               <span className="relative flex h-1.5 w-1.5">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-positive opacity-75" />
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-positive" />
@@ -67,9 +67,9 @@ export function TeamDashboard({ agents }: Props) {
           ))}
           <Link
             href="/agents/new"
-            className="group flex min-h-[168px] flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-line-strong bg-white/[0.01] text-content-subtle transition-all hover:border-iris-400/50 hover:bg-iris-500/[0.04] hover:text-iris-300"
+            className="group flex min-h-[168px] flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-line-strong bg-content/[0.03] text-content-subtle transition-all hover:border-iris-400/50 hover:bg-iris-500/[0.04] hover:text-iris-300"
           >
-            <span className="grid h-11 w-11 place-items-center rounded-xl bg-white/[0.04] transition-colors group-hover:bg-iris-soft">
+            <span className="grid h-11 w-11 place-items-center rounded-xl bg-content/[0.05] transition-colors group-hover:bg-iris-soft">
               <Plus className="h-5 w-5" />
             </span>
             <span className="text-sm font-medium">Hire another agent</span>

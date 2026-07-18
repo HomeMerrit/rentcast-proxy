@@ -19,7 +19,7 @@ export function BarList({
             <span className="truncate text-content-muted">{it.label}</span>
             <span className="tabular-nums text-content">{format(it.value)}</span>
           </div>
-          <div className="h-2 overflow-hidden rounded-full bg-white/[0.05]">
+          <div className="h-2 overflow-hidden rounded-full bg-content/[0.05]">
             <div
               className="h-full rounded-full bg-iris-gradient transition-[width] duration-700 ease-out"
               style={{ width: `${(it.value / max) * 100}%` }}

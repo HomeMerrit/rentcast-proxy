@@ -32,7 +32,7 @@ const toneMap: Record<Tone, string> = {
   warning: "bg-warning/12 text-warning border-warning/25",
   danger: "bg-danger/12 text-danger border-danger/25",
   info: "bg-info/12 text-info border-info/25",
-  neutral: "bg-white/5 text-content-muted border-line",
+  neutral: "bg-content/5 text-content-muted border-line",
 };
 export function Badge({
   tone = "neutral",
@@ -81,7 +81,7 @@ export function Progress({
       ? "bg-warning"
       : "bg-danger";
   return (
-    <div className={cn("h-1.5 w-full overflow-hidden rounded-full bg-white/6", className)}>
+    <div className={cn("h-1.5 w-full overflow-hidden rounded-full bg-content/[0.06]", className)}>
       <div
         className={cn("h-full rounded-full transition-[width] duration-700 ease-out", bar, showGlow && tone === "iris" && "shadow-[0_0_12px_rgba(237,113,80,0.6)]")}
         style={{ width: `${pct}%` }}
@@ -95,7 +95,7 @@ export function Spinner({ className }: { className?: string }) {
   return (
     <span
       className={cn(
-        "inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/15 border-t-iris-400",
+        "inline-block h-4 w-4 animate-spin rounded-full border-2 border-content/12 border-t-iris-400",
         className
       )}
     />
@@ -124,7 +124,7 @@ export function Chip({
         "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-medium transition-all duration-200 active:scale-95",
         selected
           ? "border-iris-400/50 bg-iris-500/15 text-iris-200 shadow-[0_0_0_1px_rgba(237,113,80,0.3),0_0_20px_-8px_rgba(237,113,80,0.7)]"
-          : "border-line bg-white/[0.03] text-content-muted hover:border-line-strong hover:text-content hover:bg-white/[0.06]",
+          : "border-line bg-content/[0.04] text-content-muted hover:border-line-strong hover:text-content hover:bg-content/[0.06]",
         className
       )}
     >
@@ -136,5 +136,5 @@ export function Chip({
 
 /* ---------- Skeleton ---------- */
 export function Skeleton({ className }: { className?: string }) {
-  return <div className={cn("shimmer rounded-lg bg-white/[0.04]", className)} />;
+  return <div className={cn("shimmer rounded-lg bg-content/[0.05]", className)} />;
 }

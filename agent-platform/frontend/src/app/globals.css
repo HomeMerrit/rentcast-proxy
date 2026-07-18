@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 * {
@@ -22,8 +22,8 @@ body {
 }
 
 ::selection {
-  background: rgba(237, 113, 80, 0.30);
-  color: #fff;
+  background: rgba(237, 113, 80, 0.26);
+  color: #241F18;
 }
 
 :focus-visible {
@@ -38,13 +38,13 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(36, 31, 24, 0.16);
   border-radius: 999px;
   border: 2px solid transparent;
   background-clip: content-box;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.16);
+  background: rgba(36, 31, 24, 0.26);
   background-clip: content-box;
 }
 

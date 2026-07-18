@@ -82,7 +82,7 @@ export function SkillPicker({
         {loading ? (
           <div className="flex flex-wrap gap-2">
             {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="shimmer h-8 w-24 rounded-full bg-white/[0.04]" />
+              <div key={i} className="shimmer h-8 w-24 rounded-full bg-content/[0.05]" />
             ))}
           </div>
         ) : (
@@ -136,7 +136,7 @@ export function SkillPicker({
                   max={95}
                   value={v.proficiency}
                   onChange={(e) => setProf(v.skill, Number(e.target.value))}
-                  className="h-1 flex-1 cursor-pointer appearance-none rounded-full bg-white/10 accent-iris-500"
+                  className="h-1 flex-1 cursor-pointer appearance-none rounded-full bg-content/10 accent-iris-500"
                 />
                 <span
                   className={cn(

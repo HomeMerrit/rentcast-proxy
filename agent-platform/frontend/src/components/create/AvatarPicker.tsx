@@ -61,7 +61,7 @@ export function AvatarPicker({
           <img src={preview} alt="Agent avatar" className="h-full w-full object-cover" />
           {busy && (
             <div className="absolute inset-0 grid place-items-center bg-canvas/60 backdrop-blur-sm">
-              <span className="h-5 w-5 animate-spin rounded-full border-2 border-white/20 border-t-iris-400" />
+              <span className="h-5 w-5 animate-spin rounded-full border-2 border-content/15 border-t-iris-400" />
             </div>
           )}
         </div>
@@ -103,7 +103,7 @@ export function AvatarPicker({
         <button
           type="button"
           onClick={shuffle}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-white/[0.03] px-3 py-1.5 text-xs font-medium text-content-muted transition-colors hover:text-content"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-content/[0.04] px-3 py-1.5 text-xs font-medium text-content-muted transition-colors hover:text-content"
         >
           <Shuffle className="h-3.5 w-3.5" /> Generate
         </button>

@@ -107,7 +107,7 @@ export function CreateAgentStudio({
               {skills.length > 0 && (
                 <div className="mt-3 flex flex-wrap justify-center gap-1">
                   {skills.slice(0, 6).map((s) => (
-                    <span key={s.skill} className="rounded-md bg-white/[0.04] px-1.5 py-0.5 text-2xs text-content-muted">
+                    <span key={s.skill} className="rounded-md bg-content/[0.05] px-1.5 py-0.5 text-2xs text-content-muted">
                       {s.skill}
                     </span>
                   ))}

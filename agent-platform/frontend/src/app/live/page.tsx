@@ -77,14 +77,14 @@ export default function LivePage() {
           <div className="flex items-center gap-4">
             <Logo />
             <nav className="hidden items-center gap-1 md:flex">
-              <Link href="/" className="rounded-lg px-3 py-1.5 text-sm text-content-muted transition-colors hover:bg-white/5 hover:text-content">Command center</Link>
-              <Link href="/network" className="rounded-lg px-3 py-1.5 text-sm text-content-muted transition-colors hover:bg-white/5 hover:text-content">Network</Link>
-              <span className="rounded-lg bg-white/5 px-3 py-1.5 text-sm font-medium text-content">Live</span>
+              <Link href="/" className="rounded-lg px-3 py-1.5 text-sm text-content-muted transition-colors hover:bg-content/5 hover:text-content">Command center</Link>
+              <Link href="/network" className="rounded-lg px-3 py-1.5 text-sm text-content-muted transition-colors hover:bg-content/5 hover:text-content">Network</Link>
+              <span className="rounded-lg bg-content/5 px-3 py-1.5 text-sm font-medium text-content">Live</span>
             </nav>
           </div>
           <div className="flex items-center gap-2">
             <span className={cn("hidden items-center gap-1.5 rounded-full border px-2.5 py-1 text-2xs font-medium sm:inline-flex",
-              fleet.isConnected ? "border-positive/30 bg-positive/5 text-positive" : "border-line bg-white/[0.03] text-content-subtle")}>
+              fleet.isConnected ? "border-positive/30 bg-positive/5 text-positive" : "border-line bg-content/[0.04] text-content-subtle")}>
               <Radio className="h-3 w-3" /> {fleet.isConnected ? "Streaming" : "Reconnecting…"}
             </span>
             <HumanInbox />

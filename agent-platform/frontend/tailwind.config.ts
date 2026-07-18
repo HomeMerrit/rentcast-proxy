@@ -2,7 +2,7 @@ import type { Config } from "tailwindcss";
 
 /**
  * AgentOS design system — warm living-world brand (see /BRAND.md).
- * Dusk blue-slate surfaces (never black, never purple), warm paper ink, a coral
+ * Light warm paper surfaces (never dark, never purple), warm ink, a coral
  * signature with gold reward and department hues. Soft, sunlit, hand-made feel.
  */
 const config: Config = {
@@ -15,22 +15,22 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Warm living-world brand — dusk (blue-slate, never black/purple). See /BRAND.md.
-        canvas: "#171c2e",
+        // Warm living-world brand — LIGHT paper (never dark/purple). See /BRAND.md.
+        canvas: "#F1E9D8",
         surface: {
-          DEFAULT: "#20273f",
-          raised: "#262e49",
-          overlay: "#2c3556",
-          inset: "#141a2b",
+          DEFAULT: "#FFFFFF",
+          raised: "#FFFFFF",
+          overlay: "#FBF6EC",
+          inset: "#F0E7D5",
         },
         line: {
-          DEFAULT: "rgba(214,220,240,0.10)",
-          strong: "rgba(214,220,240,0.18)",
+          DEFAULT: "rgba(36,31,24,0.10)",
+          strong: "rgba(36,31,24,0.17)",
         },
         content: {
-          DEFAULT: "#F3EFE6",
-          muted: "#B7B1A4",
-          subtle: "#877F6E",
+          DEFAULT: "#241F18",
+          muted: "#6B6355",
+          subtle: "#978D7A",
         },
         // "iris" kept as the accent token name, but it is now the brand CORAL ramp.
         iris: {
@@ -74,19 +74,19 @@ const config: Config = {
         "3xl": "1.5rem",
       },
       boxShadow: {
-        card: "0 1px 0 0 rgba(255,255,255,0.05) inset, 0 8px 30px -12px rgba(0,0,0,0.5)",
-        raised: "0 1px 0 0 rgba(255,255,255,0.06) inset, 0 20px 50px -20px rgba(0,0,0,0.6)",
-        glow: "0 0 0 1px rgba(237,113,80,0.35), 0 0 40px -8px rgba(237,113,80,0.55)",
-        "glow-aqua": "0 0 0 1px rgba(90,151,214,0.35), 0 0 40px -8px rgba(90,151,214,0.5)",
-        focus: "0 0 0 2px rgba(23,28,46,1), 0 0 0 4px rgba(237,113,80,0.6)",
+        card: "0 1px 0 0 rgba(255,255,255,0.6) inset, 0 10px 26px -14px rgba(36,31,24,0.16)",
+        raised: "0 1px 0 0 rgba(255,255,255,0.7) inset, 0 22px 50px -22px rgba(36,31,24,0.22)",
+        glow: "0 0 0 1px rgba(237,113,80,0.35), 0 0 40px -8px rgba(237,113,80,0.4)",
+        "glow-aqua": "0 0 0 1px rgba(90,151,214,0.35), 0 0 40px -8px rgba(90,151,214,0.4)",
+        focus: "0 0 0 2px rgba(241,233,216,1), 0 0 0 4px rgba(237,113,80,0.6)",
       },
       backgroundImage: {
         "iris-gradient": "linear-gradient(135deg, #F0BE4D 0%, #ED7150 92%)",
-        "iris-soft": "linear-gradient(135deg, rgba(237,113,80,0.16), rgba(240,190,77,0.10))",
+        "iris-soft": "linear-gradient(135deg, rgba(237,113,80,0.14), rgba(240,190,77,0.10))",
         "grid-faint":
-          "linear-gradient(rgba(214,220,240,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(214,220,240,0.03) 1px, transparent 1px)",
+          "linear-gradient(rgba(36,31,24,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(36,31,24,0.035) 1px, transparent 1px)",
         "radial-iris":
-          "radial-gradient(60% 50% at 50% 0%, rgba(240,190,77,0.16), transparent 70%)",
+          "radial-gradient(60% 50% at 50% 0%, rgba(240,190,77,0.14), transparent 70%)",
       },
       backgroundSize: {
         grid: "44px 44px",

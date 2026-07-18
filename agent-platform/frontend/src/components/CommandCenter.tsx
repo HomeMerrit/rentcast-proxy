@@ -88,11 +88,11 @@ export function CommandCenter() {
           <div className="flex items-center gap-4">
             <Logo />
             <nav className="hidden items-center gap-1 md:flex">
-              <span className="rounded-lg bg-white/5 px-3 py-1.5 text-sm font-medium text-content">Command center</span>
-              <Link href="/network" className="rounded-lg px-3 py-1.5 text-sm text-content-muted transition-colors hover:bg-white/5 hover:text-content">Network</Link>
-              <Link href="/live" className="rounded-lg px-3 py-1.5 text-sm text-content-muted transition-colors hover:bg-white/5 hover:text-content">Live</Link>
+              <span className="rounded-lg bg-content/5 px-3 py-1.5 text-sm font-medium text-content">Command center</span>
+              <Link href="/network" className="rounded-lg px-3 py-1.5 text-sm text-content-muted transition-colors hover:bg-content/5 hover:text-content">Network</Link>
+              <Link href="/live" className="rounded-lg px-3 py-1.5 text-sm text-content-muted transition-colors hover:bg-content/5 hover:text-content">Live</Link>
             </nav>
-            <span className="hidden items-center gap-1.5 rounded-full border border-line bg-white/[0.03] px-2.5 py-1 text-2xs font-medium text-positive lg:inline-flex">
+            <span className="hidden items-center gap-1.5 rounded-full border border-line bg-content/[0.04] px-2.5 py-1 text-2xs font-medium text-positive lg:inline-flex">
               <span className="relative flex h-1.5 w-1.5">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-positive opacity-75" />
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-positive" />
@@ -202,7 +202,7 @@ export function CommandCenter() {
                 <Link
                   key={a.id}
                   href={`/agents/${a.agent_id}`}
-                  className="flex items-center gap-3 rounded-lg border border-transparent px-2 py-2 transition-colors hover:border-line hover:bg-white/[0.02]"
+                  className="flex items-center gap-3 rounded-lg border border-transparent px-2 py-2 transition-colors hover:border-line hover:bg-content/[0.04]"
                 >
                   <AgentAvatar seed={a.avatar_seed} url={a.avatar_url} name={a.agent_name} status="idle" size={30} showStatus={false} />
                   <div className="min-w-0 flex-1">
@@ -262,7 +262,7 @@ export function CommandCenter() {
               </thead>
               <tbody>
                 {filtered.map((a) => (
-                  <tr key={a.id} className="group border-b border-line/60 last:border-0 hover:bg-white/[0.02]">
+                  <tr key={a.id} className="group border-b border-line/60 last:border-0 hover:bg-content/[0.04]">
                     <td className="px-4 py-2.5">
                       <Link href={`/agents/${a.id}`} className="flex items-center gap-2.5">
                         <AgentAvatar seed={a.avatar_seed} url={a.avatar_url} name={a.name} status={a.status} size={30} />
@@ -316,7 +316,7 @@ function Kpi({
   return (
     <Card className="p-4">
       <div className="flex items-center justify-between">
-        <span className="grid h-7 w-7 place-items-center rounded-lg bg-white/[0.04] text-content-muted">{icon}</span>
+        <span className="grid h-7 w-7 place-items-center rounded-lg bg-content/[0.05] text-content-muted">{icon}</span>
         {spark && spark.length > 1 && <Sparkline data={spark} tone={sparkTone} />}
       </div>
       <p className={cn("mt-3 font-display text-2xl font-semibold tabular-nums", tone === "positive" ? "text-positive" : "text-content")}>
