@@ -7,6 +7,7 @@ import HumanInbox from "@/components/HumanInbox";
 import { AgentAvatar } from "@/components/AgentAvatar";
 import { StatusDot } from "@/components/StatusDot";
 import { RunTaskDialog } from "@/components/RunTaskDialog";
+import { CardGrowth } from "@/components/Growth";
 import { Card, Button, Select } from "@/components/ui";
 import { useFleetStream } from "@/lib/ag-ui";
 import { api } from "@/lib/api";
@@ -156,6 +157,11 @@ export default function LivePage() {
                       <span className="text-xs text-content-subtle">idle — ready for work</span>
                     )}
                   </div>
+
+                  <CardGrowth
+                    input={{ task_count: a.task_count, success_count: a.success_count, status }}
+                    className="mt-3"
+                  />
                 </Card>
               );
             })}

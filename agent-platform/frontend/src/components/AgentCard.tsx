@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { AgentAvatar } from "./AgentAvatar";
+import { CardGrowth } from "./Growth";
 import { successRate, cn } from "@/lib/utils";
 import type { Agent } from "@/types/agent";
 
@@ -52,7 +53,12 @@ export function AgentCard({ agent }: { agent: Agent }) {
           </div>
         )}
 
-        <div className="mt-4 flex items-center justify-between border-t border-line pt-3.5 text-xs text-content-subtle">
+        <CardGrowth
+          input={{ task_count: agent.task_count, success_count: agent.success_count, status: agent.status }}
+          className="mt-4"
+        />
+
+        <div className="mt-3.5 flex items-center justify-between border-t border-line pt-3.5 text-xs text-content-subtle">
           <span className="tabular-nums">{agent.task_count.toLocaleString()} tasks</span>
           <span
             className={cn(

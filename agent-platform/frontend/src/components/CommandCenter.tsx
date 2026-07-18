@@ -12,6 +12,8 @@ import { AccountMenu } from "./AccountMenu";
 import { AgentAvatar } from "./AgentAvatar";
 import { StatusDot } from "./StatusDot";
 import { RunTaskDialog } from "./RunTaskDialog";
+import { LevelChip, MoodPill } from "./Growth";
+import { agentGrowth } from "@/lib/growth";
 import { AreaChart } from "./charts/AreaChart";
 import { BarList, RadialGauge, Sparkline, Segmented } from "./charts/mini";
 import { Card, Banner, Skeleton } from "./ui";
@@ -329,6 +331,22 @@ export function CommandCenter() {
                         <span className="min-w-0">
                           <span className="block truncate font-medium text-content group-hover:text-iris-200">{a.name}</span>
                           <span className="block truncate text-2xs text-content-subtle">{a.title}</span>
+                          <span className="mt-1 flex items-center gap-2">
+                            {(() => {
+                              const g = agentGrowth({
+                                task_count: a.task_count,
+                                success_count: a.success_count,
+                                avg_eval: a.avg_eval,
+                                status: a.status,
+                              });
+                              return (
+                                <>
+                                  <LevelChip growth={g} />
+                                  <MoodPill mood={g.mood} />
+                                </>
+                              );
+                            })()}
+                          </span>
                         </span>
                       </Link>
                     </td>

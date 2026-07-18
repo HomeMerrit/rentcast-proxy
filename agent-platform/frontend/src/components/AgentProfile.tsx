@@ -6,6 +6,7 @@ import { SkillBadge } from "./SkillBadge";
 import { WorkLogFeed } from "./WorkLogFeed";
 import { StatusDot } from "./StatusDot";
 import { RunTaskDialog } from "./RunTaskDialog";
+import { GrowthPanel } from "./Growth";
 import { useAgentStream } from "@/lib/ag-ui";
 import { successRate } from "@/lib/utils";
 import { api } from "@/lib/api";
@@ -467,6 +468,16 @@ export function AgentProfile({ agent }: Props) {
             </div>
           </div>
         </div>
+
+        {/* ── Growth (level · XP · mood) ─────────────────────────────────── */}
+        <GrowthPanel
+          input={{
+            task_count: agent.task_count,
+            success_count: agent.success_count,
+            avg_eval: evalSummary?.avg_score ?? null,
+            status: liveStatus,
+          }}
+        />
 
         {/* ── Tab navigation ────────────────────────────────────────────── */}
         <div className="flex gap-1 rounded-xl border border-line bg-surface p-1">
