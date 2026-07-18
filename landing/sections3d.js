@@ -124,17 +124,13 @@ function init(){
   // up front (unobstructed) with two teammates at desks behind. Everyone reads.
   function workerVignette(parent,color,peopleArr){
     const g=new THREE.Group();
-    const plate=box(4.0,0.3,3.2,0.5,lighter(color,1.16),{rough:0.72}); plate.position.y=0.15; g.add(plate);
-    const band=box(4.1,0.16,3.3,0.05,color,{rough:0.5}); band.position.y=0.28; g.add(band);
-    const spots=[
-      {x:0.0,  z:0.8,  seated:false, ry:0.0,   s:1.4},
-      {x:-1.32,z:-0.5, seated:true,  ry:0.35,  s:1.16},
-      {x:1.32, z:-0.5, seated:true,  ry:-0.35, s:1.16},
-    ];
-    spots.forEach(sp=>{
-      if(sp.seated){ const d=deskUnit(color); d.position.set(sp.x,0.3,sp.z-0.58); d.rotation.y=sp.ry; g.add(d); }
-      const c=person(color,sp.seated); c.position.set(sp.x,0.3,sp.z); c.rotation.y=sp.ry; c.scale.setScalar(sp.s); g.add(c);
-      peopleArr.push({o:c, y:0.3, phase:Math.random()*6.28, seated:sp.seated});
+    const plate=box(4.6,0.3,2.4,0.5,lighter(color,1.16),{rough:0.72}); plate.position.y=0.15; g.add(plate);
+    const band=box(4.7,0.16,2.5,0.05,color,{rough:0.5}); band.position.y=0.28; g.add(band);
+    // three teammates, all the SAME size, standing in a clean row facing forward
+    const S=1.25;
+    [-1.35,0.0,1.35].forEach(x=>{
+      const c=person(color,false); c.position.set(x,0.3,0); c.scale.setScalar(S); g.add(c);
+      peopleArr.push({o:c, y:0.3, phase:Math.random()*6.28, seated:false});
     });
     parent.add(g); return g;
   }
@@ -184,11 +180,11 @@ function init(){
     const sh=contactShadow(tileW,tileD); sh.position.x=ctr.x; scene.add(sh);
 
     // frame camera to the content
-    const cam=new THREE.PerspectiveCamera(closeup?28:30,1,0.1,120);
+    const cam=new THREE.PerspectiveCamera(closeup?22:30,1,0.1,120);
     const radius=Math.max(size.x,size.z)*0.5, h=size.y;
-    if(closeup){ // team: head-on + low so every worker is fully in frame, filling it
-      cam.position.set(ctr.x+0.12, 1.9, 6.0);
-      cam.lookAt(ctr.x, 1.0, -0.1);
+    if(closeup){ // team: pulled back + narrow FOV so all three workers sit fully in frame, same size, clean lines
+      cam.position.set(ctr.x, 2.7, 10.2);
+      cam.lookAt(ctr.x, 0.95, 0);
     } else {
       const dist=Math.max(radius*2.0, h*1.7)+5.5;
       cam.position.set(ctr.x+dist*0.62, h*0.5+dist*0.55, dist*0.82);
