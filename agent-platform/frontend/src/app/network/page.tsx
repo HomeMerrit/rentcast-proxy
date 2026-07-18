@@ -37,15 +37,15 @@ export default function NetworkPage() {
           <div className="flex items-center gap-4">
             <Logo />
             <nav className="hidden items-center gap-1 sm:flex">
-              <Link href="/" className="rounded-lg px-3 py-1.5 text-sm text-content-muted transition-colors hover:bg-content/5 hover:text-content">Command center</Link>
-              <span className="rounded-lg bg-content/5 px-3 py-1.5 text-sm font-medium text-content">Network</span>
-              <Link href="/live" className="rounded-lg px-3 py-1.5 text-sm text-content-muted transition-colors hover:bg-content/5 hover:text-content">Live</Link>
+              <Link href="/" className="rounded-lg px-3 py-1.5 text-sm text-content-muted transition-colors hover:bg-content/5 hover:text-content">Company</Link>
+              <span className="rounded-lg bg-content/5 px-3 py-1.5 text-sm font-medium text-content">Flow</span>
+              <Link href="/live" className="rounded-lg px-3 py-1.5 text-sm text-content-muted transition-colors hover:bg-content/5 hover:text-content">Floor</Link>
             </nav>
           </div>
           <div className="flex items-center gap-2">
             <HumanInbox />
             <Link href="/agents/new" className="inline-flex h-9 items-center gap-1.5 rounded-xl bg-iris-gradient px-3.5 text-sm font-medium text-white shadow-[0_8px_24px_-10px_rgba(237,113,80,0.8)] transition-transform active:scale-95">
-              <Plus className="h-4 w-4" /> New agent
+              <Plus className="h-4 w-4" /> Hire
             </Link>
           </div>
         </div>
@@ -54,18 +54,18 @@ export default function NetworkPage() {
       <main className="mx-auto max-w-7xl px-4 py-7 sm:px-6">
         <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="eyebrow">Collaboration</p>
+            <p className="eyebrow">The flow</p>
             <h1 className="mt-1 font-display text-2xl font-semibold tracking-tight text-content sm:text-3xl">
-              Agent network
+              How work flows
             </h1>
             <p className="mt-1 text-sm text-content-muted">
-              How your agents delegate and talk to each other, in real time.
+              How your teams hand work to each other, in real time.
             </p>
           </div>
           <div className="flex gap-2.5">
-            <Stat label="Agents" value={graph?.nodes.length ?? "—"} />
-            <Stat label="Connections" value={graph?.edges.length ?? "—"} />
-            <Stat label="Messages" value={totalMsgs} accent />
+            <Stat label="Workers" value={graph?.nodes.length ?? "—"} />
+            <Stat label="Links" value={graph?.edges.length ?? "—"} />
+            <Stat label="Hand-offs" value={totalMsgs} accent />
           </div>
         </div>
 
@@ -89,8 +89,8 @@ export default function NetworkPage() {
                 <EmptyState
                   className="h-[440px]"
                   icon={<NetworkIcon className="h-5 w-5" />}
-                  title="No agents in the network yet"
-                  description="Hire a few agents and let them delegate — their connections will map out here."
+                  title="No hand-offs yet"
+                  description="Hire a few workers and give them jobs — as they pass work to each other, the flow maps out here."
                 />
               ) : (
                 <CollaborationGraph graph={graph} />
@@ -122,7 +122,7 @@ export default function NetworkPage() {
           {/* recent A2A messages */}
           <Card className="p-5">
             <h3 className="mb-3 flex items-center gap-1.5 font-display text-sm font-semibold text-content">
-              <MessageSquare className="h-4 w-4 text-iris-300" /> Recent messages
+              <MessageSquare className="h-4 w-4 text-iris-300" /> Recent hand-offs
             </h3>
             <div className="max-h-[520px] space-y-2 overflow-y-auto pr-1">
               {graph?.recent.length === 0 && (
@@ -157,7 +157,7 @@ function Stat({ label, value, accent }: { label: string; value: string | number;
     <div className="rounded-xl border border-line bg-surface px-3.5 py-2 text-center">
       <p className={`font-display text-lg font-semibold tabular-nums ${accent ? "text-gradient" : "text-content"}`}>{value}</p>
       <p className="flex items-center justify-center gap-1 text-2xs text-content-subtle">
-        {label === "Connections" && <NetworkIcon className="h-2.5 w-2.5" />}
+        {label === "Links" && <NetworkIcon className="h-2.5 w-2.5" />}
         {label}
       </p>
     </div>

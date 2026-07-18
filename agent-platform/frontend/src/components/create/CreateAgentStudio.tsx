@@ -13,10 +13,11 @@ const DEPARTMENTS = [
   "Finance", "Support", "Design", "Legal", "Data",
 ];
 
+// Plain-language "brainpower" tiers — the technical engine stays under the hood.
 const MODELS = [
-  { id: "claude-sonnet-5", label: "Sonnet 5 · balanced", hint: "Best default — fast & capable" },
-  { id: "claude-opus-4-8", label: "Opus 4.8 · most capable", hint: "Deepest reasoning, higher cost" },
-  { id: "claude-haiku-4-5-20251001", label: "Haiku 4.5 · fastest", hint: "Cheapest, great for volume" },
+  { id: "claude-sonnet-5", label: "Balanced", hint: "Best all-rounder — quick and capable" },
+  { id: "claude-opus-4-8", label: "Deepest", hint: "Most thorough thinking, higher cost" },
+  { id: "claude-haiku-4-5-20251001", label: "Fastest", hint: "Quickest and cheapest, great for volume" },
 ];
 
 export function CreateAgentStudio({
@@ -73,12 +74,12 @@ export function CreateAgentStudio({
           /* skills are non-fatal */
         }
       }
-      toast({ tone: "success", title: `${agent.name} hired`, description: `${title} joined your workforce.` });
+      toast({ tone: "success", title: `${agent.name} hired`, description: `${title} joined your team.` });
       onCreated?.(agent);
     } catch (e) {
       toast({
         tone: "error",
-        title: "Could not create agent",
+        title: "Could not hire this worker",
         description: e instanceof Error ? e.message : "Please try again.",
       });
     } finally {
@@ -95,7 +96,7 @@ export function CreateAgentStudio({
             <AvatarPicker value={avatar} onChange={setAvatar} />
             <div className="mt-5 border-t border-line pt-4 text-center">
               <p className="font-display text-lg font-semibold text-content">
-                {name || "New Agent"}
+                {name || "New worker"}
               </p>
               <p className="text-sm text-content-muted">{title || "Job title"}</p>
               <div className="mt-2 flex flex-wrap justify-center gap-1.5">
@@ -144,7 +145,7 @@ export function CreateAgentStudio({
                   ))}
                 </Select>
               </Field>
-              <Field label="Model" htmlFor="ag-model" hint={MODELS.find((m) => m.id === model)?.hint}>
+              <Field label="Brainpower" htmlFor="ag-model" hint={MODELS.find((m) => m.id === model)?.hint}>
                 <Select id="ag-model" value={model} onChange={(e) => setModel(e.target.value)}>
                   {MODELS.map((m) => (
                     <option key={m.id} value={m.id}>{m.label}</option>
@@ -152,27 +153,27 @@ export function CreateAgentStudio({
                 </Select>
               </Field>
             </div>
-            <Field label="Description" hint="What is this agent responsible for?">
+            <Field label="Description" hint="What is this worker responsible for?">
               <Textarea
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
-                placeholder="Describe the agent's role, focus areas and personality…"
+                placeholder="Describe their role, focus areas and personality…"
               />
             </Field>
           </Card>
 
           <Card className="p-6">
-            <h3 className="mb-4 font-display text-base font-semibold text-content">Skills</h3>
+            <h3 className="mb-4 font-display text-base font-semibold text-content">Tools</h3>
             <SkillPicker department={department} title={title} value={skills} onChange={setSkills} />
           </Card>
 
           <div className="flex items-center justify-between gap-3">
             <p className="flex items-center gap-1.5 text-2xs text-content-subtle">
               <Sparkles className="h-3.5 w-3.5 text-iris-300" />
-              Skills auto-improve as the agent completes work.
+              They get sharper with every job they finish.
             </p>
             <Button size="lg" onClick={submit} loading={saving} disabled={!valid} iconRight={<ArrowRight className="h-4 w-4" />}>
-              {saving ? "Hiring…" : "Hire agent"}
+              {saving ? "Hiring…" : "Hire worker"}
             </Button>
           </div>
         </motion.div>

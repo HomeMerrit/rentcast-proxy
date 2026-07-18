@@ -4,7 +4,7 @@ import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
 import {
   Plus, Search, DollarSign, Activity, Users, Zap, Gauge, TrendingUp,
-  CheckCircle2, XCircle, ArrowUpDown, Briefcase, ArrowRight, Radio,
+  CheckCircle2, XCircle, ArrowUpDown, Briefcase, ArrowRight, Radio, ChevronDown,
 } from "lucide-react";
 import { Logo } from "./brand/Logo";
 import HumanInbox from "./HumanInbox";
@@ -42,6 +42,7 @@ export function CommandCenter() {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
   const [jobOpen, setJobOpen] = useState(false);
+  const [showNumbers, setShowNumbers] = useState(false); // less is more: numbers on demand
 
   const load = async () => {
     // allSettled so one flaky endpoint doesn't blank the whole board; the banner
@@ -203,6 +204,21 @@ export function CommandCenter() {
           />
         )}
 
+        {/* Less is more: the world is the screen. Numbers live one calm tap away. */}
+        {loaded && buildings.length > 0 && (
+          <div className="mt-5 flex justify-center">
+            <button
+              onClick={() => setShowNumbers((v) => !v)}
+              className="inline-flex items-center gap-1.5 rounded-full border border-line bg-surface/70 px-4 py-1.5 text-xs font-medium text-content-muted transition-colors hover:border-line-strong hover:text-content"
+            >
+              {showNumbers ? "Hide the numbers" : "See the numbers"}
+              <ChevronDown className={cn("h-3.5 w-3.5 transition-transform", showNumbers && "rotate-180")} />
+            </button>
+          </div>
+        )}
+
+        {showNumbers && (
+        <div className="mt-4 space-y-4 animate-fade-up">
         {/* KPI row */}
         {!loaded ? (
           <div className="grid grid-cols-2 gap-3 lg:grid-cols-6">
@@ -413,6 +429,8 @@ export function CommandCenter() {
             </table>
           </div>
         </Card>
+        </div>
+        )}
       </main>
     </div>
   );

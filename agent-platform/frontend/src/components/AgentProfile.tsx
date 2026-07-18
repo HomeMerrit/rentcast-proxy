@@ -45,7 +45,7 @@ function describeEvent(event: AGUIEvent): string {
     case "RUN_STARTED":
       return `Started: ${(d.task_type as string) || "task"}`;
     case "RUN_FINISHED":
-      return `Finished (${(d.tokens_used as number) || 0} tokens)`;
+      return "Finished the job";
     case "RUN_ERROR":
       return `Error: ${(d.error as string) || "unknown"}`;
     case "TEXT_MESSAGE_START":
@@ -138,7 +138,7 @@ function MemoriesPanel({ agentId }: { agentId: string }) {
         <p className="text-sm text-content-muted">Loading memories…</p>
       ) : memories.length === 0 ? (
         <p className="text-sm text-content-muted">
-          No memories yet. Memories are stored automatically after each task.
+          No memories yet. They remember what matters after each job.
         </p>
       ) : (
         <div className="space-y-2">
@@ -243,11 +243,11 @@ function EvalPanel({ agentId }: { agentId: string }) {
         <div className="grid grid-cols-3 gap-3">
           <div className="rounded-lg border border-line p-3 text-center">
             <div className="font-display text-2xl font-semibold text-content">{summary.avg_score}</div>
-            <div className="mt-0.5 text-xs text-content-subtle">Avg score</div>
+            <div className="mt-0.5 text-xs text-content-subtle">Avg quality</div>
           </div>
           <div className="rounded-lg border border-line p-3 text-center">
             <div className="font-display text-2xl font-semibold text-content">{summary.total_evals}</div>
-            <div className="mt-0.5 text-xs text-content-subtle">Total evals</div>
+            <div className="mt-0.5 text-xs text-content-subtle">Reviews</div>
           </div>
           <div className="flex flex-col items-center justify-center rounded-lg border border-line p-3 text-center">
             <span className="inline-flex items-center gap-1.5 text-sm font-medium text-content">
@@ -265,15 +265,15 @@ function EvalPanel({ agentId }: { agentId: string }) {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs font-medium text-iris-600">
-                System prompt · Generation {config.generation}
+                Coached · round {config.generation}
               </p>
               {config.eval_score && (
                 <p className="mt-0.5 text-xs text-iris-500">
-                  Triggered at avg score: {config.eval_score.toFixed(1)}
+                  Started at quality {config.eval_score.toFixed(1)}
                 </p>
               )}
             </div>
-            <span className="rounded-full bg-iris-100 px-2 py-0.5 text-xs text-iris-600">Evolved</span>
+            <span className="rounded-full bg-iris-100 px-2 py-0.5 text-xs text-iris-600">Coached</span>
           </div>
           {config.value && (
             <p className="mt-2 line-clamp-2 text-xs italic text-iris-500">{config.value}</p>
@@ -288,18 +288,18 @@ function EvalPanel({ agentId }: { agentId: string }) {
         className="inline-flex w-full items-center justify-center gap-1.5 rounded-lg border border-iris-300 py-2 text-sm font-medium text-iris-600 transition-colors hover:bg-iris-50 disabled:opacity-50"
       >
         {evolved ? (
-          <><Check className="h-4 w-4" /> Evolution triggered</>
+          <><Check className="h-4 w-4" /> Coaching underway</>
         ) : evolving ? (
-          "Triggering…"
+          "Starting…"
         ) : (
-          <><Zap className="h-4 w-4" /> Evolve agent prompt</>
+          <><Zap className="h-4 w-4" /> Coach this worker</>
         )}
       </button>
 
       {/* Recent evals list */}
       {evals.length === 0 ? (
         <p className="text-sm text-content-muted">
-          No evaluations yet. Evals run automatically after each task completes.
+          No quality reviews yet. Every job is checked as it finishes.
         </p>
       ) : (
         <div className="space-y-2">
@@ -390,7 +390,7 @@ export function AgentProfile({ agent }: Props) {
       <header className="sticky top-0 z-30 border-b border-line bg-canvas/80 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-4xl items-center gap-3 px-4 sm:px-6">
           <Link href="/" className="flex items-center gap-1.5 text-sm text-content-muted transition-colors hover:text-content">
-            <span aria-hidden>←</span> Agents
+            <span aria-hidden>←</span> Team
           </Link>
           <span className="text-content-subtle">/</span>
           <span className="text-sm text-content">{agent.name}</span>
@@ -428,7 +428,7 @@ export function AgentProfile({ agent }: Props) {
                   <div className="font-display text-xl font-semibold tabular-nums text-content">
                     {agent.task_count.toLocaleString()}
                   </div>
-                  <div className="text-2xs text-content-subtle">Tasks</div>
+                  <div className="text-2xs text-content-subtle">Jobs</div>
                 </div>
                 <div className="text-center">
                   <div
@@ -444,12 +444,12 @@ export function AgentProfile({ agent }: Props) {
                   <div className="font-display text-xl font-semibold tabular-nums text-content">
                     {agent.skills.length}
                   </div>
-                  <div className="text-2xs text-content-subtle">Skills</div>
+                  <div className="text-2xs text-content-subtle">Tools</div>
                 </div>
                 {evalSummary && evalSummary.total_evals > 0 && (
                   <div className="flex items-center gap-1.5">
                     <ScoreBadge score={Math.round(evalSummary.avg_score)} />
-                    <span className="text-xs text-content-subtle">avg eval</span>
+                    <span className="text-xs text-content-subtle">avg quality</span>
                   </div>
                 )}
               </div>
@@ -491,7 +491,7 @@ export function AgentProfile({ agent }: Props) {
                   : "text-content-subtle hover:text-content-muted"
               }`}
             >
-              {tab === "activity" ? "Live Activity" : tab.charAt(0).toUpperCase() + tab.slice(1)}
+              {tab === "activity" ? "Live" : tab === "evals" ? "Quality" : tab === "memories" ? "Memory" : "Overview"}
             </button>
           ))}
         </div>
@@ -502,7 +502,7 @@ export function AgentProfile({ agent }: Props) {
             {/* Skills */}
             {agent.skills.length > 0 && (
               <div>
-                <h2 className="mb-4 font-display text-lg font-semibold text-content">Skills</h2>
+                <h2 className="mb-4 font-display text-lg font-semibold text-content">Tools</h2>
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                   {agent.skills.map((s) => (
                     <SkillBadge key={s.id} skill={s} />
@@ -521,7 +521,7 @@ export function AgentProfile({ agent }: Props) {
             {(agent.recent_comms?.length ?? 0) > 0 && (
               <div>
                 <h2 className="mb-4 font-display text-lg font-semibold text-content">
-                  Recent communications
+                  Recent hand-offs
                 </h2>
                 <div className="space-y-3">
                   {agent.recent_comms!.map((c) => (
@@ -659,7 +659,7 @@ export function AgentProfile({ agent }: Props) {
         {/* ── Evals tab ─────────────────────────────────────────────────── */}
         {activeTab === "evals" && (
           <div className="rounded-2xl border border-line bg-surface p-6">
-            <h2 className="mb-4 text-lg font-semibold text-content">Evaluations</h2>
+            <h2 className="mb-4 text-lg font-semibold text-content">Quality</h2>
             <EvalPanel agentId={agent.id} />
           </div>
         )}

@@ -52,7 +52,7 @@ export default function HumanInbox() {
       <button
         onClick={() => setOpen(true)}
         className="relative rounded-full p-2 transition-colors hover:bg-content/5"
-        title="Agent messages"
+        title="Messages from your team"
       >
         <Bell className="h-5 w-5 text-content-subtle" />
         {unread > 0 && (
@@ -80,7 +80,7 @@ export default function HumanInbox() {
           {/* Header */}
           <div className="flex items-center justify-between border-b border-line px-4 py-3">
             <h2 className="flex items-center gap-2 font-display text-base font-semibold text-content">
-              Agent messages
+              From your team
               {unread > 0 && (
                 <span className="rounded-full bg-iris-soft px-2 py-0.5 text-xs font-medium text-iris-600">
                   {unread} unread
@@ -100,7 +100,7 @@ export default function HumanInbox() {
             {messages.length === 0 ? (
               <div className="flex h-48 flex-col items-center justify-center text-content-muted">
                 <MessageSquare className="mb-2 h-10 w-10 opacity-30" />
-                <p className="text-sm">No messages from agents</p>
+                <p className="text-sm">No messages yet</p>
               </div>
             ) : (
               messages.map((msg) => (
@@ -152,7 +152,7 @@ export default function HumanInbox() {
                     <div className="mt-3 space-y-2">
                       <textarea
                         rows={2}
-                        placeholder="Reply to this agent…"
+                        placeholder="Reply…"
                         className="w-full resize-none rounded-lg border border-line bg-surface-inset px-3 py-2 text-sm text-content placeholder:text-content-subtle outline-none focus:border-iris-400/60"
                         value={replies[msg.id] ?? ""}
                         onChange={(e) =>

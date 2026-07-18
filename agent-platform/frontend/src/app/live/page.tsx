@@ -18,7 +18,7 @@ function describe(e: AGUIEvent): { text: string; tone: string } {
   const d = e.data || {};
   switch (e.type) {
     case "RUN_STARTED": return { text: `started ${(d.task_type as string) || "a task"}`, tone: "text-iris-300" };
-    case "RUN_FINISHED": return { text: `finished (${(d.tokens_used as number) || 0} tokens)`, tone: "text-positive" };
+    case "RUN_FINISHED": return { text: `finished the job`, tone: "text-positive" };
     case "RUN_ERROR": return { text: `errored`, tone: "text-danger" };
     case "TOOL_CALL_START": return { text: `used ${(d.tool_name as string) || "a tool"}`, tone: "text-warning" };
     case "TOOL_CALL_RESULT": return { text: `got a tool result`, tone: "text-aqua" };
@@ -78,7 +78,7 @@ export default function LivePage() {
             </span>
             <HumanInbox />
             <Link href="/agents/new" className="inline-flex h-9 items-center gap-1.5 rounded-xl bg-iris-gradient px-3.5 text-sm font-medium text-white shadow-[0_8px_24px_-10px_rgba(237,113,80,0.8)] transition-transform active:scale-95">
-              <Plus className="h-4 w-4" /> New agent
+              <Plus className="h-4 w-4" /> Hire
             </Link>
           </div>
         </div>
@@ -90,14 +90,14 @@ export default function LivePage() {
             <p className="eyebrow">Real-time</p>
             <h1 className="mt-1 font-display text-2xl font-semibold tracking-tight text-content sm:text-3xl">Live floor</h1>
             <p className="mt-1 text-sm text-content-muted">
-              Watch every agent think, act and hand off — as it happens. {liveCount > 0 && <span className="text-positive">{liveCount} working now.</span>}
+              Watch every worker think, act and hand off — as it happens. {liveCount > 0 && <span className="text-positive">{liveCount} at work now.</span>}
             </p>
           </div>
           {/* quick run */}
           <div className="flex items-end gap-2">
             <div className="w-44">
               <Select value={runAgent} onChange={(e) => setRunAgent(e.target.value)} className="h-9">
-                <option value="">Pick an agent…</option>
+                <option value="">Pick a worker…</option>
                 {agents.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}
               </Select>
             </div>
@@ -167,7 +167,7 @@ export default function LivePage() {
             })}
             {agents.length === 0 && (
               <Card className="col-span-full grid place-items-center p-10 text-sm text-content-subtle">
-                No agents yet. <Link href="/agents/new" className="ml-1 text-iris-300">Hire one →</Link>
+                No workers yet. <Link href="/agents/new" className="ml-1 text-iris-300">Hire one →</Link>
               </Card>
             )}
           </div>
@@ -180,7 +180,7 @@ export default function LivePage() {
             <div className="max-h-[560px] space-y-1.5 overflow-y-auto pr-1">
               {namedEvents.length === 0 && (
                 <p className="py-8 text-center text-xs text-content-subtle">
-                  Waiting for activity… run a task above to see the floor light up.
+                  Waiting for activity… give a worker a job above to see the floor light up.
                 </p>
               )}
               {namedEvents.map((e, i) => {

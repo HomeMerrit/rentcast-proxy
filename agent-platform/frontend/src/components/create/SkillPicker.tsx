@@ -105,7 +105,7 @@ export function SkillPicker({
           value={custom}
           onChange={(e) => setCustom(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addCustom())}
-          placeholder="Add a custom skill…"
+          placeholder="Add your own tool…"
           className="h-9 flex-1 rounded-lg border border-line bg-surface-inset px-3 text-sm text-content placeholder:text-content-subtle outline-none focus:border-iris-400/60"
         />
         <button
@@ -121,7 +121,7 @@ export function SkillPicker({
       {value.length > 0 && (
         <div className="space-y-2">
           <p className="text-2xs font-medium uppercase tracking-wide text-content-subtle">
-            {value.length} skill{value.length > 1 ? "s" : ""} selected — set starting proficiency
+            {value.length} tool{value.length > 1 ? "s" : ""} selected — set starting skill
           </p>
           <div className="space-y-2">
             {value.map((v) => (

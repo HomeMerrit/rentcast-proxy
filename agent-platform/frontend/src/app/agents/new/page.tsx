@@ -15,17 +15,17 @@ export default function NewAgentPage() {
             <ArrowLeft className="h-4 w-4" />
           </Link>
           <Logo />
-          <span className="ml-2 hidden text-sm text-content-subtle sm:block">/ Hire a new agent</span>
+          <span className="ml-2 hidden text-sm text-content-subtle sm:block">/ Hire a worker</span>
         </div>
       </header>
       <div className="px-4 py-8">
         <div className="mx-auto mb-8 max-w-5xl">
-          <p className="eyebrow">New agent</p>
+          <p className="eyebrow">New worker</p>
           <h1 className="mt-1 font-display text-2xl font-semibold text-content sm:text-3xl">
-            Design your AI employee
+            Bring a worker to life
           </h1>
           <p className="mt-1 text-sm text-content-muted">
-            Give them an identity, a role and a starting skill set. They&apos;ll learn and improve from every task.
+            Give them a face, a role and a starting set of tools. They&apos;ll get better with every job.
           </p>
         </div>
         <CreateAgentStudio onCreated={(agent) => router.push(`/agents/${agent.id}`)} />

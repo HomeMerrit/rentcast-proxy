@@ -8,6 +8,7 @@ import {
   Network, SkipForward, FileText, Pencil,
 } from "lucide-react";
 import { Logo } from "@/components/brand/Logo";
+import { LivingWorld } from "@/components/world/LivingWorld";
 import { Button, Field, Input, Textarea, Select, Card, Stepper, useToast } from "@/components/ui";
 import { FileDropzone } from "@/components/create/FileDropzone";
 import { CreateAgentStudio } from "@/components/create/CreateAgentStudio";
@@ -191,37 +192,49 @@ export default function OnboardingPage() {
                 animate={{ opacity: 1, scale: 1 }}
                 className="inline-flex items-center gap-1.5 rounded-full border border-line bg-content/[0.04] px-3 py-1 text-2xs font-medium text-content-muted"
               >
-                <Sparkles className="h-3 w-3 text-iris-300" /> Welcome to your AI workforce
+                <Sparkles className="h-3 w-3 text-iris-300" /> Your business, brought to life
               </motion.span>
               <h1 className="mx-auto mt-5 max-w-3xl font-display text-4xl font-semibold leading-[1.08] tracking-tight text-content sm:text-5xl">
-                Build a company of <span className="text-gradient">AI employees</span> that work,
-                learn and collaborate — 24/7.
+                Build a company<br className="hidden sm:block" /> that <span className="text-gradient">builds itself.</span>
               </h1>
               <p className="mx-auto mt-4 max-w-xl text-base text-content-muted">
-                Onboard your business in minutes. Hire specialized agents, give them your knowledge,
-                and watch them run in real time.
+                Set up in minutes. Hire your first workers, give them your tools and knowledge, and
+                watch the work — and the value — flow.
               </p>
 
-              <div className="mx-auto mt-10 grid max-w-3xl gap-4 sm:grid-cols-2">
+              <div className="pointer-events-none mx-auto mt-8 max-w-2xl">
+                <LivingWorld
+                  buildings={[
+                    { dept: "Sales", count: 4, active: true },
+                    { dept: "Engineering", count: 3, active: true },
+                    { dept: "Support", count: 2 },
+                    { dept: "Finance", count: 2 },
+                    { dept: "Operations", count: 3, active: true },
+                    { dept: "Marketing", count: 2 },
+                  ]}
+                />
+              </div>
+
+              <div className="mx-auto mt-6 grid max-w-3xl gap-4 sm:grid-cols-2">
                 <ChoiceCard
                   icon={<Building2 className="h-6 w-6" />}
-                  title="Onboard my company"
-                  desc="Set up your business, upload reference docs, and hire your first team of agents with shared context."
+                  title="Bring in my company"
+                  desc="Set up your business, add your reference docs, and hire your first team — all sharing the same context."
                   onClick={() => start("company")}
                   primary
                 />
                 <ChoiceCard
                   icon={<Rocket className="h-6 w-6" />}
                   title="Start from scratch"
-                  desc="Skip the setup and jump straight to designing your first AI agent. Add your company later."
+                  desc="Skip the setup and hire your very first worker. You can add your company later."
                   onClick={() => start("scratch")}
                 />
               </div>
 
               <div className="mx-auto mt-12 grid max-w-2xl grid-cols-3 gap-4 text-left">
                 <Highlight icon={<Users className="h-4 w-4" />} label="Hire specialists" />
-                <Highlight icon={<Brain className="h-4 w-4" />} label="Self-improving" />
-                <Highlight icon={<Network className="h-4 w-4" />} label="Agents collaborate" />
+                <Highlight icon={<Brain className="h-4 w-4" />} label="They grow with use" />
+                <Highlight icon={<Network className="h-4 w-4" />} label="Teams hand off" />
               </div>
             </motion.div>
           )}
@@ -231,7 +244,7 @@ export default function OnboardingPage() {
             <StepShell
               key="business"
               title="Tell us about your business"
-              subtitle="This context is shared with every agent you hire, so their work fits your company."
+              subtitle="This context is shared with every worker you hire, so their work fits your company."
             >
               <Card className="space-y-4 p-6">
                 <div className="grid gap-4 sm:grid-cols-2">
@@ -254,7 +267,7 @@ export default function OnboardingPage() {
                     </Select>
                   </Field>
                 </div>
-                <Field label="What does your company do?" hint="A short description helps agents understand your mission">
+                <Field label="What does your company do?" hint="A short description helps your workers understand your mission">
                   <Textarea
                     value={biz.description}
                     onChange={(e) => setBiz({ ...biz, description: e.target.value })}
@@ -271,7 +284,7 @@ export default function OnboardingPage() {
             <StepShell
               key="knowledge"
               title="Bring in your knowledge"
-              subtitle="Upload documents, playbooks or a whole folder. We embed them so your agents can reference them."
+              subtitle="Add documents, playbooks or a whole folder. We keep them close so your workers can draw on them."
             >
               <Card className="p-6">
                 <FileDropzone files={files} onChange={setFiles} />
@@ -300,7 +313,7 @@ export default function OnboardingPage() {
             <StepShell
               key="review"
               title="Review your setup"
-              subtitle="Make sure everything looks right before you hire your first agent. You can go back and edit."
+              subtitle="Make sure everything looks right before you hire your first worker. You can go back and edit."
             >
               <Card className="divide-y divide-line p-0">
                 <ReviewRow
@@ -321,12 +334,12 @@ export default function OnboardingPage() {
                 <ReviewRow
                   icon={<Brain className="h-4 w-4" />}
                   label="Knowledge"
-                  value={docCount ? `${docCount} document${docCount > 1 ? "s" : ""} ingested` : "No documents added"}
-                  meta={docCount ? "Your agents can reference these" : "You can add these later"}
+                  value={docCount ? `${docCount} document${docCount > 1 ? "s" : ""} added` : "No documents added"}
+                  meta={docCount ? "Your workers can draw on these" : "You can add these later"}
                   onEdit={() => setStep(2)}
                 />
               </Card>
-              <FlowNav onBack={() => setStep(2)} onNext={() => setStep(4)} nextLabel="Looks good — hire my first agent" />
+              <FlowNav onBack={() => setStep(2)} onNext={() => setStep(4)} nextLabel="Looks good — hire my first worker" />
             </StepShell>
           )}
 
@@ -334,11 +347,11 @@ export default function OnboardingPage() {
           {((step === 4 && mode === "company") || (step === 1 && mode === "scratch")) && (
             <StepShell
               key="hire"
-              title="Hire your first agent"
+              title="Hire your first worker"
               subtitle={
                 company
-                  ? `They'll join ${company.name} with full access to your uploaded knowledge.`
-                  : "Design your first AI employee. You can add a company anytime."
+                  ? `They'll join ${company.name} with full access to your knowledge.`
+                  : "Bring your first worker to life. You can add a company anytime."
               }
               wide
             >
