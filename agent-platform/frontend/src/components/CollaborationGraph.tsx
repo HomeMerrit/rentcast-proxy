@@ -2,7 +2,7 @@
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { NetworkGraph, NetworkNode } from "@/types/agent";
-import { avatarUrl } from "@/lib/utils";
+import { avatarHue, initialsOf } from "./AgentAvatar";
 
 const W = 820;
 const H = 620;
@@ -135,28 +135,27 @@ export function CollaborationGraph({ graph }: { graph: NetworkGraph }) {
               onMouseLeave={() => setHover(null)}
               onClick={() => router.push(`/agents/${node.id}`)}
             >
-              <clipPath id={clip}>
-                <circle r={r} />
-              </clipPath>
-              <circle r={r + 3} fill="#20273f" stroke={ring} strokeWidth={2} />
-              <image
-                href={node.avatar_url || avatarUrl(node.avatar_seed)}
-                x={-r}
-                y={-r}
-                width={r * 2}
-                height={r * 2}
-                clipPath={`url(#${clip})`}
-                preserveAspectRatio="xMidYMid slice"
-              />
+              <defs>
+                <linearGradient id={clip} x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stopColor={avatarHue(node.avatar_seed || node.name)[0]} />
+                  <stop offset="1" stopColor={avatarHue(node.avatar_seed || node.name)[1]} />
+                </linearGradient>
+              </defs>
+              <circle r={r + 3} fill="#FFFFFF" stroke={ring} strokeWidth={2.4} />
+              <circle r={r} fill={`url(#${clip})`} />
+              <text y={r * 0.34} textAnchor="middle" fontSize={r * 0.8} fontWeight={700} fill="#fff" style={{ pointerEvents: "none" }}>
+                {initialsOf(node.name)}
+              </text>
               {(hover === node.id || nodes.length <= 12) && (
                 <text
-                  y={r + 15}
+                  y={r + 16}
                   textAnchor="middle"
                   fontSize={11}
-                  fill={hover === node.id ? "#F3EFE6" : "#B7B1A4"}
+                  fontWeight={hover === node.id ? 600 : 400}
+                  fill={hover === node.id ? "#241F18" : "#6B6355"}
                   style={{ pointerEvents: "none" }}
                 >
-                  {node.name}
+                  {node.name.split(" ")[0]}
                 </text>
               )}
             </g>

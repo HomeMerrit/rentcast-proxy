@@ -6,7 +6,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function avatarUrl(seed: string): string {
-  return `https://api.dicebear.com/9.x/personas/svg?seed=${encodeURIComponent(seed)}&backgroundColor=b6e3f4,c0aede,d1d4f9`;
+  return `https://api.dicebear.com/9.x/personas/svg?seed=${encodeURIComponent(seed)}&backgroundColor=f0be4d,ed7150,e08a5b,5a97d6,4fb0aa,e6ae3c`;
 }
 
 export function successRate(agent: { task_count: number; success_count: number }): number {

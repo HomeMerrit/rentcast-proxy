@@ -16,13 +16,18 @@ import type {
   NetworkGraph,
 } from "@/types/agent";
 
+import { DEMO, demoResponse } from "./demo";
+
 export const BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
 function authKey(): string | null {
   return typeof window !== "undefined" ? localStorage.getItem("agentos_api_key") : null;
 }
 
+const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
 async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
+  if (DEMO) { await delay(120 + Math.min(300, path.length * 4)); return demoResponse(path) as T; }
   const apiKey = authKey();
   const res = await fetch(`${BASE}${path}`, {
     ...init,
@@ -39,6 +44,7 @@ async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
 
 /** Multipart upload — do NOT set Content-Type (browser sets the boundary). */
 async function apiUpload<T>(path: string, form: FormData): Promise<T> {
+  if (DEMO) { await delay(300); return demoResponse(path) as T; }
   const apiKey = authKey();
   const res = await fetch(`${BASE}${path}`, {
     method: "POST",
