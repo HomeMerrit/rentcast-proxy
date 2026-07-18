@@ -1,8 +1,9 @@
 name: CI
 
-# The merge gate. Runs the backend tenancy / auth / rate-limit suite against a
-# real Postgres + Redis on every PR and on pushes to the platform branch, so an
-# isolation or auth regression can never reach the deployed backend unnoticed.
+# The merge gate. Runs the backend tenancy / auth / rate-limit / budget suite
+# against a real Postgres + Redis on every PR and on pushes to the platform
+# branch, so an isolation, auth, or spend-cap regression can never reach the
+# deployed backend unnoticed.
 
 on:
   pull_request:

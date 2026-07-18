@@ -52,9 +52,11 @@ async def create_agent(body: AgentCreate, db: AsyncSession = Depends(get_db), or
 
 @router.post("/{agent_id}/run", response_model=RunTaskResponse)
 async def run_task(agent_id: UUID, body: RunTaskRequest, db: AsyncSession = Depends(get_db), org: Organization = Depends(get_current_org)):
-    from ..workers.agent_tasks import run_agent_task
+    from ..billing import assert_within_budget
     agent = await assert_agent_in_org(agent_id, org, db)
+    await assert_within_budget(org, db)
 
+    from ..workers.agent_tasks import run_agent_task
     task = run_agent_task.delay(
         str(agent_id),
         agent.name,

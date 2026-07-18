@@ -92,6 +92,10 @@ async def a2a_receive(agent_id: UUID, body: dict, db: AsyncSession = Depends(get
     # 404 (via assert) rather than leaking cross-tenant existence.
     agent = await assert_agent_in_org(agent_id, org, db)
 
+    # Enforce the caller org's monthly spend cap before queueing work.
+    from ..billing import assert_within_budget
+    await assert_within_budget(org, db)
+
     # Extract text from A2A message format
     message = params.get("message", {})
     parts = message.get("parts", [])

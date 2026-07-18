@@ -4,6 +4,7 @@ from sqlalchemy import String, Integer, Boolean, Text, ForeignKey, DateTime, JSO
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .database import Base
+from .config import settings
 
 
 class Organization(Base):
@@ -13,6 +14,11 @@ class Organization(Base):
     name: Mapped[str] = mapped_column(String, nullable=False)
     slug: Mapped[str | None] = mapped_column(String, unique=True, nullable=True)
     plan: Mapped[str] = mapped_column(String, default="pilot")
+    # Hard monthly spend cap in USD. NULL means unlimited. New orgs inherit the
+    # configured default; raise it per-org to lift the cap.
+    monthly_budget_usd: Mapped[float | None] = mapped_column(
+        Float, nullable=True, default=lambda: settings.default_monthly_budget_usd
+    )
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.utcnow)
 
 

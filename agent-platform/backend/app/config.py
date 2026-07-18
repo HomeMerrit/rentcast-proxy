@@ -18,6 +18,12 @@ class Settings(BaseSettings):
     # Document upload guards.
     max_upload_mb: int = 8
     max_upload_files: int = 25
+    # Per-tenant spend guard. Each org gets a monthly USD cap; once the current
+    # calendar month's task cost reaches it, new task dispatch is refused (402).
+    # Set an org's monthly_budget_usd to NULL to remove its cap. enforce_budget
+    # is the global kill-switch (accounting still runs; only blocking is skipped).
+    default_monthly_budget_usd: float = 50.0
+    enforce_budget: bool = True
     # Comma-separated extra CORS origins (in addition to localhost + *.up.railway.app)
     cors_origins: str = ""
     # Default organization used to scope data when auth is disabled (pilots/dev) and to

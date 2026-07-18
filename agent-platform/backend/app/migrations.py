@@ -25,6 +25,8 @@ _COLUMN_MIGRATIONS: list[tuple[str, str, str]] = [
     ("companies", "org_id", "UUID"),
     ("documents", "org_id", "UUID"),
     ("api_keys", "org_id", "UUID"),
+    # Per-tenant monthly spend cap (NULL = unlimited). Backfilled below.
+    ("organizations", "monthly_budget_usd", "DOUBLE PRECISION"),
 ]
 
 
@@ -71,6 +73,21 @@ async def _tenancy_bootstrap(engine: AsyncEngine) -> None:
                 )
             except Exception as exc:  # noqa: BLE001
                 logger.warning("tenancy: backfill %s failed: %s", table, exc)
+
+        # 2b) Give the default org (the live pilot tenant) a spend cap if it has
+        #     none yet. Targeted at the default org only, so a real signup org that
+        #     an admin sets to NULL (unlimited) is never re-capped on restart. To
+        #     make the default org unlimited, set a very high number, not NULL.
+        try:
+            await conn.execute(
+                text(
+                    "UPDATE organizations SET monthly_budget_usd = :budget "
+                    "WHERE id = :id AND monthly_budget_usd IS NULL"
+                ),
+                {"budget": settings.default_monthly_budget_usd, "id": settings.default_org_id},
+            )
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("tenancy: default-org budget backfill failed: %s", exc)
 
         # 3) Relax global name uniqueness -> per-org. Drop the old global unique
         #    constraint (name auto-assigned by Postgres) and ensure the composite one.
