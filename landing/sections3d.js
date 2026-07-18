@@ -71,9 +71,9 @@ function init(){
   // a person — standing or seated at a desk; head kept for idle head-turns
   function person(color, seated){
     const g=new THREE.Group();
-    const pts=[[0,0],[0.36,0],[0.40,0.07],[0.26,0.13],[0.205,0.42],[0.225,0.6],[0.17,0.74],[0.055,0.8]].map(p=>new THREE.Vector2(p[0],p[1]));
-    const b=new THREE.Mesh(new THREE.LatheGeometry(pts,16),mat(color,{rough:0.6})); g.add(b);
-    const h=new THREE.Mesh(new THREE.SphereGeometry(0.19,16,12),mat(color,{rough:0.55})); h.position.y=0.83; g.add(h);
+    const pts=[[0,0],[0.30,0],[0.315,0.06],[0.235,0.17],[0.205,0.40],[0.245,0.585],[0.235,0.64],[0.115,0.70],[0.075,0.745]].map(p=>new THREE.Vector2(p[0],p[1]));
+    const b=new THREE.Mesh(new THREE.LatheGeometry(pts,18),mat(color,{rough:0.6})); g.add(b);
+    const h=new THREE.Mesh(new THREE.SphereGeometry(0.195,18,14),mat(color,{rough:0.55})); h.position.y=0.80; g.add(h);
     const inner=g; const wrap=new THREE.Group(); wrap.add(inner);
     if(seated){ inner.scale.set(1.0,0.66,1.0); inner.rotation.x=0.16; }   // lower + lean toward desk
     wrap.userData.head=h; wrap.userData.inner=inner;

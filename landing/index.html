@@ -2,17 +2,22 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Build a company that builds itself</title>
+<title>AgentOS — Build a company that builds itself</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content="AgentOS is where you hire AI employees — they research, sell, operate and report around the clock, coordinating as one workforce you can actually watch." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%237257ff'/%3E%3Cpath d='M12 4 5 8v8l7 4 7-4V8l-7-4Z' fill='none' stroke='white' stroke-width='1.5' stroke-linejoin='round'/%3E%3Ccircle cx='12' cy='12' r='2.2' fill='white'/%3E%3C/svg%3E" />
 <style>
 :root{
   --bg-1:#E9F0EF; --bg-2:#F7F2EA; --ink:#241F18; --ink-2:#5C554A; --ink-3:#8C8474;
   --panel:#FFFFFF; --line:rgba(36,31,24,.10); --line-2:rgba(36,31,24,.16);
   --coral:#ED7150; --coral-d:#CE5330; --gold:#F0BE4D;
+  --iris:#7257ff; --iris-2:#a855f7; --aqua:#22d3ee;
+  --iris-grad:linear-gradient(135deg,#7257ff 0%,#a855f7 55%,#22d3ee 130%);
   --sales:#5A97D6; --support:#4FB0AA; --finance:#E6AE3C; --ops:#E08A5B; --eng:#8B79D4; --mktg:#E06A9A;
   --window:rgba(64,84,104,.28);
   --shadow-s:0 1px 2px rgba(30,24,16,.06),0 8px 22px -12px rgba(30,24,16,.22);
   --shadow-m:0 2px 4px rgba(30,24,16,.06),0 22px 46px -22px rgba(30,24,16,.30);
+  --shadow-l:0 4px 8px rgba(30,24,16,.05),0 40px 80px -30px rgba(30,24,16,.42);
   --font:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",system-ui,Roboto,Helvetica,Arial,sans-serif;
   --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
 }
@@ -23,10 +28,11 @@
     --coral:#F5825F; --gold:#F5CB63; --window:#FFD98A;
     --shadow-s:0 1px 2px rgba(0,0,0,.3),0 10px 24px -12px rgba(0,0,0,.5);
     --shadow-m:0 2px 6px rgba(0,0,0,.35),0 26px 50px -24px rgba(0,0,0,.6);
+    --shadow-l:0 6px 12px rgba(0,0,0,.4),0 44px 90px -34px rgba(0,0,0,.72);
   }
 }
-:root[data-theme="light"]{--bg-1:#E9F0EF;--bg-2:#F7F2EA;--ink:#241F18;--ink-2:#5C554A;--ink-3:#8C8474;--panel:#FFFFFF;--line:rgba(36,31,24,.10);--line-2:rgba(36,31,24,.16);--coral:#ED7150;--gold:#F0BE4D;--window:rgba(64,84,104,.28);--shadow-s:0 1px 2px rgba(30,24,16,.06),0 8px 22px -12px rgba(30,24,16,.22);--shadow-m:0 2px 4px rgba(30,24,16,.06),0 22px 46px -22px rgba(30,24,16,.30);}
-:root[data-theme="dark"]{--bg-1:#20273f;--bg-2:#171c2e;--ink:#F3EFE6;--ink-2:#B7B1A4;--ink-3:#847E71;--panel:#212840;--line:rgba(206,214,235,.12);--line-2:rgba(206,214,235,.18);--coral:#F5825F;--gold:#F5CB63;--window:#FFD98A;--shadow-s:0 1px 2px rgba(0,0,0,.3),0 10px 24px -12px rgba(0,0,0,.5);--shadow-m:0 2px 6px rgba(0,0,0,.35),0 26px 50px -24px rgba(0,0,0,.6);}
+:root[data-theme="light"]{--bg-1:#E9F0EF;--bg-2:#F7F2EA;--ink:#241F18;--ink-2:#5C554A;--ink-3:#8C8474;--panel:#FFFFFF;--line:rgba(36,31,24,.10);--line-2:rgba(36,31,24,.16);--coral:#ED7150;--gold:#F0BE4D;--window:rgba(64,84,104,.28);--shadow-s:0 1px 2px rgba(30,24,16,.06),0 8px 22px -12px rgba(30,24,16,.22);--shadow-m:0 2px 4px rgba(30,24,16,.06),0 22px 46px -22px rgba(30,24,16,.30);--shadow-l:0 4px 8px rgba(30,24,16,.05),0 40px 80px -30px rgba(30,24,16,.42);}
+:root[data-theme="dark"]{--bg-1:#20273f;--bg-2:#171c2e;--ink:#F3EFE6;--ink-2:#B7B1A4;--ink-3:#847E71;--panel:#212840;--line:rgba(206,214,235,.12);--line-2:rgba(206,214,235,.18);--coral:#F5825F;--gold:#F5CB63;--window:#FFD98A;--shadow-s:0 1px 2px rgba(0,0,0,.3),0 10px 24px -12px rgba(0,0,0,.5);--shadow-m:0 2px 6px rgba(0,0,0,.35),0 26px 50px -24px rgba(0,0,0,.6);--shadow-l:0 6px 12px rgba(0,0,0,.4),0 44px 90px -34px rgba(0,0,0,.72);}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;background:var(--bg-2)}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
@@ -36,103 +42,324 @@ h1,h2,h3{margin:0;font-weight:800;letter-spacing:-.03em;text-wrap:balance}
 p{margin:0}
 a{color:inherit;text-decoration:none}
 .eyebrow{font-family:var(--mono);text-transform:uppercase;letter-spacing:.22em;font-size:11px;color:var(--ink-3);font-weight:600}
+.grad{background:var(--iris-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 
+/* ---------- top bar ---------- */
 .bar{position:sticky;top:0;z-index:60;backdrop-filter:blur(12px);background:color-mix(in srgb,var(--bg-2) 74%,transparent);border-bottom:1px solid var(--line)}
 .bar-in{max-width:1160px;margin:0 auto;padding:0 26px;height:64px;display:flex;align-items:center;justify-content:space-between}
 .brandlk{display:flex;align-items:center;gap:11px}
+.logomark{width:30px;height:30px;border-radius:9px;background:var(--iris-grad);display:grid;place-items:center;box-shadow:0 6px 18px -6px rgba(114,87,255,.9)}
+.logomark svg{width:18px;height:18px}
 .wordmark{font-weight:800;font-size:19px;letter-spacing:-.02em}
+.navlinks{display:none;gap:4px;margin-left:14px}
+@media(min-width:900px){.navlinks{display:flex}}
+.navlinks a{font-size:14px;color:var(--ink-2);padding:8px 12px;border-radius:10px;font-weight:500}
+.navlinks a:hover{color:var(--ink);background:color-mix(in srgb,var(--ink) 5%,transparent)}
 .barbtns{display:flex;align-items:center;gap:10px}
 .ttoggle{width:38px;height:38px;border-radius:11px;border:1px solid var(--line-2);background:var(--panel);cursor:pointer;display:grid;place-items:center;font-size:15px;box-shadow:var(--shadow-s)}
-.btn{font-weight:600;font-size:15px;border-radius:13px;padding:12px 20px;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:9px;transition:transform .14s,box-shadow .14s}
-.btn-p{background:var(--coral);color:#fff;box-shadow:0 10px 24px -10px var(--coral-d,#CE5330)}
-.btn-p:hover{transform:translateY(-2px);box-shadow:0 16px 30px -10px var(--coral-d,#CE5330)}
+.btn{font-weight:600;font-size:15px;border-radius:13px;padding:12px 20px;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:9px;transition:transform .14s,box-shadow .14s;white-space:nowrap}
+.btn-p{background:var(--coral);color:#fff;box-shadow:0 10px 24px -10px var(--coral-d)}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 16px 30px -10px var(--coral-d)}
+.btn-iris{background:var(--iris-grad);color:#fff;box-shadow:0 10px 26px -10px rgba(114,87,255,.85)}
+.btn-iris:hover{transform:translateY(-2px);box-shadow:0 16px 34px -10px rgba(114,87,255,.9)}
 .btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--line-2)}
 .btn-ghost:hover{background:color-mix(in srgb,var(--ink) 5%,transparent)}
 .btn-link{background:transparent;color:var(--ink-2);padding:12px 6px}
 .btn-link:hover{color:var(--ink)}
 
 section{position:relative;z-index:1}
-.hero{padding:52px 0 8px;text-align:center}
-.hero h1{font-size:clamp(38px,6.4vw,74px);line-height:.98;letter-spacing:-.04em}
-.hero .sub{font-size:clamp(16px,2vw,20px);color:var(--ink-2);max-width:30ch;margin:20px auto 0;font-weight:450}
-.hero-cta{display:flex;gap:12px;justify-content:center;margin-top:26px;flex-wrap:wrap;align-items:center}
-.stage{margin:14px auto 0;max-width:1120px;position:relative}
-.stage svg{width:100%;height:auto;display:block;overflow:visible}
+.hero{padding:56px 0 8px;text-align:center}
+.hero .eyebrow{display:inline-block;margin-bottom:16px}
+.hero h1{font-size:clamp(38px,6.4vw,76px);line-height:.98;letter-spacing:-.04em}
+.hero .sub{font-size:clamp(16px,1.9vw,20px);color:var(--ink-2);max-width:46ch;margin:22px auto 0;font-weight:450;line-height:1.5}
+.hero-cta{display:flex;gap:12px;justify-content:center;margin-top:28px;flex-wrap:wrap;align-items:center}
+.microcopy{margin-top:14px;font-size:13px;color:var(--ink-3)}
+.stage{margin:20px auto 0;max-width:1120px;position:relative}
 #hero3d{width:100%;display:block;min-height:280px;touch-action:pan-y}
 .stage-fallback{padding:80px 20px;text-align:center;color:var(--ink-3)}
-.v3d{width:100%;height:158px;display:block}
-.grow .v3d{height:132px}
-.v3d-wide{width:100%;height:auto;aspect-ratio:16/11}
 .liveflag{position:absolute;top:12px;left:50%;transform:translateX(-50%);display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);background:color-mix(in srgb,var(--panel) 70%,transparent);border:1px solid var(--line);border-radius:20px;padding:5px 12px;backdrop-filter:blur(6px)}
-.liveflag .dot{width:7px;height:7px;border-radius:50%;background:var(--coral)}
+.liveflag .dot{width:7px;height:7px;border-radius:50%;background:var(--coral);animation:blink 1.8s ease-in-out infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-.liveflag .dot{animation:blink 1.8s ease-in-out infinite}
 
+/* ---------- proof strip ---------- */
+.proof{padding:30px 0 8px}
+.proof .lab{text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);margin-bottom:18px}
+.proof-row{display:flex;flex-wrap:wrap;gap:12px 34px;justify-content:center;align-items:center}
+.proof-row .pill{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:15px;color:var(--ink-2);letter-spacing:-.01em;opacity:.9}
+.proof-row .pill .g{width:9px;height:9px;border-radius:3px;background:var(--iris-grad)}
+
+/* ---------- section scaffolding ---------- */
 .band{padding:92px 0;border-top:1px solid var(--line)}
 .band.soft{background:color-mix(in srgb,var(--panel) 34%,transparent)}
 .sec-head{max-width:660px}
 .sec-head.center{margin:0 auto;text-align:center}
-.sec-head h2{font-size:clamp(28px,4.4vw,46px);line-height:1.02;letter-spacing:-.03em}
+.sec-head h2{font-size:clamp(28px,4.4vw,46px);line-height:1.03;letter-spacing:-.03em}
 .sec-head p{color:var(--ink-2);font-size:18px;margin-top:14px;font-weight:450}
 
-/* in-world workers — each in their own district */
+/* ---------- real product panels (AgentOS dark UI) ---------- */
+.os{
+  --c-canvas:#070810; --c-surface:#0c0e18; --c-raised:#11131f; --c-inset:#090a12;
+  --c-line:rgba(255,255,255,.08); --c-line2:rgba(255,255,255,.14);
+  --c-ink:#eef1fa; --c-mut:#98a1ba; --c-sub:#5f6884;
+  --c-iris:#7257ff; --c-iris3:#ab9fff; --c-aqua:#22d3ee;
+  --c-pos:#34d399; --c-warn:#fbbf24; --c-dang:#fb7185;
+  --c-grad:linear-gradient(135deg,#7257ff 0%,#a855f7 55%,#22d3ee 130%);
+  border-radius:18px;overflow:hidden;border:1px solid rgba(255,255,255,.10);
+  background:var(--c-canvas);color:var(--c-ink);box-shadow:var(--shadow-l);
+  font-size:13px;line-height:1.45;position:relative;
+}
+.os-chrome{display:flex;align-items:center;gap:8px;padding:11px 14px;background:#0a0b14;border-bottom:1px solid var(--c-line)}
+.os-dots{display:flex;gap:6px}
+.os-dots i{width:11px;height:11px;border-radius:50%;display:block}
+.os-dots i:nth-child(1){background:#fb7185}.os-dots i:nth-child(2){background:#fbbf24}.os-dots i:nth-child(3){background:#34d399}
+.os-url{margin:0 auto;font-family:var(--mono);font-size:11px;color:var(--c-sub);background:#05060c;border:1px solid var(--c-line);padding:3px 12px;border-radius:8px}
+.os-body{padding:16px;background:
+  radial-gradient(60% 46% at 50% 0%, rgba(114,87,255,.16), transparent 70%),
+  linear-gradient(rgba(255,255,255,.022) 1px, transparent 1px) 0 0/44px 44px,
+  linear-gradient(90deg, rgba(255,255,255,.022) 1px, transparent 1px) 0 0/44px 44px,
+  var(--c-canvas);}
+.os-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:10px;flex-wrap:wrap}
+.os-brand{display:flex;align-items:center;gap:9px}
+.os-lg{width:24px;height:24px;border-radius:7px;background:var(--c-grad);display:grid;place-items:center}
+.os-lg svg{width:14px;height:14px}
+.os-wm{font-weight:700;font-size:14px}
+.os-nav{display:flex;gap:4px;margin-left:6px}
+.os-nav span{font-size:12px;color:var(--c-mut);padding:5px 10px;border-radius:8px}
+.os-nav span.on{background:rgba(255,255,255,.06);color:var(--c-ink)}
+.os-live{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--c-pos);border:1px solid var(--c-line);border-radius:20px;padding:3px 9px}
+.os-live .p{position:relative;width:6px;height:6px}
+.os-live .p::before{content:"";position:absolute;inset:0;border-radius:50%;background:var(--c-pos);animation:ping 1.8s cubic-bezier(0,0,.2,1) infinite}
+.os-live .p::after{content:"";position:absolute;inset:0;border-radius:50%;background:var(--c-pos)}
+@keyframes ping{75%,100%{transform:scale(2.4);opacity:0}}
+.os-newbtn{display:inline-flex;align-items:center;gap:6px;background:var(--c-grad);color:#fff;font-weight:600;font-size:12px;padding:7px 12px;border-radius:10px;box-shadow:0 8px 20px -10px rgba(114,87,255,.9)}
+.os-h1{font-size:20px;font-weight:700;letter-spacing:-.02em;margin:2px 0 12px}
+.os-eyebrow{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--c-sub);font-weight:600}
+.card{background:var(--c-surface);border:1px solid var(--c-line);border-radius:14px;box-shadow:0 1px 0 0 rgba(255,255,255,.04) inset,0 8px 30px -12px rgba(0,0,0,.6)}
+/* KPI row */
+.os-kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:9px}
+@media(max-width:720px){.os-kpis{grid-template-columns:repeat(3,1fr)}}
+.kpi{padding:11px}
+.kpi .kh{display:flex;align-items:center;justify-content:space-between}
+.kpi .ic{width:26px;height:26px;border-radius:8px;background:rgba(255,255,255,.05);display:grid;place-items:center;color:var(--c-mut)}
+.kpi .ic svg{width:15px;height:15px}
+.kpi .v{font-size:21px;font-weight:700;margin-top:9px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.kpi .v.pos{color:var(--c-pos)}
+.kpi .l{font-size:10.5px;color:var(--c-sub)}
+.spark{height:16px;width:46px}
+/* charts row */
+.os-charts{display:grid;grid-template-columns:2fr 1fr;gap:9px;margin-top:9px}
+@media(max-width:720px){.os-charts{grid-template-columns:1fr}}
+.chart-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.chart-hd h3{font-size:13px;font-weight:600}
+.seg{display:inline-flex;background:var(--c-inset);border:1px solid var(--c-line);border-radius:9px;padding:2px}
+.seg span{font-size:11px;padding:3px 9px;border-radius:7px;color:var(--c-mut)}
+.seg span.on{background:rgba(255,255,255,.08);color:var(--c-ink)}
+.gauge-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:14px}
+.gauge-wrap h3{align-self:flex-start;font-size:13px;font-weight:600}
+.gauge{position:relative;width:118px;height:118px}
+.gauge .num{position:absolute;inset:0;display:grid;place-items:center;font-size:26px;font-weight:700;letter-spacing:-.02em}
+.gauge .sub2{font-size:10.5px;color:var(--c-sub)}
+/* dept + activity */
+.os-mid{display:grid;grid-template-columns:1fr 2fr;gap:9px;margin-top:9px}
+@media(max-width:720px){.os-mid{grid-template-columns:1fr}}
+.pad{padding:14px}
+.pad h3{font-size:13px;font-weight:600;margin-bottom:12px}
+.barlist{display:flex;flex-direction:column;gap:9px}
+.barrow{display:grid;grid-template-columns:64px 1fr auto;gap:8px;align-items:center;font-size:11.5px}
+.barrow .nm{color:var(--c-mut)}
+.bartrk{height:8px;border-radius:6px;background:rgba(255,255,255,.045);overflow:hidden}
+.barfill{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,#7c66ff,#22d3ee);box-shadow:0 0 12px -3px rgba(114,87,255,.7)}
+.barrow .vv{color:var(--c-sub);font-variant-numeric:tabular-nums}
+.feed{display:flex;flex-direction:column;gap:4px;max-height:230px;overflow:hidden}
+.feed-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.feed-hd h3{font-size:13px;font-weight:600}
+.feed-hd .u{font-size:10.5px;color:var(--c-sub);display:inline-flex;align-items:center;gap:6px}
+.feed-hd .u i{width:6px;height:6px;border-radius:50%;background:var(--c-pos);animation:blink 1.6s infinite}
+.frow{display:flex;align-items:center;gap:10px;padding:7px 6px;border-radius:9px}
+.frow:hover{background:rgba(255,255,255,.02)}
+.frow .tx{min-width:0;flex:1}
+.frow .tx .a{font-size:12px;color:var(--c-ink)}
+.frow .tx .a b{font-weight:600}
+.frow .tx .a .m{color:var(--c-mut)}
+.frow .tx .r{font-size:10.5px;color:var(--c-sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.frow .meta{display:flex;align-items:center;gap:9px;font-size:10.5px;color:var(--c-sub);flex-shrink:0}
+.tick{color:var(--c-pos)}
+/* avatars */
+.av{border-radius:9px;display:grid;place-items:center;color:#fff;font-weight:700;flex-shrink:0;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
+.av.s28{width:28px;height:28px;font-size:10px}
+.av.s34{width:34px;height:34px;font-size:12px}
+.av.s40{width:40px;height:40px;font-size:13px}
+.av-i{background:linear-gradient(135deg,#7257ff,#a855f7)}
+.av-a{background:linear-gradient(135deg,#0ea5b7,#22d3ee)}
+.av-o{background:linear-gradient(135deg,#e08a5b,#f0a35b)}
+.av-f{background:linear-gradient(135deg,#d99a2b,#f0c65b)}
+.av-e{background:linear-gradient(135deg,#6d5bd0,#9f8bff)}
+.av-s{background:linear-gradient(135deg,#3aa79f,#5fd0c4)}
+/* fleet table */
+.fleet{margin-top:9px;overflow:hidden;padding:0}
+.fleet-hd{display:flex;align-items:center;gap:10px;padding:13px 14px;border-bottom:1px solid var(--c-line);flex-wrap:wrap}
+.fleet-hd h3{font-size:13px;font-weight:600;margin-right:auto}
+.fleet-hd .inp{height:28px;display:inline-flex;align-items:center;gap:6px;background:var(--c-inset);border:1px solid var(--c-line);border-radius:9px;padding:0 10px;color:var(--c-sub);font-size:11.5px}
+.fleet-hd .sel{height:28px;display:inline-flex;align-items:center;background:var(--c-inset);border:1px solid var(--c-line);border-radius:9px;padding:0 10px;color:var(--c-mut);font-size:11.5px}
+table.ft{width:100%;min-width:600px;border-collapse:collapse;font-size:12.5px}
+table.ft th{text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--c-sub);font-weight:500;padding:9px 10px;border-bottom:1px solid var(--c-line)}
+table.ft th.r,table.ft td.r{text-align:right}
+table.ft td{padding:9px 10px;border-bottom:1px solid rgba(255,255,255,.05)}
+table.ft tr:last-child td{border-bottom:0}
+.ag{display:flex;align-items:center;gap:9px}
+.ag>span{min-width:0}
+.ag .nm{font-weight:600;white-space:nowrap}
+.ag .ti{font-size:10.5px;color:var(--c-sub);white-space:nowrap}
+.num{font-variant-numeric:tabular-nums}
+.pos{color:var(--c-pos)}.warn{color:var(--c-warn)}.dang{color:var(--c-dang)}.mut{color:var(--c-mut)}.sub{color:var(--c-sub)}
+.sdot{width:7px;height:7px;border-radius:50%;display:inline-block}
+.sdot.active{background:var(--c-pos);box-shadow:0 0 0 3px rgba(52,211,153,.16)}
+.sdot.thinking{background:var(--c-iris3);box-shadow:0 0 0 3px rgba(171,159,255,.16)}
+.sdot.idle{background:var(--c-sub)}
+.sdot.error{background:var(--c-dang);box-shadow:0 0 0 3px rgba(251,113,133,.16)}
+/* live floor */
+.floor{display:grid;grid-template-columns:1fr .8fr;gap:9px;align-items:start}
+@media(max-width:720px){.floor{grid-template-columns:1fr}}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+@media(max-width:560px){.tiles{grid-template-columns:1fr}}
+.tile{padding:12px}
+.tile-hd>span:nth-child(2){min-width:0}
+.tile-hd .nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tile.busy{border-color:rgba(114,87,255,.4);box-shadow:0 0 0 1px rgba(114,87,255,.35),0 0 40px -8px rgba(114,87,255,.5)}
+.tile-hd{display:flex;align-items:center;gap:9px}
+.tile-hd .nm{font-weight:600;font-size:13px}
+.tile-hd .ti{font-size:10px;color:var(--c-sub)}
+.tile-hd .st{margin-left:auto;font-size:10.5px;display:inline-flex;align-items:center;gap:5px;color:var(--c-mut)}
+.tile-body{margin-top:10px;min-height:44px;border:1px solid var(--c-line);background:var(--c-inset);border-radius:10px;padding:9px;font-size:11.5px}
+.caret{display:inline-block;width:5px;height:12px;background:var(--c-iris3);vertical-align:middle;margin-left:2px;animation:blink 1s steps(1) infinite}
+.estream{padding:13px}
+.estream h3{font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px;margin-bottom:10px}
+.estream .ev{display:flex;gap:8px;align-items:flex-start;padding:5px 4px;font-size:11.5px}
+.estream .ev .d{width:6px;height:6px;border-radius:50%;background:var(--c-iris3);margin-top:5px;flex-shrink:0}
+.estream .ev b{font-weight:600;color:var(--c-ink)}
+/* create studio */
+.studio{display:grid;grid-template-columns:.9fr 1.1fr;gap:14px}
+@media(max-width:720px){.studio{grid-template-columns:1fr}}
+.field{margin-bottom:11px}
+.field .lb{font-size:10.5px;color:var(--c-sub);margin-bottom:5px}
+.field .in{height:34px;display:flex;align-items:center;background:var(--c-inset);border:1px solid var(--c-line);border-radius:10px;padding:0 11px;color:var(--c-ink);font-size:12.5px}
+.field .in.ph{color:var(--c-sub)}
+.avbig{width:76px;height:76px;border-radius:18px;font-size:26px}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{font-size:11.5px;padding:6px 11px;border-radius:20px;border:1px solid var(--c-line);color:var(--c-mut);display:inline-flex;align-items:center;gap:6px}
+.chip.on{background:rgba(114,87,255,.14);border-color:rgba(114,87,255,.4);color:#cdc7ff}
+.chip .pl{color:var(--c-iris3);font-weight:700}
+.prof{font-size:11px;color:var(--c-sub)}
+/* two-col product feature */
+.feat2{display:grid;grid-template-columns:1fr 1.15fr;gap:44px;align-items:center}
+@media(max-width:900px){.feat2{grid-template-columns:1fr;gap:28px}}
+.feat2.flip .os{order:-1}
+@media(max-width:900px){.feat2.flip .os{order:0}}
+.feat2 ul{list-style:none;padding:0;margin:20px 0 0}
+.feat2 ul li{display:flex;gap:11px;align-items:flex-start;margin-top:13px;color:var(--ink-2);font-size:15.5px}
+.feat2 ul li .ck{width:22px;height:22px;border-radius:7px;background:color-mix(in srgb,var(--iris) 16%,transparent);display:grid;place-items:center;flex-shrink:0;margin-top:1px}
+.feat2 ul li .ck svg{width:13px;height:13px;stroke:var(--iris)}
+
+/* ---------- in-world 3D sections ---------- */
+.v3d{width:100%;height:158px;display:block}
+.grow .v3d{height:132px}
+.v3d-wide{width:100%;height:auto;aspect-ratio:16/11}
 .team{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:40px}
 @media(max-width:820px){.team{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:460px){.team{grid-template-columns:repeat(2,1fr)}}
 .tw{text-align:center;padding:10px 4px 14px;border-radius:18px;transition:background .18s,transform .18s}
 .tw:hover{background:color-mix(in srgb,var(--panel) 55%,transparent);transform:translateY(-4px)}
-.tw svg{width:100%;height:auto;display:block}
 .tw .n{font-weight:700;font-size:14px;margin-top:2px}
 .tw .j{font-size:12px;color:var(--ink-3)}
-
 .two{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:center}
 @media(max-width:860px){.two{grid-template-columns:1fr;gap:26px}}
 .visual{border-radius:26px;overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow-m);background:linear-gradient(180deg,color-mix(in srgb,var(--bg-1) 70%,var(--panel)),var(--panel))}
-.visual svg{width:100%;height:auto;display:block}
-
 .growth{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:44px}
 @media(max-width:820px){.growth{grid-template-columns:repeat(2,1fr)}}
 .grow{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:14px;box-shadow:var(--shadow-s);text-align:center}
-.grow svg{width:100%;height:auto;display:block}
 .grow .n{font-weight:700;font-size:15px;margin-top:8px}
+
+/* ---------- capability grid ---------- */
+.cap{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:44px}
+@media(max-width:900px){.cap{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.cap{grid-template-columns:1fr}}
+.capcard{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:24px;box-shadow:var(--shadow-s);transition:transform .18s,box-shadow .18s}
+.capcard:hover{transform:translateY(-4px);box-shadow:var(--shadow-m)}
+.capcard .ic{width:42px;height:42px;border-radius:12px;background:color-mix(in srgb,var(--iris) 14%,transparent);display:grid;place-items:center;margin-bottom:15px}
+.capcard .ic svg{width:22px;height:22px;stroke:var(--iris);fill:none;stroke-width:1.7}
+.capcard h3{font-size:18px;letter-spacing:-.02em}
+.capcard p{color:var(--ink-2);font-size:14.5px;margin-top:7px}
+
+/* ---------- stats band ---------- */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+@media(max-width:720px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stat{text-align:center}
+.stat .n{font-size:clamp(30px,4.6vw,50px);font-weight:800;letter-spacing:-.03em;line-height:1}
+.stat .l{color:var(--ink-2);font-size:14px;margin-top:8px}
+
+/* ---------- FAQ ---------- */
+.faq{max-width:780px;margin:38px auto 0}
+.qa{border-bottom:1px solid var(--line)}
+.qa button{width:100%;text-align:left;background:none;border:none;cursor:pointer;padding:22px 4px;display:flex;align-items:center;justify-content:space-between;gap:16px;font-family:inherit;color:var(--ink);font-size:18px;font-weight:700;letter-spacing:-.02em}
+.qa .ans{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.qa .ans p{color:var(--ink-2);font-size:15.5px;padding:0 4px 22px}
+.qa.open .ans{max-height:240px}
+.qa .pm{flex-shrink:0;width:24px;height:24px;border-radius:50%;border:1px solid var(--line-2);display:grid;place-items:center;transition:transform .3s;font-size:16px;color:var(--ink-2)}
+.qa.open .pm{transform:rotate(45deg)}
 
 .final{padding:112px 0 120px;text-align:center}
 .final h2{font-size:clamp(32px,5.2vw,58px);line-height:1;letter-spacing:-.035em}
-.final .sub{color:var(--ink-2);font-size:18px;margin-top:16px}
+.final .sub{color:var(--ink-2);font-size:18px;margin-top:16px;max-width:44ch;margin-left:auto;margin-right:auto}
 .final .hero-cta{margin-top:32px}
 
-.foot{border-top:1px solid var(--line);padding:34px 0 64px;color:var(--ink-3);font-size:12.5px}
-.foot .ns{font-weight:700;color:var(--ink-2);font-size:14px;letter-spacing:-.01em}
-.foot .src{font-family:var(--mono);font-size:11px;line-height:1.9;margin-top:12px;max-width:80ch}
-:focus-visible{outline:2.5px solid var(--coral);outline-offset:3px;border-radius:8px}
+.foot{border-top:1px solid var(--line);padding:44px 0 64px;color:var(--ink-3);font-size:13px}
+.foot-top{display:flex;flex-wrap:wrap;gap:26px;justify-content:space-between;align-items:flex-start;margin-bottom:28px}
+.foot .ns{font-weight:800;color:var(--ink);font-size:16px;letter-spacing:-.02em;display:flex;align-items:center;gap:10px}
+.foot .cols{display:flex;gap:52px;flex-wrap:wrap}
+.foot .col h4{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-3);margin:0 0 10px}
+.foot .col a{display:block;color:var(--ink-2);font-size:14px;padding:4px 0}
+.foot .col a:hover{color:var(--ink)}
+.foot .src{font-family:var(--mono);font-size:11px;line-height:1.9;margin-top:20px;max-width:88ch;border-top:1px solid var(--line);padding-top:18px}
+:focus-visible{outline:2.5px solid var(--iris);outline-offset:3px;border-radius:8px}
 
-/* reveal + motion */
 .rv{opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .8s cubic-bezier(.18,1.25,.4,1)}
 .rv.on{opacity:1;transform:translateY(0)}
-@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}.mv{display:none}}
+@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
 </style>
+</head>
+<body>
 
 <div class="bar">
   <div class="bar-in">
-    <div class="brandlk">
-      <svg width="30" height="30" viewBox="0 0 40 40" aria-hidden="true" id="logo"></svg>
-      <span class="wordmark">Atlas</span>
-    </div>
+    <a class="brandlk" href="#top" aria-label="AgentOS home">
+      <span class="logomark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 2.5 4 7v10l8 4.5 8-4.5V7l-8-4.5Z" stroke="#fff" stroke-width="1.6" stroke-linejoin="round" opacity=".9"/><circle cx="12" cy="12" r="2.4" fill="#fff"/></svg>
+      </span>
+      <span class="wordmark">Agent<span class="grad">OS</span></span>
+      <nav class="navlinks">
+        <a href="#product">Product</a>
+        <a href="#how">How it works</a>
+        <a href="#capabilities">Capabilities</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+    </a>
     <div class="barbtns">
       <button class="ttoggle" id="tbtn" aria-label="Toggle day and night"><span id="ticon">🌙</span></button>
-      <a class="btn btn-p" href="#start">Start Building</a>
+      <a class="btn btn-iris" href="#start">Start free</a>
     </div>
   </div>
 </div>
 
-<section class="hero">
+<section class="hero" id="top">
   <div class="wrap">
+    <span class="eyebrow">The AI employee platform</span>
     <h1>Build a company<br/>that builds itself.</h1>
-    <p class="sub">Your business, brought to life.</p>
+    <p class="sub">AgentOS is where you hire AI employees — they research, sell, operate and report around the clock, coordinating as one workforce you can actually watch.</p>
     <div class="hero-cta">
-      <a class="btn btn-p" href="#start">Start Building</a>
-      <a class="btn btn-link" href="#start" aria-label="Watch a 60 second demo">▶&nbsp; Watch 60s demo</a>
+      <a class="btn btn-iris" href="#start" style="font-size:16px;padding:14px 24px">Start free</a>
+      <a class="btn btn-ghost" href="#product" style="font-size:16px;padding:14px 22px">See the product ↓</a>
     </div>
+    <p class="microcopy">No credit card · hire your first agent in minutes</p>
     <div class="stage">
       <span class="liveflag"><span class="dot"></span> watch it work</span>
       <canvas id="hero3d" role="img" aria-label="A living 3D company: a customer's task moves through the Sales, Operations and Finance teams and becomes revenue."></canvas>
@@ -141,7 +368,117 @@ section{position:relative;z-index:1}
   </div>
 </section>
 
-<section class="band soft">
+<section class="proof">
+  <div class="wrap">
+    <p class="lab">Built on the best of modern AI</p>
+    <div class="proof-row">
+      <span class="pill"><span class="g"></span>Claude</span>
+      <span class="pill"><span class="g"></span>LangGraph</span>
+      <span class="pill"><span class="g"></span>Qdrant</span>
+      <span class="pill"><span class="g"></span>E2B Sandboxes</span>
+      <span class="pill"><span class="g"></span>AG-UI Streaming</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ REAL PRODUCT: COMMAND CENTER ============ -->
+<section class="band" id="product">
+  <div class="wrap">
+    <div class="sec-head center rv">
+      <p class="eyebrow">The product</p>
+      <h2>One command center for your whole workforce.</h2>
+      <p>Every agent, every task, every dollar — live. Throughput, success rate and spend at a glance, with the full fleet one scroll away.</p>
+    </div>
+    <div class="os rv" style="margin-top:40px" aria-label="AgentOS command center">
+      <div class="os-chrome"><span class="os-dots"><i></i><i></i><i></i></span><span class="os-url">app.agentos.ai/command</span></div>
+      <div class="os-body">
+        <div class="os-top">
+          <div class="os-brand">
+            <span class="os-lg"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2.5 4 7v10l8 4.5 8-4.5V7l-8-4.5Z" stroke="#fff" stroke-width="1.6" stroke-linejoin="round" opacity=".9"/><circle cx="12" cy="12" r="2.4" fill="#fff"/></svg></span>
+            <span class="os-wm">Agent<span class="grad">OS</span></span>
+            <span class="os-nav"><span class="on">Command center</span><span>Network</span><span>Live</span></span>
+          </div>
+          <div style="display:flex;align-items:center;gap:9px">
+            <span class="os-live"><span class="p"></span>9 active</span>
+            <span class="os-newbtn">+ New agent</span>
+          </div>
+        </div>
+        <p class="os-eyebrow">Command center</p>
+        <h2 class="os-h1">Run your workforce</h2>
+
+        <div class="os-kpis">
+          <div class="card kpi"><div class="kh"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3 3-5 6-5s6 2 6 5"/><path d="M16 5a3 3 0 0 1 0 6M21 20c0-2-1.5-3.6-4-4.3"/></svg></span></div><div class="v">24</div><div class="l">Agents</div></div>
+          <div class="card kpi"><div class="kh"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12h4l2 6 4-14 2 8h6"/></svg></span></div><div class="v pos">9</div><div class="l">Active now</div></div>
+          <div class="card kpi"><div class="kh"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></svg></span><svg class="spark" viewBox="0 0 46 16" preserveAspectRatio="none"><polyline points="0,12 8,10 15,11 22,6 30,7 38,3 46,4" fill="none" stroke="#8b78ff" stroke-width="1.6"/></svg></div><div class="v">3.4k</div><div class="l">Tasks (14d)</div></div>
+          <div class="card kpi"><div class="kh"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M12 7v5l3 2"/></svg></span></div><div class="v pos">94%</div><div class="l">Success</div></div>
+          <div class="card kpi"><div class="kh"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v20M17 6c0-2-2.5-3-5-3s-5 1-5 3.5S9 10 12 11s5 1.5 5 4-2.5 4-5 4-5-1-5-3"/></svg></span><svg class="spark" viewBox="0 0 46 16" preserveAspectRatio="none"><polyline points="0,10 8,11 15,8 22,9 30,5 38,6 46,3" fill="none" stroke="#22d3ee" stroke-width="1.6"/></svg></div><div class="v">$128.40</div><div class="l">Spend</div></div>
+          <div class="card kpi"><div class="kh"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 3h4v4"/></svg></span></div><div class="v">1.2M</div><div class="l">Tokens</div></div>
+        </div>
+
+        <div class="os-charts">
+          <div class="card pad">
+            <div class="chart-hd"><h3>Task throughput · last 14 days</h3><span class="seg"><span class="on">Tasks</span><span>Cost</span></span></div>
+            <svg viewBox="0 0 560 150" width="100%" height="140" preserveAspectRatio="none" aria-hidden="true">
+              <defs><linearGradient id="ag" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7257ff" stop-opacity=".42"/><stop offset="1" stop-color="#7257ff" stop-opacity="0"/></linearGradient></defs>
+              <path d="M0,118 L0,96 40,104 80,88 120,92 160,70 200,78 240,58 280,66 320,44 360,52 400,36 440,42 480,26 520,32 560,20 560,118 Z" fill="url(#ag)"/>
+              <polyline points="0,96 40,104 80,88 120,92 160,70 200,78 240,58 280,66 320,44 360,52 400,36 440,42 480,26 520,32 560,20" fill="none" stroke="#8b78ff" stroke-width="2.2"/>
+              <circle cx="560" cy="20" r="3.4" fill="#ab9fff"/>
+            </svg>
+          </div>
+          <div class="card gauge-wrap">
+            <h3>Success rate</h3>
+            <div class="gauge">
+              <svg viewBox="0 0 120 120" width="118" height="118"><circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="11"/><circle cx="60" cy="60" r="50" fill="none" stroke="url(#gg)" stroke-width="11" stroke-linecap="round" stroke-dasharray="295" stroke-dashoffset="18" transform="rotate(-90 60 60)"/><defs><linearGradient id="gg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7257ff"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs></svg>
+              <div class="num">94%</div>
+            </div>
+            <p class="sub2">1,284 / 1,366 tasks · avg eval <span style="color:var(--c-ink)">88/100</span></p>
+          </div>
+        </div>
+
+        <div class="os-mid">
+          <div class="card pad">
+            <h3>By department</h3>
+            <div class="barlist">
+              <div class="barrow"><span class="nm">Sales</span><span class="bartrk"><span class="barfill" style="width:100%"></span></span><span class="vv">1.1k</span></div>
+              <div class="barrow"><span class="nm">Research</span><span class="bartrk"><span class="barfill" style="width:74%"></span></span><span class="vv">812</span></div>
+              <div class="barrow"><span class="nm">Operations</span><span class="bartrk"><span class="barfill" style="width:58%"></span></span><span class="vv">640</span></div>
+              <div class="barrow"><span class="nm">Support</span><span class="bartrk"><span class="barfill" style="width:41%"></span></span><span class="vv">452</span></div>
+              <div class="barrow"><span class="nm">Finance</span><span class="bartrk"><span class="barfill" style="width:22%"></span></span><span class="vv">243</span></div>
+            </div>
+          </div>
+          <div class="card pad">
+            <div class="feed-hd"><h3>Live activity</h3><span class="u"><i></i>updating</span></div>
+            <div class="feed">
+              <div class="frow"><span class="av s28 av-i">MC</span><div class="tx"><div class="a"><b>Maya Chen</b> <span class="m">ran</span> competitor_analysis</div><div class="r">Identified 3 pricing gaps worth $2M ARR opportunity.</div></div><div class="meta"><span class="num">$0.04</span><span class="tick">✓</span><span>2m</span></div></div>
+              <div class="frow"><span class="av s28 av-i">JR</span><div class="tx"><div class="a"><b>Jake Rivera</b> <span class="m">ran</span> outreach_draft</div><div class="r">Drafted 47 personalized enterprise sequences.</div></div><div class="meta"><span class="num">$0.06</span><span class="tick">✓</span><span>4m</span></div></div>
+              <div class="frow"><span class="av s28 av-o">SO</span><div class="tx"><div class="a"><b>Sam Ops</b> <span class="m">ran</span> health_check</div><div class="r">All 24 agents nominal · queue depth 0.</div></div><div class="meta"><span class="num">$0.01</span><span class="tick">✓</span><span>6m</span></div></div>
+              <div class="frow"><span class="av s28 av-f">NV</span><div class="tx"><div class="a"><b>Nora Vale</b> <span class="m">ran</span> invoice_reconcile</div><div class="r">Matched 128 line items · 2 flagged for review.</div></div><div class="meta"><span class="num">$0.03</span><span class="tick">✓</span><span>9m</span></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card fleet">
+          <div class="fleet-hd"><h3>Fleet</h3><span class="inp">⌕ Search agents…</span><span class="sel">All depts ▾</span><span class="sel">Any status ▾</span></div>
+          <div style="overflow-x:auto">
+          <table class="ft">
+            <thead><tr><th>Agent</th><th>Dept</th><th>Tasks</th><th>Success</th><th>Cost</th><th>Eval</th><th class="r">Active</th></tr></thead>
+            <tbody>
+              <tr><td><span class="ag"><span class="av s28 av-i">MC</span><span><span class="nm">Maya Chen</span><br><span class="ti">Lead Research Analyst</span></span></span></td><td class="mut">Research</td><td class="num">147</td><td class="num pos">94%</td><td class="num mut">$2.10</td><td class="num mut">88</td><td class="r"><span class="sdot active"></span> <span class="sub">now</span></td></tr>
+              <tr><td><span class="ag"><span class="av s28 av-i">JR</span><span><span class="nm">Jake Rivera</span><br><span class="ti">Sales Intelligence</span></span></span></td><td class="mut">Sales</td><td class="num">312</td><td class="num warn">87%</td><td class="num mut">$4.80</td><td class="num mut">82</td><td class="r"><span class="sdot thinking"></span> <span class="sub">now</span></td></tr>
+              <tr><td><span class="ag"><span class="av s28 av-o">SO</span><span><span class="nm">Sam Ops</span><br><span class="ti">Operations Manager</span></span></span></td><td class="mut">Operations</td><td class="num">567</td><td class="num pos">97%</td><td class="num mut">$1.90</td><td class="num mut">91</td><td class="r"><span class="sdot idle"></span> <span class="sub">12m ago</span></td></tr>
+              <tr><td><span class="ag"><span class="av s28 av-f">NV</span><span><span class="nm">Nora Vale</span><br><span class="ti">Finance Controller</span></span></span></td><td class="mut">Finance</td><td class="num">203</td><td class="num pos">96%</td><td class="num mut">$3.20</td><td class="num mut">90</td><td class="r"><span class="sdot active"></span> <span class="sub">now</span></td></tr>
+              <tr><td><span class="ag"><span class="av s28 av-e">LP</span><span><span class="nm">Leo Park</span><br><span class="ti">Automation Engineer</span></span></span></td><td class="mut">Engineering</td><td class="num">421</td><td class="num pos">92%</td><td class="num mut">$5.60</td><td class="num mut">86</td><td class="r"><span class="sdot idle"></span> <span class="sub">3m ago</span></td></tr>
+            </tbody>
+          </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HOW IT WORKS: 3D WORLD ============ -->
+<section class="band soft" id="how">
   <div class="wrap">
     <div class="sec-head center">
       <p class="eyebrow">The team</p>
@@ -163,18 +500,131 @@ section{position:relative;z-index:1}
   </div>
 </section>
 
+<!-- ============ REAL PRODUCT: LIVE FLOOR ============ -->
+<section class="band soft">
+  <div class="wrap">
+    <div class="feat2 flip">
+      <div class="os rv" aria-label="AgentOS live floor">
+        <div class="os-chrome"><span class="os-dots"><i></i><i></i><i></i></span><span class="os-url">app.agentos.ai/live</span></div>
+        <div class="os-body">
+          <div class="os-top">
+            <div class="os-brand"><span class="os-lg"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2.5 4 7v10l8 4.5 8-4.5V7l-8-4.5Z" stroke="#fff" stroke-width="1.6" stroke-linejoin="round" opacity=".9"/><circle cx="12" cy="12" r="2.4" fill="#fff"/></svg></span><span class="os-nav"><span>Command center</span><span>Network</span><span class="on">Live</span></span></div>
+            <span class="os-live"><span class="p"></span>Streaming</span>
+          </div>
+          <p class="os-eyebrow">Real-time</p>
+          <h2 class="os-h1">Live floor</h2>
+          <div class="floor">
+            <div class="tiles">
+              <div class="card tile busy"><div class="tile-hd"><span class="av s34 av-i">MC</span><span><div class="nm">Maya Chen</div><div class="ti">Research</div></span><span class="st"><span class="sdot active"></span>active</span></div><div class="tile-body warn" style="color:var(--c-warn)">⚙ using web_search…</div></div>
+              <div class="card tile busy"><div class="tile-hd"><span class="av s34 av-i">JR</span><span><div class="nm">Jake Rivera</div><div class="ti">Sales</div></span><span class="st"><span class="sdot thinking"></span>thinking</span></div><div class="tile-body mut">Drafting outreach for 47 enterprise prospects<span class="caret"></span></div></div>
+              <div class="card tile"><div class="tile-hd"><span class="av s34 av-o">SO</span><span><div class="nm">Sam Ops</div><div class="ti">Operations</div></span><span class="st"><span class="sdot idle"></span>idle</span></div><div class="tile-body sub">idle — ready for work</div></div>
+              <div class="card tile busy"><div class="tile-hd"><span class="av s34 av-f">NV</span><span><div class="nm">Nora Vale</div><div class="ti">Finance</div></span><span class="st"><span class="sdot active"></span>active</span></div><div class="tile-body" style="color:var(--c-iris3)">● reconciling invoices…</div></div>
+            </div>
+            <div class="card estream">
+              <h3><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#ab9fff" stroke-width="1.8"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></svg> Event stream</h3>
+              <div class="ev"><span class="d" style="background:#34d399"></span><span><b>Nora Vale</b> <span class="pos">finished (2,140 tokens)</span></span></div>
+              <div class="ev"><span class="d"></span><span><b>Maya Chen</b> <span style="color:var(--c-warn)">used web_search</span></span></div>
+              <div class="ev"><span class="d"></span><span><b>Jake Rivera</b> <span style="color:var(--c-iris3)">messaged Maya Chen</span></span></div>
+              <div class="ev"><span class="d"></span><span><b>Sam Ops</b> <span class="mut">recalled 6 memories</span></span></div>
+              <div class="ev"><span class="d" style="background:#34d399"></span><span><b>Leo Park</b> <span class="pos">finished (980 tokens)</span></span></div>
+              <div class="ev"><span class="d" style="background:#fbbf24"></span><span><b>Jake Rivera</b> <span style="color:var(--c-warn)">asked a human</span></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sec-head rv">
+        <p class="eyebrow">The live floor</p>
+        <h2>Watch every agent think, act and hand off.</h2>
+        <ul>
+          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>See each agent's live status, current tool and message — streamed as it happens.</li>
+          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>A global event stream: runs, tool calls, agent-to-agent handoffs and human asks.</li>
+          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Dispatch a task and watch the floor light up in real time.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ REAL PRODUCT: HIRE AN AGENT ============ -->
+<section class="band">
+  <div class="wrap">
+    <div class="feat2">
+      <div class="sec-head rv">
+        <p class="eyebrow">Onboarding</p>
+        <h2>Hire an agent in minutes.</h2>
+        <ul>
+          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Describe the role. AgentOS recommends the right skills and a model to match.</li>
+          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Give them a face and a name — they show up in your world instantly.</li>
+          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Upload your docs and they onboard on your company's context.</li>
+        </ul>
+      </div>
+      <div class="os rv" aria-label="AgentOS create agent studio">
+        <div class="os-chrome"><span class="os-dots"><i></i><i></i><i></i></span><span class="os-url">app.agentos.ai/agents/new</span></div>
+        <div class="os-body">
+          <p class="os-eyebrow">Create agent</p>
+          <h2 class="os-h1">Hire a new agent</h2>
+          <div class="studio">
+            <div>
+              <div style="display:flex;gap:12px;align-items:center;margin-bottom:14px"><span class="av avbig av-a">AR</span><div><div style="font-weight:700;font-size:14px">Ada Reyes</div><div class="prof">Support Specialist</div></div></div>
+              <div class="field"><div class="lb">Name</div><div class="in">Ada Reyes</div></div>
+              <div class="field"><div class="lb">Role / title</div><div class="in">Support Specialist</div></div>
+              <div class="field"><div class="lb">Department</div><div class="in">Support</div></div>
+              <div class="field"><div class="lb">Model</div><div class="in">Claude Sonnet 5</div></div>
+            </div>
+            <div>
+              <div class="field"><div class="lb">Recommended skills</div>
+                <div class="chips">
+                  <span class="chip on"><span class="pl">+</span>Ticket Triage</span>
+                  <span class="chip on"><span class="pl">+</span>Knowledge Base</span>
+                  <span class="chip on"><span class="pl">+</span>Email Drafting</span>
+                  <span class="chip">Sentiment Analysis</span>
+                  <span class="chip">Escalation</span>
+                  <span class="chip">CRM Lookup</span>
+                </div>
+              </div>
+              <div class="field"><div class="lb">Company context</div><div class="in ph">handbook.pdf · faqs.md · policies.pdf — 3 files onboarded</div></div>
+              <div class="field"><div class="lb">Bio</div><div class="in ph" style="height:auto;padding:9px 11px;line-height:1.5;color:var(--c-mut)">I answer customer questions fast, escalate what I can't solve, and learn from every ticket.</div></div>
+              <div style="margin-top:14px"><span class="os-newbtn" style="padding:9px 16px;font-size:13px">✦ Hire agent</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="band soft">
   <div class="wrap two">
     <div class="visual" style="order:-1"><div id="glanceWorld" class="v3d v3d-wide" data-scene3d="glance" aria-hidden="true"></div></div>
     <div class="sec-head">
       <p class="eyebrow">The view</p>
       <h2>See your business at a glance.</h2>
-      <p>Not charts. Not dashboards. A living organization you can actually look at — and understand in a second.</p>
+      <p>The dashboard tells you the numbers. The world shows you the shape — a living organization you can look at and understand in a second.</p>
     </div>
   </div>
 </section>
 
-<section class="band">
+<!-- ============ CAPABILITIES ============ -->
+<section class="band" id="capabilities">
+  <div class="wrap">
+    <div class="sec-head center">
+      <p class="eyebrow">What they can do</p>
+      <h2>Not a chatbot. A workforce.</h2>
+      <p>Every AgentOS employee is built to do real work, get better at it, and coordinate with the rest of the team.</p>
+    </div>
+    <div class="cap">
+      <div class="capcard rv"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 20c0-3.2 3-5.2 5.5-5.2s5.5 2 5.5 5.2"/><path d="M16.5 5.2a3 3 0 0 1 0 6M21 20c0-2.2-1.6-3.9-4-4.6"/></svg></div><h3>Hire by role</h3><p>Describe a job. AgentOS recommends the skills and model, then spins up a qualified agent.</p></div>
+      <div class="capcard rv"><div class="ic"><svg viewBox="0 0 24 24"><path d="M4 19V5M4 19h16M8 19v-6M12 19V9M16 19v-9M20 19V6"/></svg></div><h3>Skills that compound</h3><p>Agents track proficiency and get measurably better at what they do most.</p></div>
+      <div class="capcard rv"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.4"/><circle cx="18" cy="18" r="2.4"/><circle cx="18" cy="6" r="2.4"/><path d="M8.4 6H15.6M18 8.4v7.2M8 8l8 8"/></svg></div><h3>Agent-to-agent handoffs</h3><p>Work flows between agents automatically — Sales hands to Finance, Finance to Ops.</p></div>
+      <div class="capcard rv"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Z"/><path d="M12 8v4l3 2"/></svg></div><h3>Human-in-the-loop</h3><p>Agents ask when they're unsure. You approve, redirect or answer — all in one inbox.</p></div>
+      <div class="capcard rv"><div class="ic"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/><circle cx="19" cy="18" r="2.4"/></svg></div><h3>Live evals &amp; cost</h3><p>Every run is scored and priced in real time — quality and spend, never a black box.</p></div>
+      <div class="capcard rv"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3C7 3 4 6 4 9c0 2 1 3 1 5s-1 2-1 4h16c0-2-1-2-1-4s1-3 1-5c0-3-3-6-8-6Z"/><path d="M9 21h6"/></svg></div><h3>Shared memory</h3><p>Agents remember context and recall it when it matters — powered by vector memory.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GROWTH 3D ============ -->
+<section class="band soft">
   <div class="wrap">
     <div class="sec-head center">
       <p class="eyebrow">The growth</p>
@@ -185,329 +635,96 @@ section{position:relative;z-index:1}
   </div>
 </section>
 
+<!-- ============ STATS ============ -->
+<section class="band">
+  <div class="wrap">
+    <div class="stats">
+      <div class="stat rv"><div class="n grad">24/7</div><div class="l">Always on, never asleep</div></div>
+      <div class="stat rv"><div class="n grad">6</div><div class="l">Departments, one workforce</div></div>
+      <div class="stat rv"><div class="n grad">100%</div><div class="l">Of runs scored &amp; priced</div></div>
+      <div class="stat rv"><div class="n grad">∞</div><div class="l">Agents, when you need them</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="band soft" id="faq">
+  <div class="wrap">
+    <div class="sec-head center">
+      <p class="eyebrow">Questions</p>
+      <h2>Good to know.</h2>
+    </div>
+    <div class="faq">
+      <div class="qa"><button aria-expanded="false"><span>What exactly is an AI employee?</span><span class="pm">+</span></button><div class="ans"><p>An agent with a role, skills, memory and a model. You give it a job; it does real work — research, outreach, reconciliation, support — reports back, and improves over time. You manage it like a teammate, not a script.</p></div></div>
+      <div class="qa"><button aria-expanded="false"><span>Do I need to know how to code?</span><span class="pm">+</span></button><div class="ans"><p>No. You describe a role in plain language, AgentOS recommends the skills and model, and you hire in a few clicks. Everything after — running tasks, watching the floor, reviewing work — is point and click.</p></div></div>
+      <div class="qa"><button aria-expanded="false"><span>How do agents work together?</span><span class="pm">+</span></button><div class="ans"><p>Through agent-to-agent messaging and shared memory. One agent hands work to another, and the whole team draws on the same company context — so a lead qualified by Sales flows to Finance and Ops without you copy-pasting a thing.</p></div></div>
+      <div class="qa"><button aria-expanded="false"><span>Can a human stay in control?</span><span class="pm">+</span></button><div class="ans"><p>Always. Agents ask for a human when they're unsure or a decision is high-stakes. Every request lands in one inbox where you approve, redirect or answer — and every run is scored and priced so nothing is a black box.</p></div></div>
+      <div class="qa"><button aria-expanded="false"><span>What does it cost?</span><span class="pm">+</span></button><div class="ans"><p>Every task is metered by tokens and shown as a real dollar cost in the command center. You see spend per agent, per department and total — in real time — so cost is always visible, never a surprise.</p></div></div>
+    </div>
+  </div>
+</section>
+
 <section class="final" id="start">
   <div class="wrap">
     <h2>Build something<br/>that keeps working.</h2>
-    <p class="sub">Most software helps you manage work. This helps work manage itself.</p>
+    <p class="sub">Most software helps you manage work. AgentOS helps the work manage itself.</p>
     <div class="hero-cta">
-      <a class="btn btn-p" href="#start" style="font-size:16px;padding:15px 26px">Start Building</a>
-      <a class="btn btn-ghost" href="#start" style="font-size:16px;padding:15px 24px">Watch 60s demo</a>
+      <a class="btn btn-iris" href="#start" style="font-size:16px;padding:15px 26px">Start free</a>
+      <a class="btn btn-ghost" href="#product" style="font-size:16px;padding:15px 24px">See the product</a>
     </div>
+    <p class="microcopy">No credit card · hire your first agent in minutes</p>
   </div>
 </section>
 
 <footer class="foot">
   <div class="wrap">
-    <div class="ns">Build a company that builds itself.</div>
-    <p class="src">Concept · living-world direction · Apple × LEGO × Tiny Glade × Monument Valley. The world is the product: value is created in front of you. Grounded in Resnick "low floor, high ceiling, wide walls" · the IKEA effect · calm ambient motion over game mechanics.</p>
+    <div class="foot-top">
+      <div>
+        <div class="ns"><span class="logomark" style="width:26px;height:26px;border-radius:8px" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2.5 4 7v10l8 4.5 8-4.5V7l-8-4.5Z" stroke="#fff" stroke-width="1.6" stroke-linejoin="round" opacity=".9"/><circle cx="12" cy="12" r="2.4" fill="#fff"/></svg></span>Agent<span class="grad">OS</span></div>
+        <p style="margin-top:10px;max-width:34ch">Build a company that builds itself.</p>
+      </div>
+      <div class="cols">
+        <div class="col"><h4>Product</h4><a href="#product">Command center</a><a href="#how">Live floor</a><a href="#capabilities">Capabilities</a></div>
+        <div class="col"><h4>Learn</h4><a href="#how">How it works</a><a href="#faq">FAQ</a><a href="#start">Get started</a></div>
+        <div class="col"><h4>Company</h4><a href="#top">About</a><a href="#start">Contact</a><a href="#start">Careers</a></div>
+      </div>
+    </div>
+    <p class="src">AgentOS · the AI employee platform. Built on Claude, LangGraph, Qdrant and E2B. Living-world direction — the world is the product: value is created in front of you. Grounded in Resnick "low floor, high ceiling, wide walls" · the IKEA effect · calm ambient motion over game mechanics.</p>
   </div>
 </footer>
 
 <script>
 (function(){
-  var root=document.documentElement,key="atlas-theme";
+  var root=document.documentElement,key="agentos-theme";
   function sysDark(){return window.matchMedia&&window.matchMedia("(prefers-color-scheme:dark)").matches;}
   function isDark(){var c=root.getAttribute("data-theme");return c?c==="dark":sysDark();}
   try{var s=localStorage.getItem(key);if(s)root.setAttribute("data-theme",s);}catch(e){}
-  function icon(){document.getElementById("ticon").textContent=isDark()?"☀️":"🌙";}
+  function icon(){var el=document.getElementById("ticon");if(el)el.textContent=isDark()?"☀️":"🌙";}
   icon();
-  document.getElementById("tbtn").addEventListener("click",function(){root.setAttribute("data-theme",isDark()?"light":"dark");try{localStorage.setItem(key,isDark()?"dark":"light");}catch(e){}icon();});
+  var tb=document.getElementById("tbtn");
+  if(tb)tb.addEventListener("click",function(){root.setAttribute("data-theme",isDark()?"light":"dark");try{localStorage.setItem(key,isDark()?"dark":"light");}catch(e){}icon();});
+
+  // reveal on scroll — with failsafes so content is NEVER stuck invisible
   var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion:reduce)").matches;
-
-  function shade(hex,f){var c=parseInt(hex.slice(1),16),r=(c>>16)&255,g=(c>>8)&255,b=c&255,t=f<0?0:255,a=Math.abs(f);
-    r=Math.round((t-r)*a)+r;g=Math.round((t-g)*a)+g;b=Math.round((t-b)*a)+b;return "#"+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);}
-  function P(a){return a.map(function(p){return p[0].toFixed(1)+","+p[1].toFixed(1)}).join(" ");}
-  function mid(a,b){return [(a[0]+b[0])/2,(a[1]+b[1])/2];}
-  function up(p,h){return [p[0],p[1]-h];}
-  function lerp(a,b,t){return [a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t];}
-  // bilinear point on a face defined by origin o, right-vec a, down-vec b, at (x,y) in [0,1]
-  function fp(o,a,b,x,y){return [o[0]+a[0]*x+b[0]*y, o[1]+a[1]*x+b[1]*y];}
-
-  function world(ISX,ISY,WX,WY){return function(u,v){return [ISX+(u-v)*WX, ISY+(u+v)*WY];};}
-
-  function island(place,D,grass,soil){
-    var top=place(0,0),right=place(1,0),bot=place(1,1),left=place(0,1);
-    var L=[left,bot,[bot[0],bot[1]+D],[left[0],left[1]+D]];
-    var R=[bot,right,[right[0],right[1]+D],[bot[0],bot[1]+D]];
-    return '<polygon points="'+P(L)+'" fill="'+soil+'"/>'+
-           '<polygon points="'+P(R)+'" fill="'+shade(soil,-.16)+'"/>'+
-           '<polygon points="'+P([top,right,bot,left])+'" fill="'+shade(grass,.05)+'"/>';
+  var rvs=[].slice.call(document.querySelectorAll(".rv"));
+  function reveal(n){n.classList.add("on");}
+  function revealNear(){var vh=window.innerHeight||800;rvs.forEach(function(n){if(!n.classList.contains("on")){var r=n.getBoundingClientRect();if(r.top<vh*1.05&&r.bottom>-40)reveal(n);}});}
+  if(reduce||!("IntersectionObserver" in window)){rvs.forEach(reveal);}
+  else{
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){reveal(e.target);io.unobserve(e.target);}});},{rootMargin:"0px 0px -6% 0px"});
+    rvs.forEach(function(n){io.observe(n);});
+    revealNear();
+    window.addEventListener("scroll",revealNear,{passive:true});
+    window.addEventListener("resize",revealNear,{passive:true});
   }
 
-  // base isometric box; returns corners + wall svg (no roof)
-  function box(place,u,v,su,H,wall){
-    var A=place(u-su,v-su),B=place(u+su,v-su),C=place(u+su,v+su),D=place(u-su,v+su);
-    var At=up(A,H),Bt=up(B,H),Ct=up(C,H),Dt=up(D,H);
-    var left=shade(wall,-.03),rightC=shade(wall,-.17);
-    var s='<polygon points="'+P([C,D,Dt,Ct])+'" fill="'+left+'"/>'+
-          '<polygon points="'+P([B,C,Ct,Bt])+'" fill="'+rightC+'"/>';
-    return {A:A,B:B,C:C,D:D,At:At,Bt:Bt,Ct:Ct,Dt:Dt,walls:s,wall:wall};
-  }
-  function flatRoof(bx,col){return '<polygon points="'+P([bx.At,bx.Bt,bx.Ct,bx.Dt])+'" fill="'+(col||shade(bx.wall,.09))+'"/>';}
-  function windows(bx,rows){ // on right wall (Bt-Ct-C-B)
-    var o=bx.Bt,a=[bx.Ct[0]-bx.Bt[0],bx.Ct[1]-bx.Bt[1]],b=[bx.B[0]-bx.Bt[0],bx.B[1]-bx.Bt[1]];
-    var s="",cols=2;
-    for(var r=0;r<rows;r++)for(var c=0;c<cols;c++){
-      var x=(c+.5)/cols,y=(r+.55)/rows,ww=.62/cols,wh=.5/rows;
-      var p0=fp(o,a,b,x-ww/2,y-wh/2),p1=fp(o,a,b,x+ww/2,y-wh/2),p2=fp(o,a,b,x+ww/2,y+wh/2),p3=fp(o,a,b,x-ww/2,y+wh/2);
-      s+='<polygon class="win" points="'+P([p0,p1,p2,p3])+'" fill="var(--window)"/>';
-    }
-    return s;
-  }
-  function gable(bx,col,rh){
-    var r1=up(mid(bx.At,bx.Dt),rh),r2=up(mid(bx.Bt,bx.Ct),rh);
-    return '<polygon points="'+P([bx.Dt,bx.Ct,r2,r1])+'" fill="'+shade(col,-.05)+'"/>'+
-           '<polygon points="'+P([bx.At,bx.Bt,r2,r1])+'" fill="'+col+'"/>'+
-           '<polygon points="'+P([bx.At,bx.Dt,r1])+'" fill="'+shade(col,-.12)+'"/>'+
-           '<polygon points="'+P([bx.Bt,bx.Ct,r2])+'" fill="'+shade(col,-.18)+'"/>';
-  }
-
-  var COL={cream:'#F0E6D4',HQ:'#EFE4D0',roofgold:'#EDBE5E',grass:'#93C489',soil:'#C7A278'};
-
-  /* ---- department buildings (readable architecture) ---- */
-  function deptBuilding(place,u,v,type){
-    var c={sales:'#5A97D6',support:'#4FB0AA',finance:'#E6AE3C',ops:'#E08A5B',eng:'#8B79D4',mktg:'#E06A9A',hq:'#EFE4D0'}[type];
-    var s="",bx;
-    if(type==='sales'){ // glass office: tall, lots of windows, flat roof
-      bx=box(place,u,v,0.115,58,c); s+=bx.walls+windows(bx,3)+flatRoof(bx,shade(c,.12));
-      s+='<polygon points="'+P([bx.At,bx.Bt,bx.Ct,bx.Dt])+'" fill="'+shade(c,.05)+'" opacity=".5"/>';
-    } else if(type==='finance'){ // vault: solid, round door, gold trim
-      bx=box(place,u,v,0.11,46,c); s+=bx.walls+flatRoof(bx,shade(c,.1));
-      var o=bx.Bt,a=[bx.Ct[0]-bx.Bt[0],bx.Ct[1]-bx.Bt[1]],b=[bx.B[0]-bx.Bt[0],bx.B[1]-bx.Bt[1]];
-      var ctr=fp(o,a,b,.5,.6),rr=Math.abs(a[0])*0.26+7;
-      s+='<circle cx="'+ctr[0].toFixed(1)+'" cy="'+ctr[1].toFixed(1)+'" r="'+rr.toFixed(1)+'" fill="'+shade(c,-.26)+'"/>';           // door plate
-      s+='<circle cx="'+ctr[0].toFixed(1)+'" cy="'+ctr[1].toFixed(1)+'" r="'+(rr*0.72).toFixed(1)+'" fill="'+shade(c,-.14)+'"/>';   // inset (solid, not a ring)
-      for(var kf=0;kf<4;kf++){var ang=kf*Math.PI/2+0.4,x1=ctr[0]+Math.cos(ang)*rr*0.2,y1=ctr[1]+Math.sin(ang)*rr*0.2,x2=ctr[0]+Math.cos(ang)*rr*0.66,y2=ctr[1]+Math.sin(ang)*rr*0.66;
-        s+='<line x1="'+x1.toFixed(1)+'" y1="'+y1.toFixed(1)+'" x2="'+x2.toFixed(1)+'" y2="'+y2.toFixed(1)+'" stroke="'+shade(c,-.32)+'" stroke-width="2" stroke-linecap="round"/>';}
-      s+='<circle cx="'+ctr[0].toFixed(1)+'" cy="'+ctr[1].toFixed(1)+'" r="'+(rr*0.18).toFixed(1)+'" fill="'+shade(c,.16)+'"/>';    // hub
-    } else if(type==='ops'){ // warehouse: wide, gable roof, roll door
-      bx=box(place,u,v,0.14,40,c); s+=bx.walls+gable(bx,shade(c,.06),26);
-      var o=bx.Bt,a=[bx.Ct[0]-bx.Bt[0],bx.Ct[1]-bx.Bt[1]],b=[bx.B[0]-bx.Bt[0],bx.B[1]-bx.Bt[1]];
-      var d0=fp(o,a,b,.28,.35),d1=fp(o,a,b,.72,.35),d2=fp(o,a,b,.72,1),d3=fp(o,a,b,.28,1);
-      s+='<polygon points="'+P([d0,d1,d2,d3])+'" fill="'+shade(c,-.24)+'"/>';
-    } else if(type==='eng'){ // tech lab: solar panels on roof + antenna
-      bx=box(place,u,v,0.115,48,c); s+=bx.walls+windows(bx,2)+flatRoof(bx,shade(c,-.02));
-      var o=bx.At,a=[bx.Bt[0]-bx.At[0],bx.Bt[1]-bx.At[1]],b=[bx.Dt[0]-bx.At[0],bx.Dt[1]-bx.At[1]];
-      for(var i=0;i<2;i++)for(var j=0;j<2;j++){var x=.28+i*.44,y=.28+j*.44,pw=.32,ph=.32;
-        s+='<polygon points="'+P([fp(o,a,b,x-pw/2,y-ph/2),fp(o,a,b,x+pw/2,y-ph/2),fp(o,a,b,x+pw/2,y+ph/2),fp(o,a,b,x-pw/2,y+ph/2)])+'" fill="#2E4468"/>';}
-      var tip=up(fp(o,a,b,.5,.5),22);s+='<line x1="'+fp(o,a,b,.5,.5)[0].toFixed(1)+'" y1="'+fp(o,a,b,.5,.5)[1].toFixed(1)+'" x2="'+tip[0].toFixed(1)+'" y2="'+tip[1].toFixed(1)+'" stroke="'+shade(c,-.3)+'" stroke-width="2.5"/><circle cx="'+tip[0].toFixed(1)+'" cy="'+tip[1].toFixed(1)+'" r="3.4" fill="'+COL.roofgold+'"/>';
-    } else if(type==='mktg'){ // creative studio: slanted skylight roof
-      bx=box(place,u,v,0.11,44,c); s+=bx.walls+windows(bx,2);
-      var r1=up(bx.At,20),r2=up(bx.Bt,20);
-      s+='<polygon points="'+P([bx.At,bx.Bt,bx.Ct,bx.Dt])+'" fill="'+shade(c,.08)+'"/>';
-      s+='<polygon points="'+P([bx.Dt,bx.Ct,r2,r1])+'" fill="'+shade(c,.16)+'"/>';
-      s+='<polygon points="'+P([bx.At,r1,r2,bx.Bt])+'" fill="'+shade(c,-.06)+'"/>';
-    } else if(type==='support'){ // rounded dome office
-      bx=box(place,u,v,0.11,48,c); s+=bx.walls+windows(bx,2)+flatRoof(bx,shade(c,.1));
-      var ct=mid(bx.At,bx.Ct);s+='<ellipse cx="'+ct[0].toFixed(1)+'" cy="'+ct[1].toFixed(1)+'" rx="'+(Math.abs(bx.Bt[0]-bx.Dt[0])/2*.7).toFixed(1)+'" ry="14" fill="'+shade(c,.14)+'"/>';
-    } else { // hq house
-      bx=box(place,u,v,0.12,46,c); s+=bx.walls+windows(bx,2)+gable(bx,COL.roofgold,22);
-    }
-    return {svg:s, key:(u+v), gy:bx.C[1]};
-  }
-
-  function tree(place,u,v){var b=place(u,v);
-    return {svg:'<rect x="'+(b[0]-3)+'" y="'+(b[1]-16)+'" width="6" height="16" rx="2" fill="#9C7A50"/>'+
-      '<circle cx="'+b[0]+'" cy="'+(b[1]-24)+'" r="15" fill="#8FBE79"/>'+
-      '<circle cx="'+(b[0]+7)+'" cy="'+(b[1]-20)+'" r="9" fill="#7FB06B"/>'+
-      '<circle cx="'+(b[0]-7)+'" cy="'+(b[1]-19)+'" r="10" fill="#9FCB88"/>', key:(u+v), gy:b[1]};}
-
-  // worker = "citizen" piece: a little person (head + shoulders) on a chess-piece base,
-  // kept in its department color. Identity by color, warmth by silhouette.
-  function peg(pt,color,scale,role){
-    scale=scale||1;var s=scale,x=pt[0],y=pt[1];
-    function n(v){return (Math.round(v*10)/10);}
-    var dark=shade(color,-.16), lite=shade(color,.26);
-    var o='<ellipse cx="'+n(x)+'" cy="'+n(y+1.6)+'" rx="'+n(7*s)+'" ry="'+n(2.8*s)+'" fill="rgba(20,16,10,.16)"/>'; // ground shadow
-    // flared skirt / base (the "piece")
-    o+='<path d="M'+n(x-6.4*s)+' '+n(y)+' Q '+n(x-6.8*s)+' '+n(y-4.5*s)+' '+n(x-4*s)+' '+n(y-6.2*s)+' L '+n(x+4*s)+' '+n(y-6.2*s)+' Q '+n(x+6.8*s)+' '+n(y-4.5*s)+' '+n(x+6.4*s)+' '+n(y)+' Z" fill="'+color+'"/>';
-    // torso with rounded shoulders (the "person")
-    o+='<path d="M'+n(x-4.6*s)+' '+n(y-6.2*s)+' Q '+n(x-5.4*s)+' '+n(y-12.5*s)+' '+n(x-3.2*s)+' '+n(y-14.4*s)+' Q '+n(x-1.7*s)+' '+n(y-15.6*s)+' '+n(x)+' '+n(y-15.6*s)+' Q '+n(x+1.7*s)+' '+n(y-15.6*s)+' '+n(x+3.2*s)+' '+n(y-14.4*s)+' Q '+n(x+5.4*s)+' '+n(y-12.5*s)+' '+n(x+4.6*s)+' '+n(y-6.2*s)+' Z" fill="'+color+'"/>';
-    // head
-    o+='<circle cx="'+n(x)+'" cy="'+n(y-19*s)+'" r="'+n(3.7*s)+'" fill="'+color+'"/>';
-    // right-side volume shade (light from the front-left, matching the buildings)
-    o+='<path d="M'+n(x)+' '+n(y)+' Q '+n(x+6.8*s)+' '+n(y-4.5*s)+' '+n(x+4*s)+' '+n(y-6.2*s)+' Q '+n(x+5.4*s)+' '+n(y-12.5*s)+' '+n(x+3.2*s)+' '+n(y-14.4*s)+' L '+n(x)+' '+n(y-14.4*s)+' Z" fill="'+dark+'" opacity=".45"/>';
-    o+='<circle cx="'+n(x-1.3*s)+'" cy="'+n(y-20.1*s)+'" r="'+n(1.5*s)+'" fill="'+lite+'" opacity=".85"/>'; // head highlight
-    return o;
-  }
-
-  function road(place,pts,hw){var left=[],right=[];for(var i=0;i<pts.length;i++){var u=pts[i][0],v=pts[i][1];left.push(place(u+hw,v-hw));right.push(place(u-hw,v+hw));}
-    return '<polygon points="'+P(left.concat(right.reverse()))+'" fill="#E9DEC6"/>';}
-
-  var C6={sales:'#5A97D6',support:'#4FB0AA',finance:'#E6AE3C',ops:'#E08A5B',eng:'#8B79D4',mktg:'#E06A9A'};
-
-  /* ============ HERO: living, self-building company ============ */
-  function buildHero(){
-    var place=world(560,84,352,166),svgEl=document.getElementById("hero");
-    var base=island(place,84,COL.grass,COL.soil);
-    var pathSvg=road(place,[[0.04,0.76],[0.96,0.76]],0.045);
-
-    // open-corner "diorama" room (dollhouse cutaway) — floor + two back walls + a team at work inside
-    function room(u,v,su,H,color){
-      var A=place(u-su,v-su),B=place(u+su,v-su),C=place(u+su,v+su),D=place(u-su,v+su);
-      var At=up(A,H),Bt=up(B,H),Dt=up(D,H);
-      var s='<polygon points="'+P([A,B,C,D])+'" fill="#EAD8B6"/>';                          // wood floor
-      s+='<polygon points="'+P([A,D,Dt,At])+'" fill="'+shade(color,-.02)+'"/>';              // back-left wall
-      s+='<polygon points="'+P([A,B,Bt,At])+'" fill="'+shade(color,-.17)+'"/>';              // back-right wall
-      var o=At,a=[Bt[0]-At[0],Bt[1]-At[1]],b=[A[0]-At[0],A[1]-At[1]];
-      s+='<polygon points="'+P([fp(o,a,b,.30,.22),fp(o,a,b,.60,.22),fp(o,a,b,.60,.56),fp(o,a,b,.30,.56)])+'" fill="var(--window)"/>'; // window on back-right
-      var o2=At,a2=[A[0]-At[0],A[1]-At[1]],b2=[Dt[0]-At[0],Dt[1]-At[1]];
-      s+='<polygon points="'+P([fp(o2,a2,b2,.28,.28),fp(o2,a2,b2,.64,.28),fp(o2,a2,b2,.64,.5),fp(o2,a2,b2,.28,.5)])+'" fill="'+shade(color,.12)+'"/>'; // dept sign on back-left
-      function F(x,y){return [A[0]+(B[0]-A[0])*x+(D[0]-A[0])*y, A[1]+(B[1]-A[1])*x+(D[1]-A[1])*y];}
-      var spots=[[0.34,0.40],[0.64,0.52],[0.42,0.72]], items=[];
-      spots.forEach(function(sp){var dp=F(sp[0],sp[1]);
-        items.push({y:dp[1], svg:'<ellipse cx="'+dp[0].toFixed(1)+'" cy="'+(dp[1]+1).toFixed(1)+'" rx="10" ry="4.4" fill="'+shade(color,.15)+'"/>'   // desk pad
-          +'<rect x="'+(dp[0]-2).toFixed(1)+'" y="'+(dp[1]-12).toFixed(1)+'" width="8" height="6" rx="1" fill="'+shade(color,-.34)+'"/>'                // monitor
-          +peg(dp,color,0.76)});});                                                                                                                    // teammate
-      items.sort(function(p,q){return p.y-q.y;});
-      s+=items.map(function(it){return it.svg;}).join("");
-      return {svg:s, gy:C[1], entry:F(0.5,1.1), desks:[F(0.34,0.36),F(0.64,0.48),F(0.42,0.68)], money:up(F(0.5,0.42),22)};
-    }
-    var sales=room(0.22,0.68,0.15,56,C6.sales);   // rooms sit on one screen row (u+v≈0.9): clean left→right
-    var ops  =room(0.45,0.45,0.16,56,C6.ops);
-    var fin  =room(0.68,0.22,0.15,56,C6.finance);
-
-    // context skyline (solid) behind the campus + trees — all depth-sorted with the rooms
-    var objs=[];
-    [{u:0.12,v:0.18,type:'eng'},{u:0.40,v:0.10,type:'mktg'},{u:0.68,v:0.08,type:'support'}].forEach(function(d){var g=deptBuilding(place,d.u,d.v,d.type);objs.push({gy:g.gy,svg:g.svg});});
-    [sales,ops,fin].forEach(function(r){objs.push({gy:r.gy,svg:r.svg});});
-    [[0.06,0.55],[0.5,0.95],[0.9,0.42],[0.26,0.92],[0.74,0.62]].forEach(function(t){var g=tree(place,t[0],t[1]);objs.push({gy:g.gy,svg:g.svg});});
-
-    /* ===== task-story renderer: a customer's task flows through the teams, becomes money ===== */
-    function pd(pts){return 'M'+pts.map(function(p){return p[0].toFixed(1)+' '+p[1].toFixed(1);}).join(' L ');}
-    var M=[], gsvg="", osvg="", defs="", k=0;
-    function mover(pts,glyph,at,dur,opt){
-      opt=opt||{};var id='m'+k,pid='mp'+k;k++;
-      var d=opt.loop?pts.concat(pts.slice(0,-1).reverse()):pts;
-      defs+='<path id="'+pid+'" d="'+pd(d)+'" fill="none"/>';
-      var g='<g id="'+id+'" style="opacity:0">'+(opt.bob?'<g class="mvin">'+glyph+'</g>':glyph)+'</g>';
-      if(opt.overlay)osvg+=g; else gsvg+=g;
-      M.push({id:id,pid:pid,at:at,dur:dur,loop:!!opt.loop,overlay:!!opt.overlay,bob:!!opt.bob,phase:(k*1.7)%6.283,gy:-1});
-    }
-    var LOOP=14000;
-    var tokenG='<circle r="11" fill="'+COL.roofgold+'" opacity=".28"/><rect x="-7" y="-6" width="14" height="12" rx="2" fill="#fff" stroke="#C9A24E" stroke-width="1.3"/><path d="M-4 -2H4 M-4 1H4 M-4 4H1" stroke="#C9A24E" stroke-width="1.1"/>';
-    var coinG='<circle r="7.5" fill="'+COL.roofgold+'"/><text x="0" y="3" font-size="9" text-anchor="middle" fill="#8a6a12" font-family="sans-serif" font-weight="700">$</text>';
-    // customer arrives → Sales; then the task threads through Sales → Ops → Finance and becomes money
-    mover([place(-0.16,0.70),place(0.14,0.82)],peg([0,0],C6.sales,0.9),500,2400,{bob:true});
-    var jr=[place(0.14,0.82),sales.entry].concat(sales.desks,[sales.entry,ops.entry],ops.desks,[ops.entry,fin.entry],fin.desks,[fin.money]);
-    mover(jr,tokenG,2700,9000,{overlay:true});
-    mover([fin.money,up(fin.money,34)],coinG,11200,1700,{overlay:true});
-    mover([up(fin.money,5),up(fin.money,40)],coinG,11600,1700,{overlay:true});
-
-    var frag='<defs>'+defs+'</defs>'
-      +'<g class="back">'+base+pathSvg+'</g>'
-      +'<g id="hero-spr">'+objs.map(function(o){return '<g class="sprite bld" data-gy="'+o.gy.toFixed(1)+'">'+o.svg+'</g>';}).join("")+gsvg+'</g>'
-      +'<g class="overlay">'+osvg+'</g>';
-    svgEl.innerHTML='<style>#hero .win{fill:var(--window)} :root[data-theme="dark"] #hero .win{filter:drop-shadow(0 0 3px #FFCF6E)}</style>'+frag;
-
-    var host=document.getElementById('hero-spr'), spr=[];
-    [].slice.call(host.querySelectorAll('.bld')).forEach(function(n){spr.push({node:n,gy:+n.getAttribute('data-gy')});});
-    M.forEach(function(m){m.node=document.getElementById(m.id);m.inner=m.node.firstChild;m.path=document.getElementById(m.pid);m.len=m.path.getTotalLength();if(!m.overlay)spr.push(m);});
-    function depthSort(){spr.sort(function(a,b){return a.gy-b.gy;});for(var j=0;j<spr.length;j++)host.appendChild(spr[j].node);}
-    if(reduce){
-      M.forEach(function(m){var pt=m.path.getPointAtLength(0);m.node.style.opacity=1;m.node.setAttribute('transform','translate('+pt.x.toFixed(1)+' '+pt.y.toFixed(1)+')');m.gy=pt.y;});
-      depthSort(); return;
-    }
-    var t0=(window.performance&&performance.now)?performance.now():0;
-    function frame(now){var lt=(now-t0)%LOOP;
-      for(var i=0;i<M.length;i++){var m=M[i],e=m.node,local=lt-m.at;
-        if(local<0||(!m.loop&&local>m.dur)){e.style.opacity=0;e.style.display='none';m.gy=-1;continue;}
-        e.style.display='';
-        var p=m.loop?((local/m.dur)%1):Math.min(1,local/m.dur);
-        e.style.opacity=Math.min(1,local/300)*(m.loop?1:Math.min(1,(m.dur-local)/300));
-        var pt=m.path.getPointAtLength(p*m.len);
-        e.setAttribute('transform','translate('+pt.x.toFixed(1)+' '+pt.y.toFixed(1)+')');
-        m.gy=pt.y;
-        if(m.bob)m.inner.setAttribute('transform','translate(0 '+(-1.4*Math.abs(Math.sin(lt/150+m.phase))).toFixed(2)+')');
-      }
-      depthSort(); requestAnimationFrame(frame);
-    }
-    requestAnimationFrame(frame);
-  }
-  /* hero is now rendered in real 3D (see hero3d.js); the SVG hero is retired */
-
-  /* ---- shared depth-sorted mini-scene: same occlusion engine as the hero ---- */
-  function sortedScene(el, place, islandD, roadSvg, blds, trees, residents, movers){
-    function pdstr(pts){return 'M'+pts.map(function(p){return p[0].toFixed(1)+' '+p[1].toFixed(1);}).join(' L ');}
-    var objs=[];
-    blds.forEach(function(d){var g=deptBuilding(place,d[1],d[2],d[0]);objs.push({gy:g.gy,svg:g.svg});});
-    trees.forEach(function(t){var g=tree(place,t[0],t[1]);objs.push({gy:g.gy,svg:g.svg});});
-    residents.forEach(function(r){objs.push({gy:place(r[1],r[2])[1],svg:peg(place(r[1],r[2]),C6[r[0]]||r[0],r[3]||0.85)});});
-    var pathDefs="",moverSVG="",M=[],k=0;
-    movers.forEach(function(m){
-      var pid=el.id+'_p'+k, mid=el.id+'_m'+k; k++;
-      var trip=m.pts.concat(m.pts.slice(0,-1).reverse());
-      pathDefs+='<path id="'+pid+'" d="'+pdstr(trip)+'" fill="none"/>';
-      moverSVG+='<g class="sprite" id="'+mid+'" style="opacity:0"><g class="mvin">'+peg([0,0],C6[m.color]||m.color,m.scale||0.85)+'</g></g>';
-      M.push({id:mid,pid:pid,speed:m.speed,type:m.type||'walk',phase:(k*1.7)%6.283,gy:-1});
+  // FAQ accordion
+  [].slice.call(document.querySelectorAll(".qa button")).forEach(function(b){
+    b.addEventListener("click",function(){
+      var qa=b.parentElement,open=qa.classList.toggle("open");
+      b.setAttribute("aria-expanded",open?"true":"false");
     });
-    var sprSVG=objs.map(function(o){return '<g class="sprite bld" data-gy="'+o.gy.toFixed(1)+'">'+o.svg+'</g>';}).join("");
-    el.innerHTML='<style>#'+el.id+' .win{fill:var(--window)} :root[data-theme="dark"] #'+el.id+' .win{filter:drop-shadow(0 0 3px #FFCF6E)}</style>'
-      +'<defs>'+pathDefs+'</defs>'
-      +'<g class="back">'+island(place,islandD,COL.grass,COL.soil)+roadSvg+'</g>'
-      +'<g id="'+el.id+'-spr">'+sprSVG+moverSVG+'</g>';
-    var host=document.getElementById(el.id+'-spr'), spr=[];
-    [].slice.call(host.querySelectorAll('.bld')).forEach(function(n){spr.push({node:n,gy:+n.getAttribute('data-gy')});});
-    M.forEach(function(m){m.node=document.getElementById(m.id);m.inner=m.node.firstChild;m.path=document.getElementById(m.pid);m.len=m.path.getTotalLength();m.durMs=Math.max(5000,m.len/m.speed*1000);spr.push(m);});
-    function ds(){spr.sort(function(a,b){return a.gy-b.gy;});for(var j=0;j<spr.length;j++)host.appendChild(spr[j].node);}
-    if(reduce){M.forEach(function(m){var pt=m.path.getPointAtLength(0);m.node.style.opacity=1;m.node.setAttribute('transform','translate('+pt.x.toFixed(1)+' '+pt.y.toFixed(1)+')');m.gy=pt.y;});ds();return;}
-    var t0=(window.performance&&performance.now)?performance.now():0;
-    function fr(now){var lt=now-t0;
-      for(var i=0;i<M.length;i++){var m=M[i];m.node.style.opacity=1;
-        var p=(lt/m.durMs)%1, pt=m.path.getPointAtLength(p*m.len);
-        m.node.setAttribute('transform','translate('+pt.x.toFixed(1)+' '+pt.y.toFixed(1)+')');m.gy=pt.y;
-        if(m.type==='walk')m.inner.setAttribute('transform','translate(0 '+(-1.3*Math.abs(Math.sin(lt/150+m.phase))).toFixed(2)+')');
-      }
-      ds(); requestAnimationFrame(fr);
-    }
-    requestAnimationFrame(fr);
-  }
-
-  /* ---- small worlds for econ + glance sections (now depth-sorted, matching the hero) ---- */
-  function smallWorld(id){
-    var el=document.getElementById(id), place=world(320,58,220,110);
-    var roadSvg=road(place,[[0.08,0.5],[0.92,0.5]],0.05)+road(place,[[0.5,0.1],[0.5,0.9]],0.05);
-    var blds=[['sales',0.40,0.40],['ops',0.78,0.26],['support',0.78,0.74],['eng',0.22,0.26],['finance',0.22,0.74],['mktg',0.52,0.12]];
-    var trees=[[0.12,0.5],[0.9,0.52],[0.5,0.92]];
-    var residents=[['sales',0.5,0.6,0.85],['finance',0.62,0.5,0.8]];   // stand on the open plaza, not stuck to a wall
-    var movers=[{pts:[place(0.14,0.5),place(0.86,0.5)],speed:24,color:'support',scale:0.85}];
-    sortedScene(el,place,56,roadSvg,blds,trees,residents,movers);
-  }
-  /* econ + glance are rendered in 3D via sections3d.js */
-
-  /* ---- growth minis ---- */
-  function miniIsland(id,items){
-    var place=world(120,24,86,43);var svg=island(place,30,COL.grass,COL.soil);
-    var objs=[];items.forEach(function(d){objs.push(deptBuilding(place,d[1],d[2],d[0]));});
-    objs.sort(function(a,b){return a.key-b.key;});svg+=objs.map(function(o){return o.svg;}).join("");
-    document.getElementById(id).innerHTML='<style>#'+id+' .win{fill:var(--window)}</style><g>'+svg+'</g>';
-  }
-  var G=[
-    ["g1",[['sales',0.5,0.5]],"One worker"],
-    ["g2",[['sales',0.4,0.42],['ops',0.66,0.5],['support',0.5,0.68]],"A small team"],
-    ["g3",[['sales',0.38,0.4],['ops',0.66,0.34],['support',0.7,0.66],['eng',0.3,0.66],['finance',0.5,0.2],['mktg',0.52,0.78]],"A company"],
-    ["g4",[['sales',0.34,0.36],['ops',0.62,0.3],['support',0.74,0.56],['eng',0.26,0.6],['finance',0.5,0.16],['mktg',0.5,0.82],['hq',0.5,0.5],['support',0.2,0.4],['ops',0.78,0.78]],"A city at work"]
-  ];
-  /* growth is rendered in 3D via sections3d.js */
-
-  /* ---- workers: each in their own district (in-world, not SaaS cards) ---- */
-  function vignette(role){
-    var place=world(80,54,58,29);
-    var svg=island(place,22,COL.grass,COL.soil);
-    var g=deptBuilding(place,0.62,0.46,role);            // building set back
-    var cit=peg(place(0.30,0.66),C6[role],1.25,role);    // citizen stands on the grass in front, with a gap
-    svg+=g.svg+cit;                                       // building first, citizen (in front) after
-    return '<svg viewBox="0 0 160 152" aria-hidden="true"><style>.win{fill:var(--window)}</style><g>'+svg+'</g></svg>';
-  }
-  var TEAM=[['sales','Sales','closes deals'],['support','Support','answers customers'],['finance','Finance','tracks the money'],['ops','Operations','keeps it running'],['eng','Engineering','builds the product'],['mktg','Marketing','brings people in']];
-  /* team is rendered in 3D via sections3d.js */
-
-  /* logo */
-  (function(){var s='<polygon points="20,6 32,12.5 20,19 8,12.5" fill="'+COL.roofgold+'"/>'+
-    '<polygon points="8,12.5 20,19 20,32 8,25.5" fill="'+shade(COL.cream,-.02)+'"/>'+
-    '<polygon points="20,19 32,12.5 32,25.5 20,32" fill="'+shade(COL.cream,-.15)+'"/>'+
-    '<polygon points="22,22 28,18.7 28,24 22,27.3" fill="'+COL.coral+'" opacity=".9"/>';
-    document.getElementById("logo").innerHTML=s;})();
+  });
 })();
 </script>
 
@@ -515,4 +732,5 @@ section{position:relative;z-index:1}
 <script type="module" src="./hero3d.js"></script>
 <script type="module" src="./sections3d.js"></script>
 
+</body>
 </html>
