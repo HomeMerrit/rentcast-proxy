@@ -35,12 +35,16 @@ export function AgentWorkstation({
       <RoundedBox args={[2.1, 0.16, 1.05]} radius={0.12} smoothness={4} position={[0, 0.78, 0]} material={M.desk} castShadow receiveShadow />
       <RoundedBox args={[1.7, 0.7, 0.8]} radius={0.12} smoothness={4} position={[0, 0.4, -0.02]} material={M.base} castShadow />
 
-      {/* monitor (faces the room / camera; kept low so the ape's face reads) */}
-      <group position={[0, 0.86, -0.28]}>
-        <RoundedBox args={[0.13, 0.24, 0.13]} radius={0.05} smoothness={3} position={[0, 0.12, 0]} material={M.base} />
-        <RoundedBox args={[1.08, 0.64, 0.06]} radius={0.05} smoothness={3} position={[0, 0.5, 0]} material={M.frame} castShadow />
-        <mesh position={[0, 0.5, 0.035]} material={screenMat}><planeGeometry args={[0.96, 0.56]} /></mesh>
+      {/* monitor — set to the side & angled so the ape's face is never blocked */}
+      <group position={[-0.62, 0.78, 0.02]} rotation={[0, 0.5, 0]}>
+        <RoundedBox args={[0.13, 0.22, 0.13]} radius={0.05} smoothness={3} position={[0, 0.11, 0]} material={M.base} />
+        <RoundedBox args={[1.0, 0.6, 0.06]} radius={0.05} smoothness={3} position={[0, 0.5, 0]} material={M.frame} castShadow />
+        <mesh position={[0, 0.5, 0.035]} material={screenMat}><planeGeometry args={[0.88, 0.52]} /></mesh>
       </group>
+
+      {/* low keyboard / control surface in front of the ape */}
+      <RoundedBox args={[0.9, 0.05, 0.32]} radius={0.03} smoothness={3} position={[0.15, 0.83, 0.18]} rotation={[-0.06, 0, 0]} material={M.dark} />
+      <RoundedBox args={[0.42, 0.04, 0.24]} radius={0.03} smoothness={3} position={[0.7, 0.82, 0.2]} material={M.base} />
 
       {/* chair (compact, tucked behind) */}
       {!empty && (
