@@ -18,9 +18,9 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AgentOS — The AI Workforce Platform",
+  title: "Atlas — Build a company that builds itself",
   description:
-    "Build, run and scale a company of AI employees. Onboard your business, hire agents, and watch them work, learn and collaborate in real time.",
+    "Your business, brought to life. Hire workers, give them tools, and watch a whole company work, hand off and grow — in a living world you can actually look at.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

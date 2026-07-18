@@ -14,6 +14,8 @@ import { StatusDot } from "./StatusDot";
 import { RunTaskDialog } from "./RunTaskDialog";
 import { LevelChip, MoodPill } from "./Growth";
 import { agentGrowth } from "@/lib/growth";
+import { LivingWorld } from "./world/LivingWorld";
+import type { Building } from "@/lib/world";
 import { AreaChart } from "./charts/AreaChart";
 import { BarList, RadialGauge, Sparkline, Segmented } from "./charts/mini";
 import { Card, Banner, Skeleton } from "./ui";
@@ -79,6 +81,21 @@ export function CommandCenter() {
   const totalTasks = overview?.tasks ?? 0;
   const activeCount = overview?.active ?? 0;
 
+  // The living world: each department becomes a building, sized by headcount,
+  // lit up when someone on that team is working right now.
+  const buildings: Building[] = useMemo(() => {
+    const activeDepts = new Set(
+      agents.filter((a) => a.status === "active" || a.status === "thinking").map((a) => a.department)
+    );
+    const src = overview?.departments?.length
+      ? overview.departments.map((d) => ({ dept: d.department, count: d.agents }))
+      : Array.from(
+          agents.reduce((m, a) => m.set(a.department, (m.get(a.department) ?? 0) + 1), new Map<string, number>()),
+          ([dept, count]) => ({ dept, count })
+        );
+    return src.map((b) => ({ ...b, active: activeDepts.has(b.dept) }));
+  }, [overview, agents]);
+
   const filtered = useMemo(() => {
     let list = agents.filter((a) => {
       if (dept !== "all" && a.department !== dept) return false;
@@ -109,16 +126,16 @@ export function CommandCenter() {
           <div className="flex items-center gap-4">
             <Logo />
             <nav className="hidden items-center gap-1 md:flex">
-              <span className="rounded-lg bg-content/5 px-3 py-1.5 text-sm font-medium text-content">Command center</span>
-              <Link href="/network" className="rounded-lg px-3 py-1.5 text-sm text-content-muted transition-colors hover:bg-content/5 hover:text-content">Network</Link>
-              <Link href="/live" className="rounded-lg px-3 py-1.5 text-sm text-content-muted transition-colors hover:bg-content/5 hover:text-content">Live</Link>
+              <span className="rounded-lg bg-content/5 px-3 py-1.5 text-sm font-medium text-content">Company</span>
+              <Link href="/network" className="rounded-lg px-3 py-1.5 text-sm text-content-muted transition-colors hover:bg-content/5 hover:text-content">Flow</Link>
+              <Link href="/live" className="rounded-lg px-3 py-1.5 text-sm text-content-muted transition-colors hover:bg-content/5 hover:text-content">Floor</Link>
             </nav>
             <span className="hidden items-center gap-1.5 rounded-full border border-line bg-content/[0.04] px-2.5 py-1 text-2xs font-medium text-positive lg:inline-flex">
               <span className="relative flex h-1.5 w-1.5">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-positive opacity-75" />
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-positive" />
               </span>
-              {overview?.active ?? 0} active
+              {overview?.active ?? 0} working
             </span>
           </div>
           <div className="flex items-center gap-2">
@@ -127,7 +144,7 @@ export function CommandCenter() {
               href="/agents/new"
               className="inline-flex h-9 items-center gap-1.5 rounded-xl bg-iris-gradient px-3.5 text-sm font-medium text-white shadow-[0_8px_24px_-10px_rgba(237,113,80,0.8)] transition-transform active:scale-95"
             >
-              <Plus className="h-4 w-4" /> New agent
+              <Plus className="h-4 w-4" /> Hire
             </Link>
             <AccountMenu />
           </div>
@@ -135,17 +152,33 @@ export function CommandCenter() {
       </header>
 
       <main className="mx-auto max-w-7xl px-4 py-7 sm:px-6">
-        <div className="mb-6">
-          <p className="eyebrow">Command center</p>
-          <h1 className="mt-1 font-display text-2xl font-semibold tracking-tight text-content sm:text-3xl">
-            Run your workforce
-          </h1>
-        </div>
-
         {error && (
           <Banner tone="danger" onRetry={load} className="mb-4">
             Can&apos;t reach the server right now — showing the last data we have. It will retry automatically.
           </Banner>
+        )}
+
+        {/* The company as a living world — the view IS the product */}
+        {buildings.length > 0 && (
+          <section className="relative mb-4 overflow-hidden rounded-3xl border border-line shadow-card"
+            style={{ background: "linear-gradient(180deg,#E9F0EF,#F7F2EA 62%)" }}>
+            <div className="relative z-10 px-5 pt-6 sm:px-8 sm:pt-7">
+              <p className="eyebrow">Your company</p>
+              <h1 className="mt-1 font-display text-2xl font-semibold tracking-tight text-content sm:text-[2rem]">
+                A company that builds itself
+              </h1>
+              <p className="mt-1 max-w-md text-sm text-content-muted">
+                {agentCount} {agentCount === 1 ? "worker" : "workers"} across {buildings.length}{" "}
+                {buildings.length === 1 ? "team" : "teams"}. Watch the work — and the value — flow.
+              </p>
+            </div>
+            <span className="absolute right-5 top-6 z-10 hidden items-center gap-1.5 rounded-full border border-line bg-surface/70 px-2.5 py-1 text-2xs font-medium text-content-muted backdrop-blur sm:inline-flex">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-iris-500" /> watch it grow
+            </span>
+            <div className="relative -mt-6 sm:-mt-10">
+              <LivingWorld buildings={buildings} />
+            </div>
+          </section>
         )}
 
         {/* Next step — always one clear action */}
@@ -183,11 +216,11 @@ export function CommandCenter() {
           </div>
         ) : (
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-6">
-          <Kpi icon={<Users className="h-4 w-4" />} label="Agents" value={overview?.agents ?? "—"} />
-          <Kpi icon={<Activity className="h-4 w-4" />} label="Active now" value={overview?.active ?? "—"} tone="positive" />
+          <Kpi icon={<Users className="h-4 w-4" />} label="Workers" value={overview?.agents ?? "—"} />
+          <Kpi icon={<Activity className="h-4 w-4" />} label="Working now" value={overview?.active ?? "—"} tone="positive" />
           <Kpi
             icon={<Zap className="h-4 w-4" />}
-            label="Tasks (14d)"
+            label="Work done (14d)"
             value={compact(series.reduce((s, d) => s + d.tasks, 0))}
             spark={taskSpark}
             sparkTone="iris"
@@ -195,12 +228,12 @@ export function CommandCenter() {
           <Kpi icon={<Gauge className="h-4 w-4" />} label="Success" value={overview ? `${overview.success_rate}%` : "—"} tone="positive" />
           <Kpi
             icon={<DollarSign className="h-4 w-4" />}
-            label="Spend (total)"
+            label="Spend"
             value={overview ? money(overview.total_cost_usd) : "—"}
             spark={costSpark}
             sparkTone="aqua"
           />
-          <Kpi icon={<TrendingUp className="h-4 w-4" />} label="Tokens" value={overview ? compact(overview.total_tokens) : "—"} />
+          <Kpi icon={<TrendingUp className="h-4 w-4" />} label="Teams" value={buildings.length || "—"} />
         </div>
         )}
 
@@ -209,40 +242,40 @@ export function CommandCenter() {
           <Card className="p-5 lg:col-span-2">
             <div className="mb-3 flex items-center justify-between">
               <h3 className="font-display text-sm font-semibold text-content">
-                {metric === "tasks" ? "Task throughput" : "Spend"} · last 14 days
+                {metric === "tasks" ? "Work done" : "Spend"} · last 14 days
               </h3>
               <Segmented
                 value={metric}
                 onChange={setMetric}
-                options={[{ value: "tasks", label: "Tasks" }, { value: "cost", label: "Cost" }]}
+                options={[{ value: "tasks", label: "Work" }, { value: "cost", label: "Spend" }]}
               />
             </div>
             <AreaChart
               data={chartData}
               tone={metric === "tasks" ? "iris" : "aqua"}
-              format={(v) => (metric === "tasks" ? `${v} tasks` : money(v))}
+              format={(v) => (metric === "tasks" ? `${v} jobs` : money(v))}
               valueLabel={metric}
             />
           </Card>
 
           <Card className="flex flex-col items-center justify-center gap-3 p-5">
             <h3 className="self-start font-display text-sm font-semibold text-content">Success rate</h3>
-            <RadialGauge value={overview?.success_rate ?? 0} sublabel={`${overview?.success ?? 0}/${overview?.tasks ?? 0} tasks`} />
+            <RadialGauge value={overview?.success_rate ?? 0} sublabel={`${overview?.success ?? 0}/${overview?.tasks ?? 0} jobs`} />
             {overview?.avg_eval != null && (
               <p className="text-2xs text-content-subtle">
-                Avg eval score <span className="text-content">{overview.avg_eval}/100</span>
+                Avg quality <span className="text-content">{overview.avg_eval}/100</span>
               </p>
             )}
           </Card>
         </div>
 
-        {/* Departments + fleet + activity */}
+        {/* Teams + workers + activity */}
         <div className="mt-4 grid gap-3 lg:grid-cols-3">
           <Card className="p-5">
-            <h3 className="mb-4 font-display text-sm font-semibold text-content">By department</h3>
+            <h3 className="mb-4 font-display text-sm font-semibold text-content">Teams</h3>
             <BarList
               items={(overview?.departments ?? []).map((d) => ({ label: d.department, value: d.tasks }))}
-              format={(v) => `${compact(v)} tasks`}
+              format={(v) => `${compact(v)} jobs`}
             />
           </Card>
 
@@ -257,7 +290,7 @@ export function CommandCenter() {
             <div className="max-h-[280px] space-y-1.5 overflow-y-auto pr-1">
               {activity.length === 0 && (
                 <p className="py-8 text-center text-xs text-content-subtle">
-                  No runs yet. Dispatch a task from any agent to see live activity.
+                  No work yet. Give any worker a job to see the floor come alive.
                 </p>
               )}
               {activity.map((a) => (
@@ -270,8 +303,8 @@ export function CommandCenter() {
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-xs text-content">
                       <span className="font-medium">{a.agent_name}</span>{" "}
-                      <span className="text-content-muted">ran</span>{" "}
-                      <span className="text-content-muted">{a.task_type}</span>
+                      <span className="text-content-muted">did</span>{" "}
+                      <span className="text-content-muted">{a.task_type.replace(/_/g, " ")}</span>
                     </p>
                     <p className="truncate text-2xs text-content-subtle">{a.result_preview || "—"}</p>
                   </div>
@@ -295,17 +328,17 @@ export function CommandCenter() {
         {/* Fleet table */}
         <Card className="mt-4 overflow-hidden p-0">
           <div className="flex flex-wrap items-center gap-2.5 border-b border-line p-4">
-            <h3 className="mr-auto font-display text-sm font-semibold text-content">Fleet</h3>
+            <h3 className="mr-auto font-display text-sm font-semibold text-content">Your team</h3>
             <div className="relative">
               <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-content-subtle" />
               <input
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
-                placeholder="Search agents…"
+                placeholder="Search workers…"
                 className="h-8 w-44 rounded-lg border border-line bg-surface-inset pl-8 pr-2 text-xs text-content placeholder:text-content-subtle outline-none focus:border-iris-400/50"
               />
             </div>
-            <FilterSelect value={dept} onChange={setDept} options={["all", ...departments]} labelAll="All depts" />
+            <FilterSelect value={dept} onChange={setDept} options={["all", ...departments]} labelAll="All teams" />
             <FilterSelect value={status} onChange={setStatus} options={["all", "active", "thinking", "idle", "error"]} labelAll="Any status" />
           </div>
 
@@ -313,13 +346,13 @@ export function CommandCenter() {
             <table className="w-full min-w-[720px] text-sm">
               <thead>
                 <tr className="border-b border-line text-left text-2xs uppercase tracking-wide text-content-subtle">
-                  <th className="px-4 py-2.5 font-medium">Agent</th>
-                  <th className="px-3 py-2.5 font-medium">Dept</th>
-                  <Th label="Tasks" active={sort === "task_count"} onClick={() => setSort("task_count")} />
+                  <th className="px-4 py-2.5 font-medium">Worker</th>
+                  <th className="px-3 py-2.5 font-medium">Team</th>
+                  <Th label="Jobs" active={sort === "task_count"} onClick={() => setSort("task_count")} />
                   <Th label="Success" active={sort === "success_rate"} onClick={() => setSort("success_rate")} />
-                  <Th label="Cost" active={sort === "cost_usd"} onClick={() => setSort("cost_usd")} />
-                  <Th label="Eval" active={sort === "avg_eval"} onClick={() => setSort("avg_eval")} />
-                  <th className="px-4 py-2.5 text-right font-medium">Active</th>
+                  <Th label="Spend" active={sort === "cost_usd"} onClick={() => setSort("cost_usd")} />
+                  <Th label="Quality" active={sort === "avg_eval"} onClick={() => setSort("avg_eval")} />
+                  <th className="px-4 py-2.5 text-right font-medium">Last seen</th>
                 </tr>
               </thead>
               <tbody>
@@ -372,7 +405,7 @@ export function CommandCenter() {
                 {filtered.length === 0 && (
                   <tr>
                     <td colSpan={7} className="px-4 py-10 text-center text-xs text-content-subtle">
-                      No agents match these filters.
+                      No workers match these filters.
                     </td>
                   </tr>
                 )}
@@ -402,11 +435,11 @@ function NextStep({
     return (
       <Prompt
         eyebrow="Start here"
-        title="Hire your first agent"
-        body="Your workforce is empty. Bring on your first AI employee — it takes about a minute."
+        title="Hire your first worker"
+        body="Your world is empty. Bring on your first worker — it takes about a minute."
         primary={
           <Link href="/agents/new" className={primaryBtn}>
-            <Plus className="h-4 w-4" /> Hire an agent
+            <Plus className="h-4 w-4" /> Hire a worker
           </Link>
         }
       />
@@ -419,7 +452,7 @@ function NextStep({
       <Prompt
         eyebrow="Next step"
         title={targetName ? `Give ${targetName} their first job` : "Give your team their first job"}
-        body="Your team is hired — now put them to work. Pick a job in plain English and watch them go."
+        body="Your team is hired — now put them to work. Pick a job in plain words and watch them go."
         primary={
           <button onClick={onGiveJob} className={primaryBtn}>
             <Briefcase className="h-4 w-4" /> Give a job
@@ -438,14 +471,14 @@ function NextStep({
           <span className="relative inline-flex h-2 w-2 rounded-full bg-positive" />
         </span>
         <p className="text-sm text-content">
-          <span className="font-medium">{activeCount} agent{activeCount > 1 ? "s" : ""} working now.</span>{" "}
-          <span className="text-content-muted">Watch them think and hand off in real time.</span>
+          <span className="font-medium">{activeCount} worker{activeCount > 1 ? "s" : ""} at work now.</span>{" "}
+          <span className="text-content-muted">See the work and hand-offs in real time.</span>
         </p>
         <Link
           href="/live"
           className="ml-auto inline-flex items-center gap-1.5 rounded-lg border border-line bg-surface px-3 py-1.5 text-xs font-medium text-content transition-colors hover:border-line-strong"
         >
-          <Radio className="h-3.5 w-3.5 text-positive" /> Watch live
+          <Radio className="h-3.5 w-3.5 text-positive" /> Watch the floor
         </Link>
       </div>
     );
