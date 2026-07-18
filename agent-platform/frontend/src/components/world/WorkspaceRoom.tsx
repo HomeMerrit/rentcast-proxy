@@ -29,11 +29,11 @@ export function WorkspaceRoom({
             {agent && (
               <ApeAgent
                 id={agent.id}
-                position={[0, 0, -0.62]}
-                scale={0.7}
+                position={[0, 0, -0.86]}
+                scale={0.62}
                 status={agent.status}
                 selected={agent.id === selectedAgentId}
-                color={agent.accentColor ?? "#F47C20"}
+                color={agent.accentColor ?? "#E9843A"}
                 onClick={onAgentClick}
               />
             )}
