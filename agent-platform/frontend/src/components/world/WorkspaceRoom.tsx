@@ -33,7 +33,7 @@ export function WorkspaceRoom({
                 scale={0.62}
                 status={agent.status}
                 selected={agent.id === selectedAgentId}
-                color={agent.accentColor ?? "#E9843A"}
+                color={agent.accentColor ?? "#F47C20"}
                 onClick={onAgentClick}
               />
             )}

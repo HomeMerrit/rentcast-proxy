@@ -11,7 +11,7 @@ function KeyLight() {
   const ref = useRef<THREE.RectAreaLight>(null);
   useEffect(() => {
     RectAreaLightUniformsLib.init();
-    ref.current?.lookAt(0, 1.7, 0);
+    ref.current?.lookAt(0, 1.72, 0);
   }, []);
   return <rectAreaLight ref={ref} position={[-4, 6, 5]} intensity={5.2} width={5} height={5} color="#fff4e6" />;
 }
@@ -35,7 +35,7 @@ export function ApePreviewScene({
         scene.background = new THREE.Color("#ffffff");
       }}
     >
-      <OrthographicCamera makeDefault position={[6.6, 3.2, 6.9]} zoom={132} near={0.1} far={100} />
+      <OrthographicCamera makeDefault position={[6.4, 3.6, 7.0]} zoom={116} near={0.1} far={100} />
 
       <ambientLight intensity={0.55} />
       <KeyLight />
@@ -53,7 +53,7 @@ export function ApePreviewScene({
       </mesh>
       <ContactShadows position={[0, 0.005, 0]} opacity={0.22} scale={6} blur={2.8} far={4} />
 
-      <OrbitControls target={[0, 1.65, 0]} enablePan={false} enableZoom autoRotate={autoRotate} autoRotateSpeed={1.2} minPolarAngle={0.35} maxPolarAngle={1.5} />
+      <OrbitControls target={[0, 1.72, 0]} enablePan={false} enableZoom autoRotate={autoRotate} autoRotateSpeed={1.2} minPolarAngle={0.35} maxPolarAngle={1.5} />
       {showFps && <Stats />}
     </Canvas>
   );
