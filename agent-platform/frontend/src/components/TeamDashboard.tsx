@@ -33,7 +33,7 @@ export function TeamDashboard({ agents }: Props) {
             <HumanInbox />
             <Link
               href="/agents/new"
-              className="inline-flex h-9 items-center gap-1.5 rounded-xl bg-iris-gradient px-3.5 text-sm font-medium text-white shadow-[0_8px_24px_-10px_rgba(114,87,255,0.8)] transition-transform active:scale-95"
+              className="inline-flex h-9 items-center gap-1.5 rounded-xl bg-iris-gradient px-3.5 text-sm font-medium text-white shadow-[0_8px_24px_-10px_rgba(237,113,80,0.8)] transition-transform active:scale-95"
             >
               <Plus className="h-4 w-4" /> New agent
             </Link>

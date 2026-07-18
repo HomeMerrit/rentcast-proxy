@@ -50,7 +50,7 @@ export function RadialGauge({
   const r = (size - stroke) / 2;
   const c = 2 * Math.PI * r;
   const pct = Math.max(0, Math.min(100, value));
-  const color = tone === "positive" ? "#34d399" : tone === "warning" ? "#fbbf24" : "#7257ff";
+  const color = tone === "positive" ? "#4E9E63" : tone === "warning" ? "#E6AE3C" : "#ED7150";
   return (
     <div className="relative inline-flex items-center justify-center" style={{ width: size, height: size }}>
       <svg width={size} height={size} className="-rotate-90">
@@ -90,7 +90,7 @@ export function Sparkline({
   height?: number;
   tone?: "iris" | "positive" | "aqua";
 }) {
-  const color = tone === "positive" ? "#34d399" : tone === "aqua" ? "#22d3ee" : "#7257ff";
+  const color = tone === "positive" ? "#4E9E63" : tone === "aqua" ? "#5A97D6" : "#ED7150";
   if (data.length < 2) return <div style={{ width, height }} />;
   const max = Math.max(1, ...data);
   const min = Math.min(...data);

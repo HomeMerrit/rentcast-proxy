@@ -50,10 +50,10 @@ export default function HumanInbox() {
       {/* Bell button */}
       <button
         onClick={() => setOpen(true)}
-        className="relative p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+        className="relative p-2 rounded-full hover:bg-surface-raised dark:hover:bg-surface-inset transition-colors"
         title="Agent messages"
       >
-        <svg className="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <svg className="w-5 h-5 text-content-subtle dark:text-content-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
         </svg>
         {unread > 0 && (
@@ -73,24 +73,24 @@ export default function HumanInbox() {
 
       {/* Drawer */}
       <div
-        className={`fixed right-0 top-0 z-50 h-full w-full max-w-md transform bg-white dark:bg-gray-900 shadow-2xl transition-transform duration-300 ${
+        className={`fixed right-0 top-0 z-50 h-full w-full max-w-md transform bg-white dark:bg-surface shadow-2xl transition-transform duration-300 ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >
         <div className="flex h-full flex-col">
           {/* Header */}
-          <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 px-4 py-3">
-            <h2 className="text-base font-semibold text-gray-900 dark:text-white">
+          <div className="flex items-center justify-between border-b border-line dark:border-line-strong px-4 py-3">
+            <h2 className="text-base font-semibold text-content dark:text-white">
               Agent Messages
               {unread > 0 && (
-                <span className="ml-2 rounded-full bg-red-100 dark:bg-red-900/30 px-2 py-0.5 text-xs font-medium text-red-600 dark:text-red-400">
+                <span className="ml-2 rounded-full bg-red-100 dark:bg-red-900/30 px-2 py-0.5 text-xs font-medium text-red-600 dark:text-danger">
                   {unread} unread
                 </span>
               )}
             </h2>
             <button
               onClick={() => setOpen(false)}
-              className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 text-xl leading-none"
+              className="text-content-muted hover:text-content-muted dark:hover:text-content text-xl leading-none"
             >
               ×
             </button>
@@ -99,7 +99,7 @@ export default function HumanInbox() {
           {/* Messages */}
           <div className="flex-1 overflow-y-auto p-4 space-y-4">
             {messages.length === 0 ? (
-              <div className="flex flex-col items-center justify-center h-48 text-gray-400">
+              <div className="flex flex-col items-center justify-center h-48 text-content-muted">
                 <svg className="w-10 h-10 mb-2 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                 </svg>
@@ -111,8 +111,8 @@ export default function HumanInbox() {
                   key={msg.id}
                   className={`rounded-xl border p-4 transition-colors ${
                     msg.read
-                      ? "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50"
-                      : "border-indigo-200 dark:border-indigo-800 bg-indigo-50 dark:bg-indigo-950/30"
+                      ? "border-line dark:border-line-strong bg-white dark:bg-surface-inset/50"
+                      : "border-iris-200 dark:border-iris-800 bg-iris-50 dark:bg-iris-900/30"
                   }`}
                 >
                   {/* Sender */}
@@ -125,20 +125,20 @@ export default function HumanInbox() {
                           status="idle"
                           size={32}
                         />
-                        <span className="text-sm font-medium text-gray-900 dark:text-white">
+                        <span className="text-sm font-medium text-content dark:text-white">
                           {msg.from_agent_name}
                         </span>
                       </>
                     ) : (
-                      <span className="text-sm font-medium text-gray-500">Human Reply</span>
+                      <span className="text-sm font-medium text-content-subtle">Human Reply</span>
                     )}
-                    <span className="ml-auto text-xs text-gray-400">
+                    <span className="ml-auto text-xs text-content-muted">
                       {new Date(msg.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                     </span>
                     {!msg.read && msg.message_type === "human_message" && (
                       <button
                         onClick={() => handleMarkRead(msg.id)}
-                        className="text-xs text-indigo-500 hover:text-indigo-700"
+                        className="text-xs text-iris-400 hover:text-iris-500"
                       >
                         Mark read
                       </button>
@@ -146,7 +146,7 @@ export default function HumanInbox() {
                   </div>
 
                   {/* Message */}
-                  <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">
+                  <p className="text-sm text-content-subtle dark:text-content leading-relaxed whitespace-pre-wrap">
                     {msg.message}
                   </p>
 
@@ -156,7 +156,7 @@ export default function HumanInbox() {
                       <textarea
                         rows={2}
                         placeholder="Reply to this agent..."
-                        className="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="w-full rounded-lg border border-line dark:border-line-strong bg-white dark:bg-surface-inset px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-iris-400"
                         value={replies[msg.id] ?? ""}
                         onChange={(e) =>
                           setReplies((r) => ({ ...r, [msg.id]: e.target.value }))
@@ -165,7 +165,7 @@ export default function HumanInbox() {
                       <button
                         onClick={() => handleReply(msg)}
                         disabled={!replies[msg.id]?.trim() || sending[msg.id]}
-                        className="w-full rounded-lg bg-indigo-600 py-1.5 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        className="w-full rounded-lg bg-iris-500 py-1.5 text-sm font-medium text-white hover:bg-iris-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                       >
                         {sending[msg.id] ? "Sending..." : "Reply"}
                       </button>

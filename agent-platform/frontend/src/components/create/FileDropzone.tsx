@@ -53,7 +53,7 @@ export function FileDropzone({
         className={cn(
           "relative flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed px-6 py-10 text-center transition-all duration-200",
           drag
-            ? "border-iris-400/70 bg-iris-500/[0.07] shadow-[0_0_0_3px_rgba(114,87,255,0.12)]"
+            ? "border-iris-400/70 bg-iris-500/[0.07] shadow-[0_0_0_3px_rgba(237,113,80,0.12)]"
             : "border-line-strong bg-surface-inset/60 hover:border-line-strong hover:bg-surface-inset"
         )}
       >

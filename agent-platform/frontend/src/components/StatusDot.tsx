@@ -4,9 +4,9 @@ import type { AgentStatus } from "@/types/agent";
 const STATUS_CONFIG: Record<AgentStatus, { color: string; pulse: boolean; label: string }> = {
   active: { color: "bg-emerald-500", pulse: true, label: "Active" },
   thinking: { color: "bg-amber-400", pulse: true, label: "Thinking" },
-  idle: { color: "bg-slate-500", pulse: false, label: "Idle" },
+  idle: { color: "bg-content-muted", pulse: false, label: "Idle" },
   error: { color: "bg-red-500", pulse: false, label: "Error" },
-  offline: { color: "bg-slate-700", pulse: false, label: "Offline" },
+  offline: { color: "bg-content-subtle", pulse: false, label: "Offline" },
 };
 
 interface Props {
@@ -27,7 +27,7 @@ export function StatusDot({ status, size = "md", showLabel = false }: Props) {
         )}
         <span className={cn("relative inline-flex rounded-full", sizeClass, color)} />
       </span>
-      {showLabel && <span className="text-sm text-gray-400">{label}</span>}
+      {showLabel && <span className="text-sm text-content-muted">{label}</span>}
     </span>
   );
 }

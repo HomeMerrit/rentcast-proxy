@@ -37,13 +37,13 @@ function LoginForm() {
         value={key}
         onChange={(e) => setKey(e.target.value)}
         placeholder="ak_..."
-        className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
+        className="w-full bg-surface-inset border border-line-strong rounded-lg px-4 py-2.5 text-white placeholder-content-subtle focus:outline-none focus:border-iris-400"
       />
-      {error && <p className="text-red-400 text-sm">{error}</p>}
+      {error && <p className="text-danger text-sm">{error}</p>}
       <button
         type="submit"
         disabled={loading || !key}
-        className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-medium py-2.5 rounded-lg transition-colors"
+        className="w-full bg-iris-500 hover:bg-iris-600 disabled:opacity-50 text-white font-medium py-2.5 rounded-lg transition-colors"
       >
         {loading ? "Verifying..." : "Sign in"}
       </button>
@@ -53,11 +53,11 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-950">
-      <div className="bg-gray-900 border border-gray-800 rounded-xl p-8 w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-canvas">
+      <div className="bg-surface border border-line rounded-xl p-8 w-full max-w-md">
         <h1 className="text-2xl font-bold text-white mb-2">AgentOS</h1>
-        <p className="text-gray-400 mb-6 text-sm">Enter your API key to continue</p>
-        <Suspense fallback={<div className="text-gray-500 text-sm">Loading...</div>}>
+        <p className="text-content-muted mb-6 text-sm">Enter your API key to continue</p>
+        <Suspense fallback={<div className="text-content-subtle text-sm">Loading...</div>}>
           <LoginForm />
         </Suspense>
       </div>

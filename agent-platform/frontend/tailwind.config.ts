@@ -1,9 +1,9 @@
 import type { Config } from "tailwindcss";
 
 /**
- * AgentOS design system.
- * A deep "space canvas" dark theme with an iris/violet signature, glass surfaces,
- * soft glows and a refined type scale. Tuned for a premium, OS-grade product feel.
+ * AgentOS design system — warm living-world brand (see /BRAND.md).
+ * Dusk blue-slate surfaces (never black, never purple), warm paper ink, a coral
+ * signature with gold reward and department hues. Soft, sunlit, hand-made feel.
  */
 const config: Config = {
   darkMode: "class",
@@ -15,45 +15,49 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        canvas: "#070810",
+        // Warm living-world brand — dusk (blue-slate, never black/purple). See /BRAND.md.
+        canvas: "#171c2e",
         surface: {
-          DEFAULT: "#0c0e18",
-          raised: "#11131f",
-          overlay: "#161927",
-          inset: "#090a12",
+          DEFAULT: "#20273f",
+          raised: "#262e49",
+          overlay: "#2c3556",
+          inset: "#141a2b",
         },
         line: {
-          DEFAULT: "rgba(255,255,255,0.07)",
-          strong: "rgba(255,255,255,0.13)",
+          DEFAULT: "rgba(214,220,240,0.10)",
+          strong: "rgba(214,220,240,0.18)",
         },
         content: {
-          DEFAULT: "#eef1fa",
-          muted: "#98a1ba",
-          subtle: "#5f6884",
+          DEFAULT: "#F3EFE6",
+          muted: "#B7B1A4",
+          subtle: "#877F6E",
         },
+        // "iris" kept as the accent token name, but it is now the brand CORAL ramp.
         iris: {
-          50: "#f1f0ff",
-          100: "#e5e2ff",
-          200: "#cdc7ff",
-          300: "#ab9fff",
-          400: "#8b78ff",
-          500: "#7257ff",
-          600: "#6039f5",
-          700: "#4f2bd1",
-          800: "#4126a9",
-          900: "#372587",
-          DEFAULT: "#7257ff",
+          50: "#fdf1ec",
+          100: "#fbe0d5",
+          200: "#f6c3ac",
+          300: "#f2a184",
+          400: "#ef8a68",
+          500: "#ED7150",
+          600: "#d85e3f",
+          700: "#b64a30",
+          800: "#8f3b28",
+          900: "#6d3022",
+          DEFAULT: "#ED7150",
         },
+        // "aqua" secondary → department blue.
         aqua: {
-          400: "#38e0f7",
-          500: "#18cbe6",
-          600: "#0ba6c4",
-          DEFAULT: "#22d3ee",
+          400: "#7FB0E0",
+          500: "#5A97D6",
+          600: "#4A83BE",
+          DEFAULT: "#5A97D6",
         },
-        positive: { DEFAULT: "#34d399", soft: "rgba(52,211,153,0.12)" },
-        warning: { DEFAULT: "#fbbf24", soft: "rgba(251,191,36,0.12)" },
-        danger: { DEFAULT: "#fb7185", soft: "rgba(251,113,133,0.12)" },
-        info: { DEFAULT: "#60a5fa", soft: "rgba(96,165,250,0.12)" },
+        gold: { DEFAULT: "#F0BE4D", soft: "rgba(240,190,77,0.14)" },
+        positive: { DEFAULT: "#4E9E63", soft: "rgba(78,158,99,0.14)" },
+        warning: { DEFAULT: "#E6AE3C", soft: "rgba(230,174,60,0.14)" },
+        danger: { DEFAULT: "#E8705C", soft: "rgba(232,112,92,0.14)" },
+        info: { DEFAULT: "#5A97D6", soft: "rgba(90,151,214,0.14)" },
       },
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
@@ -70,19 +74,19 @@ const config: Config = {
         "3xl": "1.5rem",
       },
       boxShadow: {
-        card: "0 1px 0 0 rgba(255,255,255,0.04) inset, 0 8px 30px -12px rgba(0,0,0,0.6)",
-        raised: "0 1px 0 0 rgba(255,255,255,0.05) inset, 0 20px 50px -20px rgba(0,0,0,0.75)",
-        glow: "0 0 0 1px rgba(114,87,255,0.35), 0 0 40px -8px rgba(114,87,255,0.55)",
-        "glow-aqua": "0 0 0 1px rgba(34,211,238,0.35), 0 0 40px -8px rgba(34,211,238,0.5)",
-        focus: "0 0 0 2px rgba(7,8,16,1), 0 0 0 4px rgba(114,87,255,0.6)",
+        card: "0 1px 0 0 rgba(255,255,255,0.05) inset, 0 8px 30px -12px rgba(0,0,0,0.5)",
+        raised: "0 1px 0 0 rgba(255,255,255,0.06) inset, 0 20px 50px -20px rgba(0,0,0,0.6)",
+        glow: "0 0 0 1px rgba(237,113,80,0.35), 0 0 40px -8px rgba(237,113,80,0.55)",
+        "glow-aqua": "0 0 0 1px rgba(90,151,214,0.35), 0 0 40px -8px rgba(90,151,214,0.5)",
+        focus: "0 0 0 2px rgba(23,28,46,1), 0 0 0 4px rgba(237,113,80,0.6)",
       },
       backgroundImage: {
-        "iris-gradient": "linear-gradient(135deg, #7257ff 0%, #a855f7 55%, #22d3ee 130%)",
-        "iris-soft": "linear-gradient(135deg, rgba(114,87,255,0.16), rgba(34,211,238,0.10))",
+        "iris-gradient": "linear-gradient(135deg, #F0BE4D 0%, #ED7150 92%)",
+        "iris-soft": "linear-gradient(135deg, rgba(237,113,80,0.16), rgba(240,190,77,0.10))",
         "grid-faint":
-          "linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px)",
+          "linear-gradient(rgba(214,220,240,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(214,220,240,0.03) 1px, transparent 1px)",
         "radial-iris":
-          "radial-gradient(60% 50% at 50% 0%, rgba(114,87,255,0.18), transparent 70%)",
+          "radial-gradient(60% 50% at 50% 0%, rgba(240,190,77,0.16), transparent 70%)",
       },
       backgroundSize: {
         grid: "44px 44px",
@@ -99,9 +103,9 @@ const config: Config = {
           "50%": { transform: "translateY(-6px)" },
         },
         "pulse-ring": {
-          "0%": { boxShadow: "0 0 0 0 rgba(114,87,255,0.5)" },
-          "70%": { boxShadow: "0 0 0 8px rgba(114,87,255,0)" },
-          "100%": { boxShadow: "0 0 0 0 rgba(114,87,255,0)" },
+          "0%": { boxShadow: "0 0 0 0 rgba(237,113,80,0.5)" },
+          "70%": { boxShadow: "0 0 0 8px rgba(237,113,80,0)" },
+          "100%": { boxShadow: "0 0 0 0 rgba(237,113,80,0)" },
         },
         "gradient-pan": {
           "0%,100%": { backgroundPosition: "0% 50%" },

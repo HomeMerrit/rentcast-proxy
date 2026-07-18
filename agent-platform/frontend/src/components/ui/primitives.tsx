@@ -83,7 +83,7 @@ export function Progress({
   return (
     <div className={cn("h-1.5 w-full overflow-hidden rounded-full bg-white/6", className)}>
       <div
-        className={cn("h-full rounded-full transition-[width] duration-700 ease-out", bar, showGlow && tone === "iris" && "shadow-[0_0_12px_rgba(114,87,255,0.6)]")}
+        className={cn("h-full rounded-full transition-[width] duration-700 ease-out", bar, showGlow && tone === "iris" && "shadow-[0_0_12px_rgba(237,113,80,0.6)]")}
         style={{ width: `${pct}%` }}
       />
     </div>
@@ -123,7 +123,7 @@ export function Chip({
       className={cn(
         "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-medium transition-all duration-200 active:scale-95",
         selected
-          ? "border-iris-400/50 bg-iris-500/15 text-iris-200 shadow-[0_0_0_1px_rgba(114,87,255,0.3),0_0_20px_-8px_rgba(114,87,255,0.7)]"
+          ? "border-iris-400/50 bg-iris-500/15 text-iris-200 shadow-[0_0_0_1px_rgba(237,113,80,0.3),0_0_20px_-8px_rgba(237,113,80,0.7)]"
           : "border-line bg-white/[0.03] text-content-muted hover:border-line-strong hover:text-content hover:bg-white/[0.06]",
         className
       )}

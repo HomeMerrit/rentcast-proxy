@@ -29,7 +29,7 @@ export function AvatarPicker({
     value.avatar_url ||
     `https://api.dicebear.com/9.x/${STYLES[styleIdx]}/svg?seed=${encodeURIComponent(
       value.avatar_seed
-    )}&backgroundColor=7257ff,22d3ee,a855f7`;
+    )}&backgroundColor=5A97D6,4FB0AA,E6AE3C,E08A5B,E06A9A,ED7150`;
 
   const shuffle = () => {
     const seed = Math.random().toString(36).slice(2, 10);
@@ -54,7 +54,7 @@ export function AvatarPicker({
         <div
           className={cn(
             "relative h-28 w-28 overflow-hidden rounded-3xl border border-line-strong bg-surface-inset",
-            "shadow-[0_0_0_4px_rgba(114,87,255,0.10),0_18px_40px_-18px_rgba(114,87,255,0.6)]"
+            "shadow-[0_0_0_4px_rgba(237,113,80,0.10),0_18px_40px_-18px_rgba(237,113,80,0.6)]"
           )}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}

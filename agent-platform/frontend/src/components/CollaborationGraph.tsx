@@ -11,11 +11,11 @@ const CY = H / 2;
 const R = 232;
 
 const STATUS: Record<string, string> = {
-  active: "#34d399",
-  thinking: "#fbbf24",
-  error: "#fb7185",
-  idle: "#5f6884",
-  offline: "#5f6884",
+  active: "#4E9E63",
+  thinking: "#E6AE3C",
+  error: "#E8705C",
+  idle: "#877F6E",
+  offline: "#877F6E",
 };
 
 export function CollaborationGraph({ graph }: { graph: NetworkGraph }) {
@@ -80,8 +80,8 @@ export function CollaborationGraph({ graph }: { graph: NetworkGraph }) {
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full" style={{ maxHeight: 620 }}>
         <defs>
           <radialGradient id="net-core" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="rgba(114,87,255,0.20)" />
-            <stop offset="100%" stopColor="rgba(114,87,255,0)" />
+            <stop offset="0%" stopColor="rgba(240,190,77,0.22)" />
+            <stop offset="100%" stopColor="rgba(240,190,77,0)" />
           </radialGradient>
         </defs>
 
@@ -99,7 +99,7 @@ export function CollaborationGraph({ graph }: { graph: NetworkGraph }) {
               key={`${e.from}-${e.to}-${i}`}
               d={edgePath(e.from, e.to)}
               fill="none"
-              stroke={lit ? "#8b78ff" : "#7257ff"}
+              stroke={lit ? "#EF8A68" : "#ED7150"}
               strokeWidth={lit ? width + 1 : width}
               strokeOpacity={dim ? 0.06 : lit ? 0.9 : 0.28}
               strokeLinecap="round"
@@ -112,7 +112,7 @@ export function CollaborationGraph({ graph }: { graph: NetworkGraph }) {
           const d = edgePath(e.from, e.to);
           if (!d) return null;
           return (
-            <circle key={`pkt-${i}`} r={3} fill="#22d3ee" opacity={0.9}>
+            <circle key={`pkt-${i}`} r={3} fill="#5A97D6" opacity={0.9}>
               <animateMotion dur={`${2.4 + (i % 5) * 0.4}s`} begin={`${(i % 8) * 0.35}s`} repeatCount="indefinite" path={d} />
             </circle>
           );
@@ -138,7 +138,7 @@ export function CollaborationGraph({ graph }: { graph: NetworkGraph }) {
               <clipPath id={clip}>
                 <circle r={r} />
               </clipPath>
-              <circle r={r + 3} fill="#0c0e18" stroke={ring} strokeWidth={2} />
+              <circle r={r + 3} fill="#20273f" stroke={ring} strokeWidth={2} />
               <image
                 href={node.avatar_url || avatarUrl(node.avatar_seed)}
                 x={-r}
@@ -153,7 +153,7 @@ export function CollaborationGraph({ graph }: { graph: NetworkGraph }) {
                   y={r + 15}
                   textAnchor="middle"
                   fontSize={11}
-                  fill={hover === node.id ? "#eef1fa" : "#98a1ba"}
+                  fill={hover === node.id ? "#F3EFE6" : "#B7B1A4"}
                   style={{ pointerEvents: "none" }}
                 >
                   {node.name}

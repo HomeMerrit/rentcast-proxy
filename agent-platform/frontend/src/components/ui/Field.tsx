@@ -5,7 +5,7 @@ import { ChevronDown } from "lucide-react";
 
 const baseField =
   "w-full rounded-xl bg-surface-inset border border-line px-3.5 text-sm text-content placeholder:text-content-subtle " +
-  "transition-all duration-200 outline-none focus:border-iris-400/60 focus:shadow-[0_0_0_3px_rgba(114,87,255,0.16)] " +
+  "transition-all duration-200 outline-none focus:border-iris-400/60 focus:shadow-[0_0_0_3px_rgba(237,113,80,0.16)] " +
   "disabled:opacity-50 disabled:pointer-events-none";
 
 export function Label({

@@ -17,29 +17,29 @@ function timeAgo(iso: string): string {
 export function WorkLogFeed({ entries }: Props) {
   if (entries.length === 0) {
     return (
-      <div className="text-center py-8 text-gray-600 text-sm">No tasks recorded yet.</div>
+      <div className="text-center py-8 text-content-subtle text-sm">No tasks recorded yet.</div>
     );
   }
 
   return (
     <div className="space-y-3">
       {entries.map((entry) => (
-        <div key={entry.id} className="bg-gray-900 border border-gray-800 rounded-lg p-4">
+        <div key={entry.id} className="bg-surface border border-line rounded-lg p-4">
           <div className="flex items-start justify-between gap-2">
             <div className="flex items-center gap-2">
               <span className={`w-2 h-2 rounded-full flex-shrink-0 mt-1 ${entry.success ? "bg-emerald-500" : "bg-red-500"}`} />
-              <span className="text-sm font-medium text-gray-300">{entry.task_type.replace(/_/g, " ")}</span>
+              <span className="text-sm font-medium text-content">{entry.task_type.replace(/_/g, " ")}</span>
             </div>
             <div className="text-right flex-shrink-0">
-              <span className="text-xs text-gray-600">{timeAgo(entry.started_at)}</span>
+              <span className="text-xs text-content-subtle">{timeAgo(entry.started_at)}</span>
               {entry.duration_ms && (
-                <p className="text-xs text-gray-700">{(entry.duration_ms / 1000).toFixed(1)}s</p>
+                <p className="text-xs text-content-subtle">{(entry.duration_ms / 1000).toFixed(1)}s</p>
               )}
             </div>
           </div>
 
           {entry.result && (
-            <p className="mt-2 text-sm text-gray-400 pl-4">{entry.result}</p>
+            <p className="mt-2 text-sm text-content-muted pl-4">{entry.result}</p>
           )}
 
           {entry.reflection && (
@@ -50,7 +50,7 @@ export function WorkLogFeed({ entries }: Props) {
             </div>
           )}
 
-          <div className="mt-2 pl-4 text-xs text-gray-700">
+          <div className="mt-2 pl-4 text-xs text-content-subtle">
             {entry.tokens_used.toLocaleString()} tokens
           </div>
         </div>

@@ -24,7 +24,7 @@ export function Stepper({
                 className={cn(
                   "relative flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-xs font-semibold transition-all duration-300",
                   done && "border-iris-400/50 bg-iris-500/20 text-iris-200",
-                  active && "border-iris-400 bg-iris-gradient text-white shadow-[0_0_18px_-4px_rgba(114,87,255,0.9)]",
+                  active && "border-iris-400 bg-iris-gradient text-white shadow-[0_0_18px_-4px_rgba(237,113,80,0.9)]",
                   !done && !active && "border-line bg-surface text-content-subtle"
                 )}
               >

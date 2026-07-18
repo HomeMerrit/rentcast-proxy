@@ -13,21 +13,21 @@ export function SkillBadge({ skill }: Props) {
   const barColor =
     skill.proficiency >= 90 ? "bg-emerald-500" :
     skill.proficiency >= 75 ? "bg-brand-500" :
-    skill.proficiency >= 60 ? "bg-amber-400" : "bg-slate-500";
+    skill.proficiency >= 60 ? "bg-amber-400" : "bg-content-muted";
 
   return (
-    <div className="bg-gray-900 border border-gray-800 rounded-lg p-3 space-y-2">
+    <div className="bg-surface border border-line rounded-lg p-3 space-y-2">
       <div className="flex items-center justify-between">
-        <span className="text-sm font-medium text-gray-200">{skill.skill}</span>
-        <span className="text-xs text-gray-500">{level}</span>
+        <span className="text-sm font-medium text-content">{skill.skill}</span>
+        <span className="text-xs text-content-subtle">{level}</span>
       </div>
-      <div className="h-1.5 bg-gray-800 rounded-full overflow-hidden">
+      <div className="h-1.5 bg-surface-inset rounded-full overflow-hidden">
         <div
           className={`h-full rounded-full transition-all duration-500 ${barColor}`}
           style={{ width: `${skill.proficiency}%` }}
         />
       </div>
-      <div className="flex items-center justify-between text-xs text-gray-600">
+      <div className="flex items-center justify-between text-xs text-content-subtle">
         <span>{skill.proficiency}% proficiency</span>
         <span>{skill.times_used.toLocaleString()} uses</span>
       </div>

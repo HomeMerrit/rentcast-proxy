@@ -32,7 +32,7 @@ export function AreaChart({
   const [hover, setHover] = useState<number | null>(null);
 
   const color =
-    tone === "positive" ? "#34d399" : tone === "aqua" ? "#22d3ee" : "#7257ff";
+    tone === "positive" ? "#4E9E63" : tone === "aqua" ? "#5A97D6" : "#ED7150";
 
   const { points, max, xs, ys, areaPath, linePath } = useMemo(() => {
     const n = data.length;
@@ -109,7 +109,7 @@ export function AreaChart({
         {hi && (
           <>
             <line x1={hi.x} x2={hi.x} y1={padTop} y2={H - padBottom} stroke="rgba(255,255,255,0.18)" strokeWidth={1} />
-            <circle cx={hi.x} cy={hi.y} r={4.5} fill={color} stroke="#0c0e18" strokeWidth={2} />
+            <circle cx={hi.x} cy={hi.y} r={4.5} fill={color} stroke="#20273f" strokeWidth={2} />
           </>
         )}
         {/* x labels */}
@@ -119,7 +119,7 @@ export function AreaChart({
               key={i}
               x={Math.min(Math.max(p.x, 18), W - 18)}
               y={H - 6}
-              fill="#5f6884"
+              fill="#877F6E"
               fontSize={11}
               textAnchor={i === 0 ? "start" : i === data.length - 1 ? "end" : "middle"}
             >
