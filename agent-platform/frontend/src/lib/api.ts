@@ -27,7 +27,10 @@ function authKey(): string | null {
 const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
-  if (DEMO) { await delay(120 + Math.min(300, path.length * 4)); return demoResponse(path) as T; }
+  if (DEMO) {
+    await delay(120 + Math.min(300, path.length * 4));
+    return demoResponse(path, (init?.method as string) ?? "GET", init?.body as string | undefined) as T;
+  }
   const apiKey = authKey();
   const res = await fetch(`${BASE}${path}`, {
     ...init,
@@ -44,7 +47,7 @@ async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
 
 /** Multipart upload — do NOT set Content-Type (browser sets the boundary). */
 async function apiUpload<T>(path: string, form: FormData): Promise<T> {
-  if (DEMO) { await delay(300); return demoResponse(path) as T; }
+  if (DEMO) { await delay(300); return demoResponse(path, "POST") as T; }
   const apiKey = authKey();
   const res = await fetch(`${BASE}${path}`, {
     method: "POST",
@@ -66,7 +69,21 @@ export interface AgentCreateInput {
   company_id?: string | null;
 }
 
+export interface SignupResult {
+  org_id: string;
+  org_name: string;
+  user_id: string;
+  key: string;
+  key_id: string;
+}
+
 export const api = {
+  auth: {
+    signup: (input: { org_name: string; email: string; name?: string }) =>
+      apiFetch<SignupResult>("/auth/signup", { method: "POST", body: JSON.stringify(input) }),
+    // Cheap authenticated probe used to validate a pasted key (guarded route → 401 if bad).
+    validate: () => apiFetch<unknown[]>("/auth/keys"),
+  },
   agents: {
     list: () => apiFetch<Agent[]>("/agents/"),
     get: (id: string) => apiFetch<Agent>(`/agents/${id}`),

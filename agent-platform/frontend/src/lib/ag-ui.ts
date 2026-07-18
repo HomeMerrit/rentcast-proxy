@@ -16,6 +16,13 @@ interface StreamState {
 
 const STREAM_URL = process.env.NEXT_PUBLIC_STREAM_URL ?? "http://localhost:8000";
 
+// EventSource can't set an Authorization header, so the backend authenticates SSE
+// via a ?token= query param. Append the stored API key when present.
+function streamUrl(path: string): string {
+  const key = typeof window !== "undefined" ? localStorage.getItem("agentos_api_key") : null;
+  return key ? `${STREAM_URL}${path}?token=${encodeURIComponent(key)}` : `${STREAM_URL}${path}`;
+}
+
 export function useAgentStream(agentId: string, initialStatus: AgentStatus = "idle") {
   const [state, setState] = useState<StreamState>({
     events: [],
@@ -54,7 +61,7 @@ export function useAgentStream(agentId: string, initialStatus: AgentStatus = "id
       esRef.current.close();
     }
 
-    const es = new EventSource(`${STREAM_URL}/stream/agents/${agentId}`);
+    const es = new EventSource(streamUrl(`/stream/agents/${agentId}`));
     esRef.current = es;
 
     es.onopen = () => {
@@ -185,7 +192,7 @@ export function useFleetStream() {
       return;
     }
     if (esRef.current) esRef.current.close();
-    const es = new EventSource(`${STREAM_URL}/stream/fleet`);
+    const es = new EventSource(streamUrl(`/stream/fleet`));
     esRef.current = es;
 
     es.onopen = () => {

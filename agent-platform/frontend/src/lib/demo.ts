@@ -197,9 +197,46 @@ function memories(id: string): Memory[] {
   return (RESULTS[d] ?? []).map((r, k) => ({ id: `mem-${id}-${k}`, content: r, task_type: pick(TASK_TYPES[d], k), created_at: iso((k + 1) * 2 * HR) }));
 }
 
-// Resolve a REST path → demo payload.
-export function demoResponse(path: string): unknown {
+let demoAgentSeq = 0;
+
+// Resolve a REST path → demo payload. `method`/`body` let writes return sensible
+// shapes (e.g. POST /agents/ returns the CREATED agent, not the whole list).
+export function demoResponse(path: string, method = "GET", body?: string): unknown {
   const p = path.split("?")[0];
+  const post = method.toUpperCase() === "POST";
+
+  if (p === "/auth/signup") {
+    let orgName = "Demo workspace";
+    try { orgName = (JSON.parse(body || "{}").org_name as string) || orgName; } catch {}
+    return { org_id: "demo-org", org_name: orgName, user_id: "demo-user", key: "ak_demo_workspace_key", key_id: "demo-key" };
+  }
+
+  // POST /agents/ → a freshly "hired" agent (a valid object with an id), NOT the list.
+  if ((p === "/agents/" || p === "/agents") && post) {
+    let b: Record<string, unknown> = {};
+    try { b = JSON.parse(body || "{}"); } catch {}
+    demoAgentSeq++;
+    const now = new Date().toISOString();
+    return {
+      id: `agent-new-${demoAgentSeq}`,
+      name: (b.name as string) || "New agent",
+      title: (b.title as string) || "Specialist",
+      department: (b.department as string) || "Operations",
+      bio: (b.bio as string) ?? null,
+      avatar_seed: (b.avatar_seed as string) || "new",
+      avatar_url: (b.avatar_url as string) ?? null,
+      company_id: (b.company_id as string) ?? null,
+      model: (b.model as string) || "claude-sonnet-5",
+      status: "idle",
+      current_task: null,
+      task_count: 0,
+      success_count: 0,
+      created_at: now,
+      updated_at: now,
+      skills: [],
+    };
+  }
+
   if (p === "/agents/" || p === "/agents") return A;
   const m = p.match(/^\/agents\/([^/]+)$/);
   if (m) return byId(m[1]) ?? A[0];

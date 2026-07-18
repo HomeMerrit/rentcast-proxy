@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { Logo } from "./brand/Logo";
 import HumanInbox from "./HumanInbox";
+import { AccountMenu } from "./AccountMenu";
 import { AgentAvatar } from "./AgentAvatar";
 import { StatusDot } from "./StatusDot";
 import { AreaChart } from "./charts/AreaChart";
@@ -108,6 +109,7 @@ export function CommandCenter() {
             >
               <Plus className="h-4 w-4" /> New agent
             </Link>
+            <AccountMenu />
           </div>
         </div>
       </header>
