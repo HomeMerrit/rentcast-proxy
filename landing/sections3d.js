@@ -120,6 +120,24 @@ function init(){
     roof.position.y=0.2+H+0.12; grp.add(roof);
     parent.add(grp); return grp;
   }
+  // an OPEN workspace — the people, no building shell. A standing "hero" worker
+  // up front (unobstructed) with two teammates at desks behind. Everyone reads.
+  function workerVignette(parent,color,peopleArr){
+    const g=new THREE.Group();
+    const plate=box(4.0,0.3,3.2,0.5,lighter(color,1.16),{rough:0.72}); plate.position.y=0.15; g.add(plate);
+    const band=box(4.1,0.16,3.3,0.05,color,{rough:0.5}); band.position.y=0.28; g.add(band);
+    const spots=[
+      {x:0.0,  z:0.8,  seated:false, ry:0.0,   s:1.4},
+      {x:-1.32,z:-0.5, seated:true,  ry:0.35,  s:1.16},
+      {x:1.32, z:-0.5, seated:true,  ry:-0.35, s:1.16},
+    ];
+    spots.forEach(sp=>{
+      if(sp.seated){ const d=deskUnit(color); d.position.set(sp.x,0.3,sp.z-0.58); d.rotation.y=sp.ry; g.add(d); }
+      const c=person(color,sp.seated); c.position.set(sp.x,0.3,sp.z); c.rotation.y=sp.ry; c.scale.setScalar(sp.s); g.add(c);
+      peopleArr.push({o:c, y:0.3, phase:Math.random()*6.28, seated:sp.seated});
+    });
+    parent.add(g); return g;
+  }
   function tree(parent,x,z,s=1){
     const g=new THREE.Group(); g.position.set(x,0,z); g.scale.setScalar(s);
     const t=new THREE.Mesh(new THREE.CylinderGeometry(0.16,0.2,1,8),mat(COL.trunk,{rough:1})); t.position.y=0.5; g.add(t);
@@ -146,7 +164,7 @@ function init(){
     const parts=spec.split(':'), closeup=(parts[0]==='team');
     if(parts[0]==='team'){
       const t=TEAM.find(x=>x.key===parts[1]);
-      buildingAt(content,0,0,t.color,t.floors,i=>3,people);   // full desks — this section shows the workers
+      workerVignette(content,t.color,people);   // just the PEOPLE — this section is about the workers, not a building
     } else if(parts[0]==='growth'){
       GROWTH_SPECS[+parts[1]].forEach(b=>buildingAt(content,b[1],b[2],COL[b[0]],b[3],b[4],people));
     } else if(parts[0]==='econ'){
@@ -165,12 +183,17 @@ function init(){
     const tile=box(tileW,1.2,tileD,0.5,COL.grass,{rough:0.95}); tile.position.set(ctr.x,-0.6,0); scene.add(tile);
     const sh=contactShadow(tileW,tileD); sh.position.x=ctr.x; scene.add(sh);
 
-    // frame camera to the content (team pulls in close so the people read)
-    const cam=new THREE.PerspectiveCamera(closeup?26:30,1,0.1,120);
+    // frame camera to the content
+    const cam=new THREE.PerspectiveCamera(closeup?28:30,1,0.1,120);
     const radius=Math.max(size.x,size.z)*0.5, h=size.y;
-    const dist=closeup ? Math.max(radius*1.5, h*1.15)+3.2 : Math.max(radius*2.0, h*1.7)+5.5;
-    cam.position.set(ctr.x+dist*0.62, (closeup?h*0.34:h*0.5)+dist*0.55, dist*0.82);
-    cam.lookAt(ctr.x, closeup?h*0.34:h*0.42, 0);
+    if(closeup){ // team: head-on + low so every worker is fully in frame, filling it
+      cam.position.set(ctr.x+0.12, 1.9, 6.0);
+      cam.lookAt(ctr.x, 1.0, -0.1);
+    } else {
+      const dist=Math.max(radius*2.0, h*1.7)+5.5;
+      cam.position.set(ctr.x+dist*0.62, h*0.5+dist*0.55, dist*0.82);
+      cam.lookAt(ctr.x, h*0.42, 0);
+    }
     return {scene,cam,content,extra,people,phase:Math.random()*6.28,closeup};
   }
 
@@ -209,7 +232,7 @@ function init(){
       const r=v.el.getBoundingClientRect();
       if(r.bottom<-40||r.top>H+40||r.width<2) continue;   // only render what's on screen
       const left=Math.floor(r.left), bottom=Math.floor(H-r.bottom), width=Math.ceil(r.width), height=Math.ceil(r.height);
-      v.content.rotation.y = Math.sin(t*0.16+v.phase)*(v.closeup?0.14:0.26) + (v.closeup?0.5:0.35);   // gentle idle sway
+      v.content.rotation.y = v.closeup ? Math.sin(t*0.16+v.phase)*0.08 : (Math.sin(t*0.16+v.phase)*0.26 + 0.35);   // team stays head-on; buildings keep a 3/4 turn
       // the people are alive: seated ones work (fast micro-nod), everyone breathes + glances around
       for(let i=0;i<v.people.length;i++){ const pr=v.people[i], ph=pr.phase;
         if(pr.seated){ pr.o.position.y = pr.y + Math.abs(Math.sin(t*4.5+ph))*0.02; pr.o.userData.inner.rotation.x = 0.16 + Math.sin(t*4.5+ph)*0.04; }
