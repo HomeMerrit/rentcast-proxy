@@ -6,14 +6,22 @@ import { Plus, Network as NetworkIcon, ArrowRight, MessageSquare } from "lucide-
 import { Logo } from "@/components/brand/Logo";
 import HumanInbox from "@/components/HumanInbox";
 import { CollaborationGraph } from "@/components/CollaborationGraph";
-import { Card, Badge } from "@/components/ui";
+import { Card, Badge, Banner, Spinner, EmptyState } from "@/components/ui";
 import { api } from "@/lib/api";
 import type { NetworkGraph } from "@/types/agent";
 
 export default function NetworkPage() {
   const [graph, setGraph] = useState<NetworkGraph | null>(null);
+  const [error, setError] = useState(false);
 
-  const load = () => api.stats.network().then(setGraph).catch(() => setGraph({ nodes: [], edges: [], recent: [] }));
+  const load = () =>
+    api.stats
+      .network()
+      .then((g) => {
+        setGraph(g);
+        setError(false);
+      })
+      .catch(() => setError(true));
   useEffect(() => {
     load();
     const t = setInterval(load, 12000);
@@ -61,6 +69,12 @@ export default function NetworkPage() {
           </div>
         </div>
 
+        {error && graph && (
+          <Banner tone="danger" onRetry={load} className="mb-4">
+            Can&apos;t reach the server — showing the last known network. Retrying automatically.
+          </Banner>
+        )}
+
         <div className="grid gap-3 lg:grid-cols-[1fr_340px]">
           <Card className="relative overflow-hidden p-2">
             {graph && graph.edges.length === 0 && graph.nodes.length > 0 && (
@@ -70,7 +84,32 @@ export default function NetworkPage() {
                 </span>
               </div>
             )}
-            {graph ? <CollaborationGraph graph={graph} /> : <div className="grid h-[440px] place-items-center text-sm text-content-subtle">Loading…</div>}
+            {graph ? (
+              graph.nodes.length === 0 ? (
+                <EmptyState
+                  className="h-[440px]"
+                  icon={<NetworkIcon className="h-5 w-5" />}
+                  title="No agents in the network yet"
+                  description="Hire a few agents and let them delegate — their connections will map out here."
+                />
+              ) : (
+                <CollaborationGraph graph={graph} />
+              )
+            ) : error ? (
+              <div className="grid h-[440px] place-items-center px-6 text-center">
+                <div>
+                  <p className="font-display text-sm font-semibold text-content">Couldn&apos;t load the network</p>
+                  <p className="mt-1 text-xs text-content-muted">The server didn&apos;t respond.</p>
+                  <button onClick={load} className="mt-3 rounded-lg border border-line bg-surface-inset px-3 py-1.5 text-xs font-medium text-content hover:border-line-strong">
+                    Try again
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="grid h-[440px] place-items-center text-sm text-content-subtle">
+                <Spinner />
+              </div>
+            )}
             <div className="flex flex-wrap items-center gap-3 px-3 pb-2 text-2xs text-content-subtle">
               <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-positive" /> active</span>
               <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-warning" /> thinking</span>

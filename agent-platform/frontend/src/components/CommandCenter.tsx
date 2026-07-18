@@ -13,7 +13,7 @@ import { AgentAvatar } from "./AgentAvatar";
 import { StatusDot } from "./StatusDot";
 import { AreaChart } from "./charts/AreaChart";
 import { BarList, RadialGauge, Sparkline, Segmented } from "./charts/mini";
-import { Card } from "./ui";
+import { Card, Banner, Skeleton } from "./ui";
 import { api } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import type { StatsOverview, AgentStat, ActivityItem, TimePoint } from "@/types/agent";
@@ -34,18 +34,24 @@ export function CommandCenter() {
   const [dept, setDept] = useState("all");
   const [status, setStatus] = useState("all");
   const [sort, setSort] = useState<SortKey>("task_count");
+  const [loaded, setLoaded] = useState(false);
+  const [error, setError] = useState(false);
 
   const load = async () => {
-    const [o, a, act, ts] = await Promise.all([
-      api.stats.overview().catch(() => null),
-      api.stats.agents().catch(() => []),
-      api.stats.activity(30).catch(() => []),
-      api.stats.timeseries(14).catch(() => ({ days: 14, series: [] as TimePoint[] })),
+    // allSettled so one flaky endpoint doesn't blank the whole board; the banner
+    // only appears when the backend is fully unreachable (every call rejected).
+    const [o, a, act, ts] = await Promise.allSettled([
+      api.stats.overview(),
+      api.stats.agents(),
+      api.stats.activity(30),
+      api.stats.timeseries(14),
     ]);
-    if (o) setOverview(o);
-    setAgents(a);
-    setActivity(act);
-    setSeries(ts.series);
+    if (o.status === "fulfilled" && o.value) setOverview(o.value);
+    if (a.status === "fulfilled") setAgents(a.value);
+    if (act.status === "fulfilled") setActivity(act.value);
+    if (ts.status === "fulfilled") setSeries(ts.value.series);
+    setError([o, a, act, ts].every((r) => r.status === "rejected"));
+    setLoaded(true);
   };
 
   useEffect(() => {
@@ -122,7 +128,24 @@ export function CommandCenter() {
           </h1>
         </div>
 
+        {error && (
+          <Banner tone="danger" onRetry={load} className="mb-4">
+            Can&apos;t reach the server right now — showing the last data we have. It will retry automatically.
+          </Banner>
+        )}
+
         {/* KPI row */}
+        {!loaded ? (
+          <div className="grid grid-cols-2 gap-3 lg:grid-cols-6">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <Card key={i} className="p-4">
+                <Skeleton className="h-7 w-7 rounded-lg" />
+                <Skeleton className="mt-3 h-7 w-16" />
+                <Skeleton className="mt-1.5 h-3 w-12" />
+              </Card>
+            ))}
+          </div>
+        ) : (
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-6">
           <Kpi icon={<Users className="h-4 w-4" />} label="Agents" value={overview?.agents ?? "—"} />
           <Kpi icon={<Activity className="h-4 w-4" />} label="Active now" value={overview?.active ?? "—"} tone="positive" />
@@ -143,6 +166,7 @@ export function CommandCenter() {
           />
           <Kpi icon={<TrendingUp className="h-4 w-4" />} label="Tokens" value={overview ? compact(overview.total_tokens) : "—"} />
         </div>
+        )}
 
         {/* Charts */}
         <div className="mt-4 grid gap-3 lg:grid-cols-3">

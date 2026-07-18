@@ -1,5 +1,6 @@
 "use client";
 import * as React from "react";
+import { AlertTriangle, RefreshCw } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /* ---------- Card ---------- */
@@ -137,4 +138,102 @@ export function Chip({
 /* ---------- Skeleton ---------- */
 export function Skeleton({ className }: { className?: string }) {
   return <div className={cn("shimmer rounded-lg bg-content/[0.05]", className)} />;
+}
+
+/* ---------- EmptyState ---------- */
+export function EmptyState({
+  icon,
+  title,
+  description,
+  action,
+  className,
+}: {
+  icon?: React.ReactNode;
+  title: string;
+  description?: string;
+  action?: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={cn("flex flex-col items-center justify-center gap-2 px-6 py-12 text-center", className)}>
+      {icon && (
+        <span className="mb-1 grid h-11 w-11 place-items-center rounded-xl bg-content/[0.05] text-content-subtle">
+          {icon}
+        </span>
+      )}
+      <p className="font-display text-sm font-semibold text-content">{title}</p>
+      {description && <p className="max-w-xs text-xs text-content-muted">{description}</p>}
+      {action && <div className="mt-2">{action}</div>}
+    </div>
+  );
+}
+
+/* ---------- ErrorState ---------- */
+export function ErrorState({
+  title = "Couldn't load this",
+  description = "Something went wrong reaching the server.",
+  onRetry,
+  className,
+}: {
+  title?: string;
+  description?: string;
+  onRetry?: () => void;
+  className?: string;
+}) {
+  return (
+    <div className={cn("flex flex-col items-center justify-center gap-2 px-6 py-12 text-center", className)}>
+      <span className="mb-1 grid h-11 w-11 place-items-center rounded-xl bg-danger/10 text-danger">
+        <AlertTriangle className="h-5 w-5" />
+      </span>
+      <p className="font-display text-sm font-semibold text-content">{title}</p>
+      <p className="max-w-xs text-xs text-content-muted">{description}</p>
+      {onRetry && (
+        <button
+          onClick={onRetry}
+          className="mt-2 inline-flex items-center gap-1.5 rounded-lg border border-line bg-surface-inset px-3 py-1.5 text-xs font-medium text-content transition-colors hover:border-line-strong hover:bg-content/[0.05]"
+        >
+          <RefreshCw className="h-3.5 w-3.5" /> Try again
+        </button>
+      )}
+    </div>
+  );
+}
+
+/* ---------- Banner (thin inline notice) ---------- */
+export function Banner({
+  tone = "danger",
+  children,
+  onRetry,
+  className,
+}: {
+  tone?: "danger" | "warning" | "info";
+  children: React.ReactNode;
+  onRetry?: () => void;
+  className?: string;
+}) {
+  const tones = {
+    danger: "border-danger/25 bg-danger/[0.07] text-danger",
+    warning: "border-warning/25 bg-warning/[0.07] text-warning",
+    info: "border-info/25 bg-info/[0.07] text-info",
+  } as const;
+  return (
+    <div
+      className={cn(
+        "flex items-center gap-2.5 rounded-xl border px-3.5 py-2.5 text-xs font-medium",
+        tones[tone],
+        className
+      )}
+    >
+      <AlertTriangle className="h-4 w-4 shrink-0" />
+      <span className="flex-1 text-content-muted">{children}</span>
+      {onRetry && (
+        <button
+          onClick={onRetry}
+          className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-content transition-colors hover:bg-content/[0.06]"
+        >
+          <RefreshCw className="h-3.5 w-3.5" /> Retry
+        </button>
+      )}
+    </div>
+  );
 }
