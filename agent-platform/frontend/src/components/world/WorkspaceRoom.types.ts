@@ -1,0 +1,52 @@
+import type { ApeStatus } from "./ApeAgent.types";
+
+export type WorkspaceLayout = "single-agent" | "multi-agent-pod" | "team-floor";
+export type WorkspaceType = "operations" | "research" | "creative" | "sales" | "command" | "custom";
+export type RoomStatus = "idle" | "active" | "attention" | "blocked" | "offline";
+export type WorkspaceQuality = "low" | "medium" | "high";
+export type WorkstationType = "standard" | "research" | "creative" | "sales" | "command" | "empty";
+
+export interface WorkspaceAgent {
+  id: string;
+  name: string;
+  role: string;
+  status: ApeStatus;
+  workstationId: string;
+  progress?: number;
+  currentTask?: string;
+  selected?: boolean;
+  accentColor?: string;
+}
+
+/** A placed workstation anchor within a room layout. */
+export interface WorkstationSlot {
+  id: string;
+  type: WorkstationType;
+  position: [number, number, number];
+  rotation: [number, number, number];
+}
+
+export interface RoomConfig {
+  id: string;
+  type: WorkspaceType;
+  layout: WorkspaceLayout;
+  size: { width: number; depth: number; height: number };
+  slots: WorkstationSlot[];
+  camera: { overview: { position: [number, number, number]; target: [number, number, number]; fov: number } };
+  rug?: { size: [number, number]; position: [number, number, number] };
+}
+
+export interface WorkspaceRoomProps {
+  id: string;
+  type?: WorkspaceType;
+  layout?: WorkspaceLayout;
+  agents: WorkspaceAgent[];
+  selectedAgentId?: string | null;
+  onAgentClick?: (id: string) => void;
+  onWorkstationClick?: (id: string) => void;
+  onCreateAgent?: (workstationId: string) => void;
+  roomStatus?: RoomStatus;
+  quality?: WorkspaceQuality;
+  showBounds?: boolean;
+  showAnchors?: boolean;
+}
