@@ -20,9 +20,9 @@ from fastapi import FastAPI, Depends
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from sqlalchemy.pool import NullPool
 
-from app.database import Base, get_db
-from app.migrations import run_migrations
+from app.database import get_db
 from app.models_db import Organization, Agent, WorkLog
+from conftest import build_schema
 from app.tenancy import get_current_org, assert_agent_in_org
 from app.billing import assert_within_budget
 from app.routers import auth as auth_router
@@ -56,10 +56,7 @@ def _make_app() -> FastAPI:
 
 @pytest.fixture(autouse=True)
 async def schema():
-    async with test_engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
-        await conn.run_sync(Base.metadata.create_all)
-    await run_migrations(test_engine)
+    await build_schema(test_engine)
     yield
 
 

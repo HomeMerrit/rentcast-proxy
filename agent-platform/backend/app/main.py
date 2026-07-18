@@ -3,9 +3,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .routers import agents, stream, comms, work_log, memory, a2a, evals, skills, company, stats, billing
 from .routers import auth as auth_router
-from .database import engine, Base
+from .database import engine
 from .models_db import EvalResult, AgentConfig, APIKey, Company, Document, Organization, User  # noqa: F401
-from .migrations import run_migrations
+from .db_migrate import adopt_or_upgrade
 from .config import settings
 from .observability import (
     configure_logging, RequestIdMiddleware, add_exception_handler, init_sentry,
@@ -19,10 +19,9 @@ logger = logging.getLogger("agentos")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-    # Apply additive column migrations to existing tables (create_all won't).
-    await run_migrations(engine)
+    # Bring the schema to head via Alembic: upgrade a fresh/managed DB, or adopt
+    # (stamp) a pre-Alembic one in place. Replaces create_all + ad-hoc migrations.
+    await adopt_or_upgrade(engine)
     # Startup warnings
     if not settings.anthropic_api_key:
         logger.warning("ANTHROPIC_API_KEY is not set — agents will fail to run")

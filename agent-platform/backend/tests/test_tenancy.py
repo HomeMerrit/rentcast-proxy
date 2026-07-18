@@ -11,17 +11,16 @@ with fresh connections (avoids asyncpg cross-loop connection reuse under pytest)
 import os
 import uuid
 import pytest
-from sqlalchemy import select, func, text
+from sqlalchemy import select, func
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from sqlalchemy.pool import NullPool
 from fastapi import HTTPException
 
-from app.database import Base
-from app.migrations import run_migrations, _tenancy_bootstrap
 from app.models_db import Organization, Agent
 from app.tenancy import assert_agent_in_org, org_agent_ids
 from app.config import settings
+from conftest import build_schema
 
 DB_URL = os.environ["DATABASE_URL"]
 test_engine = create_async_engine(DB_URL, poolclass=NullPool)
@@ -34,10 +33,7 @@ def _agent(org_id, name, dept="Sales"):
 
 @pytest.fixture(autouse=True)
 async def schema():
-    async with test_engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
-        await conn.run_sync(Base.metadata.create_all)
-    await run_migrations(test_engine)
+    await build_schema(test_engine)
     yield
 
 
@@ -54,20 +50,6 @@ async def test_default_org_bootstrapped():
         org = await db.get(Organization, uuid.UUID(settings.default_org_id))
         assert org is not None
         assert org.name == settings.default_org_name
-
-
-async def test_backfill_assigns_null_org_to_default():
-    """A pre-tenancy row (org_id NULL) gets backfilled into the default org."""
-    async with TestSession() as db:
-        await db.execute(text(
-            "INSERT INTO agents (id, name, title, department, avatar_seed, model, status, task_count, success_count, created_at, updated_at) "
-            "VALUES (:id, 'Legacy Bot', 'Rep', 'Sales', 'legacy', 'claude-sonnet-5', 'idle', 0, 0, now(), now())"
-        ), {"id": str(uuid.uuid4())})
-        await db.commit()
-    await _tenancy_bootstrap(test_engine)
-    async with TestSession() as db:
-        row = (await db.execute(select(Agent).where(Agent.name == "Legacy Bot"))).scalar_one()
-        assert str(row.org_id) == settings.default_org_id
 
 
 async def test_same_name_allowed_across_orgs():

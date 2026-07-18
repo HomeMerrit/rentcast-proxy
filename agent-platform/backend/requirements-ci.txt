@@ -7,6 +7,7 @@
 # so we pin just the shared subset here. Versions match requirements.txt.
 fastapi==0.115.5
 sqlalchemy[asyncio]==2.0.36
+alembic==1.14.0
 asyncpg==0.30.0
 greenlet>=3.0
 pydantic==2.10.3
