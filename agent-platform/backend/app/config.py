@@ -24,6 +24,11 @@ class Settings(BaseSettings):
     # is the global kill-switch (accounting still runs; only blocking is skipped).
     default_monthly_budget_usd: float = 50.0
     enforce_budget: bool = True
+    # Observability. JSON logs are the norm in production (one object per line);
+    # SENTRY_DSN, when set and sentry-sdk is installed, turns on error tracking.
+    log_level: str = "INFO"
+    log_json: bool = False
+    sentry_dsn: str = ""
     # Comma-separated extra CORS origins (in addition to localhost + *.up.railway.app)
     cors_origins: str = ""
     # Default organization used to scope data when auth is disabled (pilots/dev) and to

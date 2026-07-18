@@ -1,16 +1,20 @@
-import uuid
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
 from .routers import agents, stream, comms, work_log, memory, a2a, evals, skills, company, stats, billing
 from .routers import auth as auth_router
 from .database import engine, Base
 from .models_db import EvalResult, AgentConfig, APIKey, Company, Document, Organization, User  # noqa: F401
 from .migrations import run_migrations
 from .config import settings
+from .observability import (
+    configure_logging, RequestIdMiddleware, add_exception_handler, init_sentry,
+)
 import logging
 
+# Standardize logging + turn on error tracking before anything else runs.
+configure_logging(level=settings.log_level, json_logs=settings.log_json)
+init_sentry(settings.sentry_dsn, settings.environment)
 logger = logging.getLogger("agentos")
 
 @asynccontextmanager
@@ -41,16 +45,16 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="AgentOS API", version="0.1.0", lifespan=lifespan)
 
-@app.middleware("http")
-async def request_id_middleware(request: Request, call_next):
-    request_id = request.headers.get("X-Request-ID", str(uuid.uuid4()))
-    response = await call_next(request)
-    response.headers["X-Request-ID"] = request_id
-    return response
+# Catch-all error boundary: unhandled exceptions become a logged, correlated 500.
+add_exception_handler(app)
 
 # Per-key rate limiting (no-op unless ENABLE_RATE_LIMIT=true).
 from .rate_limit import rate_limit_middleware  # noqa: E402
 app.middleware("http")(rate_limit_middleware)
+
+# Request correlation added LAST so it is the outermost user middleware: the id
+# is minted before anything else runs and reaches the error boundary.
+app.add_middleware(RequestIdMiddleware)
 
 _cors_origins = ["http://localhost:3000", "http://localhost:3001"]
 if settings.cors_origins:
