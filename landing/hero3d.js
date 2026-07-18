@@ -73,12 +73,16 @@ function boot(){
     const s=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(cnv),transparent:true,depthWrite:false,blending:THREE.AdditiveBlending}));
     s.scale.setScalar(scale); return s;
   }
-  function citizen(color){
+  // a person — standing or seated at a desk; head kept for idle head-turns
+  function person(color, seated){
     const g=new THREE.Group();
     const pts=[[0,0],[0.36,0],[0.40,0.07],[0.26,0.13],[0.205,0.42],[0.225,0.60],[0.17,0.74],[0.055,0.80]].map(p=>new THREE.Vector2(p[0],p[1]));
-    const body=new THREE.Mesh(new THREE.LatheGeometry(pts,20),mat(color,{rough:0.62})); body.castShadow=true; body.scale.setScalar(1.05); g.add(body);
-    const head=new THREE.Mesh(new THREE.SphereGeometry(0.19,20,16),mat(color,{rough:0.55})); head.castShadow=true; head.position.y=0.80*1.05+0.13; g.add(head);
-    return g;
+    const body=new THREE.Mesh(new THREE.LatheGeometry(pts,18),mat(color,{rough:0.6})); body.castShadow=true; g.add(body);
+    const head=new THREE.Mesh(new THREE.SphereGeometry(0.19,18,14),mat(color,{rough:0.55})); head.castShadow=true; head.position.y=0.83; g.add(head);
+    const inner=g; const wrap=new THREE.Group(); wrap.add(inner);
+    if(seated){ inner.scale.set(1.0,0.66,1.0); inner.rotation.x=0.16; }   // lower + lean toward the desk
+    wrap.userData.head=head; wrap.userData.inner=inner;
+    return wrap;
   }
   function desk(accent){
     const g=new THREE.Group();
@@ -92,28 +96,35 @@ function boot(){
   function floorLevel(color, teamN){
     const g=new THREE.Group();
     const slab=box(FS,0.3,FS,0.1,0xF4EAD6,{rough:0.85}); slab.position.y=0.15; g.add(slab);
-    // colored floor-plate fascia on the two open edges (modern, and you can count floors)
-    const fa=box(FS,0.16,0.09,0.03,color,{rough:0.55}); fa.position.set(0,0.3,FS/2-0.045); g.add(fa);
-    const fb=box(0.09,0.16,FS,0.03,color,{rough:0.55}); fb.position.set(FS/2-0.045,0.3,0); g.add(fb);
-    const wallH=FH-0.3;
-    const wl=box(0.22,wallH,FS,0.07,color,{rough:0.7}); wl.position.set(-FS/2+0.11,0.3+wallH/2,0); g.add(wl);
-    const wr=box(FS,wallH,0.22,0.07,darker(color,0.92),{rough:0.7}); wr.position.set(0,0.3+wallH/2,-FS/2+0.11); g.add(wr);
-    // glass ribbon window across the back-right wall, with slim mullions
-    const gw=FS-1.1, gy=0.3+wallH*0.54, gz=-FS/2+0.2;
-    const glass=box(gw,0.78,0.05,0.02,COL.screen,{emissive:0xCFE6FF,ei:0.32,rough:0.18,metal:0.2,env:0.7}); glass.position.set(0.15,gy,gz); g.add(glass);
-    for(let m=-1;m<=1;m++){const mul=box(0.05,0.82,0.09,0.02,darker(color,0.86),{rough:0.7}); mul.position.set(0.15+m*gw/3,gy,gz+0.02); g.add(mul);}
-    const spots=[[-1.0,0.85],[0.85,0.15],[-0.1,-0.85]].slice(0,teamN);
+    const band=box(FS+0.06,0.16,FS+0.06,0.04,color,{rough:0.5}); band.position.y=0.3; g.add(band);   // dept floor-line (count the floors)
+    // glass curtain walls around this floor — floor-to-ceiling, see-through, dept-tinted
+    const wallH=FH-0.1;
+    const gmat=new THREE.MeshStandardMaterial({color, transparent:true, opacity:0.16, roughness:0.1, metalness:0.0, envMapIntensity:1.2, depthWrite:false, side:THREE.DoubleSide});
+    gmat.userData.baseOpacity=0.16;
+    const wallGeo=new THREE.PlaneGeometry(FS,wallH);
+    [[0,FS/2,0],[0,-FS/2,Math.PI],[-FS/2,0,-Math.PI/2],[FS/2,0,Math.PI/2]].forEach(w=>{
+      const m=new THREE.Mesh(wallGeo,gmat); m.position.set(w[0],0.3+wallH/2,w[1]); m.rotation.y=w[2]; m.renderOrder=20; g.add(m);
+    });
+    // corner columns (structure)
+    const colGeo=rbox(0.14,wallH,0.14,0.05), colMat=mat(darker(color,0.9),{rough:0.55});
+    [[-FS/2,-FS/2],[FS/2,-FS/2],[FS/2,FS/2],[-FS/2,FS/2]].forEach(c=>{ const m=new THREE.Mesh(colGeo,colMat); m.castShadow=true; m.receiveShadow=true; m.position.set(c[0],0.3+wallH/2,c[1]); g.add(m); });
+    const spots=[[-1.05,0.75,true],[0.95,0.05,false],[-0.05,-0.9,true]].slice(0,teamN);
     const people=[];
     spots.forEach(s=>{
-      const dk=desk(color); dk.position.set(s[0],0.3,s[1]-0.5); dk.rotation.y=0.5; g.add(dk);
-      const c=citizen(color); c.position.set(s[0],0.3,s[1]); c.userData.bob=Math.random()*6.28; g.add(c); people.push(c);
+      const seated=s[2];
+      const dk=desk(color); dk.position.set(s[0],0.3,s[1]-0.6); dk.rotation.y=0.35; g.add(dk);
+      const c=person(color,seated); c.position.set(s[0],0.3,s[1]); g.add(c);
+      people.push({o:c, y:0.3, phase:Math.random()*6.28, seated});
     });
     g.userData.people=people;
     return g;
   }
   function setOpacity(group,op){
-    const done=op>=1;
-    group.traverse(o=>{ if(o.isMesh && o.material){ o.material.transparent=!done; o.material.opacity=op; } });
+    group.traverse(o=>{ if(o.isMesh && o.material){
+      const base=o.material.userData.baseOpacity ?? 1;
+      o.material.opacity=base*op;
+      o.material.transparent = base<1 || op<1;
+    }});
   }
 
   // ---- a building: stack of floors that appear/level-up over time ----
@@ -197,7 +208,7 @@ function boot(){
           lvl.rotation.y = (1-ec)*0.7;                          // a quick settle turn as it lands
           const s=0.9+0.1*e; lvl.scale.set(s,1,s);              // scale-in
           setOpacity(lvl, clamp01((lt-at)/(APPEAR*0.4)));
-          lvl.userData.people.forEach((c,k)=>{ const pp=clamp01((lt-at-0.55-k*0.14)/0.5); c.visible=pp>0; c.scale.setScalar(easeOutBack(pp)); }); // team pops in after the floor lands
+          lvl.userData.people.forEach((pr,k)=>{ const pp=clamp01((lt-at-0.55-k*0.14)/0.5); pr.o.visible=pp>0; pr.o.scale.setScalar(easeOutBack(pp)); }); // team pops in after the floor lands
         } else lvl.visible=false;
       });
       // roof: a full 360° spin as it slots into place on every level-up
@@ -228,8 +239,12 @@ function boot(){
 
     updateBuildings(lt);
 
-    // idle bob of everyone currently visible
-    buildings.forEach(B=>B.floors.forEach(lvl=>{ if(lvl.visible) lvl.userData.people.forEach(c=>{ if(c.visible) c.position.y=0.3+Math.sin(el*2.1+c.userData.bob)*0.03; }); }));
+    // the people are alive — seated ones work (fast micro-nod), everyone breathes + glances around
+    buildings.forEach(B=>B.floors.forEach(lvl=>{ if(!lvl.visible) return; lvl.userData.people.forEach(pr=>{ if(!pr.o.visible) return; const ph=pr.phase;
+      if(pr.seated){ pr.o.position.y=pr.y+Math.abs(Math.sin(el*4.5+ph))*0.02; pr.o.userData.inner.rotation.x=0.16+Math.sin(el*4.5+ph)*0.04; }
+      else { pr.o.position.y=pr.y+Math.sin(el*1.8+ph)*0.03; pr.o.rotation.z=Math.sin(el*0.9+ph)*0.05; }
+      pr.o.userData.head.rotation.y=Math.sin(el*0.6+ph*1.7)*0.5;
+    }); }));
 
     // task token
     if(lt>=tokenStart && lt<=tokenStart+tokenDur){
