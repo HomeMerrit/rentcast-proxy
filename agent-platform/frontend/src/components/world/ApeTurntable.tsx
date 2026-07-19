@@ -3,17 +3,19 @@ import { Suspense, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { PerspectiveCamera } from "@react-three/drei";
 import * as THREE from "three";
-import { ApeAgentModel, type ApeStatus, type ApeJersey } from "./ApeAgentModel";
+import { ApeAgentModel, type ApeStatus, type ApeJersey, type ApePattern } from "./ApeAgentModel";
 import { StatusFx } from "./StatusFx";
 
-function Spinner({ status, accent, jersey }: { status: ApeStatus; accent?: string | null; jersey?: ApeJersey | null }) {
+function Spinner({ status, accent, jersey, pattern }: {
+  status: ApeStatus; accent?: string | null; jersey?: ApeJersey | null; pattern?: ApePattern | null;
+}) {
   const group = useRef<THREE.Group>(null);
   useFrame((_, dt) => {
     if (group.current) group.current.rotation.y += dt * 0.55;
   });
   return (
     <group ref={group}>
-      <ApeAgentModel status={status} accent={accent} jersey={jersey} />
+      <ApeAgentModel status={status} accent={accent} jersey={jersey} pattern={pattern} />
       <StatusFx status={status} accent={accent ?? undefined} height={2.7} />
     </group>
   );
@@ -23,8 +25,11 @@ function Spinner({ status, accent, jersey }: { status: ApeStatus; accent?: strin
  *  agent's accent vest and live status clip + FX. Transparent canvas, so it
  *  sits directly on any card surface. */
 export function ApeTurntable({
-  status = "idle", accent = null, jersey = null, className,
-}: { status?: ApeStatus; accent?: string | null; jersey?: ApeJersey | null; className?: string }) {
+  status = "idle", accent = null, jersey = null, pattern = null, className,
+}: {
+  status?: ApeStatus; accent?: string | null; jersey?: ApeJersey | null;
+  pattern?: ApePattern | null; className?: string;
+}) {
   return (
     <div className={className}>
       <Canvas
@@ -49,7 +54,7 @@ export function ApeTurntable({
         {/* character centered on the camera axis (ape is ~2.2 tall + FX above) */}
         <group position={[0, -1.45, 0]}>
           <Suspense fallback={null}>
-            <Spinner status={status} accent={accent} jersey={jersey} />
+            <Spinner status={status} accent={accent} jersey={jersey} pattern={pattern} />
           </Suspense>
           {/* soft grounding shadow only — the card supplies the surface */}
           <mesh rotation-x={-Math.PI / 2} receiveShadow>

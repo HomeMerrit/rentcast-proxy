@@ -34,6 +34,117 @@ export interface ApeJersey {
   label?: string;
 }
 
+export type ApePattern = "bolt" | "stripes" | "hoops" | "chevron" | "sash" | "dots";
+const PATTERNS: ApePattern[] = ["bolt", "stripes", "hoops", "chevron", "sash", "dots"];
+
+/** stable pattern trait per agent id (offset hash so it doesn't correlate with number) */
+export function patternOf(id: string): ApePattern {
+  let h = 7;
+  for (let i = 0; i < id.length; i++) h = (h * 37 + id.charCodeAt(i)) >>> 0;
+  return PATTERNS[h % PATTERNS.length];
+}
+
+/** Draws the kit pattern in light/dark shades of the agent's own accent on a
+ *  transparent canvas — the vest color shows through, so kits stay tonal. */
+function vestPatternTexture(pattern: ApePattern, accent: string): THREE.CanvasTexture {
+  const light = "#" + new THREE.Color(accent).lerp(new THREE.Color("#ffffff"), 0.45).getHexString();
+  const dark = "#" + new THREE.Color(accent).lerp(new THREE.Color("#1E1B18"), 0.4).getHexString();
+  const cv = document.createElement("canvas");
+  cv.width = cv.height = 512;
+  const ctx = cv.getContext("2d")!;
+  ctx.clearRect(0, 0, 512, 512);
+  switch (pattern) {
+    case "bolt": {
+      ctx.fillStyle = light;
+      ctx.strokeStyle = dark;
+      ctx.lineWidth = 14;
+      ctx.beginPath();
+      ctx.moveTo(300, 30); ctx.lineTo(150, 280); ctx.lineTo(240, 280);
+      ctx.lineTo(190, 490); ctx.lineTo(370, 220); ctx.lineTo(272, 220);
+      ctx.lineTo(340, 30); ctx.closePath();
+      ctx.fill(); ctx.stroke();
+      break;
+    }
+    case "stripes": {
+      ctx.save();
+      ctx.translate(256, 256); ctx.rotate(-0.45);
+      ctx.fillStyle = light;
+      ctx.fillRect(-90, -400, 90, 800);
+      ctx.fillStyle = dark;
+      ctx.fillRect(30, -400, 46, 800);
+      ctx.restore();
+      break;
+    }
+    case "hoops": {
+      ctx.fillStyle = dark;
+      for (const y of [70, 230, 390]) ctx.fillRect(0, y, 512, 62);
+      ctx.fillStyle = light;
+      for (const y of [132, 292, 452]) ctx.fillRect(0, y, 512, 16);
+      break;
+    }
+    case "chevron": {
+      ctx.strokeStyle = light;
+      ctx.lineWidth = 46;
+      ctx.lineJoin = "miter";
+      for (const y of [110, 260, 410]) {
+        ctx.beginPath();
+        ctx.moveTo(60, y); ctx.lineTo(256, y + 110); ctx.lineTo(452, y);
+        ctx.stroke();
+      }
+      break;
+    }
+    case "sash": {
+      ctx.save();
+      ctx.translate(256, 256); ctx.rotate(0.6);
+      ctx.fillStyle = dark;
+      ctx.fillRect(-400, -60, 800, 120);
+      ctx.fillStyle = light;
+      ctx.fillRect(-400, 60, 800, 22);
+      ctx.restore();
+      break;
+    }
+    case "dots": {
+      ctx.fillStyle = light;
+      for (let row = 0; row < 6; row++) {
+        const r = 26 - row * 3;
+        for (let col = 0; col < 5; col++) {
+          const x = 70 + col * 96 + (row % 2 ? 48 : 0);
+          ctx.beginPath();
+          ctx.arc(x, 60 + row * 82, Math.max(r, 8), 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      break;
+    }
+  }
+  const tex = new THREE.CanvasTexture(cv);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = 4;
+  return tex;
+}
+
+/** Vest-sized overlay planes (front + back) carrying the pattern; they sit
+ *  between the torso face and the jersey prints. */
+function vestPatternMesh(kind: "chest" | "back", pattern: ApePattern, accent: string): THREE.Mesh {
+  const mesh = new THREE.Mesh(
+    new THREE.PlaneGeometry(1.34, 0.8),
+    new THREE.MeshStandardMaterial({
+      map: vestPatternTexture(pattern, accent),
+      transparent: true,
+      roughness: 0.85,
+      polygonOffset: true,
+      polygonOffsetFactor: -0.5,
+    }),
+  );
+  if (kind === "back") {
+    mesh.rotation.y = Math.PI;
+    mesh.position.set(0, -0.72, -0.105);
+  } else {
+    mesh.position.set(0, -0.62, 0.105);
+  }
+  return mesh;
+}
+
 /** stable 2-digit squad number per agent id */
 export function jerseyNumberOf(id: string): number {
   let h = 0;
@@ -126,9 +237,11 @@ type Props = ThreeElements["group"] & {
   accent?: string | null;
   /** kit printed on the vest via SOCKET_CHEST / SOCKET_BACK accessories */
   jersey?: ApeJersey | null;
+  /** kit pattern trait drawn in shades of the accent (requires accent) */
+  pattern?: ApePattern | null;
 };
 
-export function ApeAgentModel({ status = "idle", clip = null, accent = null, jersey = null, ...props }: Props) {
+export function ApeAgentModel({ status = "idle", clip = null, accent = null, jersey = null, pattern = null, ...props }: Props) {
   const group = useRef<THREE.Group>(null);
   const { scene, animations } = useGLTF("/models/ape-agent-master.glb");
   // depend on the kit's VALUES, not object identity — callers pass literals
@@ -162,13 +275,17 @@ export function ApeAgentModel({ status = "idle", clip = null, accent = null, jer
         }
       }
     });
+    if (accent && pattern) {
+      c.getObjectByName("SOCKET_CHEST")?.add(vestPatternMesh("chest", pattern, accent));
+      c.getObjectByName("SOCKET_BACK")?.add(vestPatternMesh("back", pattern, accent));
+    }
     if (jerseyNumber !== null) {
       const kit = { number: jerseyNumber, label: jerseyLabel ?? undefined };
       c.getObjectByName("SOCKET_CHEST")?.add(jerseyMesh("chest", kit));
       c.getObjectByName("SOCKET_BACK")?.add(jerseyMesh("back", kit));
     }
     return c;
-  }, [scene, accent, jerseyNumber, jerseyLabel]);
+  }, [scene, accent, jerseyNumber, jerseyLabel, pattern]);
   const { actions } = useAnimations(animations, group);
 
   useEffect(() => {
