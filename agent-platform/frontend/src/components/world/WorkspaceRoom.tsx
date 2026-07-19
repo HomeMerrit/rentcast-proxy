@@ -5,7 +5,7 @@ import { ApeworksShell } from "./ApeworksShell";
 import { WorkspaceLighting } from "./WorkspaceLighting";
 import { AgentWorkstation } from "./AgentWorkstation";
 import { ApeAgentGlb } from "./ApeAgentGlb";
-import { jerseyNumberOf } from "./ApeAgentModel";
+import { jerseyNumberOf, patternOf } from "./ApeAgentModel";
 import { resolveRoom, HQ_MAX_AGENTS } from "./WorkspaceRoom.config";
 import type { WorkspaceRoomProps, RoomConfig } from "./WorkspaceRoom.types";
 
@@ -41,6 +41,7 @@ export function WorkspaceRoom({
                 clip={pouf ? "Sit" : null}
                 color={agent.accentColor}
                 jersey={{ number: jerseyNumberOf(agent.id), label: agent.role.slice(0, 3).toUpperCase() || undefined }}
+                pattern={patternOf(agent.id)}
                 selected={agent.id === selectedAgentId}
                 onClick={onAgentClick}
               />

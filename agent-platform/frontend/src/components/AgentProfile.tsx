@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { Zap, Check } from "lucide-react";
 import { avatarHue } from "./AgentAvatar";
 import type { ApeStatus } from "@/components/world/ApeAgent.types";
-import { jerseyNumberOf } from "@/components/world/ApeAgentModel";
+import { jerseyNumberOf, patternOf } from "@/components/world/ApeAgentModel";
 import { SkillBadge } from "./SkillBadge";
 import { WorkLogFeed } from "./WorkLogFeed";
 import { StatusDot } from "./StatusDot";
@@ -423,6 +423,7 @@ export function AgentProfile({ agent }: Props) {
                   number: jerseyNumberOf(agent.id),
                   label: (agent.department || agent.title || "").slice(0, 3).toUpperCase() || undefined,
                 }}
+                pattern={patternOf(agent.id)}
                 className="absolute inset-0"
               />
             </div>

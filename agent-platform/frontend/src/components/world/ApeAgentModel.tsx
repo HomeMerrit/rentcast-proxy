@@ -35,7 +35,9 @@ export interface ApeJersey {
 }
 
 export type ApePattern = "bolt" | "stripes" | "hoops" | "chevron" | "sash" | "dots";
-const PATTERNS: ApePattern[] = ["bolt", "stripes", "hoops", "chevron", "sash", "dots"];
+/** the approved streetwear set — loud, clean under the number at floor scale
+ *  (chevron/sash still render for dev previews but aren't dealt as traits) */
+const PATTERNS: ApePattern[] = ["bolt", "stripes", "hoops", "dots"];
 
 /** stable pattern trait per agent id (offset hash so it doesn't correlate with number) */
 export function patternOf(id: string): ApePattern {
