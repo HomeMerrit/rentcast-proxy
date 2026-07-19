@@ -5,12 +5,12 @@ import type { ThreeElements } from "@react-three/fiber";
 import * as THREE from "three";
 import { SkeletonUtils } from "three-stdlib";
 import { patternOf, jerseyNumberOf, vestPatternCanvas } from "./kit";
-import type { ApeJersey, ApePattern } from "./kit";
+import type { ApeJersey, ApePattern, ApeAccessory } from "./kit";
 
 // kit identity (numbers, patterns, artwork) lives in ./kit so 2D surfaces can
 // share it without loading the GLB pipeline; re-exported here for callers.
 export { patternOf, jerseyNumberOf };
-export type { ApeJersey, ApePattern };
+export type { ApeJersey, ApePattern, ApeAccessory };
 
 /**
  * Loads the locked master character (Blender → GLB). This is the ONE approved
@@ -142,6 +142,49 @@ function jerseyMesh(kind: "chest" | "back", jersey: ApeJersey): THREE.Mesh {
   return mesh;
 }
 
+/** Growth-earned accessories built from primitives, blocky to match the
+ *  mascot; no locked geometry is touched. Anchored to the character root at
+ *  the head's rest coordinates (head block y 1.18–2.76, ±0.96 × ±0.61; ears
+ *  out to ±1.31): the baked head-socket's animated basis is distorted by the
+ *  clip bake, and — like StatusFx — a root anchor reads clean on every
+ *  approved clip since the head stays near rest. */
+function accessoryGroup(kind: ApeAccessory, accent: string | null): THREE.Group {
+  const g = new THREE.Group();
+  const box = (w: number, h: number, d: number, mat: THREE.Material, x: number, y: number, z: number) => {
+    const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
+    m.position.set(x, y, z);
+    m.castShadow = true;
+    g.add(m);
+    return m;
+  };
+  if (kind === "crown") {
+    const gold = new THREE.MeshStandardMaterial({ color: "#F2C14E", metalness: 0.65, roughness: 0.3 });
+    const gem = new THREE.MeshStandardMaterial({ color: accent ?? "#E0484F", roughness: 0.35 });
+    // small square band perched on the big square head (top face at y 2.76)
+    box(1.0, 0.22, 0.1, gold, 0, 2.88, 0.45);
+    box(1.0, 0.22, 0.1, gold, 0, 2.88, -0.45);
+    box(0.1, 0.22, 0.8, gold, 0.45, 2.88, 0);
+    box(0.1, 0.22, 0.8, gold, -0.45, 2.88, 0);
+    for (const [x, z] of [[0.45, 0.45], [-0.45, 0.45], [0.45, -0.45], [-0.45, -0.45]] as const)
+      box(0.14, 0.28, 0.14, gold, x, 3.08, z);
+    box(0.14, 0.14, 0.06, gem, 0, 2.88, 0.51);
+  } else {
+    const shell = new THREE.MeshStandardMaterial({ color: "#2A2622", roughness: 0.65 });
+    const pad = new THREE.MeshStandardMaterial({ color: accent ?? "#F58220", roughness: 0.5 });
+    // band over the head down to cups over the ear blocks (x 0.86–1.31, y 1.63–2.25)
+    box(2.9, 0.16, 0.34, shell, 0, 2.88, 0);
+    box(0.16, 0.95, 0.34, shell, 1.42, 2.38, 0);
+    box(0.16, 0.95, 0.34, shell, -1.42, 2.38, 0);
+    box(0.24, 0.6, 0.6, pad, 1.47, 1.94, 0);
+    box(0.24, 0.6, 0.6, pad, -1.47, 1.94, 0);
+    // mic boom angled from the left cup toward the muzzle
+    const boom = box(0.07, 0.07, 0.85, shell, -1.27, 1.72, 0.56);
+    boom.lookAt(-1.05, 1.5, 0.95);
+    box(0.16, 0.12, 0.12, pad, -1.05, 1.5, 0.95);
+  }
+  return g;
+}
+
 type Props = ThreeElements["group"] & {
   status?: ApeStatus;
   /** explicit clip override (dev/preview); takes precedence over status */
@@ -153,14 +196,19 @@ type Props = ThreeElements["group"] & {
   jersey?: ApeJersey | null;
   /** kit pattern trait drawn in shades of the accent (requires accent) */
   pattern?: ApePattern | null;
+  /** growth-earned gear attached to baked head sockets */
+  accessories?: ApeAccessory[] | null;
 };
 
-export function ApeAgentModel({ status = "idle", clip = null, accent = null, jersey = null, pattern = null, ...props }: Props) {
+export function ApeAgentModel({
+  status = "idle", clip = null, accent = null, jersey = null, pattern = null, accessories = null, ...props
+}: Props) {
   const group = useRef<THREE.Group>(null);
   const { scene, animations } = useGLTF("/models/ape-agent-master.glb");
   // depend on the kit's VALUES, not object identity — callers pass literals
   const jerseyNumber = jersey?.number ?? null;
   const jerseyLabel = jersey?.label ?? null;
+  const accessoryKey = accessories?.join(",") ?? "";
   // per-instance skeleton clone so many agents can animate independently
   const instance = useMemo(() => {
     const c = SkeletonUtils.clone(scene);
@@ -198,8 +246,12 @@ export function ApeAgentModel({ status = "idle", clip = null, accent = null, jer
       c.getObjectByName("SOCKET_CHEST")?.add(jerseyMesh("chest", kit));
       c.getObjectByName("SOCKET_BACK")?.add(jerseyMesh("back", kit));
     }
+    if (accessoryKey) {
+      for (const kind of accessoryKey.split(",") as ApeAccessory[])
+        c.add(accessoryGroup(kind, accent));
+    }
     return c;
-  }, [scene, accent, jerseyNumber, jerseyLabel, pattern]);
+  }, [scene, accent, jerseyNumber, jerseyLabel, pattern, accessoryKey]);
   const { actions } = useAnimations(animations, group);
 
   useEffect(() => {

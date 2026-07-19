@@ -4,7 +4,8 @@ import dynamic from "next/dynamic";
 import { Zap, Check } from "lucide-react";
 import { avatarHue } from "./AgentAvatar";
 import type { ApeStatus } from "@/components/world/ApeAgent.types";
-import { kitKeyOf, jerseyNumberOf, patternOf } from "@/components/world/kit";
+import { kitKeyOf, jerseyNumberOf, patternOf, earnedAccessories } from "@/components/world/kit";
+import { agentGrowth } from "@/lib/growth";
 import { SkillBadge } from "./SkillBadge";
 import { WorkLogFeed } from "./WorkLogFeed";
 import { StatusDot } from "./StatusDot";
@@ -424,6 +425,7 @@ export function AgentProfile({ agent }: Props) {
                   label: (agent.department || agent.title || "").slice(0, 3).toUpperCase() || undefined,
                 }}
                 pattern={patternOf(kitKeyOf(agent))}
+                accessories={earnedAccessories(agentGrowth({ task_count: agent.task_count, success_count: agent.success_count }))}
                 className="absolute inset-0"
               />
             </div>

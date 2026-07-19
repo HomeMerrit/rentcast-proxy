@@ -1,6 +1,6 @@
 "use client";
-import { Suspense, useState } from "react";
-import { Canvas } from "@react-three/fiber";
+import { Suspense, useEffect, useRef, useState } from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls, useGLTF } from "@react-three/drei";
 import { EffectComposer, N8AO, Bloom, Vignette } from "@react-three/postprocessing";
 import * as THREE from "three";
@@ -80,12 +80,63 @@ function EntrancePortal({ onEnter }: { onEnter: () => void }) {
   );
 }
 
+/** duration of the door fly-through; pages time their cover fade against it */
+export const ENTER_FLIGHT_MS = 1600;
+const FLIGHT_END_POS = new THREE.Vector3(0.8, 2.7, 7.6); // just outside the muzzle door
+const FLIGHT_END_TGT = new THREE.Vector3(0.8, 2.5, 5.6); // looking through it
+
+/** Walks the camera up to the front door: eases from wherever the user left
+ *  the orbit down to the doorway, then hands off (the page fades and switches
+ *  to the interior). Purely a camera move — the world itself is untouched. */
+function EntranceFlight({ active, onDone }: { active: boolean; onDone: () => void }) {
+  const { camera, controls } = useThree();
+  const flight = useRef<{ t: number; pos: THREE.Vector3; tgt: THREE.Vector3; done: boolean } | null>(null);
+
+  useEffect(() => {
+    if (!active) flight.current = null;
+  }, [active]);
+
+  useFrame((_, dt) => {
+    if (!active) return;
+    const orbit = controls as unknown as { target: THREE.Vector3; enabled: boolean } | null;
+    if (!flight.current) {
+      flight.current = {
+        t: 0,
+        pos: camera.position.clone(),
+        tgt: (orbit?.target ?? new THREE.Vector3(1.5, 6.5, 0)).clone(),
+        done: false,
+      };
+    }
+    const f = flight.current;
+    if (f.done) return;
+    f.t = Math.min(1, f.t + (dt * 1000) / ENTER_FLIGHT_MS);
+    const e = f.t < 0.5 ? 4 * f.t ** 3 : 1 - Math.pow(-2 * f.t + 2, 3) / 2; // easeInOutCubic
+    camera.position.lerpVectors(f.pos, FLIGHT_END_POS, e);
+    const tgt = new THREE.Vector3().lerpVectors(f.tgt, FLIGHT_END_TGT, e);
+    if (orbit) orbit.target.copy(tgt);
+    camera.lookAt(tgt);
+    if (f.t >= 1) {
+      f.done = true;
+      onDone();
+    }
+  });
+  return null;
+}
+
 /** The APE AGENTS HQ exterior — the building is the mascot. A greeter ape
  *  waits at the entrance (AGENT_SLOT_DOOR in the GLB). */
 export function ApeworksExteriorScene({
   onEnterHq,
   hero = false,
-}: { onEnterHq?: () => void; hero?: boolean } = {}) {
+  entering = false,
+  onEntered,
+}: {
+  onEnterHq?: () => void;
+  hero?: boolean;
+  /** when true, the camera flies to the front door, then onEntered fires */
+  entering?: boolean;
+  onEntered?: () => void;
+} = {}) {
   return (
     <Canvas
       shadows
@@ -102,6 +153,7 @@ export function ApeworksExteriorScene({
       }}
     >
       <ExteriorLighting />
+      {onEntered && <EntranceFlight active={entering} onDone={onEntered} />}
       <Suspense fallback={null}>
         <ExteriorShell />
         {onEnterHq && <EntrancePortal onEnter={onEnterHq} />}
@@ -129,9 +181,11 @@ export function ApeworksExteriorScene({
         minPolarAngle={hero ? Math.PI / 2 - 0.6 : 0}
         minAzimuthAngle={hero ? -0.9 : -Infinity}
         maxAzimuthAngle={hero ? 0.6 : Infinity}
-        enableZoom={!hero}
-        enablePan={!hero}
-        minDistance={10}
+        enableZoom={!hero && !entering}
+        enablePan={!hero && !entering}
+        enableRotate={!entering}
+        minDistance={entering ? 0.1 : 10}
+        enabled={!entering}
         maxDistance={70}
         enableDamping
         makeDefault

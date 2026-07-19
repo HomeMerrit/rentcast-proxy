@@ -11,6 +11,17 @@ export interface ApeJersey {
   label?: string;
 }
 
+export type ApeAccessory = "headset" | "crown";
+
+/** Growth-earned gear (socket accessories, never geometry edits): reaching
+ *  "Skilled" (level 3) earns the ops headset; a max-level "Legend" trades it
+ *  for the crown. Derived from the same growth ladder every surface shows. */
+export function earnedAccessories(growth: { level: number }): ApeAccessory[] {
+  if (growth.level >= 7) return ["crown"];
+  if (growth.level >= 3) return ["headset"];
+  return [];
+}
+
 export type ApePattern = "bolt" | "stripes" | "hoops" | "chevron" | "sash" | "dots";
 
 /** the approved streetwear set — loud, clean under the number at floor scale

@@ -1,8 +1,23 @@
-# APE Agent — Master Asset Lock (v1.2)
+# APE Agent — Master Asset Lock (v1.3)
 
 `agent-platform/frontend/public/models/ape-agent-master.glb` is the **only approved
 master character**. Approved and locked as v1; v1.1 adds the rig and the 12
 approved animation clips with the rest-pose geometry unchanged.
+
+## v1.3 — earned accessories (app-side, GLB unchanged)
+
+Growth-earned gear built from primitives in the app (accessory rule); the GLB
+and its checksum are untouched:
+
+- **Headset** — earned at growth level 3 ("Skilled"): dark band + accent ear
+  cups + mic boom over the ear blocks.
+- **Crown** — earned at level 7 ("Legend"), replacing the headset: small gold
+  square crown with corner spikes + accent gem, perched on the head top.
+- Anchoring note: gear is anchored to the character root at the head's rest
+  coordinates (like `StatusFx`), NOT parented to the head sockets — the baked
+  head-socket runtime basis is distorted by the clip bake (rotated ~90° about
+  X with a non-uniform pose scale), which shears rigid child geometry. The
+  head stays near rest in every approved clip, so a root anchor reads clean.
 
 ## v1.2 — agent kit variants (approved)
 

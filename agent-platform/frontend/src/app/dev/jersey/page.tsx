@@ -1,6 +1,6 @@
 "use client";
 import dynamic from "next/dynamic";
-import type { ApePattern } from "@/components/world/ApeAgentModel";
+import type { ApePattern, ApeAccessory } from "@/components/world/ApeAgentModel";
 
 const ApeTurntable = dynamic(
   () => import("@/components/world/ApeTurntable").then((m) => m.ApeTurntable),
@@ -9,11 +9,11 @@ const ApeTurntable = dynamic(
 
 /** Kit pattern lineup for approval — one ape per pattern trait, each in a
  *  different accent, all spinning. */
-const LINEUP: { pattern: ApePattern; accent: string; number: number; label: string }[] = [
+const LINEUP: { pattern: ApePattern; accent: string; number: number; label: string; accessories?: ApeAccessory[] }[] = [
   { pattern: "bolt", accent: "#5A97D6", number: 9, label: "OPS" },
   { pattern: "stripes", accent: "#E06A9A", number: 23, label: "CRE" },
-  { pattern: "hoops", accent: "#6BB47C", number: 4, label: "SAL" },
-  { pattern: "chevron", accent: "#E6AE3C", number: 71, label: "CMD" },
+  { pattern: "hoops", accent: "#6BB47C", number: 4, label: "SAL", accessories: ["headset"] },
+  { pattern: "chevron", accent: "#E6AE3C", number: 71, label: "CMD", accessories: ["crown"] },
   { pattern: "sash", accent: "#8B79D4", number: 47, label: "RES" },
   { pattern: "dots", accent: "#4FB0AA", number: 12, label: "OPS" },
 ];
@@ -35,6 +35,7 @@ export default function JerseyPage() {
               accent={k.accent}
               pattern={k.pattern}
               jersey={{ number: k.number, label: k.label }}
+              accessories={k.accessories ?? null}
               className="pattern-cell"
             />
             <span style={{ position: "absolute", top: 10, left: 12, fontSize: 12, fontWeight: 700,

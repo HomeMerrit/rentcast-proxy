@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import * as THREE from "three";
-import { ApeAgentModel, type ApeClip, type ApeJersey, type ApePattern } from "./ApeAgentModel";
+import { ApeAgentModel, type ApeClip, type ApeJersey, type ApePattern, type ApeAccessory } from "./ApeAgentModel";
 import { StatusFx } from "./StatusFx";
 import type { ApeAgentProps } from "./ApeAgent.types";
 
@@ -11,8 +11,8 @@ import type { ApeAgentProps } from "./ApeAgent.types";
  * come exclusively from the baked asset (status drives the approved clips).
  */
 export function ApeAgentGlb({
-  id, position, rotation, scale = 1, status = "idle", selected = false, onClick, clip = null, color, jersey = null, pattern = null,
-}: ApeAgentProps & { clip?: ApeClip | null; jersey?: ApeJersey | null; pattern?: ApePattern | null }) {
+  id, position, rotation, scale = 1, status = "idle", selected = false, onClick, clip = null, color, jersey = null, pattern = null, accessories = null,
+}: ApeAgentProps & { clip?: ApeClip | null; jersey?: ApeJersey | null; pattern?: ApePattern | null; accessories?: ApeAccessory[] | null }) {
   const [hovered, setHovered] = useState(false);
   const accent = color ?? "#FFB36E";
 
@@ -34,7 +34,7 @@ export function ApeAgentGlb({
           />
         </mesh>
       )}
-      <ApeAgentModel status={status} clip={clip} accent={color ?? null} jersey={jersey} pattern={pattern} />
+      <ApeAgentModel status={status} clip={clip} accent={color ?? null} jersey={jersey} pattern={pattern} accessories={accessories} />
       {/* floating status glyph (allowed: FX live outside the character mesh) */}
       <StatusFx status={status} accent={accent} height={2.9} />
     </group>

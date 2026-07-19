@@ -1,4 +1,5 @@
 import type { ApeStatus } from "./ApeAgent.types";
+import type { ApeAccessory } from "./kit";
 
 export type WorkspaceLayout = "single-agent" | "multi-agent-pod" | "team-floor" | "hq";
 export type WorkspaceType = "operations" | "research" | "creative" | "sales" | "command" | "custom";
@@ -18,6 +19,8 @@ export interface WorkspaceAgent {
   accentColor?: string;
   /** kit identity key (avatar seed) — falls back to id when absent */
   kitId?: string;
+  /** growth-earned gear (headset, crown) */
+  accessories?: ApeAccessory[];
 }
 
 /** A placed workstation anchor within a room layout. */

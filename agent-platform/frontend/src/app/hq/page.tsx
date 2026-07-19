@@ -7,6 +7,8 @@ import { Logo } from "@/components/brand/Logo";
 import { StatusDot } from "@/components/StatusDot";
 import { KitChip } from "@/components/KitChip";
 import { avatarHue } from "@/components/AgentAvatar";
+import { earnedAccessories } from "@/components/world/kit";
+import { agentGrowth } from "@/lib/growth";
 import { useFleetStream } from "@/lib/ag-ui";
 import { api } from "@/lib/api";
 import { cn } from "@/lib/utils";
@@ -38,6 +40,7 @@ export default function HqPage() {
   const [agents, setAgents] = useState<Agent[]>([]);
   const [view, setView] = useState<View>("exterior");
   const [fading, setFading] = useState(false);
+  const [entering, setEntering] = useState(false); // door fly-through in progress
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const fleet = useFleetStream();
 
@@ -51,8 +54,23 @@ export default function HqPage() {
     setTimeout(() => {
       setView(next);
       setSelectedId(null);
+      setEntering(false);
       setTimeout(() => setFading(false), 60);
     }, 260);
+  };
+
+  // Entering through the front door: fly the camera to the doorway, fade to
+  // cover the cut just as we reach it, then swap to the interior.
+  const enterHq = () => {
+    if (entering || view !== "exterior") return;
+    setEntering(true);
+    setTimeout(() => setFading(true), 1150); // fade fully in right at arrival
+  };
+  const arrived = () => {
+    setView("inside");
+    setSelectedId(null);
+    setEntering(false);
+    setTimeout(() => setFading(false), 120);
   };
 
   const floorAgents: WorkspaceAgent[] = useMemo(
@@ -65,6 +83,7 @@ export default function HqPage() {
         workstationId: `ws-${i + 1}`,
         accentColor: avatarHue(a.avatar_seed || a.name)[0],
         kitId: a.avatar_seed || a.id,
+        accessories: earnedAccessories(agentGrowth({ task_count: a.task_count, success_count: a.success_count })),
       })),
     [agents, fleet.agents],
   );
@@ -106,7 +125,7 @@ export default function HqPage() {
 
       <main className="relative min-h-0 flex-1">
         {view === "exterior" ? (
-          <ApeworksExteriorScene onEnterHq={() => switchView("inside")} />
+          <ApeworksExteriorScene onEnterHq={enterHq} entering={entering} onEntered={arrived} />
         ) : (
           <WorkspacePreviewScene
             agents={floorAgents}
@@ -124,10 +143,10 @@ export default function HqPage() {
           )}
         />
 
-        {view === "exterior" && !fading && (
+        {view === "exterior" && !fading && !entering && (
           <div className="pointer-events-none absolute inset-x-0 bottom-6 flex justify-center">
             <button
-              onClick={() => switchView("inside")}
+              onClick={enterHq}
               className="pointer-events-auto rounded-xl bg-iris-gradient px-5 py-2.5 text-sm font-semibold text-white shadow-[0_10px_30px_-10px_rgba(237,113,80,0.9)] transition-transform active:scale-95"
             >
               Enter headquarters →
