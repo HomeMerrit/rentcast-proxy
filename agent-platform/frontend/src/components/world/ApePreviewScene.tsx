@@ -32,17 +32,23 @@ export function ApePreviewScene({
     >
       <OrthographicCamera makeDefault position={[4.6, 4.6, 8.0]} zoom={160} near={0.1} far={100} />
 
-      {/* wrap-around studio light (local — no network HDRs) */}
+      {/* wrap-around studio light (local — no network HDRs): strong upper-left key,
+          weak warm fill right, top rim — gives every face a gradient like the ref */}
       <Environment resolution={256} frames={1}>
-        <Lightformer intensity={2.9} position={[-4, 5, 4]} scale={[7, 7, 1]} color="#ffffff" target={[0, 1.5, 0]} />
-        <Lightformer intensity={1.1} position={[5, 2, 3]} scale={[6, 6, 1]} color="#fff2e2" target={[0, 1.5, 0]} />
-        <Lightformer intensity={1.4} position={[0, 6, -4]} scale={[9, 4, 1]} color="#ffffff" target={[0, 1.5, 0]} />
-        <Lightformer intensity={0.7} position={[0, 1.6, 7]} scale={[16, 12, 1]} color="#ffffff" target={[0, 1.5, 0]} />
+        <Lightformer intensity={3.4} position={[-5, 6, 4]} scale={[6, 6, 1]} color="#ffffff" target={[0, 1.5, 0]} />
+        <Lightformer intensity={0.55} position={[6, 2, 2]} scale={[5, 5, 1]} color="#ffe3c4" target={[0, 1.5, 0]} />
+        <Lightformer intensity={1.2} position={[0, 7, -3]} scale={[9, 3, 1]} color="#ffffff" target={[0, 1.5, 0]} />
+        <Lightformer intensity={0.5} position={[0, 1.8, 7]} scale={[14, 10, 1]} color="#fff4e8" target={[0, 1.5, 0]} />
       </Environment>
 
-      <ambientLight intensity={0.18} />
-      {/* soft key (no hard shadow map — grounding comes from the contact shadow + AO) */}
-      <directionalLight position={[-3.5, 7, 5]} intensity={1.5} color="#fff7ee" />
+      <ambientLight intensity={0.16} />
+      {/* soft key with REAL cast shadows — brow onto face, muzzle onto chin, head onto body */}
+      <directionalLight
+        position={[-3, 7.5, 6]} intensity={1.7} color="#fff7ee" castShadow
+        shadow-mapSize={[2048, 2048]} shadow-bias={-0.0002} shadow-normalBias={0.03}
+      >
+        <orthographicCamera attach="shadow-camera" args={[-2.6, 2.6, 4.2, -0.4, 0.5, 20]} />
+      </directionalLight>
 
       <ApeAgent id="operator" status={status} selected={selected} debug={debug} onClick={onSelect} />
 

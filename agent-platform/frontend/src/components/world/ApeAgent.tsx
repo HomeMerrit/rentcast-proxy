@@ -72,25 +72,25 @@ export function ApeAgent({
         <RoundedBox args={[1.1, 0.85, 0.9]} radius={0.09} smoothness={4} position={[0, 0.52, 0.05]} material={mats.body} castShadow receiveShadow />
 
         {/* LEGS — short stubs, square gap */}
-        <RoundedBox args={[0.44, 0.5, 0.6]} radius={0.07} smoothness={4} position={[-0.32, 0.25, 0.1]} material={mats.body} castShadow />
-        <RoundedBox args={[0.44, 0.5, 0.6]} radius={0.07} smoothness={4} position={[0.32, 0.25, 0.1]} material={mats.body} castShadow />
+        <RoundedBox args={[0.44, 0.5, 0.6]} radius={0.07} smoothness={4} position={[-0.32, 0.25, 0.1]} material={mats.body} castShadow receiveShadow />
+        <RoundedBox args={[0.44, 0.5, 0.6]} radius={0.07} smoothness={4} position={[0.32, 0.25, 0.1]} material={mats.body} castShadow receiveShadow />
 
         {/* ARMS — outer edge just past the head side; upper + fist */}
         <group ref={leftArm} position={[-0.825, 1.4, 0.02]}>
-          <RoundedBox args={[0.47, 0.85, 0.55]} radius={0.09} smoothness={4} position={[0, -0.38, 0]} material={mats.body} castShadow />
-          <RoundedBox args={[0.4, 0.36, 0.48]} radius={0.08} smoothness={4} position={[0, -0.85, 0.02]} material={mats.body} castShadow />
+          <RoundedBox args={[0.47, 0.85, 0.55]} radius={0.09} smoothness={4} position={[0, -0.38, 0]} material={mats.body} castShadow receiveShadow />
+          <RoundedBox args={[0.4, 0.36, 0.48]} radius={0.08} smoothness={4} position={[0, -0.85, 0.02]} material={mats.body} castShadow receiveShadow />
         </group>
         <group ref={rightArm} position={[0.825, 1.4, 0.02]}>
-          <RoundedBox args={[0.47, 0.85, 0.55]} radius={0.09} smoothness={4} position={[0, -0.38, 0]} material={mats.body} castShadow />
-          <RoundedBox args={[0.4, 0.36, 0.48]} radius={0.08} smoothness={4} position={[0, -0.85, 0.02]} material={mats.body} castShadow />
+          <RoundedBox args={[0.47, 0.85, 0.55]} radius={0.09} smoothness={4} position={[0, -0.38, 0]} material={mats.body} castShadow receiveShadow />
+          <RoundedBox args={[0.4, 0.36, 0.48]} radius={0.08} smoothness={4} position={[0, -0.85, 0.02]} material={mats.body} castShadow receiveShadow />
         </group>
 
         {/* HEAD — the hero (~69% of total height), crisp near-cube */}
         <group ref={head} position={[0, 1.98, 0]}>
-          <RoundedBox args={[1.92, 2.1, 1.7]} radius={0.1} smoothness={4} position={[0, 0, -0.03]} material={mats.body} castShadow />
+          <RoundedBox args={[1.92, 2.1, 1.7]} radius={0.1} smoothness={4} position={[0, 0, -0.03]} material={mats.body} castShadow receiveShadow />
 
           {/* BROW — full-width visor bar, proud of the face */}
-          <RoundedBox args={[1.98, 0.26, 0.4]} radius={0.06} smoothness={4} position={[0, 0.335, 0.7]} material={mats.body} castShadow />
+          <RoundedBox args={[1.98, 0.26, 0.4]} radius={0.06} smoothness={4} position={[0, 0.335, 0.7]} material={mats.body} castShadow receiveShadow />
 
           {/* EYES — big glossy black, hugging the brow; the face packs tight below */}
           <RoundedBox args={[0.28, 0.4, 0.1]} radius={0.045} smoothness={4} position={[-0.44, -0.035, 0.78]} material={mats.eye} />
@@ -99,21 +99,21 @@ export function ApeAgent({
           <mesh position={[0.37, 0.075, 0.84]} material={mats.hi}><sphereGeometry args={[0.052, 18, 18]} /></mesh>
 
           {/* NOSE — big, its top wedged up between the eyes; nostril holes in its top */}
-          <RoundedBox args={[0.78, 0.4, 0.55]} radius={0.06} smoothness={4} position={[0, -0.37, 0.86]} material={mats.body} castShadow />
+          <RoundedBox args={[0.78, 0.4, 0.55]} radius={0.06} smoothness={4} position={[0, -0.37, 0.86]} material={mats.body} castShadow receiveShadow />
           <RoundedBox args={[0.15, 0.1, 0.14]} radius={0.02} smoothness={4} position={[-0.19, -0.19, 1.0]} material={mats.hole} />
           <RoundedBox args={[0.15, 0.1, 0.14]} radius={0.02} smoothness={4} position={[0.19, -0.19, 1.0]} material={mats.hole} />
 
           {/* MOUTH — wide slab meeting the nose, plus a thinner chin lip at the base */}
-          <RoundedBox args={[1.09, 0.34, 0.5]} radius={0.07} smoothness={4} position={[0, -0.71, 0.7]} material={mats.body} castShadow />
-          <RoundedBox args={[1.0, 0.18, 0.46]} radius={0.07} smoothness={4} position={[0, -0.97, 0.67]} material={mats.body} castShadow />
+          <RoundedBox args={[1.09, 0.34, 0.5]} radius={0.07} smoothness={4} position={[0, -0.71, 0.7]} material={mats.body} castShadow receiveShadow />
+          <RoundedBox args={[1.0, 0.18, 0.46]} radius={0.07} smoothness={4} position={[0, -0.97, 0.67]} material={mats.body} castShadow receiveShadow />
 
           {/* EARS — thick slabs sunk into the head sides, square through-hole */}
           <group position={[-1.0, -0.025, 0.45]}>
-            <RoundedBox args={[0.42, 0.75, 0.5]} radius={0.08} smoothness={4} material={mats.body} castShadow />
+            <RoundedBox args={[0.42, 0.75, 0.5]} radius={0.08} smoothness={4} material={mats.body} castShadow receiveShadow />
             <RoundedBox args={[0.23, 0.23, 0.2]} radius={0.03} smoothness={4} position={[-0.02, 0.02, 0.16]} material={mats.hole} />
           </group>
           <group position={[1.0, -0.025, 0.45]}>
-            <RoundedBox args={[0.42, 0.75, 0.5]} radius={0.08} smoothness={4} material={mats.body} castShadow />
+            <RoundedBox args={[0.42, 0.75, 0.5]} radius={0.08} smoothness={4} material={mats.body} castShadow receiveShadow />
             <RoundedBox args={[0.23, 0.23, 0.2]} radius={0.03} smoothness={4} position={[0.02, 0.02, 0.16]} material={mats.hole} />
           </group>
         </group>
