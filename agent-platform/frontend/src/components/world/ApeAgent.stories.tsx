@@ -7,7 +7,7 @@ const STATUSES: ApeStatus[] = ["idle", "working", "thinking", "waiting", "comple
 
 export const stories: { name: string; props: ApeAgentProps }[] = STATUSES.map((status) => ({
   name: status,
-  props: { id: `operator-${status}`, status, color: "#E97B29" },
+  props: { id: `operator-${status}`, status, color: "#DC5F0E" },
 }));
 
 export default { title: "world/ApeAgent", stories };
