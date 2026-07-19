@@ -13,7 +13,7 @@ function KeyLight() {
     RectAreaLightUniformsLib.init();
     ref.current?.lookAt(0, 1.72, 0);
   }, []);
-  return <rectAreaLight ref={ref} position={[-4, 6, 5]} intensity={5.2} width={5} height={5} color="#fff4e6" />;
+  return <rectAreaLight ref={ref} position={[-4, 6, 5]} intensity={4.6} width={5} height={5} color="#fff4e6" />;
 }
 
 export function ApePreviewScene({
@@ -35,12 +35,12 @@ export function ApePreviewScene({
         scene.background = new THREE.Color("#ffffff");
       }}
     >
-      <OrthographicCamera makeDefault position={[6.4, 3.6, 7.0]} zoom={116} near={0.1} far={100} />
+      <OrthographicCamera makeDefault position={[4.6, 5.3, 8.0]} zoom={98} near={0.1} far={100} />
 
       <ambientLight intensity={0.55} />
       <KeyLight />
       <directionalLight position={[4, 3, 4]} intensity={1.5} color="#ffffff" />
-      <directionalLight position={[1, 5, -4]} intensity={1.8} color="#ffe9cf" />
+      <directionalLight position={[1, 5, -4]} intensity={1.4} color="#ffe9cf" />
       {/* gentle rim from behind-side to catch the bevels */}
       <directionalLight position={[-3.5, 2.4, -4.5]} intensity={1.7} color="#fff1db" />
 
