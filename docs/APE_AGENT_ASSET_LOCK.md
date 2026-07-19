@@ -18,6 +18,8 @@ and its checksum are untouched:
   head-socket runtime basis is distorted by the clip bake (rotated ~90° about
   X with a non-uniform pose scale), which shears rigid child geometry. The
   head stays near rest in every approved clip, so a root anchor reads clean.
+- Gear only renders on standing/desk poses — the `Sit` clip lowers the head
+  away from the anchor, so lounging apes take their gear off.
 
 ## v1.2 — agent kit variants (approved)
 

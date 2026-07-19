@@ -42,7 +42,7 @@ export function WorkspaceRoom({
                 color={agent.accentColor}
                 jersey={{ number: jerseyNumberOf(agent.kitId ?? agent.id), label: agent.role.slice(0, 3).toUpperCase() || undefined }}
                 pattern={patternOf(agent.kitId ?? agent.id)}
-                accessories={agent.accessories ?? null}
+                accessories={pouf ? null : agent.accessories ?? null}
                 selected={agent.id === selectedAgentId}
                 onClick={onAgentClick}
               />
