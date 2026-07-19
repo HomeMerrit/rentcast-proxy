@@ -78,6 +78,21 @@ def carve(target, c):
 # from the bottom to form two legs — no leg/body seam line, just a clean gap
 tor = box("TORSO", (1.50, 1.22, 1.04), (0, 0.61, 0), 0.13, M["body"])  # 20% shorter lower half
 carve(tor, cutter((0.32, 0.67, 1.3), (0, 0.0, 0.04)))
+# v1.2: second material slot on the leg region (below the notch top). SAME
+# colour as the body so the locked look is pixel-identical — it only lets the
+# app tint the "legs" slot separately as an approved kit variant.
+M["legs"] = mat("legs", COL["body"])
+tor.data.name = "TORSO"          # datablock name → child primitive names in glTF
+tor.data.materials.append(M["legs"])
+LEG_TOP = 0.345
+bpy.context.view_layer.objects.active = tor
+bpy.ops.object.mode_set(mode="EDIT")
+bpy.ops.mesh.select_all(action="SELECT")
+bpy.ops.mesh.bisect(plane_co=(0, 0, LEG_TOP), plane_no=(0, 0, 1))
+bpy.ops.object.mode_set(mode="OBJECT")
+for p in tor.data.polygons:
+    if p.center.z < LEG_TOP:
+        p.material_index = 1
 # arm with a SMALLER hand block at the bottom (hand narrower than the arm)
 box("ARM_L", (0.54, 0.92, 0.64), (-1.11, 0.78, 0.0), 0.12, M["body"])
 box("ARM_R", (0.54, 0.92, 0.64), (1.11, 0.78, 0.0), 0.12, M["body"])

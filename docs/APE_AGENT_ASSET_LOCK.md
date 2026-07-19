@@ -1,8 +1,24 @@
-# APE Agent — Master Asset Lock (v1.1)
+# APE Agent — Master Asset Lock (v1.2)
 
 `agent-platform/frontend/public/models/ape-agent-master.glb` is the **only approved
 master character**. Approved and locked as v1; v1.1 adds the rig and the 12
 approved animation clips with the rest-pose geometry unchanged.
+
+## v1.2 — agent kit variants (approved)
+
+Geometry and the default look are unchanged. The torso mesh gains a second
+material slot, `legs`, on the faces below the leg notch (baked in the same
+body orange, so the plain mascot renders identically). Approved per-agent
+variants the app may apply:
+
+- **Accent vest** — tint the torso's `body` slot to the agent's accent color
+  (`avatarHue`); fur, arms, hands, head stay brand orange.
+- **Brown legs** — when (and only when) the vest is applied, the `legs` slot
+  tints to brand dark `#B85712` so the legs read as fur, not kit.
+- **Jersey prints** — chest crest + squad label and back number attach as
+  planes to `SOCKET_CHEST` / `SOCKET_BACK` (accessory rule; they ride the
+  spine bone).
+- **Status glyphs** — `StatusFx` floats outside the character mesh (FX rule).
 
 ## v1.1 — rig + animation
 

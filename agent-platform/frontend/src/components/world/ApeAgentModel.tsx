@@ -143,10 +143,22 @@ export function ApeAgentModel({ status = "idle", clip = null, accent = null, jer
         mesh.castShadow = true;
         mesh.receiveShadow = true;
         mesh.frustumCulled = false; // skinned bounds don't track bones
-        if (accent && o.name === "TORSO") {
-          const m = (mesh.material as THREE.MeshStandardMaterial).clone();
-          m.color = new THREE.Color(accent);
-          mesh.material = m;
+        // kit mode: the torso's "body" slot takes the agent accent (vest) and
+        // its "legs" slot goes brand dark-brown so the legs read as fur, not
+        // kit. The plain mascot (no accent) stays locked all-orange. The torso
+        // is multi-primitive, so match by material + owning node, not mesh name.
+        if (accent) {
+          const src = mesh.material as THREE.MeshStandardMaterial;
+          const onTorso = o.name.startsWith("TORSO") || o.parent?.name === "TORSO";
+          if (src.name === "legs") {
+            const m = src.clone();
+            m.color = new THREE.Color("#B85712");
+            mesh.material = m;
+          } else if (src.name === "body" && onTorso) {
+            const m = src.clone();
+            m.color = new THREE.Color(accent);
+            mesh.material = m;
+          }
         }
       }
     });
