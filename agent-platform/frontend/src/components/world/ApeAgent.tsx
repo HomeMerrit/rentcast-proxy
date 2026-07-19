@@ -18,7 +18,7 @@ export function ApeAgent({
   scale = 1,
   status = "idle",
   selected = false,
-  color = "#DD6812",
+  color = "#DC5F0E",
   debug = false,
   onClick,
 }: ApeAgentProps) {
@@ -73,8 +73,8 @@ export function ApeAgent({
         <RoundedBox args={[1.14, 0.9, 0.95]} radius={0.14} smoothness={5} position={[0, 0.92, 0.1]} material={mats.body} castShadow receiveShadow />
 
         {/* LEGS — short stubs, clear square gap, stepping slightly forward */}
-        <RoundedBox args={[0.46, 0.52, 0.62]} radius={0.1} smoothness={5} position={[-0.31, 0.26, 0.14]} material={mats.body} castShadow />
-        <RoundedBox args={[0.46, 0.52, 0.62]} radius={0.1} smoothness={5} position={[0.31, 0.26, 0.14]} material={mats.body} castShadow />
+        <RoundedBox args={[0.5, 0.52, 0.62]} radius={0.1} smoothness={5} position={[-0.34, 0.26, 0.14]} material={mats.body} castShadow />
+        <RoundedBox args={[0.5, 0.52, 0.62]} radius={0.1} smoothness={5} position={[0.34, 0.26, 0.14]} material={mats.body} castShadow />
 
         {/* ARMS (pivot at the shoulder, emerging from under the head's corners) + FISTS */}
         <group ref={leftArm} position={[-0.88, 1.42, 0.06]}>
@@ -94,19 +94,19 @@ export function ApeAgent({
           <RoundedBox args={[2.1, 0.26, 0.5]} radius={0.11} smoothness={5} position={[0, 0.4, 0.82]} material={mats.body} castShadow />
 
           {/* EYES — glossy black, tight against the nose, tucked under the brow */}
-          <RoundedBox ref={leftEye} args={[0.28, 0.42, 0.07]} radius={0.06} smoothness={5} position={[-0.5, -0.02, 0.83]} material={mats.eye} />
-          <RoundedBox ref={rightEye} args={[0.28, 0.42, 0.07]} radius={0.06} smoothness={5} position={[0.5, -0.02, 0.83]} material={mats.eye} />
-          <mesh position={[-0.57, 0.1, 0.875]} material={mats.hi}><sphereGeometry args={[0.06, 18, 18]} /></mesh>
-          <mesh position={[0.43, 0.1, 0.875]} material={mats.hi}><sphereGeometry args={[0.06, 18, 18]} /></mesh>
+          <RoundedBox ref={leftEye} args={[0.32, 0.46, 0.07]} radius={0.07} smoothness={5} position={[-0.5, 0.0, 0.83]} material={mats.eye} />
+          <RoundedBox ref={rightEye} args={[0.32, 0.46, 0.07]} radius={0.07} smoothness={5} position={[0.5, 0.0, 0.83]} material={mats.eye} />
+          <mesh position={[-0.58, 0.13, 0.875]} material={mats.hi}><sphereGeometry args={[0.06, 18, 18]} /></mesh>
+          <mesh position={[0.42, 0.13, 0.875]} material={mats.hi}><sphereGeometry args={[0.06, 18, 18]} /></mesh>
 
-          {/* NOSE block — between the eyes (top overlaps the eye row), projecting far
-              forward; nostril holes punched into its TOP face near the front edge */}
-          <RoundedBox args={[0.82, 0.46, 0.6]} radius={0.11} smoothness={5} position={[0, -0.36, 0.92]} material={mats.body} castShadow />
-          <RoundedBox args={[0.14, 0.1, 0.14]} radius={0.02} smoothness={4} position={[-0.17, -0.16, 1.1]} material={mats.hole} />
-          <RoundedBox args={[0.14, 0.1, 0.14]} radius={0.02} smoothness={4} position={[0.17, -0.16, 1.1]} material={mats.hole} />
+          {/* NOSE block — between the eyes, its top at the eye-bottom line (both eyes
+              read fully); nostril holes punched into its TOP face near the front edge */}
+          <RoundedBox args={[0.86, 0.5, 0.62]} radius={0.11} smoothness={5} position={[0, -0.45, 0.92]} material={mats.body} castShadow />
+          <RoundedBox args={[0.16, 0.1, 0.16]} radius={0.02} smoothness={4} position={[-0.19, -0.22, 1.1]} material={mats.hole} />
+          <RoundedBox args={[0.16, 0.1, 0.16]} radius={0.02} smoothness={4} position={[0.19, -0.22, 1.1]} material={mats.hole} />
 
           {/* MOUTH slab — wider than the nose, stepped back, chin reaching the head's base */}
-          <RoundedBox args={[1.34, 0.52, 0.55]} radius={0.16} smoothness={5} position={[0, -0.87, 0.78]} material={mats.body} castShadow />
+          <RoundedBox args={[1.36, 0.46, 0.55]} radius={0.16} smoothness={5} position={[0, -0.94, 0.78]} material={mats.body} castShadow />
 
           {/* EARS — big tall tabs at mid-head, pushed forward so the ring reads; square through-hole */}
           <group position={[-1.18, -0.05, 0.45]}>

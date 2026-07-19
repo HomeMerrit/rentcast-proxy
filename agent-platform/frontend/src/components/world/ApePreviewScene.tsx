@@ -35,12 +35,12 @@ export function ApePreviewScene({
         scene.background = new THREE.Color("#ffffff");
       }}
     >
-      <OrthographicCamera makeDefault position={[4.6, 5.3, 8.0]} zoom={98} near={0.1} far={100} />
+      <OrthographicCamera makeDefault position={[4.6, 5.3, 8.0]} zoom={160} near={0.1} far={100} />
 
       <ambientLight intensity={0.55} />
       <KeyLight />
       <directionalLight position={[4, 3, 4]} intensity={1.5} color="#ffffff" />
-      <directionalLight position={[1, 5, -4]} intensity={1.4} color="#ffe9cf" />
+      <directionalLight position={[1, 5, -4]} intensity={1.1} color="#ffe9cf" />
       {/* gentle rim from behind-side to catch the bevels */}
       <directionalLight position={[-3.5, 2.4, -4.5]} intensity={1.7} color="#fff1db" />
 
@@ -51,9 +51,9 @@ export function ApePreviewScene({
         <planeGeometry args={[40, 40]} />
         <meshStandardMaterial color="#ffffff" roughness={1} />
       </mesh>
-      <ContactShadows position={[0, 0.005, 0]} opacity={0.22} scale={6} blur={2.8} far={4} />
+      <ContactShadows position={[0, 0.005, 0]} opacity={0.35} scale={7} blur={2.5} far={4} />
 
-      <OrbitControls target={[0, 1.72, 0]} enablePan={false} enableZoom autoRotate={autoRotate} autoRotateSpeed={1.2} minPolarAngle={0.35} maxPolarAngle={1.5} />
+      <OrbitControls target={[0, 1.62, 0]} enablePan={false} enableZoom autoRotate={autoRotate} autoRotateSpeed={1.2} minPolarAngle={0.35} maxPolarAngle={1.5} />
       {showFps && <Stats />}
     </Canvas>
   );
