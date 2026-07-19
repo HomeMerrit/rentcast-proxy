@@ -85,7 +85,30 @@ export function roomForCount(type: WorkspaceType, count: number): RoomConfig {
   return makeRoom(`${type}-${layout}`, type, layout);
 }
 
+// ── APEWORKS HQ — the one true room, modeled in Blender from the approved
+// reference (public/models/apeworks-room.glb). Slot positions/rotations mirror
+// the AGENT_SLOT_* empties baked into that GLB. 5 agents per floor max:
+// 4 on the ground floor + 1 on the mezzanine.
+export const HQ_MAX_AGENTS = 5;
+const HQ_SLOTS = (type: WorkstationType) => [
+  { id: "ws-1", type, position: [-4.4, 0, -1.5] as [number, number, number], rotation: [0, 0.42, 0] as [number, number, number], kind: "desk" as const },
+  { id: "ws-2", type, position: [-1.4, 0, -2.6] as [number, number, number], rotation: [0, 0.06, 0] as [number, number, number], kind: "desk" as const },
+  { id: "ws-3", type, position: [1.2, 0, -2.4] as [number, number, number], rotation: [0, -0.1, 0] as [number, number, number], kind: "desk" as const },
+  { id: "ws-4", type, position: [3.6, 0, 1.3] as [number, number, number], rotation: [0, -0.5, 0] as [number, number, number], kind: "pouf" as const },
+  { id: "ws-5", type, position: [4.3, 3.0, -3.1] as [number, number, number], rotation: [0, 0.1, 0] as [number, number, number], kind: "desk" as const },
+];
+
+export function makeHqRoom(type: WorkspaceType): RoomConfig {
+  const wsType = (type === "custom" ? "standard" : type) as WorkstationType;
+  return {
+    id: "apeworks-hq", type, layout: "hq",
+    size: { width: 15, depth: 10.5, height: 5.4 },
+    slots: HQ_SLOTS(wsType),
+    camera: { overview: { position: [6.2, 5.4, 12.2], target: [-0.4, 1.9, -0.6], fov: 42 } },
+  };
+}
+
 /** Single source of truth used by both the room and its camera. */
-export function resolveRoom(type: WorkspaceType, count: number): RoomConfig {
-  return roomForCount(type, Math.max(1, count));
+export function resolveRoom(type: WorkspaceType, _count: number): RoomConfig {
+  return makeHqRoom(type);
 }

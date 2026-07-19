@@ -40,7 +40,7 @@ export default function WorkspaceDevPage() {
         <Sel label="Room" value={type} options={TYPES} onChange={(v) => setType(v as WorkspaceType)} />
         <label style={{ fontSize: 13, display: "inline-flex", gap: 6, alignItems: "center" }}>
           <span style={{ color: "#8a8072" }}>Agents</span>
-          <input type="range" min={1} max={12} value={count} onChange={(e) => { setCount(+e.target.value); setSelected(null); }} />
+          <input type="range" min={1} max={5} value={count} onChange={(e) => { setCount(+e.target.value); setSelected(null); }} />
           <b style={{ width: 18 }}>{count}</b>
         </label>
         <Sel label="Status" value={status} options={STATUSES} onChange={(v) => setStatus(v as ApeStatus)} />
@@ -57,7 +57,7 @@ export default function WorkspaceDevPage() {
           border: mobile ? "1px solid #d8cfc0" : "none", borderRadius: mobile ? 26 : 0, overflow: "hidden" }}>
           <Scene type={type} agents={agents} selectedAgentId={selected} quality={quality} orbit={orbit}
             onAgentClick={(id) => setSelected((s) => (s === id ? null : id))}
-            onCreateAgent={() => setCount((c) => Math.min(12, c + 1))} />
+            onCreateAgent={() => setCount((c) => Math.min(5, c + 1))} />
         </div>
       </main>
     </div>

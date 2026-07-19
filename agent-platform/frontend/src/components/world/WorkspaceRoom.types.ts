@@ -1,6 +1,6 @@
 import type { ApeStatus } from "./ApeAgent.types";
 
-export type WorkspaceLayout = "single-agent" | "multi-agent-pod" | "team-floor";
+export type WorkspaceLayout = "single-agent" | "multi-agent-pod" | "team-floor" | "hq";
 export type WorkspaceType = "operations" | "research" | "creative" | "sales" | "command" | "custom";
 export type RoomStatus = "idle" | "active" | "attention" | "blocked" | "offline";
 export type WorkspaceQuality = "low" | "medium" | "high";
@@ -24,6 +24,8 @@ export interface WorkstationSlot {
   type: WorkstationType;
   position: [number, number, number];
   rotation: [number, number, number];
+  /** "desk" gets a workstation; "pouf" is a lounge seat baked into the room (agent sits) */
+  kind?: "desk" | "pouf";
 }
 
 export interface RoomConfig {

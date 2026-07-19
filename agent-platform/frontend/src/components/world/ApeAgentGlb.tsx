@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import * as THREE from "three";
-import { ApeAgentModel } from "./ApeAgentModel";
+import { ApeAgentModel, type ApeClip } from "./ApeAgentModel";
 import type { ApeAgentProps } from "./ApeAgent.types";
 
 /**
@@ -10,8 +10,8 @@ import type { ApeAgentProps } from "./ApeAgent.types";
  * come exclusively from the baked asset (status drives the approved clips).
  */
 export function ApeAgentGlb({
-  id, position, rotation, scale = 1, status = "idle", selected = false, onClick,
-}: ApeAgentProps) {
+  id, position, rotation, scale = 1, status = "idle", selected = false, onClick, clip = null,
+}: ApeAgentProps & { clip?: ApeClip | null }) {
   const [hovered, setHovered] = useState(false);
 
   return (
@@ -32,7 +32,7 @@ export function ApeAgentGlb({
           />
         </mesh>
       )}
-      <ApeAgentModel status={status} />
+      <ApeAgentModel status={status} clip={clip} />
     </group>
   );
 }
