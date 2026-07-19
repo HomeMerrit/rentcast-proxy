@@ -1,1 +1,1 @@
-6096644c6c8a6654ffdd843ea25cd159f27e689d66b6575195f0bbb4ddd8b6c1  agent-platform/frontend/public/models/ape-agent-master.glb
+d921199dd13e57fb3ccc17935f6649edddf7337028645547f4e2d44c1255e136  agent-platform/frontend/public/models/ape-agent-master.glb

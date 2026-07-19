@@ -2,6 +2,7 @@
 import { useState } from "react";
 import dynamic from "next/dynamic";
 import type { ApeView } from "@/components/world/ApeGlbScene";
+import type { ApeClip } from "@/components/world/ApeAgentModel";
 
 const ApeGlbScene = dynamic(
   () => import("@/components/world/ApeGlbScene").then((m) => m.ApeGlbScene),
@@ -14,9 +15,15 @@ const VIEWS: { key: ApeView; label: string }[] = [
   { key: "side", label: "Side" },
 ];
 
+const CLIPS: ApeClip[] = [
+  "Idle", "Blink", "Walk", "Sit", "Stand", "WorkingDesk",
+  "Thinking", "Waiting", "CompletedNod", "ErrorLow", "TurnLeft", "TurnRight",
+];
+
 export default function ApeGlbPage() {
   const [view, setView] = useState<ApeView>("three-quarter");
   const [overlay, setOverlay] = useState(false);
+  const [clip, setClip] = useState<ApeClip | null>(null);
 
   return (
     <div style={{ minHeight: "100vh", background: "#fff", color: "#141414",
@@ -29,10 +36,16 @@ export default function ApeGlbPage() {
         <Btn on={overlay} onClick={() => setOverlay((v) => !v)}>Overlay 50%</Btn>
       </header>
 
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 6, alignItems: "center", padding: "8px 16px", borderBottom: "1px solid #eee" }}>
+        <span style={{ color: "#888", fontSize: 12, fontWeight: 700, letterSpacing: 0.4, marginRight: 4 }}>CLIPS</span>
+        <Btn on={clip === null} onClick={() => setClip(null)}>Rest</Btn>
+        {CLIPS.map((c) => <Btn key={c} on={clip === c} onClick={() => setClip(c)}>{c}</Btn>)}
+      </div>
+
       <main style={{ flex: 1, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1, background: "#eee", minHeight: 520 }}>
         <div style={{ position: "relative", background: "#fff", overflow: "hidden" }}>
           <div style={{ position: "absolute", inset: 0 }}>
-            <ApeGlbScene view={view} />
+            <ApeGlbScene view={view} clip={clip} />
           </div>
           {overlay && (
             <img src="/ape-reference.png" alt="overlay"

@@ -1,7 +1,24 @@
-# APE Agent — Master Asset Lock (v1)
+# APE Agent — Master Asset Lock (v1.1)
 
 `agent-platform/frontend/public/models/ape-agent-master.glb` is the **only approved
-master character**. Approved and locked as v1.
+master character**. Approved and locked as v1; v1.1 adds the rig and the 12
+approved animation clips with the rest-pose geometry unchanged.
+
+## v1.1 — rig + animation
+
+- Rigid-piece armature (`APE_RIG`): `root → pelvis → spine → head`, arm chains
+  `arm_upper_L/R → arm_lower_L/R → hand_L/R`, `leg_L/R`, plus `eye_L/R` helper
+  bones for Blink. Every mesh is 100% weighted to exactly one bone — pieces move
+  as rigid blocks, never bend.
+- Baked clips (30 fps): `Idle`, `Blink`, `Walk`, `Sit`, `Stand`, `WorkingDesk`,
+  `Thinking`, `Waiting`, `CompletedNod`, `ErrorLow`, `TurnLeft`, `TurnRight`.
+  `Sit`, `Stand`, `CompletedNod`, `ErrorLow`, `TurnLeft`, `TurnRight` are
+  one-shots (play once, hold); the rest loop.
+- `SOCKET_*` empties are bone-parented, so accessories follow the animation.
+- App playback: `ApeAgentModel` maps agent status → clip via drei
+  `useAnimations` (idle→Idle, working→WorkingDesk, thinking→Thinking,
+  waiting→Waiting, completed→CompletedNod, error→ErrorLow) with 0.2–0.25 s
+  crossfades. `/dev/ape-glb` has a clip preview bar.
 
 - **3D source of truth:** `agent-platform/3d/ape_agent_master_build.py` — a
   deterministic Blender (bpy) build script. Running it regenerates the master GLB

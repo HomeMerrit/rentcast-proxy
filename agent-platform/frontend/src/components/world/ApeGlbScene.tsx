@@ -4,7 +4,7 @@ import { Canvas } from "@react-three/fiber";
 import { OrthographicCamera, OrbitControls, Environment, Lightformer } from "@react-three/drei";
 import { EffectComposer, N8AO } from "@react-three/postprocessing";
 import * as THREE from "three";
-import { ApeAgentModel } from "./ApeAgentModel";
+import { ApeAgentModel, type ApeClip } from "./ApeAgentModel";
 
 export type ApeView = "three-quarter" | "front" | "side";
 
@@ -15,7 +15,7 @@ const CAM: Record<ApeView, [number, number, number]> = {
 };
 
 /** Studio viewer for the locked GLB master (Blender owns look; this owns placement). */
-export function ApeGlbScene({ view = "three-quarter" }: { view?: ApeView }) {
+export function ApeGlbScene({ view = "three-quarter", clip = null }: { view?: ApeView; clip?: ApeClip | null }) {
   return (
     <Canvas
       shadows
@@ -51,7 +51,7 @@ export function ApeGlbScene({ view = "three-quarter" }: { view?: ApeView }) {
 
       <Suspense fallback={null}>
         {/* -16° root rotation to match the reference three-quarter angle */}
-        <ApeAgentModel rotation={[0, -0.279, 0]} />
+        <ApeAgentModel rotation={[0, -0.279, 0]} clip={clip} />
       </Suspense>
 
       {/* seamless white studio — shadow-catcher shows only the soft grounded shadow */}
