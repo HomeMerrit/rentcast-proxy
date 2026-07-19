@@ -5,6 +5,7 @@ import { formatDistanceToNow } from "date-fns";
 import { Plus, Network as NetworkIcon, ArrowRight, MessageSquare } from "lucide-react";
 import { Logo } from "@/components/brand/Logo";
 import HumanInbox from "@/components/HumanInbox";
+import { AppNav } from "@/components/AppNav";
 import { CollaborationGraph } from "@/components/CollaborationGraph";
 import { Card, Badge, Banner, Spinner, EmptyState } from "@/components/ui";
 import { api } from "@/lib/api";
@@ -36,11 +37,7 @@ export default function NetworkPage() {
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
           <div className="flex items-center gap-4">
             <Logo />
-            <nav className="hidden items-center gap-1 sm:flex">
-              <Link href="/" className="rounded-lg px-3 py-1.5 text-sm text-content-muted transition-colors hover:bg-content/5 hover:text-content">Company</Link>
-              <span className="rounded-lg bg-content/5 px-3 py-1.5 text-sm font-medium text-content">Flow</span>
-              <Link href="/live" className="rounded-lg px-3 py-1.5 text-sm text-content-muted transition-colors hover:bg-content/5 hover:text-content">Floor</Link>
-            </nav>
+            <AppNav current="/network" />
           </div>
           <div className="flex items-center gap-2">
             <HumanInbox />

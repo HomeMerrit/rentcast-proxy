@@ -129,7 +129,7 @@ export function CreateAgentStudio({
                 #{String(kitNumber).padStart(2, "0")} · {kitPattern}
               </span>
             </div>
-            <AvatarPicker value={avatar} onChange={setAvatar} />
+            <AvatarPicker value={avatar} onChange={setAvatar} name={name} />
             <div className="mt-5 border-t border-line pt-4 text-center">
               <p className="font-display text-lg font-semibold text-content">
                 {name || "New worker"}

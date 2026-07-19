@@ -44,7 +44,8 @@ export function ApeTurntable({
           gl.shadowMap.type = THREE.PCFSoftShadowMap;
         }}
       >
-        <PerspectiveCamera makeDefault fov={34} position={[0, 0.35, 6.2]} near={0.1} far={40} />
+        {/* far enough back that every clip + earned gear (crown tops ~3.2) keeps headroom */}
+        <PerspectiveCamera makeDefault fov={34} position={[0, 0.5, 7.0]} near={0.1} far={40} />
         <ambientLight intensity={0.55} color="#fff3e2" />
         <directionalLight
           position={[-4, 6, 5]} intensity={2.2} color="#fff7ee" castShadow

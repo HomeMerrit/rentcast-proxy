@@ -165,7 +165,10 @@ function applyFleetEvent(agents: Record<string, FleetAgentLive>, event: AGUIEven
     case "RUN_FINISHED": next.status = "idle"; next.currentTool = null; break;
     case "RUN_ERROR": next.status = "error"; break;
     case "TEXT_MESSAGE_START": next.status = "active"; next.currentMessage = ""; break;
-    case "TEXT_MESSAGE_CONTENT": next.currentMessage = (prev.currentMessage + ((d.delta as string) || "")).slice(-280); break;
+    case "TEXT_MESSAGE_CONTENT":
+      // `replace` marks a delta that is a complete line (demo results), not a token chunk.
+      next.currentMessage = (d.replace ? ((d.delta as string) || "") : prev.currentMessage + ((d.delta as string) || "")).slice(-280);
+      break;
     case "TOOL_CALL_START": next.status = "active"; next.currentTool = (d.tool_name as string) || "tool"; break;
     case "TOOL_CALL_END": next.currentTool = null; break;
     case "STATE_SNAPSHOT": case "STATE_DELTA": if (d.status) next.status = d.status as AgentStatus; break;
@@ -221,7 +224,7 @@ export function useFleetStream() {
             case "TEXT_MESSAGE_START":
               next.status = "active"; next.currentMessage = ""; break;
             case "TEXT_MESSAGE_CONTENT":
-              next.currentMessage = (prev.currentMessage + ((d.delta as string) || "")).slice(-280); break;
+              next.currentMessage = (d.replace ? ((d.delta as string) || "") : prev.currentMessage + ((d.delta as string) || "")).slice(-280); break;
             case "TOOL_CALL_START":
               next.status = "active"; next.currentTool = (d.tool_name as string) || "tool"; break;
             case "TOOL_CALL_END":

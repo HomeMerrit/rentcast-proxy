@@ -3,6 +3,7 @@ import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { setApiKey } from "@/lib/auth";
 import { api } from "@/lib/api";
+import { Logo } from "@/components/brand/Logo";
 
 type Mode = "create" | "signin";
 
@@ -147,12 +148,9 @@ export default function LoginPage() {
       <div className="relative flex min-h-screen items-center justify-center p-6">
         <div className="w-full max-w-md">
           <div className="mb-6 flex items-center gap-3">
-            <span className="grid h-11 w-11 place-items-center rounded-2xl text-white shadow-lg"
-              style={{ background: "linear-gradient(135deg,#F0BE4D 0%,#ED7150 92%)", boxShadow: "0 10px 24px -10px rgba(237,113,80,.6)" }}>
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2.6l8.1 4.7v9.4L12 21.4 3.9 16.7V7.3L12 2.6z" stroke="#fff" strokeWidth="1.7" strokeLinejoin="round" /><circle cx="12" cy="12" r="2.5" fill="#fff" /></svg>
-            </span>
+            <Logo className="[&>svg]:h-11 [&>svg]:w-11" showText={false} />
             <div>
-              <p className="text-lg font-extrabold tracking-tight text-content">AgentOS</p>
+              <p className="font-display text-lg font-semibold tracking-tight text-content">Ape<span className="text-iris-500">Agents</span></p>
               <p className="text-xs text-content-muted">Build a company that builds itself.</p>
             </div>
           </div>

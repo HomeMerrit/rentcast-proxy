@@ -1,7 +1,7 @@
 "use client";
 import { useRef, useState } from "react";
 import { Upload, Shuffle, User, X } from "lucide-react";
-import { avatarUrl } from "@/lib/utils";
+import { avatarHue, initialsOf } from "@/components/AgentAvatar";
 import { downscaleImage } from "@/lib/image";
 import { cn } from "@/lib/utils";
 
@@ -10,30 +10,26 @@ export interface AvatarValue {
   avatar_url: string | null;
 }
 
-const STYLES = ["personas", "bottts-neutral", "notionists", "shapes", "glass"];
-
 export function AvatarPicker({
   value,
   onChange,
+  name = "",
   status = "idle",
 }: {
   value: AvatarValue;
   onChange: (v: AvatarValue) => void;
+  name?: string;
   status?: string;
 }) {
   const fileRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
-  const [styleIdx, setStyleIdx] = useState(0);
 
-  const preview =
-    value.avatar_url ||
-    `https://api.dicebear.com/9.x/${STYLES[styleIdx]}/svg?seed=${encodeURIComponent(
-      value.avatar_seed
-    )}&backgroundColor=5A97D6,4FB0AA,E6AE3C,E08A5B,E06A9A,ED7150`;
+  // Self-contained identity: the same accent gradient + initials the rest of
+  // the product uses — no external avatar service, nothing that can 404.
+  const [c0, c1] = avatarHue(value.avatar_seed || name || "new-agent");
 
   const shuffle = () => {
     const seed = Math.random().toString(36).slice(2, 10);
-    setStyleIdx((i) => (i + 1) % STYLES.length);
     onChange({ avatar_seed: seed, avatar_url: null });
   };
 
@@ -57,8 +53,17 @@ export function AvatarPicker({
             "shadow-[0_0_0_4px_rgba(237,113,80,0.10),0_18px_40px_-18px_rgba(237,113,80,0.6)]"
           )}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={preview} alt="Agent avatar" className="h-full w-full object-cover" />
+          {value.avatar_url ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={value.avatar_url} alt="Agent avatar" className="h-full w-full object-cover" />
+          ) : (
+            <div
+              className="grid h-full w-full place-items-center text-3xl font-semibold text-white"
+              style={{ background: `linear-gradient(135deg, ${c0}, ${c1})`, boxShadow: "inset 0 1px 0 rgba(255,255,255,0.35)" }}
+            >
+              {initialsOf(name || "New Worker")}
+            </div>
+          )}
           {busy && (
             <div className="absolute inset-0 grid place-items-center bg-canvas/60 backdrop-blur-sm">
               <span className="h-5 w-5 animate-spin rounded-full border-2 border-content/15 border-t-iris-400" />
@@ -122,4 +127,3 @@ export function AvatarPicker({
   );
 }
 
-export { avatarUrl };

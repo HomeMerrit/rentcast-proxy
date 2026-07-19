@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { Logo } from "@/components/brand/Logo";
+import { AppNav } from "@/components/AppNav";
 import { StatusDot } from "@/components/StatusDot";
 import { KitChip } from "@/components/KitChip";
 import { avatarHue } from "@/components/AgentAvatar";
@@ -96,10 +97,7 @@ export default function HqPage() {
         <div className="flex h-14 items-center justify-between gap-3 px-4 sm:px-6">
           <div className="flex items-center gap-4">
             <Link href="/"><Logo /></Link>
-            <nav className="hidden items-center gap-1 sm:flex">
-              <Link href="/" className="rounded-lg px-3 py-1.5 text-sm text-content-muted transition-colors hover:bg-content/5 hover:text-content">Command center</Link>
-              <Link href="/live" className="rounded-lg px-3 py-1.5 text-sm text-content-muted transition-colors hover:bg-content/5 hover:text-content">Live</Link>
-            </nav>
+            <AppNav current="/hq" />
           </div>
           <div className="flex items-center gap-2">
             <div className="flex rounded-xl border border-line p-0.5">

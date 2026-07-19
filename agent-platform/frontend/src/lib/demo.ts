@@ -276,7 +276,7 @@ export function nextFleetEvent(): AGUIEvent {
   const mk = (type: AGUIEvent["type"], data: Record<string, unknown>): AGUIEvent => ({ type, agent_id: aid, data, timestamp: t });
   if (roll === 0) return mk("RUN_STARTED", { task_type: pick(TASK_TYPES[s.dept], tick) });
   if (roll === 1) return mk("TOOL_CALL_START", { tool_name: pick(TOOLS, tick) });
-  if (roll === 2) return mk("TEXT_MESSAGE_CONTENT", { delta: pick(RESULTS[s.dept], tick) });
+  if (roll === 2) return mk("TEXT_MESSAGE_CONTENT", { delta: pick(RESULTS[s.dept], tick), replace: true });
   if (roll === 3) { const sub = pick(SUB, tick); return mk("CUSTOM", { subtype: sub, to_agent: byId(aid).name, count: 3 + (tick % 5) }); }
   if (roll === 4) return mk("TOOL_CALL_RESULT", { result: "ok" });
   return mk("RUN_FINISHED", { tokens_used: 900 + (tick % 40) * 30 });

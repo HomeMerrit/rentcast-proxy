@@ -7,8 +7,14 @@ import {
   Building2, Sparkles, ArrowRight, ArrowLeft, Rocket, Users, Brain,
   Network, SkipForward, FileText, Pencil,
 } from "lucide-react";
+import dynamic from "next/dynamic";
 import { Logo } from "@/components/brand/Logo";
-import { LivingWorld } from "@/components/world/LivingWorld";
+
+// The real HQ at dusk — the same locked world the whole product lives in.
+const ApeworksExteriorScene = dynamic(
+  () => import("@/components/world/ApeworksExteriorScene").then((m) => m.ApeworksExteriorScene),
+  { ssr: false, loading: () => <div className="h-full w-full" style={{ background: "#2C3550" }} /> }
+);
 import { Button, Field, Input, Textarea, Select, Card, Stepper, useToast } from "@/components/ui";
 import { FileDropzone } from "@/components/create/FileDropzone";
 import { CreateAgentStudio } from "@/components/create/CreateAgentStudio";
@@ -202,17 +208,13 @@ export default function OnboardingPage() {
                 watch the work — and the value — flow.
               </p>
 
-              <div className="pointer-events-none mx-auto mt-8 max-w-2xl">
-                <LivingWorld
-                  buildings={[
-                    { dept: "Sales", count: 4, active: true },
-                    { dept: "Engineering", count: 3, active: true },
-                    { dept: "Support", count: 2 },
-                    { dept: "Finance", count: 2 },
-                    { dept: "Operations", count: 3, active: true },
-                    { dept: "Marketing", count: 2 },
-                  ]}
-                />
+              <div className="mx-auto mt-8 max-w-3xl overflow-hidden rounded-3xl border border-line shadow-card" style={{ background: "#2C3550" }}>
+                <div className="relative h-[300px] sm:h-[340px]">
+                  <ApeworksExteriorScene hero />
+                  <span className="pointer-events-none absolute bottom-3 right-4 z-10 text-2xs text-white/45">
+                    your HQ, waiting for its first worker
+                  </span>
+                </div>
               </div>
 
               <div className="mx-auto mt-6 grid max-w-3xl gap-4 sm:grid-cols-2">
