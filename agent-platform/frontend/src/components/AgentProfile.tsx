@@ -1,7 +1,10 @@
 "use client";
 import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 import { Zap, Check } from "lucide-react";
-import { AgentAvatar } from "./AgentAvatar";
+import { avatarHue } from "./AgentAvatar";
+import type { ApeStatus } from "@/components/world/ApeAgent.types";
+import { jerseyNumberOf } from "@/components/world/ApeAgentModel";
 import { SkillBadge } from "./SkillBadge";
 import { WorkLogFeed } from "./WorkLogFeed";
 import { StatusDot } from "./StatusDot";
@@ -10,8 +13,17 @@ import { GrowthPanel } from "./Growth";
 import { useAgentStream } from "@/lib/ag-ui";
 import { successRate } from "@/lib/utils";
 import { api } from "@/lib/api";
-import type { Agent, AGUIEvent, AGUIEventType, Memory, EvalResult, EvalSummary, AgentConfigInfo } from "@/types/agent";
+import type { Agent, AGUIEvent, AGUIEventType, Memory, EvalResult, EvalSummary, AgentConfigInfo, AgentStatus } from "@/types/agent";
 import Link from "next/link";
+
+const ApeTurntable = dynamic(
+  () => import("@/components/world/ApeTurntable").then((m) => m.ApeTurntable),
+  { ssr: false },
+);
+
+const APE_STATUS: Record<AgentStatus, ApeStatus> = {
+  active: "working", thinking: "thinking", idle: "idle", error: "error", offline: "waiting",
+};
 
 interface Props {
   agent: Agent;
@@ -402,13 +414,18 @@ export function AgentProfile({ agent }: Props) {
         {/* ── Profile header card ───────────────────────────────────────── */}
         <div className="rounded-2xl border border-line bg-surface-raised p-6 shadow-raised">
           <div className="flex items-start gap-6">
-            <AgentAvatar
-              seed={agent.avatar_seed}
-              url={agent.avatar_url}
-              name={agent.name}
-              status={liveStatus}
-              size={96}
-            />
+            {/* live 3D mascot — spins slowly, wears the agent's accent, plays its status */}
+            <div className="relative h-44 w-40 shrink-0 overflow-hidden rounded-2xl bg-surface-inset ring-1 ring-black/5">
+              <ApeTurntable
+                status={APE_STATUS[liveStatus] ?? "idle"}
+                accent={avatarHue(agent.avatar_seed || agent.name)[0]}
+                jersey={{
+                  number: jerseyNumberOf(agent.id),
+                  label: (agent.department || agent.title || "").slice(0, 3).toUpperCase() || undefined,
+                }}
+                className="absolute inset-0"
+              />
+            </div>
 
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-3">
