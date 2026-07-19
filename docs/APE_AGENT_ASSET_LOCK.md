@@ -29,6 +29,29 @@ approved animation clips with the rest-pose geometry unchanged.
 - **Viewer / approval route:** `/dev/ape-glb` (side-by-side vs the approved
   reference `public/ape-reference.png`, Front / 3⁄4 / Side, 50% overlay).
 
+## Environment assets (same lock discipline)
+
+Environments follow the same pipeline as the character: a deterministic Blender
+source script owns all appearance; the app only loads the GLB, lights it, and
+parents interactive things to the baked `AGENT_SLOT_*` empties.
+
+- **APEWORKS HQ room** — source `agent-platform/3d/apeworks_room_build.py` →
+  `public/models/apeworks-room.glb`. 5 agent slots per floor max
+  (`AGENT_SLOT_1..5`, slot 4 is the pouf/Sit slot, slot 5 is the mezzanine).
+  Loader `ApeworksShell.tsx`; used by `WorkspaceRoom` (`/dev/workspace`).
+- **APE AGENTS HQ exterior** — source `agent-platform/3d/apeworks_exterior_build.py` →
+  `public/models/apeworks-exterior.glb`. The building is the mascot: cream head
+  mass with eye windows + glowing pupils, orange muzzle entrance tower with
+  portal + steps, glowing `APE AGENTS` facade sign, banana sculpture + antenna,
+  dark `LET THE APES WORK.` wing, plaza (monolith HQ sign, company-status board,
+  bollards, trees), delivery drone + branded van, dusk skyline. One baked slot,
+  `AGENT_SLOT_DOOR`, for the greeter ape. Loader/scene
+  `ApeworksExteriorScene.tsx`; approval route `/dev/exterior`; approval render
+  `agent-platform/3d/apeworks-exterior.png`.
+
+Both GLBs are checksummed in `docs/APE_AGENT_ASSET_HASH.txt` and change only via
+their Blender source → regenerate → render → approval → checksum update.
+
 ## Rules
 
 Do not recreate the ape procedurally in the app. Do not replace the GLB with a

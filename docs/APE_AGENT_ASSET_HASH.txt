@@ -1,1 +1,3 @@
 d921199dd13e57fb3ccc17935f6649edddf7337028645547f4e2d44c1255e136  agent-platform/frontend/public/models/ape-agent-master.glb
+4e2285adf6f97bc64b2af42197fff65c034da80f246282bb56606f72b1fc7eba  agent-platform/frontend/public/models/apeworks-room.glb
+13fc4ed59a9ed64446a9328a06f43129690bd87c8ed092940b7dde8dac108d71  agent-platform/frontend/public/models/apeworks-exterior.glb
