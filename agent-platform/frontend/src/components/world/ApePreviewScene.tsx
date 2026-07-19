@@ -30,11 +30,11 @@ export function ApePreviewScene({
         scene.background = new THREE.Color("#ffffff");
       }}
     >
-      <OrthographicCamera makeDefault position={[4.6, 4.2, 8.0]} zoom={160} near={0.1} far={100} />
+      <OrthographicCamera makeDefault position={[4.6, 4.6, 8.0]} zoom={160} near={0.1} far={100} />
 
       {/* wrap-around studio light (local — no network HDRs) */}
       <Environment resolution={256} frames={1}>
-        <Lightformer intensity={2.6} position={[-4, 5, 4]} scale={[7, 7, 1]} color="#ffffff" target={[0, 1.5, 0]} />
+        <Lightformer intensity={2.9} position={[-4, 5, 4]} scale={[7, 7, 1]} color="#ffffff" target={[0, 1.5, 0]} />
         <Lightformer intensity={1.1} position={[5, 2, 3]} scale={[6, 6, 1]} color="#fff2e2" target={[0, 1.5, 0]} />
         <Lightformer intensity={1.4} position={[0, 6, -4]} scale={[9, 4, 1]} color="#ffffff" target={[0, 1.5, 0]} />
         <Lightformer intensity={0.7} position={[0, 1.6, 7]} scale={[16, 12, 1]} color="#ffffff" target={[0, 1.5, 0]} />

@@ -30,6 +30,7 @@ export function updateApe(
 ) {
   const bob = r.bob.current, head = r.head.current, la = r.leftArm.current, ra = r.rightArm.current;
   if (!bob || !head || !la || !ra) return;
+  const slowDevice = dt > 0.15; // struggling frame-rate: skip blinks entirely
   dt = Math.min(dt, 0.05);
 
   if (status !== a.prev) { a.prev = status; a.enterT = t; }
@@ -63,10 +64,13 @@ export function updateApe(
     hY = Math.sin(t * 0.32) * 0.05;           // idle: tiny slow head adjustment
   }
 
-  // blink (idle/waiting/thinking) — quick eye squash
-  if (status === "idle" || status === "waiting" || status === "thinking") {
+  // blink (idle/waiting/thinking) — quick eye squash; never on slow devices,
+  // where a whole rendered frame could land inside the blink window
+  if (!slowDevice && (status === "idle" || status === "waiting" || status === "thinking")) {
     if (t >= a.nextBlink) { a.blinkUntil = t + 0.12; a.nextBlink = t + 4 + Math.random() * 4; }
     if (t < a.blinkUntil) eyeY = 0.12;
+  } else if (slowDevice) {
+    a.blinkUntil = 0;
   }
 
   // ── apply (damped) ──
@@ -79,8 +83,13 @@ export function updateApe(
 
   const le = r.leftEye.current, re = r.rightEye.current;
   const ey = t < a.blinkUntil ? 0.12 : eyeY; // blink snaps, others damp
-  if (le) le.scale.y = damp(le.scale.y, ey, 30, dt);
-  if (re) re.scale.y = damp(re.scale.y, ey, 30, dt);
+  // snap across large gaps (blink open/close) so low-fps devices never
+  // linger mid-blink; damp only the small expressive changes
+  const setEye = (m: THREE.Mesh) => {
+    m.scale.y = Math.abs(m.scale.y - ey) > 0.4 ? ey : damp(m.scale.y, ey, 30, dt);
+  };
+  if (le) setEye(le);
+  if (re) setEye(re);
 
   // selection / error floor ring
   const ring = r.ring.current;
