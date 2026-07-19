@@ -149,7 +149,7 @@ def wordmark(text, size, pos, material, name):
     o = bpy.context.active_object
     o.data.materials.append(material); o.parent = root
     return o
-wordmark("APEWORKS", 0.52, (-2.2, 2.35, BZ + 0.14), M["charcoal"], "WORDMARK")
+wordmark("APE AGENTS", 0.52, (-2.2, 2.35, BZ + 0.14), M["charcoal"], "WORDMARK")
 wordmark("HEADQUARTERS", 0.24, (-2.2, 1.98, BZ + 0.14), M["charcoal"], "WORDMARK_SUB")
 
 # backlit cove outline around the logo panel (thin emissive rim behind panel)

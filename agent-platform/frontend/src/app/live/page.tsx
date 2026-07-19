@@ -68,6 +68,7 @@ export default function LivePage() {
             <nav className="hidden items-center gap-1 md:flex">
               <Link href="/" className="rounded-lg px-3 py-1.5 text-sm text-content-muted transition-colors hover:bg-content/5 hover:text-content">Command center</Link>
               <Link href="/network" className="rounded-lg px-3 py-1.5 text-sm text-content-muted transition-colors hover:bg-content/5 hover:text-content">Network</Link>
+              <Link href="/hq" className="rounded-lg px-3 py-1.5 text-sm text-content-muted transition-colors hover:bg-content/5 hover:text-content">HQ</Link>
               <span className="rounded-lg bg-content/5 px-3 py-1.5 text-sm font-medium text-content">Live</span>
             </nav>
           </div>

@@ -104,6 +104,7 @@ export function CommandCenter() {
               <span className="rounded-lg bg-content/5 px-3 py-1.5 text-sm font-medium text-content">Company</span>
               <Link href="/network" className="rounded-lg px-3 py-1.5 text-sm text-content-muted transition-colors hover:bg-content/5 hover:text-content">Flow</Link>
               <Link href="/live" className="rounded-lg px-3 py-1.5 text-sm text-content-muted transition-colors hover:bg-content/5 hover:text-content">Floor</Link>
+              <Link href="/hq" className="rounded-lg px-3 py-1.5 text-sm text-content-muted transition-colors hover:bg-content/5 hover:text-content">HQ</Link>
             </nav>
             <span className="hidden items-center gap-1.5 rounded-full border border-line bg-content/[0.04] px-2.5 py-1 text-2xs font-medium text-positive lg:inline-flex">
               <span className="relative flex h-1.5 w-1.5">

@@ -1,5 +1,5 @@
 "use client";
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, useGLTF } from "@react-three/drei";
 import { EffectComposer, N8AO, Bloom, Vignette } from "@react-three/postprocessing";
@@ -56,9 +56,33 @@ function ExteriorLighting() {
   );
 }
 
+/** Clickable entrance portal hotspot — invisible hit box over the muzzle
+ *  doorway; hovering lifts the glow, clicking enters the HQ. */
+function EntrancePortal({ onEnter }: { onEnter: () => void }) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <group position={[0.8, 2.65, 6.35]}>
+      <mesh
+        visible={false}
+        onClick={(e) => { e.stopPropagation(); onEnter(); }}
+        onPointerOver={(e) => { e.stopPropagation(); setHovered(true); document.body.style.cursor = "pointer"; }}
+        onPointerOut={() => { setHovered(false); document.body.style.cursor = "auto"; }}
+      >
+        <boxGeometry args={[3.5, 4.2, 0.6]} />
+      </mesh>
+      {hovered && (
+        <mesh position={[0, 0, 0.14]}>
+          <planeGeometry args={[3.1, 3.5]} />
+          <meshBasicMaterial color="#FF9A3C" transparent opacity={0.16} depthWrite={false} />
+        </mesh>
+      )}
+    </group>
+  );
+}
+
 /** The APE AGENTS HQ exterior — the building is the mascot. A greeter ape
  *  waits at the entrance (AGENT_SLOT_DOOR in the GLB). */
-export function ApeworksExteriorScene() {
+export function ApeworksExteriorScene({ onEnterHq }: { onEnterHq?: () => void } = {}) {
   return (
     <Canvas
       shadows
@@ -77,6 +101,7 @@ export function ApeworksExteriorScene() {
       <ExteriorLighting />
       <Suspense fallback={null}>
         <ExteriorShell />
+        {onEnterHq && <EntrancePortal onEnter={onEnterHq} />}
         {/* greeter at the door, matching AGENT_SLOT_DOOR in the GLB */}
         <ApeAgentGlb
           id="greeter"

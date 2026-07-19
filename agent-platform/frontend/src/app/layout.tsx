@@ -18,9 +18,9 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Atlas — Build a company that builds itself",
+  title: "ApeAgents — Build a company that builds itself",
   description:
-    "Your business, brought to life. Hire workers, give them tools, and watch a whole company work, hand off and grow — in a living world you can actually look at.",
+    "Your business, brought to life. Hire ape agents, give them tools, and watch a whole company work, hand off and grow — in a living world you can actually look at.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
