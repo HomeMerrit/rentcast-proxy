@@ -4,7 +4,7 @@ import { ContactShadows } from "@react-three/drei";
 import { WorkspaceShell } from "./WorkspaceShell";
 import { WorkspaceLighting } from "./WorkspaceLighting";
 import { AgentWorkstation } from "./AgentWorkstation";
-import { ApeAgent } from "./ApeAgent";
+import { ApeAgentGlb } from "./ApeAgentGlb";
 import { resolveRoom } from "./WorkspaceRoom.config";
 import type { WorkspaceRoomProps, RoomConfig } from "./WorkspaceRoom.types";
 
@@ -27,13 +27,12 @@ export function WorkspaceRoom({
           <group key={slot.id} position={slot.position} rotation={slot.rotation}>
             <AgentWorkstation id={slot.id} status={agent?.status ?? "idle"} type={slot.type} empty={!agent} onCreate={onCreateAgent} />
             {agent && (
-              <ApeAgent
+              <ApeAgentGlb
                 id={agent.id}
-                position={[0, 0, -0.86]}
-                scale={0.62}
+                position={[0, 0, -1.22]}
+                scale={0.6}
                 status={agent.status}
                 selected={agent.id === selectedAgentId}
-                color={agent.accentColor ?? "#DC5F0E"}
                 onClick={onAgentClick}
               />
             )}

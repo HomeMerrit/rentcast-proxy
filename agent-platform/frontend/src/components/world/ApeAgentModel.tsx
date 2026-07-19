@@ -1,8 +1,9 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useAnimations, useGLTF } from "@react-three/drei";
 import type { ThreeElements } from "@react-three/fiber";
 import * as THREE from "three";
+import { SkeletonUtils } from "three-stdlib";
 
 /**
  * Loads the locked master character (Blender → GLB). This is the ONE approved
@@ -37,6 +38,18 @@ type Props = ThreeElements["group"] & {
 export function ApeAgentModel({ status = "idle", clip = null, ...props }: Props) {
   const group = useRef<THREE.Group>(null);
   const { scene, animations } = useGLTF("/models/ape-agent-master.glb");
+  // per-instance skeleton clone so many agents can animate independently
+  const instance = useMemo(() => {
+    const c = SkeletonUtils.clone(scene);
+    c.traverse((o) => {
+      if ((o as THREE.Mesh).isMesh) {
+        o.castShadow = true;
+        o.receiveShadow = true;
+        o.frustumCulled = false; // skinned bounds don't track bones
+      }
+    });
+    return c;
+  }, [scene]);
   const { actions } = useAnimations(animations, group);
 
   useEffect(() => {
@@ -57,7 +70,7 @@ export function ApeAgentModel({ status = "idle", clip = null, ...props }: Props)
 
   return (
     <group ref={group} {...props}>
-      <primitive object={scene} />
+      <primitive object={instance} />
     </group>
   );
 }

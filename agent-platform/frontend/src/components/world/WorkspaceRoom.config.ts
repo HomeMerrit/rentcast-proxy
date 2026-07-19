@@ -23,11 +23,12 @@ export const STATUS_LOOK: Record<string, { edge: string; screen: string; dot: st
   error: { edge: "#E06A50", screen: "#2a1f1c", dot: "#E06A50", emissive: 0.6 },
 };
 
-const SMALL = { width: 12, depth: 8, height: 4.8 };
-const BIG = { width: 18, depth: 12, height: 5.4 };
-const OVERVIEW_SINGLE = { position: [7.0, 4.7, 8.6] as [number, number, number], target: [0.7, 1.5, 0] as [number, number, number], fov: 33 };
-const OVERVIEW_SMALL = { position: [9.2, 6.4, 10.4] as [number, number, number], target: [0, 1.35, 0] as [number, number, number], fov: 33 };
-const OVERVIEW_BIG = { position: [15, 10, 16] as [number, number, number], target: [0, 1.6, 0] as [number, number, number], fov: 37 };
+// dense, cozy rooms — desks nearly shoulder-to-shoulder like the brand reference
+const SMALL = { width: 9.5, depth: 7, height: 4.8 };
+const BIG = { width: 14.5, depth: 9.5, height: 5.4 };
+const OVERVIEW_SINGLE = { position: [6.4, 4.3, 7.8] as [number, number, number], target: [0.7, 1.5, 0] as [number, number, number], fov: 33 };
+const OVERVIEW_SMALL = { position: [7.6, 5.2, 8.6] as [number, number, number], target: [0, 1.35, 0] as [number, number, number], fov: 33 };
+const OVERVIEW_BIG = { position: [12, 7.6, 12.6] as [number, number, number], target: [0, 1.5, 0] as [number, number, number], fov: 36 };
 
 // Workstation placements per layout (from the spec).
 function slots(layout: string, type: WorkstationType) {
@@ -35,23 +36,23 @@ function slots(layout: string, type: WorkstationType) {
     return [{ id: "ws-1", type, position: [0.8, 0, 0.4] as [number, number, number], rotation: [0, -0.18, 0] as [number, number, number] }];
   if (layout === "two-agent")
     return [
-      { id: "ws-1", type, position: [-2.2, 0, 0.3] as [number, number, number], rotation: [0, 0.18, 0] as [number, number, number] },
-      { id: "ws-2", type, position: [2.2, 0, 0.3] as [number, number, number], rotation: [0, -0.18, 0] as [number, number, number] },
+      { id: "ws-1", type, position: [-1.35, 0, 0.3] as [number, number, number], rotation: [0, 0.14, 0] as [number, number, number] },
+      { id: "ws-2", type, position: [1.35, 0, 0.3] as [number, number, number], rotation: [0, -0.14, 0] as [number, number, number] },
     ];
   if (layout === "four-agent")
     return [
-      { id: "ws-1", type, position: [-3.2, 0, 0.8] as [number, number, number], rotation: [0, 0.28, 0] as [number, number, number] },
-      { id: "ws-2", type, position: [-1.1, 0, -0.5] as [number, number, number], rotation: [0, 0.12, 0] as [number, number, number] },
-      { id: "ws-3", type, position: [1.1, 0, -0.5] as [number, number, number], rotation: [0, -0.12, 0] as [number, number, number] },
-      { id: "ws-4", type, position: [3.2, 0, 0.8] as [number, number, number], rotation: [0, -0.28, 0] as [number, number, number] },
+      { id: "ws-1", type, position: [-2.9, 0, 0.8] as [number, number, number], rotation: [0, 0.24, 0] as [number, number, number] },
+      { id: "ws-2", type, position: [-1.0, 0, -0.5] as [number, number, number], rotation: [0, 0.1, 0] as [number, number, number] },
+      { id: "ws-3", type, position: [1.0, 0, -0.5] as [number, number, number], rotation: [0, -0.1, 0] as [number, number, number] },
+      { id: "ws-4", type, position: [2.9, 0, 0.8] as [number, number, number], rotation: [0, -0.24, 0] as [number, number, number] },
     ];
-  // team floor: three pods
+  // team floor: three tight pods
   const out = [];
-  const pods = [-5.6, 0, 5.6];
+  const pods = [-4.7, 0, 4.7];
   let i = 0;
   for (const px of pods)
-    for (const [dx, dz] of [[-1.4, 0.6], [1.4, 0.6], [0, -0.9]] as [number, number][]) {
-      out.push({ id: `ws-${++i}`, type, position: [px + dx, 0, dz] as [number, number, number], rotation: [0, -dx * 0.12, 0] as [number, number, number] });
+    for (const [dx, dz] of [[-1.35, 0.6], [1.35, 0.6], [0, -0.9]] as [number, number][]) {
+      out.push({ id: `ws-${++i}`, type, position: [px + dx, 0, dz] as [number, number, number], rotation: [0, -dx * 0.1, 0] as [number, number, number] });
     }
   return out;
 }
