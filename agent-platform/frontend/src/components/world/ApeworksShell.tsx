@@ -14,7 +14,8 @@ export function ApeworksShell() {
   const room = useMemo(() => {
     scene.traverse((o) => {
       if ((o as THREE.Mesh).isMesh) {
-        o.castShadow = true;
+        // the ceiling is visual only — casting shadows would black out the room
+        o.castShadow = !o.name.startsWith("CEIL_");
         o.receiveShadow = true;
       }
     });

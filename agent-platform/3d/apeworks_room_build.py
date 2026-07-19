@@ -35,17 +35,19 @@ def mat(name, hexs, rough=0.55, emis=0.0, alpha=1.0):
     return m
 
 M = {
-    "wall":     mat("wall", "#F6F1E9", 0.62),
-    "wallWarm": mat("wallWarm", "#FCF7EF", 0.6),
-    "floor":    mat("floor", "#D9D2C7", 0.7),
+    "wall":     mat("wall", "#F7F1E7", 0.62),
+    "wallWarm": mat("wallWarm", "#FDF8EF", 0.6),
+    "floor":    mat("floor", "#E3D9C9", 0.68),
     "orange":   mat("orange", "#EE7F1C", 0.45),
     "orangeLit":mat("orangeLit", "#FF9A3C", 0.4, emis=2.2),
     "charcoal": mat("charcoal", "#1E1B18", 0.4),
     "screen":   mat("screen", "#141210", 0.25),
     "amber":    mat("amber", "#FFB45C", 0.4, emis=3.0),
-    "sky":      mat("sky", "#AFD4EE", 0.4, emis=1.6),
+    "sky":      mat("sky", "#A9CFEA", 0.4, emis=1.0),
     "glass":    mat("glass", "#DCE9F0", 0.08, alpha=0.22),
-    "rug":      mat("rug", "#C9C2B8", 0.9),
+    "rug":      mat("rug", "#CFC6B8", 0.9),
+    "city":     mat("city", "#8FA8BB", 0.6, emis=0.25),
+    "cityFar":  mat("cityFar", "#A9BFCE", 0.6, emis=0.3),
     "plant":    mat("plant", "#8FBF6B", 0.7),
     "plantD":   mat("plantD", "#6E9E4E", 0.7),
     "pot":      mat("pot", "#FBF6EE", 0.5),
@@ -106,9 +108,14 @@ box("WALL_L_BACK",  (0.3, H, D/2 - 3.6), (LX, H/2, -D/2 + (D/2 - 3.6)/2), M["wal
 box("WALL_L_FRONT", (0.3, H, D/2 - 2.4), (LX, H/2, D/2 - (D/2 - 2.4)/2), M["wall"], 0.06)
 box("WALL_L_SILL",  (0.3, 0.95, 6.0), (LX, 0.475, -0.6), M["wall"], 0.06)
 box("WALL_L_HEAD",  (0.3, H - 4.25, 6.0), (LX, (H + 4.25)/2, -0.6), M["wall"], 0.06)
-# window: frame + sky glow + orange roller bar (reference)
+# window: frame + sky glow + blocky skyline silhouette + orange roller bar
 box("WINDOW_FRAME_B", (0.14, 0.1, 6.1), (LX + 0.1, 0.95, -0.6), M["wallWarm"])
 box("WINDOW_SKY", (0.06, 3.3, 6.0), (LX + 0.02, 2.6, -0.6), M["sky"])
+# low distant skyline hugging the bottom third of the glass
+for i, (bw, bh, bz) in enumerate(((0.9, 0.8, -3.0), (0.7, 1.25, -2.1), (1.1, 0.6, -1.0),
+                                  (0.8, 1.0, 0.1), (0.6, 0.7, 1.0), (0.9, 1.15, 1.9))):
+    m = M["city"] if i % 2 == 0 else M["cityFar"]
+    box(f"CITY_{i+1}", (0.05, bh, bw), (LX + 0.06, 0.95 + bh/2, bz), m)
 box("WINDOW_ROLLER", (0.22, 0.16, 6.3), (LX + 0.16, 4.32, -0.6), M["orange"], 0.05)
 
 # ── logo wall (back, left-of-center): raised panel + ape mark + wordmark ─────
@@ -199,6 +206,22 @@ plant("PLANT_WIN", (-6.4, 0, -4.4), 1.0)
 # shelf on the mezzanine back wall with a mini ape
 box("MEZZ_SHELF", (1.6, 0.08, 0.4), (2.9, MY + 1.5, BZ + 0.25), M["wallWarm"], 0.02)
 ape_mark(2.9, MY + 1.85, BZ + 0.35, 0.34, name="SHELF_APE")
+
+# ── ceiling with warm light coves (no shadow casting in-app: CEIL_* names) ───
+box("CEIL_SLAB", (W, 0.22, D), (0, H + 0.11, 0), M["wall"], 0.05)
+# recessed cove troughs with emissive warm strips (the reference's glow lines)
+for name, dims, pos in (
+    ("CEIL_COVE_1", (9.0, 0.1, 0.5), (-1.5, H - 0.05, -3.4)),
+    ("CEIL_COVE_2", (9.0, 0.1, 0.5), (-1.5, H - 0.05, 1.6)),
+    ("CEIL_COVE_3", (0.5, 0.1, 7.0), (5.6, H - 0.05, -0.8)),
+):
+    box(name, dims, pos, M["amber"])
+# perimeter cove glow where walls meet the ceiling
+box("CEIL_RIM_BACK", (W - 0.6, 0.08, 0.12), (0, H - 0.1, -D/2 + 0.28), M["amber"])
+box("CEIL_RIM_LEFT", (0.12, 0.08, D - 0.6), (-W/2 + 0.28, H - 0.1, 0), M["amber"])
+# backlit rounded panel on the right wall (reference cove panel)
+box("RWALL_PANEL", (0.12, 2.6, 5.2), (W/2 + 0.03, 2.9, 1.4), M["wallWarm"], 0.06)
+box("RWALL_GLOW", (0.05, 2.84, 5.44), (W/2 + 0.1, 2.9, 1.4), M["amber"])
 
 # ── agent slots (empties; the app parents workstations + apes here) ──────────
 # 5 per floor max: ground floor slots 1–4 + mezzanine slot 5

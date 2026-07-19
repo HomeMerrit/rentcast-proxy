@@ -1,7 +1,8 @@
 "use client";
 import { useMemo } from "react";
 import { Canvas } from "@react-three/fiber";
-import { PerspectiveCamera, OrbitControls } from "@react-three/drei";
+import { PerspectiveCamera, OrbitControls, Environment, Lightformer } from "@react-three/drei";
+import { EffectComposer, N8AO, Bloom, Vignette } from "@react-three/postprocessing";
 import * as THREE from "three";
 import { WorkspaceRoom } from "./WorkspaceRoom";
 import { RoomCameraController, type CamShot } from "./RoomCameraController";
@@ -36,9 +37,10 @@ export function WorkspacePreviewScene({
       gl={{ antialias: true, alpha: false, preserveDrawingBuffer: true, powerPreference: "high-performance" }}
       onCreated={({ gl, scene }) => {
         gl.toneMapping = THREE.ACESFilmicToneMapping;
-        gl.toneMappingExposure = 1.0;
+        gl.toneMappingExposure = 0.94;
         gl.outputColorSpace = THREE.SRGBColorSpace;
-        scene.background = new THREE.Color("#ECE6DB");
+        gl.shadowMap.type = THREE.PCFSoftShadowMap;
+        scene.background = new THREE.Color("#EFE7D9");
       }}
     >
       <PerspectiveCamera makeDefault fov={overview.fov} position={overview.position} near={0.1} far={100} />
@@ -46,10 +48,26 @@ export function WorkspacePreviewScene({
         ? <OrbitControls target={overview.target} enablePan={false} minPolarAngle={0.3} maxPolarAngle={1.45} />
         : <RoomCameraController overview={overview} focus={focus} fov={overview.fov} />}
 
+      {/* warm wrap-around studio env for richer material response (local, no HDR) */}
+      <Environment resolution={256} frames={1}>
+        <Lightformer intensity={1.6} position={[-6, 6, 5]} scale={[7, 6, 1]} color="#fff4e4" target={[0, 1.6, 0]} />
+        <Lightformer intensity={0.7} position={[7, 3, 3]} scale={[5, 5, 1]} color="#ffd9b0" target={[0, 1.6, 0]} />
+        <Lightformer intensity={0.5} position={[0, 3, 9]} scale={[12, 7, 1]} color="#fff0dc" target={[0, 1.6, 0]} />
+      </Environment>
+
       <WorkspaceRoom
         id={room.id} type={type} agents={agents} selectedAgentId={selectedAgentId}
         onAgentClick={onAgentClick} onCreateAgent={onCreateAgent} quality={quality}
       />
+
+      {/* comp-quality grade: crevice AO + soft glow on the cove strips + vignette */}
+      {quality !== "low" && (
+        <EffectComposer enableNormalPass={false}>
+          <N8AO aoRadius={0.55} intensity={1.7} distanceFalloff={0.9} quality={quality === "high" ? "high" : "medium"} />
+          <Bloom intensity={0.32} luminanceThreshold={1.1} luminanceSmoothing={0.25} mipmapBlur />
+          <Vignette offset={0.28} darkness={0.5} eskil={false} />
+        </EffectComposer>
+      )}
     </Canvas>
   );
 }
