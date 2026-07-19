@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { AgentAvatar } from "./AgentAvatar";
+import { KitChip } from "./KitChip";
 import { CardGrowth } from "./Growth";
 import { successRate, cn } from "@/lib/utils";
 import type { Agent } from "@/types/agent";
@@ -27,7 +28,10 @@ export function AgentCard({ agent }: { agent: Agent }) {
               <ArrowUpRight className="h-3.5 w-3.5 shrink-0 text-content-subtle opacity-0 transition-all group-hover:translate-x-0.5 group-hover:opacity-100" />
             </h3>
             <p className="truncate text-sm text-content-muted">{agent.title}</p>
-            <p className="mt-0.5 text-2xs uppercase tracking-wide text-content-subtle">{agent.department}</p>
+            <p className="mt-1 flex items-center gap-1.5 text-2xs uppercase tracking-wide text-content-subtle">
+              <KitChip agent={agent} />
+              <span className="truncate">{agent.department}</span>
+            </p>
           </div>
         </div>
 

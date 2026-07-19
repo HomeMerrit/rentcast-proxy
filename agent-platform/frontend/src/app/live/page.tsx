@@ -5,6 +5,7 @@ import { Plus, Radio, Briefcase, Wrench, CheckCircle2, AlertTriangle, Zap } from
 import { Logo } from "@/components/brand/Logo";
 import HumanInbox from "@/components/HumanInbox";
 import { AgentAvatar } from "@/components/AgentAvatar";
+import { KitChip } from "@/components/KitChip";
 import { StatusDot } from "@/components/StatusDot";
 import { RunTaskDialog } from "@/components/RunTaskDialog";
 import { CardGrowth } from "@/components/Growth";
@@ -134,7 +135,10 @@ export default function LivePage() {
                   <div className="flex items-center gap-3">
                     <AgentAvatar seed={a.avatar_seed} url={a.avatar_url} name={a.name} status={status} size={40} />
                     <div className="min-w-0 flex-1">
-                      <Link href={`/agents/${a.id}`} className="truncate font-display text-sm font-semibold text-content hover:text-iris-200">{a.name}</Link>
+                      <span className="flex items-center gap-1.5">
+                        <Link href={`/agents/${a.id}`} className="truncate font-display text-sm font-semibold text-content hover:text-iris-200">{a.name}</Link>
+                        <KitChip agent={a} />
+                      </span>
                       <p className="truncate text-2xs text-content-subtle">{a.title}</p>
                     </div>
                     <StatusDot status={status} showLabel size="sm" />

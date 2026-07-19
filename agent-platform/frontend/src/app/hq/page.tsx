@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { Logo } from "@/components/brand/Logo";
 import { StatusDot } from "@/components/StatusDot";
+import { KitChip } from "@/components/KitChip";
 import { avatarHue } from "@/components/AgentAvatar";
 import { useFleetStream } from "@/lib/ag-ui";
 import { api } from "@/lib/api";
@@ -63,6 +64,7 @@ export default function HqPage() {
         status: APE_STATUS[(fleet.agents[a.id]?.status as AgentStatus) ?? a.status] ?? "idle",
         workstationId: `ws-${i + 1}`,
         accentColor: avatarHue(a.avatar_seed || a.name)[0],
+        kitId: a.avatar_seed || a.id,
       })),
     [agents, fleet.agents],
   );
@@ -138,6 +140,7 @@ export default function HqPage() {
             <div className="flex items-center gap-2">
               <StatusDot status={(fleet.agents[selected.id]?.status as AgentStatus) ?? selected.status} />
               <span className="truncate font-display text-sm font-semibold text-content">{selected.name}</span>
+              <KitChip agent={selected} />
             </div>
             <p className="mt-1 truncate text-xs text-content-muted">
               {selected.title || selected.department || "Agent"}

@@ -1,12 +1,21 @@
 "use client";
 import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { Sparkles, ArrowRight, Building2, Cpu } from "lucide-react";
 import { api } from "@/lib/api";
 import { Button, Field, Input, Textarea, Select, Card, Badge, useToast } from "@/components/ui";
 import { AvatarPicker, type AvatarValue } from "./AvatarPicker";
 import { SkillPicker, type PickedSkill } from "./SkillPicker";
+import { avatarHue } from "@/components/AgentAvatar";
+import { patternOf, jerseyNumberOf, kitShades } from "@/components/world/kit";
 import type { Agent } from "@/types/agent";
+
+// the live 3D mascot preview — the kit this hire will actually wear
+const ApeTurntable = dynamic(
+  () => import("@/components/world/ApeTurntable").then((m) => m.ApeTurntable),
+  { ssr: false },
+);
 
 const DEPARTMENTS = [
   "Research", "Sales", "Marketing", "Engineering", "Operations",
@@ -49,6 +58,14 @@ export function CreateAgentStudio({
   const [saving, setSaving] = useState(false);
 
   const valid = name.trim() && title.trim() && department;
+
+  // The kit is dealt from the avatar seed, so this preview IS the mascot the
+  // agent walks out with — "Generate" re-rolls the whole kit (mint moment).
+  const kitSeed = avatar.avatar_seed;
+  const kitAccent = avatarHue(kitSeed || name || "new-agent")[0];
+  const kitNumber = jerseyNumberOf(kitSeed);
+  const kitPattern = patternOf(kitSeed);
+  const kitLabel = department.slice(0, 3).toUpperCase() || undefined;
 
   const submit = async () => {
     if (!valid) {
@@ -93,6 +110,25 @@ export function CreateAgentStudio({
         {/* Live preview */}
         <div className="lg:sticky lg:top-6 lg:self-start">
           <Card className="p-6">
+            {/* the 3D mascot — spins with the exact kit this hire will wear */}
+            <div className="relative mb-4 h-52 overflow-hidden rounded-xl bg-surface-inset ring-1 ring-black/5">
+              <ApeTurntable
+                status="idle"
+                accent={kitAccent}
+                jersey={{ number: kitNumber, label: kitLabel }}
+                pattern={kitPattern}
+                className="absolute inset-0"
+              />
+              <span className="absolute left-3 top-2.5 text-2xs font-semibold uppercase tracking-wide text-content-subtle">
+                Their mascot
+              </span>
+              <span
+                className="absolute right-3 top-2.5 rounded-md border px-1.5 py-0.5 text-2xs font-semibold tabular-nums"
+                style={{ borderColor: `${kitAccent}55`, background: `${kitAccent}14`, color: kitShades(kitAccent).dark }}
+              >
+                #{String(kitNumber).padStart(2, "0")} · {kitPattern}
+              </span>
+            </div>
             <AvatarPicker value={avatar} onChange={setAvatar} />
             <div className="mt-5 border-t border-line pt-4 text-center">
               <p className="font-display text-lg font-semibold text-content">

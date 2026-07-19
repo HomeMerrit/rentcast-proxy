@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { Zap, Check } from "lucide-react";
 import { avatarHue } from "./AgentAvatar";
 import type { ApeStatus } from "@/components/world/ApeAgent.types";
-import { jerseyNumberOf, patternOf } from "@/components/world/ApeAgentModel";
+import { kitKeyOf, jerseyNumberOf, patternOf } from "@/components/world/kit";
 import { SkillBadge } from "./SkillBadge";
 import { WorkLogFeed } from "./WorkLogFeed";
 import { StatusDot } from "./StatusDot";
@@ -420,10 +420,10 @@ export function AgentProfile({ agent }: Props) {
                 status={APE_STATUS[liveStatus] ?? "idle"}
                 accent={avatarHue(agent.avatar_seed || agent.name)[0]}
                 jersey={{
-                  number: jerseyNumberOf(agent.id),
+                  number: jerseyNumberOf(kitKeyOf(agent)),
                   label: (agent.department || agent.title || "").slice(0, 3).toUpperCase() || undefined,
                 }}
-                pattern={patternOf(agent.id)}
+                pattern={patternOf(kitKeyOf(agent))}
                 className="absolute inset-0"
               />
             </div>

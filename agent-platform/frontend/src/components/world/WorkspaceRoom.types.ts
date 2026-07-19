@@ -16,6 +16,8 @@ export interface WorkspaceAgent {
   currentTask?: string;
   selected?: boolean;
   accentColor?: string;
+  /** kit identity key (avatar seed) — falls back to id when absent */
+  kitId?: string;
 }
 
 /** A placed workstation anchor within a room layout. */

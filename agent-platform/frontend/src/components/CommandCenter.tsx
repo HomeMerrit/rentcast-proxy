@@ -1,26 +1,31 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 import { formatDistanceToNow } from "date-fns";
 import {
   Plus, DollarSign, Activity, Users, Zap, Gauge, TrendingUp,
-  CheckCircle2, XCircle, Briefcase, ArrowRight, Radio, ChevronDown,
+  CheckCircle2, XCircle, Briefcase, Radio, ChevronDown,
 } from "lucide-react";
 import { Logo } from "./brand/Logo";
 import HumanInbox from "./HumanInbox";
 import { AccountMenu } from "./AccountMenu";
 import { AgentAvatar } from "./AgentAvatar";
 import { RunTaskDialog } from "./RunTaskDialog";
-import { LevelChip, MoodPill } from "./Growth";
-import { agentGrowth } from "@/lib/growth";
-import { LivingWorld } from "./world/LivingWorld";
 import type { Building } from "@/lib/world";
 import { AreaChart } from "./charts/AreaChart";
 import { BarList, RadialGauge, Sparkline, Segmented } from "./charts/mini";
-import { Card, Banner, Skeleton, Modal } from "./ui";
+import { Card, Banner, Skeleton } from "./ui";
 import { api } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import type { StatsOverview, AgentStat, ActivityItem, TimePoint } from "@/types/agent";
+
+// the real HQ — the Blender-built exterior, loaded client-side only
+const ApeworksExteriorScene = dynamic(
+  () => import("./world/ApeworksExteriorScene").then((m) => m.ApeworksExteriorScene),
+  { ssr: false },
+);
 
 const money = (v: number) => (v >= 1 ? `$${v.toFixed(2)}` : `$${v.toFixed(4)}`);
 const compact = (v: number) =>
@@ -36,7 +41,7 @@ export function CommandCenter() {
   const [error, setError] = useState(false);
   const [jobOpen, setJobOpen] = useState(false);
   const [showNumbers, setShowNumbers] = useState(false); // less is more: numbers on demand
-  const [pickedTeam, setPickedTeam] = useState<string | null>(null); // world is the nav
+  const router = useRouter();
 
   const load = async () => {
     // allSettled so one flaky endpoint doesn't blank the whole board; the banner
@@ -134,39 +139,37 @@ export function CommandCenter() {
           </Banner>
         )}
 
-        {/* The company as a living world — the view IS the product */}
+        {/* The company IS the building — the real HQ, live at dusk */}
         {buildings.length > 0 && (
-          <section className="relative mb-4 overflow-hidden rounded-3xl border border-line shadow-card"
-            style={{ background: "linear-gradient(180deg,#E9F0EF,#F7F2EA 62%)" }}>
-            <div className="relative z-10 px-5 pt-6 sm:px-8 sm:pt-7">
-              <p className="eyebrow">Your company</p>
-              <h1 className="mt-1 font-display text-2xl font-semibold tracking-tight text-content sm:text-[2rem]">
-                A company that builds itself
-              </h1>
-              <p className="mt-1 max-w-md text-sm text-content-muted">
-                {agentCount <= 1
-                  ? "It starts with one. Give them a job — and watch your company grow."
-                  : `${agentCount} workers across ${buildings.length} ${buildings.length === 1 ? "team" : "teams"}. Watch the work — and the value — flow.`}
-              </p>
+          <section className="relative mb-4 overflow-hidden rounded-3xl border border-line shadow-card" style={{ background: "#2C3550" }}>
+            <div className="relative h-[380px] sm:h-[460px]">
+              <ApeworksExteriorScene hero onEnterHq={() => router.push("/hq")} />
+              {/* copy floats on the dusk sky; the scene stays draggable below */}
+              <div className="pointer-events-none absolute inset-x-0 top-0 z-10 bg-gradient-to-b from-[#232B45]/90 via-[#232B45]/40 to-transparent px-5 pb-14 pt-6 sm:px-8 sm:pt-7">
+                <p className="text-2xs font-medium uppercase tracking-[0.14em] text-white/60">Your company</p>
+                <h1 className="mt-1 font-display text-2xl font-semibold tracking-tight text-white sm:text-[2rem]">
+                  A company that builds itself
+                </h1>
+                <p className="mt-1 max-w-md text-sm text-white/75">
+                  {agentCount <= 1
+                    ? "It starts with one. Give them a job — and watch your company grow."
+                    : `${agentCount} workers across ${buildings.length} ${buildings.length === 1 ? "team" : "teams"}. They're inside, working right now.`}
+                </p>
+              </div>
+              <span className="absolute right-5 top-6 z-10 hidden items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-2.5 py-1 text-2xs font-medium text-white/80 backdrop-blur sm:inline-flex">
+                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-iris-400" /> live · dusk at HQ
+              </span>
+              <div className="pointer-events-none absolute inset-x-0 bottom-4 z-10 flex flex-col items-center gap-1.5">
+                <Link
+                  href="/hq"
+                  className="pointer-events-auto rounded-xl bg-iris-gradient px-5 py-2.5 text-sm font-semibold text-white shadow-[0_10px_30px_-10px_rgba(237,113,80,0.9)] transition-transform active:scale-95"
+                >
+                  Step inside HQ →
+                </Link>
+                <span className="text-2xs text-white/50">or knock on the front door</span>
+              </div>
             </div>
-            <span className="absolute right-5 top-6 z-10 hidden items-center gap-1.5 rounded-full border border-line bg-surface/70 px-2.5 py-1 text-2xs font-medium text-content-muted backdrop-blur sm:inline-flex">
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-iris-500" /> watch it grow
-            </span>
-            <div className="relative -mt-6 sm:-mt-10">
-              <LivingWorld buildings={buildings} onPick={setPickedTeam} />
-            </div>
-            <p className="relative z-10 pb-4 text-center text-2xs text-content-subtle">
-              Tap a building to meet the team
-            </p>
           </section>
-        )}
-
-        {pickedTeam && (
-          <TeamSheet
-            team={pickedTeam}
-            workers={agents.filter((a) => a.department === pickedTeam)}
-            onClose={() => setPickedTeam(null)}
-          />
         )}
 
         {/* Next step — always one clear action */}
@@ -449,50 +452,6 @@ function Prompt({
         <div className="shrink-0">{primary}</div>
       </div>
     </div>
-  );
-}
-
-// Tap a building → meet that team. This is the roster now (the table is gone).
-function TeamSheet({
-  team, workers, onClose,
-}: {
-  team: string; workers: AgentStat[]; onClose: () => void;
-}) {
-  const sorted = [...workers].sort((a, b) => b.task_count - a.task_count);
-  return (
-    <Modal open onClose={onClose} title={`${team} team`} className="max-w-md">
-      <div className="max-h-[62vh] space-y-1.5 overflow-y-auto p-3">
-        {sorted.length === 0 && (
-          <p className="px-2 py-8 text-center text-sm text-content-muted">
-            No one on this team yet.
-          </p>
-        )}
-        {sorted.map((a) => {
-          const g = agentGrowth({
-            task_count: a.task_count, success_count: a.success_count,
-            avg_eval: a.avg_eval, status: a.status,
-          });
-          return (
-            <Link
-              key={a.id}
-              href={`/agents/${a.id}`}
-              className="group flex items-center gap-3 rounded-xl border border-transparent p-2 transition-colors hover:border-line hover:bg-content/[0.04]"
-            >
-              <AgentAvatar seed={a.avatar_seed} url={a.avatar_url} name={a.name} status={a.status} size={38} />
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium text-content">{a.name}</p>
-                <p className="truncate text-2xs text-content-subtle">{a.title}</p>
-                <span className="mt-1 flex items-center gap-2">
-                  <LevelChip growth={g} />
-                  <MoodPill mood={g.mood} />
-                </span>
-              </div>
-              <ArrowRight className="h-4 w-4 shrink-0 text-content-subtle transition-all group-hover:translate-x-0.5 group-hover:text-iris-400" />
-            </Link>
-          );
-        })}
-      </div>
-    </Modal>
   );
 }
 

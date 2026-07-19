@@ -82,7 +82,10 @@ function EntrancePortal({ onEnter }: { onEnter: () => void }) {
 
 /** The APE AGENTS HQ exterior — the building is the mascot. A greeter ape
  *  waits at the entrance (AGENT_SLOT_DOOR in the GLB). */
-export function ApeworksExteriorScene({ onEnterHq }: { onEnterHq?: () => void } = {}) {
+export function ApeworksExteriorScene({
+  onEnterHq,
+  hero = false,
+}: { onEnterHq?: () => void; hero?: boolean } = {}) {
   return (
     <Canvas
       shadows
@@ -118,9 +121,16 @@ export function ApeworksExteriorScene({ onEnterHq }: { onEnterHq?: () => void } 
         <Vignette offset={0.26} darkness={0.55} eskil={false} />
       </EffectComposer>
 
+      {/* hero mode (embedded in a scrolling page): no zoom/pan so the wheel
+          keeps scrolling the page; a gentle nudgeable orbit stays available */}
       <OrbitControls
         target={[1.5, 6.5, 0]}
         maxPolarAngle={Math.PI / 2 - 0.03}
+        minPolarAngle={hero ? Math.PI / 2 - 0.6 : 0}
+        minAzimuthAngle={hero ? -0.9 : -Infinity}
+        maxAzimuthAngle={hero ? 0.6 : Infinity}
+        enableZoom={!hero}
+        enablePan={!hero}
         minDistance={10}
         maxDistance={70}
         enableDamping

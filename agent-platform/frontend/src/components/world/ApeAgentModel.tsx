@@ -4,6 +4,13 @@ import { useAnimations, useGLTF } from "@react-three/drei";
 import type { ThreeElements } from "@react-three/fiber";
 import * as THREE from "three";
 import { SkeletonUtils } from "three-stdlib";
+import { patternOf, jerseyNumberOf, vestPatternCanvas } from "./kit";
+import type { ApeJersey, ApePattern } from "./kit";
+
+// kit identity (numbers, patterns, artwork) lives in ./kit so 2D surfaces can
+// share it without loading the GLB pipeline; re-exported here for callers.
+export { patternOf, jerseyNumberOf };
+export type { ApeJersey, ApePattern };
 
 /**
  * Loads the locked master character (Blender → GLB). This is the ONE approved
@@ -29,97 +36,9 @@ export type ApeClip =
 /** clips that play once and hold their final pose instead of looping */
 const ONE_SHOT: Set<string> = new Set(["Sit", "Stand", "CompletedNod", "ErrorLow", "TurnLeft", "TurnRight"]);
 
-export interface ApeJersey {
-  number: number;
-  label?: string;
-}
-
-export type ApePattern = "bolt" | "stripes" | "hoops" | "chevron" | "sash" | "dots";
-/** the approved streetwear set — loud, clean under the number at floor scale
- *  (chevron/sash still render for dev previews but aren't dealt as traits) */
-const PATTERNS: ApePattern[] = ["bolt", "stripes", "hoops", "dots"];
-
-/** stable pattern trait per agent id (offset hash so it doesn't correlate with number) */
-export function patternOf(id: string): ApePattern {
-  let h = 7;
-  for (let i = 0; i < id.length; i++) h = (h * 37 + id.charCodeAt(i)) >>> 0;
-  return PATTERNS[h % PATTERNS.length];
-}
-
-/** Draws the kit pattern in light/dark shades of the agent's own accent on a
- *  transparent canvas — the vest color shows through, so kits stay tonal. */
+/** kit pattern artwork (from ./kit) wrapped as a three texture */
 function vestPatternTexture(pattern: ApePattern, accent: string): THREE.CanvasTexture {
-  const light = "#" + new THREE.Color(accent).lerp(new THREE.Color("#ffffff"), 0.45).getHexString();
-  const dark = "#" + new THREE.Color(accent).lerp(new THREE.Color("#1E1B18"), 0.4).getHexString();
-  const cv = document.createElement("canvas");
-  cv.width = cv.height = 512;
-  const ctx = cv.getContext("2d")!;
-  ctx.clearRect(0, 0, 512, 512);
-  switch (pattern) {
-    case "bolt": {
-      ctx.fillStyle = light;
-      ctx.strokeStyle = dark;
-      ctx.lineWidth = 14;
-      ctx.beginPath();
-      ctx.moveTo(300, 30); ctx.lineTo(150, 280); ctx.lineTo(240, 280);
-      ctx.lineTo(190, 490); ctx.lineTo(370, 220); ctx.lineTo(272, 220);
-      ctx.lineTo(340, 30); ctx.closePath();
-      ctx.fill(); ctx.stroke();
-      break;
-    }
-    case "stripes": {
-      ctx.save();
-      ctx.translate(256, 256); ctx.rotate(-0.45);
-      ctx.fillStyle = light;
-      ctx.fillRect(-90, -400, 90, 800);
-      ctx.fillStyle = dark;
-      ctx.fillRect(30, -400, 46, 800);
-      ctx.restore();
-      break;
-    }
-    case "hoops": {
-      ctx.fillStyle = dark;
-      for (const y of [70, 230, 390]) ctx.fillRect(0, y, 512, 62);
-      ctx.fillStyle = light;
-      for (const y of [132, 292, 452]) ctx.fillRect(0, y, 512, 16);
-      break;
-    }
-    case "chevron": {
-      ctx.strokeStyle = light;
-      ctx.lineWidth = 46;
-      ctx.lineJoin = "miter";
-      for (const y of [110, 260, 410]) {
-        ctx.beginPath();
-        ctx.moveTo(60, y); ctx.lineTo(256, y + 110); ctx.lineTo(452, y);
-        ctx.stroke();
-      }
-      break;
-    }
-    case "sash": {
-      ctx.save();
-      ctx.translate(256, 256); ctx.rotate(0.6);
-      ctx.fillStyle = dark;
-      ctx.fillRect(-400, -60, 800, 120);
-      ctx.fillStyle = light;
-      ctx.fillRect(-400, 60, 800, 22);
-      ctx.restore();
-      break;
-    }
-    case "dots": {
-      ctx.fillStyle = light;
-      for (let row = 0; row < 6; row++) {
-        const r = 26 - row * 3;
-        for (let col = 0; col < 5; col++) {
-          const x = 70 + col * 96 + (row % 2 ? 48 : 0);
-          ctx.beginPath();
-          ctx.arc(x, 60 + row * 82, Math.max(r, 8), 0, Math.PI * 2);
-          ctx.fill();
-        }
-      }
-      break;
-    }
-  }
-  const tex = new THREE.CanvasTexture(cv);
+  const tex = new THREE.CanvasTexture(vestPatternCanvas(pattern, accent));
   tex.colorSpace = THREE.SRGBColorSpace;
   tex.anisotropy = 4;
   return tex;
@@ -145,13 +64,6 @@ function vestPatternMesh(kind: "chest" | "back", pattern: ApePattern, accent: st
     mesh.position.set(0, -0.62, 0.105);
   }
   return mesh;
-}
-
-/** stable 2-digit squad number per agent id */
-export function jerseyNumberOf(id: string): number {
-  let h = 0;
-  for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) >>> 0;
-  return (h % 99) + 1;
 }
 
 /** Prints the kit onto a transparent canvas: chest = mini ape crest + squad
