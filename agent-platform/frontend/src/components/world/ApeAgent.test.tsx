@@ -10,8 +10,8 @@ export function runApeAgentSmokeTests(): { name: string; pass: boolean }[] {
 
   ok("every status is a non-empty string", STATUSES.every((s) => typeof s === "string" && s.length > 0));
 
-  const props: ApeAgentProps = { id: "operator", status: "idle", color: "#F47C20" };
-  ok("default color is the locked orange", props.color === "#F47C20");
+  const props: ApeAgentProps = { id: "operator", status: "idle", color: "#E97B29" };
+  ok("default color is the locked orange", props.color === "#E97B29");
   ok("id is required and present", typeof props.id === "string" && props.id.length > 0);
 
   return results;

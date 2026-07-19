@@ -18,7 +18,7 @@ export function ApeAgent({
   scale = 1,
   status = "idle",
   selected = false,
-  color = "#F47C20",
+  color = "#E97B29",
   debug = false,
   onClick,
 }: ApeAgentProps) {
@@ -36,11 +36,9 @@ export function ApeAgent({
     const std = (c: string, roughness = 0.52) =>
       new THREE.MeshStandardMaterial({ color: c, roughness, metalness: 0, wireframe: debug });
     return {
-      body: std(color, 0.5),
-      face: std("#FF8728", 0.5),         // subtly brighter face / muzzle orange
-      eye: new THREE.MeshStandardMaterial({ color: "#0E0D0C", roughness: 0.18, metalness: 0, wireframe: debug }),
-      nostril: std("#A94A0A", 0.6),      // dark orange, recessed (not brown)
-      innerEar: std("#C95D12", 0.5),
+      body: std(color, 0.55),
+      eye: new THREE.MeshStandardMaterial({ color: "#0E0D0C", roughness: 0.16, metalness: 0, wireframe: debug }),
+      hole: std("#5C2A0A", 0.85),        // deep recessed cavities (nostrils + ears)
       hi: new THREE.MeshBasicMaterial({ color: "#FFFFFF", wireframe: debug }),
     };
   }, [color, debug]);
@@ -68,56 +66,53 @@ export function ApeAgent({
       </mesh>
 
       <group ref={bob}>
-        {/* TORSO */}
-        <RoundedBox args={[1.22, 1.1, 0.78]} radius={0.1} smoothness={5} position={[0, 1.08, 0]} material={mats.body} castShadow receiveShadow />
+        {/* TORSO — shorter & narrower than the head */}
+        <RoundedBox args={[1.32, 1.12, 0.9]} radius={0.12} smoothness={5} position={[0, 1.04, 0]} material={mats.body} castShadow receiveShadow />
 
-        {/* LEGS */}
-        <RoundedBox args={[0.48, 0.62, 0.63]} radius={0.075} smoothness={5} position={[-0.32, 0.31, 0.04]} material={mats.body} castShadow />
-        <RoundedBox args={[0.48, 0.62, 0.63]} radius={0.075} smoothness={5} position={[0.32, 0.31, 0.04]} material={mats.body} castShadow />
+        {/* LEGS — short stubby, small gap */}
+        <RoundedBox args={[0.5, 0.54, 0.62]} radius={0.1} smoothness={5} position={[-0.33, 0.27, 0.03]} material={mats.body} castShadow />
+        <RoundedBox args={[0.5, 0.54, 0.62]} radius={0.1} smoothness={5} position={[0.33, 0.27, 0.03]} material={mats.body} castShadow />
 
-        {/* ARMS (pivot at the shoulder) + HANDS */}
-        <group ref={leftArm} position={[-0.83, 1.64, 0]}>
-          <RoundedBox args={[0.42, 0.92, 0.52]} radius={0.09} smoothness={5} position={[0, -0.46, 0]} material={mats.body} castShadow />
-          <RoundedBox args={[0.29, 0.42, 0.38]} radius={0.065} smoothness={5} position={[0, -1.09, 0]} material={mats.body} castShadow />
+        {/* ARMS (pivot at the shoulder) + HANDS — hanging at the sides */}
+        <group ref={leftArm} position={[-0.86, 1.56, 0.02]}>
+          <RoundedBox args={[0.46, 0.8, 0.56]} radius={0.13} smoothness={5} position={[0, -0.43, 0]} material={mats.body} castShadow />
+          <RoundedBox args={[0.44, 0.36, 0.52]} radius={0.13} smoothness={5} position={[0, -0.94, 0.02]} material={mats.body} castShadow />
         </group>
-        <group ref={rightArm} position={[0.83, 1.64, 0]}>
-          <RoundedBox args={[0.42, 0.92, 0.52]} radius={0.09} smoothness={5} position={[0, -0.46, 0]} material={mats.body} castShadow />
-          <RoundedBox args={[0.29, 0.42, 0.38]} radius={0.065} smoothness={5} position={[0, -1.09, 0]} material={mats.body} castShadow />
+        <group ref={rightArm} position={[0.86, 1.56, 0.02]}>
+          <RoundedBox args={[0.46, 0.8, 0.56]} radius={0.13} smoothness={5} position={[0, -0.43, 0]} material={mats.body} castShadow />
+          <RoundedBox args={[0.44, 0.36, 0.52]} radius={0.13} smoothness={5} position={[0, -0.94, 0.02]} material={mats.body} castShadow />
         </group>
 
-        {/* HEAD group (origin at head center) — seated on the torso, no neck gap */}
-        <group ref={head} position={[0, 2.46, 0]}>
-          <RoundedBox args={[1.86, 1.68, 1.02]} radius={0.12} smoothness={5} material={mats.body} castShadow />
+        {/* HEAD group (origin at head center) — big near-cubic hero, seated on torso */}
+        <group ref={head} position={[0, 2.42, 0]}>
+          <RoundedBox args={[1.9, 1.78, 1.18]} radius={0.14} smoothness={5} material={mats.body} castShadow />
 
-          {/* FACE PANEL */}
-          <RoundedBox args={[1.54, 0.88, 0.1]} radius={0.08} smoothness={5} position={[0, -0.12, 0.545]} material={mats.face} />
+          {/* BROW — thick visor bar projecting forward over the eyes */}
+          <RoundedBox args={[1.5, 0.28, 0.38]} radius={0.12} smoothness={5} position={[0, 0.34, 0.52]} material={mats.body} castShadow />
 
-          {/* BROW */}
-          <RoundedBox args={[1.58, 0.27, 0.2]} radius={0.07} smoothness={5} position={[0, 0.38, 0.62]} material={mats.body} castShadow />
+          {/* EYES — black rounded rectangles tucked under the brow + matching highlights */}
+          <RoundedBox ref={leftEye} args={[0.2, 0.32, 0.06]} radius={0.05} smoothness={5} position={[-0.42, 0.05, 0.6]} material={mats.eye} castShadow />
+          <RoundedBox ref={rightEye} args={[0.2, 0.32, 0.06]} radius={0.05} smoothness={5} position={[0.42, 0.05, 0.6]} material={mats.eye} castShadow />
+          <mesh position={[-0.48, 0.14, 0.645]} material={mats.hi}><sphereGeometry args={[0.038, 18, 18]} /></mesh>
+          <mesh position={[0.36, 0.14, 0.645]} material={mats.hi}><sphereGeometry args={[0.038, 18, 18]} /></mesh>
 
-          {/* EYES (+ highlight in the same corner of both) */}
-          <group position={[-0.43, 0.17, 0.575]}>
-            <RoundedBox ref={leftEye} args={[0.2, 0.39, 0.06]} radius={0.045} smoothness={5} material={mats.eye} castShadow />
-            <mesh position={[-0.045, 0.085, 0.037]} material={mats.hi}><sphereGeometry args={[0.042, 20, 20]} /></mesh>
+          {/* MUZZLE — large block projecting well forward, sitting below the eyes,
+              with two recessed square nostril holes near its top */}
+          <group position={[0, -0.46, 0.58]}>
+            <RoundedBox args={[0.98, 0.66, 0.72]} radius={0.14} smoothness={5} material={mats.body} castShadow />
+            <RoundedBox args={[0.15, 0.15, 0.14]} radius={0.02} smoothness={4} position={[-0.17, 0.16, 0.3]} material={mats.hole} />
+            <RoundedBox args={[0.15, 0.15, 0.14]} radius={0.02} smoothness={4} position={[0.17, 0.16, 0.3]} material={mats.hole} />
           </group>
-          <group position={[0.43, 0.17, 0.575]}>
-            <RoundedBox ref={rightEye} args={[0.2, 0.39, 0.06]} radius={0.045} smoothness={5} material={mats.eye} castShadow />
-            <mesh position={[-0.045, 0.085, 0.037]} material={mats.hi}><sphereGeometry args={[0.042, 20, 20]} /></mesh>
+
+          {/* EARS — cubic tabs on the sides, each with a recessed square hole */}
+          <group position={[-1.02, 0.06, 0.04]}>
+            <RoundedBox args={[0.5, 0.56, 0.5]} radius={0.12} smoothness={5} material={mats.body} castShadow />
+            <RoundedBox args={[0.2, 0.2, 0.16]} radius={0.025} smoothness={4} position={[0, 0, 0.19]} material={mats.hole} />
           </group>
-
-          {/* MUZZLE + LOWER MUZZLE */}
-          <RoundedBox args={[0.9, 0.48, 0.33]} radius={0.08} smoothness={5} position={[0, -0.31, 0.72]} material={mats.face} castShadow />
-          <RoundedBox args={[0.76, 0.14, 0.26]} radius={0.05} smoothness={5} position={[0, -0.64, 0.67]} material={mats.face} />
-
-          {/* NOSTRILS */}
-          <RoundedBox args={[0.105, 0.135, 0.035]} radius={0.018} smoothness={4} position={[-0.2, -0.28, 0.875]} material={mats.nostril} />
-          <RoundedBox args={[0.105, 0.135, 0.035]} radius={0.018} smoothness={4} position={[0.2, -0.28, 0.875]} material={mats.nostril} />
-
-          {/* EARS + INNER EARS */}
-          <RoundedBox args={[0.43, 0.61, 0.3]} radius={0.09} smoothness={5} position={[-1.06, -0.02, 0]} material={mats.body} castShadow />
-          <RoundedBox args={[0.43, 0.61, 0.3]} radius={0.09} smoothness={5} position={[1.06, -0.02, 0]} material={mats.body} castShadow />
-          <RoundedBox args={[0.17, 0.22, 0.04]} radius={0.025} smoothness={4} position={[-1.06, -0.02, 0.17]} material={mats.innerEar} />
-          <RoundedBox args={[0.17, 0.22, 0.04]} radius={0.025} smoothness={4} position={[1.06, -0.02, 0.17]} material={mats.innerEar} />
+          <group position={[1.02, 0.06, 0.04]}>
+            <RoundedBox args={[0.5, 0.56, 0.5]} radius={0.12} smoothness={5} material={mats.body} castShadow />
+            <RoundedBox args={[0.2, 0.2, 0.16]} radius={0.025} smoothness={4} position={[0, 0, 0.19]} material={mats.hole} />
+          </group>
         </group>
       </group>
     </group>
