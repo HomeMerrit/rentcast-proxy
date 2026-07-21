@@ -90,7 +90,7 @@ export function RunTaskDialog({
             {job ? job.title : `Give ${agentName} a job`}
           </h3>
           <p className="truncate text-xs text-content-muted">
-            {job ? job.blurb : "Pick what you'd like done — no setup required."}
+            {job ? job.blurb : "Pick what you'd like done. No setup required."}
           </p>
         </div>
       </div>

@@ -205,7 +205,7 @@ export default function OnboardingPage() {
               </h1>
               <p className="mx-auto mt-4 max-w-xl text-base text-content-muted">
                 Set up in minutes. Hire your first workers, give them your tools and knowledge, and
-                watch the work — and the value — flow.
+                watch the work flow.
               </p>
 
               <div className="mx-auto mt-8 max-w-3xl overflow-hidden rounded-3xl border border-line shadow-card" style={{ background: "#2C3550" }}>
@@ -221,7 +221,7 @@ export default function OnboardingPage() {
                 <ChoiceCard
                   icon={<Building2 className="h-6 w-6" />}
                   title="Bring in my company"
-                  desc="Set up your business, add your reference docs, and hire your first team — all sharing the same context."
+                  desc="Set up your business, add your reference docs, and hire your first team, all sharing the same context."
                   onClick={() => start("company")}
                   primary
                 />
@@ -341,7 +341,7 @@ export default function OnboardingPage() {
                   onEdit={() => setStep(2)}
                 />
               </Card>
-              <FlowNav onBack={() => setStep(2)} onNext={() => setStep(4)} nextLabel="Looks good — hire my first worker" />
+              <FlowNav onBack={() => setStep(2)} onNext={() => setStep(4)} nextLabel="Looks good, hire my first worker" />
             </StepShell>
           )}
 
@@ -371,7 +371,7 @@ export default function OnboardingPage() {
                   onClick={goWorkspace}
                   className="text-xs text-content-subtle hover:text-content-muted"
                 >
-                  I&apos;ll do this later — go to my workspace
+                  I&apos;ll do this later, take me to my workspace
                 </button>
               </div>
             </StepShell>

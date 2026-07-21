@@ -1,10 +1,11 @@
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 /** ApeAgents mark — the blocky ape head (same proportions as the locked
- *  mascot's face panel), orange with the lit muzzle. */
+ *  mascot's face panel), orange with the lit muzzle. Always links home. */
 export function Logo({ className, showText = true }: { className?: string; showText?: boolean }) {
   return (
-    <span className={cn("inline-flex items-center gap-2.5", className)}>
+    <Link href="/" aria-label="ApeAgents home" className={cn("inline-flex items-center gap-2.5", className)}>
       <svg viewBox="0 0 40 40" className="h-7 w-7" aria-hidden>
         {/* ears */}
         <rect x="2" y="14" width="6" height="12" rx="1.5" fill="#F58220" />
@@ -29,6 +30,6 @@ export function Logo({ className, showText = true }: { className?: string; showT
           Ape<span className="text-iris-300">Agents</span>
         </span>
       )}
-    </span>
+    </Link>
   );
 }

@@ -42,7 +42,7 @@ export function LivingWorld({
       id={id}
       viewBox={viewBox}
       role="img"
-      aria-label="Your company as a living world — each building is a team, each figure a worker."
+      aria-label="Your company as a living world. Each building is a team and each figure a worker."
       className={className}
       style={{ width: "100%", height: "auto", display: "block", overflow: "visible" }}
       onClick={handleClick}

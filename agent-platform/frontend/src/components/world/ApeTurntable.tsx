@@ -49,7 +49,7 @@ export function ApeTurntable({
         <ambientLight intensity={0.55} color="#fff3e2" />
         <directionalLight
           position={[-4, 6, 5]} intensity={2.2} color="#fff7ee" castShadow
-          shadow-mapSize={[1024, 1024]} shadow-bias={-0.0003} shadow-radius={5}
+          shadow-mapSize={[1024, 1024]} shadow-bias={-0.0003} shadow-normalBias={0.05} shadow-radius={5}
         />
         <directionalLight position={[4.5, 3, 3]} intensity={0.8} color="#ffd9b0" />
         <directionalLight position={[0, 5, -5]} intensity={1.0} />

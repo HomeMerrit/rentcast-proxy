@@ -65,7 +65,7 @@ export function FileDropzone({
             Drag &amp; drop your reference files
           </p>
           <p className="mt-0.5 text-xs text-content-subtle">
-            Docs, notes, playbooks, CSVs — we&apos;ll turn them into shared knowledge. Max 8MB each.
+            Docs, notes, playbooks, CSVs. We&apos;ll turn them into shared knowledge. Max 8MB each.
           </p>
         </div>
         <div className="flex items-center gap-2">

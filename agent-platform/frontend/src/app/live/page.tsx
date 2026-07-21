@@ -88,7 +88,7 @@ export default function LivePage() {
             <p className="eyebrow">Real-time</p>
             <h1 className="mt-1 font-display text-2xl font-semibold tracking-tight text-content sm:text-3xl">Live floor</h1>
             <p className="mt-1 text-sm text-content-muted">
-              Watch every worker think, act and hand off — as it happens. {liveCount > 0 && <span className="text-positive">{liveCount} at work now.</span>}
+              Watch every worker think, act and hand off as it happens. {liveCount > 0 && <span className="text-positive">{liveCount} at work now.</span>}
             </p>
           </div>
           {/* quick run */}
@@ -155,7 +155,7 @@ export default function LivePage() {
                         <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-iris-400" /> thinking…
                       </span>
                     ) : (
-                      <span className="text-xs text-content-subtle">idle — ready for work</span>
+                      <span className="text-xs text-content-subtle">idle, ready for work</span>
                     )}
                   </div>
 
@@ -168,7 +168,7 @@ export default function LivePage() {
             })}
             {agents.length === 0 && (
               <Card className="col-span-full grid place-items-center p-10 text-sm text-content-subtle">
-                No workers yet. <Link href="/agents/new" className="ml-1 text-iris-600">Hire one →</Link>
+                No workers yet. <Link href="/agents/new" className="ml-1 text-iris-600 hover:text-iris-500">Hire one</Link>
               </Card>
             )}
           </div>
@@ -181,7 +181,7 @@ export default function LivePage() {
             <div className="max-h-[560px] space-y-1.5 overflow-y-auto pr-1">
               {namedEvents.length === 0 && (
                 <p className="py-8 text-center text-xs text-content-subtle">
-                  Waiting for activity… give a worker a job above to see the floor light up.
+                  Waiting for activity. Give a worker a job above to see the floor light up.
                 </p>
               )}
               {namedEvents.map((e, i) => {

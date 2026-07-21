@@ -62,7 +62,7 @@ export const JOBS: JobTemplate[] = [
     id: "write",
     icon: PenLine,
     title: "Write something",
-    blurb: "Draft content in your voice — posts, emails, copy.",
+    blurb: "Draft content in your voice: posts, emails, copy.",
     cta: "Write it",
     fields: [
       {
@@ -167,7 +167,7 @@ export const JOBS: JobTemplate[] = [
     id: "custom",
     icon: Wand2,
     title: "Something else",
-    blurb: "Describe the job in your own words — they'll figure it out.",
+    blurb: "Describe the job in your own words and they'll figure it out.",
     cta: "Give it to them",
     fields: [
       {

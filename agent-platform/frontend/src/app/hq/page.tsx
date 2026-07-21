@@ -131,7 +131,7 @@ export default function HqPage() {
       <header className="z-30 border-b border-line bg-canvas/80 backdrop-blur-xl">
         <div className="flex h-14 items-center justify-between gap-3 px-4 sm:px-6">
           <div className="flex items-center gap-4">
-            <Link href="/"><Logo /></Link>
+            <Logo />
             <AppNav current="/hq" />
           </div>
           <div className="flex items-center gap-2">

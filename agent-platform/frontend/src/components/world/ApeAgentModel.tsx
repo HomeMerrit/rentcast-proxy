@@ -45,23 +45,27 @@ function vestPatternTexture(pattern: ApePattern, accent: string): THREE.CanvasTe
 }
 
 /** Vest-sized overlay planes (front + back) carrying the pattern; they sit
- *  between the torso face and the jersey prints. */
+ *  between the torso face and the jersey prints. depthWrite off + explicit
+ *  renderOrder: near-coplanar transparent planes otherwise z-fight with the
+ *  torso while the model rotates (visible as the print flashing). */
 function vestPatternMesh(kind: "chest" | "back", pattern: ApePattern, accent: string): THREE.Mesh {
   const mesh = new THREE.Mesh(
     new THREE.PlaneGeometry(1.34, 0.8),
     new THREE.MeshStandardMaterial({
       map: vestPatternTexture(pattern, accent),
       transparent: true,
+      depthWrite: false,
       roughness: 0.85,
       polygonOffset: true,
       polygonOffsetFactor: -0.5,
     }),
   );
+  mesh.renderOrder = 1;
   if (kind === "back") {
     mesh.rotation.y = Math.PI;
-    mesh.position.set(0, -0.72, -0.105);
+    mesh.position.set(0, -0.72, -0.12);
   } else {
-    mesh.position.set(0, -0.62, 0.105);
+    mesh.position.set(0, -0.62, 0.12);
   }
   return mesh;
 }
@@ -126,18 +130,21 @@ function jerseyMesh(kind: "chest" | "back", jersey: ApeJersey): THREE.Mesh {
     new THREE.MeshStandardMaterial({
       map: jerseyTexture(kind, jersey),
       transparent: true,
+      depthWrite: false,
       roughness: 0.85,
       polygonOffset: true,
       polygonOffsetFactor: -1,
     }),
   );
+  mesh.renderOrder = 2;
   // sockets sit 0.1 INSIDE the torso block (±0.52 deep) at neck height —
   // offset the print onto the actual torso face, clear of the muzzle overhang
+  // and clear of the pattern overlay so neither ever depth-fights it
   if (kind === "back") {
     mesh.rotation.y = Math.PI;
-    mesh.position.set(0, -0.7, -0.11);
+    mesh.position.set(0, -0.7, -0.14);
   } else {
-    mesh.position.set(0, -0.58, 0.11);
+    mesh.position.set(0, -0.58, 0.14);
   }
   return mesh;
 }

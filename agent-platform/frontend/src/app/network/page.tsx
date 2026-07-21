@@ -68,7 +68,7 @@ export default function NetworkPage() {
 
         {error && graph && (
           <Banner tone="danger" onRetry={load} className="mb-4">
-            Can&apos;t reach the server — showing the last known network. Retrying automatically.
+            Can&apos;t reach the server, so this is the last known network. Retrying automatically.
           </Banner>
         )}
 
@@ -77,7 +77,7 @@ export default function NetworkPage() {
             {graph && graph.edges.length === 0 && graph.nodes.length > 0 && (
               <div className="pointer-events-none absolute inset-x-0 top-6 z-10 text-center">
                 <span className="rounded-full border border-line bg-surface-overlay/90 px-3 py-1 text-2xs text-content-muted backdrop-blur">
-                  No agent-to-agent messages yet — when one agent delegates to another, a link appears here.
+                  No agent-to-agent messages yet. When one agent delegates to another, a link appears here.
                 </span>
               </div>
             )}
@@ -87,7 +87,7 @@ export default function NetworkPage() {
                   className="h-[440px]"
                   icon={<NetworkIcon className="h-5 w-5" />}
                   title="No hand-offs yet"
-                  description="Hire a few workers and give them jobs — as they pass work to each other, the flow maps out here."
+                  description="Hire a few workers and give them jobs. As they pass work to each other, the flow maps out here."
                 />
               ) : (
                 <CollaborationGraph graph={graph} />

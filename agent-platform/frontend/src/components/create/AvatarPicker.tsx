@@ -114,7 +114,7 @@ export function AvatarPicker({
         </button>
       </div>
       <p className="flex items-center gap-1 text-2xs text-content-subtle">
-        <User className="h-3 w-3" /> Upload a headshot — Generate re-rolls the avatar and the kit
+        <User className="h-3 w-3" /> Upload a headshot, or hit Generate to re-roll the avatar and kit
       </p>
       <input
         ref={fileRef}

@@ -25,7 +25,7 @@ const DEPARTMENTS = [
 
 // Plain-language "brainpower" tiers — the technical engine stays under the hood.
 const MODELS = [
-  { id: "claude-sonnet-5", label: "Balanced", hint: "Best all-rounder — quick and capable" },
+  { id: "claude-sonnet-5", label: "Balanced", hint: "Best all-rounder, quick and capable" },
   { id: "claude-opus-4-8", label: "Deepest", hint: "Most thorough thinking, higher cost" },
   { id: "claude-haiku-4-5-20251001", label: "Fastest", hint: "Quickest and cheapest, great for volume" },
 ];

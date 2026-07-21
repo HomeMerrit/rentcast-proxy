@@ -74,7 +74,7 @@ function AuthCard() {
           <p className="font-semibold text-content">Workspace created</p>
         </div>
         <p className="text-sm text-content-muted">
-          This is your API key. It’s shown only once — save it somewhere safe. You can make more keys later in settings.
+          This is your API key. It’s shown only once, so save it somewhere safe. You can make more keys later in settings.
         </p>
         <div className="flex items-center gap-2 rounded-xl border border-line bg-surface-inset px-3 py-2.5">
           <code className="flex-1 select-all break-all font-mono text-sm text-content">{issuedKey}</code>

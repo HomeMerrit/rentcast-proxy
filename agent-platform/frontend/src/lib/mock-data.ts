@@ -35,7 +35,7 @@ export const mockAgents: Agent[] = [
       {
         id: "c1", from_agent_id: "agent-maya-001", from_agent_name: "Maya Chen",
         to_agent_id: "agent-jake-002", to_agent_name: "Jake Rivera",
-        message: "Jake — pricing report ready. 3 high-value segments for outreach.",
+        message: "Jake, the pricing report is ready. 3 high-value segments for outreach.",
         message_type: "message", created_at: new Date(Date.now() - 1800000).toISOString(), read: true,
       },
     ],

@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 import { formatDistanceToNow } from "date-fns";
 import {
   Plus, DollarSign, Activity, Users, Zap, Gauge, TrendingUp,
-  CheckCircle2, XCircle, Briefcase, Radio, ChevronDown,
+  CheckCircle2, XCircle, Briefcase, Radio, ChevronDown, ArrowRight,
 } from "lucide-react";
 import { Logo } from "./brand/Logo";
 import { AppNav } from "./AppNav";
@@ -131,7 +131,7 @@ export function CommandCenter() {
       <main className="mx-auto max-w-7xl px-4 py-7 sm:px-6">
         {error && (
           <Banner tone="danger" onRetry={load} className="mb-4">
-            Can&apos;t reach the server right now — showing the last data we have. It will retry automatically.
+            Can&apos;t reach the server right now, so this is the last data we have. It will retry automatically.
           </Banner>
         )}
 
@@ -148,7 +148,7 @@ export function CommandCenter() {
                 </h1>
                 <p className="mt-1 max-w-md text-sm text-white/75">
                   {agentCount <= 1
-                    ? "It starts with one. Give them a job — and watch your company grow."
+                    ? "It starts with one. Give them a job and watch your company grow."
                     : `${agentCount} workers across ${buildings.length} ${buildings.length === 1 ? "team" : "teams"}. They're inside, working right now.`}
                 </p>
               </div>
@@ -160,7 +160,7 @@ export function CommandCenter() {
                   href="/hq"
                   className="btn-cta pointer-events-auto px-6 py-2.5 text-sm font-semibold"
                 >
-                  Step inside HQ →
+                  Step inside HQ <ArrowRight className="h-4 w-4" />
                 </Link>
                 <span className="text-2xs text-white/50">or knock on the front door</span>
               </div>
@@ -353,7 +353,7 @@ function NextStep({
       <Prompt
         eyebrow="Start here"
         title="Hire your first worker"
-        body="Your world is empty. Bring on your first worker — it takes about a minute."
+        body="Your world is empty. Bringing on your first worker takes about a minute."
         primary={
           <Link href="/agents/new" className={primaryBtn}>
             <Plus className="h-4 w-4" /> Hire a worker
@@ -369,7 +369,7 @@ function NextStep({
       <Prompt
         eyebrow="Next step"
         title={targetName ? `Give ${targetName} their first job` : "Give your team their first job"}
-        body="Your team is hired — now put them to work. Pick a job in plain words and watch them go."
+        body="Your team is hired. Now put them to work: pick a job in plain words and watch them go."
         primary={
           <button onClick={onGiveJob} className={primaryBtn}>
             <Briefcase className="h-4 w-4" /> Give a job

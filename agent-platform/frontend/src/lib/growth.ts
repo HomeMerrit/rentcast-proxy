@@ -68,14 +68,14 @@ export function agentMood(input: GrowthInput): Mood {
 
   const tasks = input.task_count || 0;
   if (tasks === 0)
-    return { label: "Fresh start", tone: "iris", hint: "Brand new — give it a first job." };
+    return { label: "Fresh start", tone: "iris", hint: "Brand new. Give it a first job." };
 
   const rate = Math.round(((input.success_count ?? 0) / tasks) * 100);
   const quality = input.avg_eval != null ? input.avg_eval : rate;
   if (quality >= 85) return { label: "Thriving", tone: "positive", hint: "Doing great work lately." };
   if (quality >= 65) return { label: "Happy", tone: "positive", hint: "Steady and reliable." };
   if (quality >= 40) return { label: "Learning", tone: "warning", hint: "Still finding its footing." };
-  return { label: "Needs care", tone: "danger", hint: "Struggling lately — check in on it." };
+  return { label: "Needs care", tone: "danger", hint: "Struggling lately. Check in on it." };
 }
 
 export function agentGrowth(input: GrowthInput): Growth {
@@ -104,7 +104,7 @@ export function agentGrowth(input: GrowthInput): Growth {
 
 /** A one-line nudge that tells the user how to make this agent grow. */
 export function growthHint(g: Growth): string {
-  if (g.isMax) return "Top of the ladder — a true Legend.";
+  if (g.isMax) return "Top of the ladder, a true Legend.";
   if (g.xp === 0) return `Give them a first job to start earning XP toward ${g.next}.`;
-  return `Every finished job earns XP toward ${g.next} — great results earn more.`;
+  return `Every finished job earns XP toward ${g.next}, and great results earn more.`;
 }

@@ -161,7 +161,7 @@ export function network(): NetworkGraph {
     recent: EDGE_PAIRS.slice(0, 8).map(([f, t], i) => ({
       id: `a2a-${i}`, from_id: `agent-${f}`, to_id: `agent-${t}`,
       from_name: byId(`agent-${f}`).name, to_name: byId(`agent-${t}`).name,
-      message: pick(["Handing this off — context attached.", "Can you take the numbers from here?", "Flagged for your review.", "Done on my side, over to you."], i),
+      message: pick(["Handing this off, context attached.", "Can you take the numbers from here?", "Flagged for your review.", "Done on my side, over to you."], i),
       message_type: "task", created_at: iso(i * 5 * MIN),
     })),
   };
@@ -169,7 +169,7 @@ export function network(): NetworkGraph {
 
 export function humanInbox(): AgentComm[] {
   return [
-    { id: "hc-1", from_agent_id: "agent-jake", from_agent_name: "Jake Rivera", message: "Northwind is asking for a 12% discount to close today — approve?", message_type: "human_message", created_at: iso(6 * MIN), read: false },
+    { id: "hc-1", from_agent_id: "agent-jake", from_agent_name: "Jake Rivera", message: "Northwind is asking for a 12% discount to close today. Approve?", message_type: "human_message", created_at: iso(6 * MIN), read: false },
     { id: "hc-2", from_agent_id: "agent-nora", from_agent_name: "Nora Vale", message: "Two invoice line items don't match the PO. Write them off or investigate?", message_type: "human_message", created_at: iso(22 * MIN), read: false },
     { id: "hc-3", from_agent_id: "agent-ada", from_agent_name: "Ada Reyes", message: "A customer wants a refund outside policy. How should I proceed?", message_type: "human_message", created_at: iso(51 * MIN), read: true },
   ];

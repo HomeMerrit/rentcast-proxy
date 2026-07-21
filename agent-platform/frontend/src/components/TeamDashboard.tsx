@@ -49,7 +49,7 @@ export function TeamDashboard({ agents }: Props) {
               AI Team
             </h1>
             <p className="mt-1 text-sm text-content-muted">
-              Working around the clock — open any agent to see them think, act and learn.
+              Working around the clock. Open any agent to see them think, act and learn.
             </p>
           </div>
           <div className="flex gap-2.5">

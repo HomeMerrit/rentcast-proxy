@@ -121,7 +121,7 @@ export function SkillPicker({
       {value.length > 0 && (
         <div className="space-y-2">
           <p className="text-2xs font-medium uppercase tracking-wide text-content-subtle">
-            {value.length} tool{value.length > 1 ? "s" : ""} selected — set starting skill
+            {value.length} tool{value.length > 1 ? "s" : ""} selected. Set the starting skill
           </p>
           <div className="space-y-2">
             {value.map((v) => (
