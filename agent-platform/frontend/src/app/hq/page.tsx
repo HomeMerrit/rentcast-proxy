@@ -142,7 +142,7 @@ export default function HqPage() {
                   onClick={() => switchView(v)}
                   className={cn(
                     "rounded-[10px] px-3.5 py-1.5 text-sm font-medium transition-colors",
-                    view === v ? "bg-iris-gradient text-white" : "text-content-muted hover:text-content",
+                    view === v ? "bg-iris-500 text-white" : "text-content-muted hover:text-content",
                   )}
                 >
                   {v === "exterior" ? "Exterior" : "Headquarters"}
@@ -181,7 +181,7 @@ export default function HqPage() {
           <div className="pointer-events-none absolute inset-x-0 bottom-6 flex justify-center">
             <button
               onClick={enterHq}
-              className="pointer-events-auto rounded-xl bg-iris-gradient px-5 py-2.5 text-sm font-semibold text-white shadow-[0_10px_30px_-10px_rgba(237,113,80,0.9)] transition-transform active:scale-95"
+              className="btn-cta pointer-events-auto px-6 py-2.5 text-sm font-semibold"
             >
               Enter headquarters →
             </button>

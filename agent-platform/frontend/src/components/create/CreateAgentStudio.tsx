@@ -218,7 +218,7 @@ export function CreateAgentStudio({
 
           <div className="flex items-center justify-between gap-3">
             <p className="flex items-center gap-1.5 text-2xs text-content-subtle">
-              <Sparkles className="h-3.5 w-3.5 text-iris-300" />
+              <Sparkles className="h-3.5 w-3.5 text-iris-600" />
               They get sharper with every job they finish.
             </p>
             <Button size="lg" onClick={submit} loading={saving} disabled={!valid} iconRight={<ArrowRight className="h-4 w-4" />}>

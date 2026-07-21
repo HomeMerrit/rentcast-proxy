@@ -115,7 +115,7 @@ export function RunTaskDialog({
                     onClick={() => pick(j)}
                     className="group flex items-start gap-3 rounded-xl border border-line bg-surface p-3.5 text-left transition-all hover:-translate-y-0.5 hover:border-iris-400/50 hover:shadow-card"
                   >
-                    <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-iris-soft text-iris-500 transition-colors group-hover:bg-iris-gradient group-hover:text-white">
+                    <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-iris-soft text-iris-500 transition-colors group-hover:bg-iris-500 group-hover:text-white">
                       <Icon className="h-[18px] w-[18px]" />
                     </span>
                     <span className="min-w-0">

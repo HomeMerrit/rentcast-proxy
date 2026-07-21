@@ -198,7 +198,7 @@ export default function OnboardingPage() {
                 animate={{ opacity: 1, scale: 1 }}
                 className="inline-flex items-center gap-1.5 rounded-full border border-line bg-content/[0.04] px-3 py-1 text-2xs font-medium text-content-muted"
               >
-                <Sparkles className="h-3 w-3 text-iris-300" /> Your business, brought to life
+                <Sparkles className="h-3 w-3 text-iris-600" /> Your business, brought to life
               </motion.span>
               <h1 className="mx-auto mt-5 max-w-3xl font-display text-4xl font-semibold leading-[1.08] tracking-tight text-content sm:text-5xl">
                 Build a company<br className="hidden sm:block" /> that <span className="text-gradient">builds itself.</span>
@@ -404,14 +404,14 @@ function ChoiceCard({
     >
       <div
         className={`mb-4 grid h-12 w-12 place-items-center rounded-xl ${
-          primary ? "bg-iris-gradient text-white shadow-glow" : "bg-content/[0.05] text-content"
+          primary ? "bg-iris-500 text-white hover:bg-iris-600" : "bg-content/[0.05] text-content"
         }`}
       >
         {icon}
       </div>
       <p className="font-display text-lg font-semibold text-content">{title}</p>
       <p className="mt-1.5 text-sm text-content-muted">{desc}</p>
-      <ArrowRight className="mt-4 h-5 w-5 text-content-subtle transition-all group-hover:translate-x-1 group-hover:text-iris-300" />
+      <ArrowRight className="mt-4 h-5 w-5 text-content-subtle transition-all group-hover:translate-x-1 group-hover:text-iris-600" />
     </motion.button>
   );
 }
@@ -423,7 +423,7 @@ function ReviewRow({
 }) {
   return (
     <div className="flex items-start gap-3 p-4">
-      <span className="mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-iris-soft text-iris-300">
+      <span className="mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-iris-soft text-iris-600">
         {icon}
       </span>
       <div className="min-w-0 flex-1">
@@ -444,7 +444,7 @@ function ReviewRow({
 function Highlight({ icon, label }: { icon: React.ReactNode; label: string }) {
   return (
     <div className="flex items-center gap-2.5 rounded-xl border border-line bg-content/[0.03] px-3.5 py-3">
-      <span className="grid h-8 w-8 place-items-center rounded-lg bg-iris-soft text-iris-300">{icon}</span>
+      <span className="grid h-8 w-8 place-items-center rounded-lg bg-iris-soft text-iris-600">{icon}</span>
       <span className="text-xs font-medium text-content-muted">{label}</span>
     </div>
   );

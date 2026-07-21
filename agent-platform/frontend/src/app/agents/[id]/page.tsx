@@ -31,7 +31,7 @@ export default async function AgentPage({
             The server didn&apos;t respond. It may be starting up or temporarily unavailable.
           </p>
           <div className="mt-5 flex items-center justify-center gap-2">
-            <Link href={`/agents/${id}`} className="rounded-xl bg-iris-gradient px-4 py-2 text-sm font-medium text-white">
+            <Link href={`/agents/${id}`} className="btn-cta px-5 py-2 text-sm">
               Try again
             </Link>
             <Link href="/" className="rounded-xl border border-line bg-surface px-4 py-2 text-sm text-content-muted hover:text-content">

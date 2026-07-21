@@ -16,7 +16,7 @@ export function Card({
         "rounded-2xl border border-line bg-surface shadow-card",
         interactive &&
           "transition-all duration-300 hover:border-line-strong hover:-translate-y-0.5 hover:shadow-raised",
-        glow && "shadow-glow",
+        glow && "border-iris-500/50",
         className
       )}
       {...props}
@@ -27,7 +27,7 @@ export function Card({
 /* ---------- Badge ---------- */
 type Tone = "iris" | "aqua" | "positive" | "warning" | "danger" | "info" | "neutral";
 const toneMap: Record<Tone, string> = {
-  iris: "bg-iris-500/12 text-iris-300 border-iris-500/25",
+  iris: "bg-iris-50 text-iris-700 border-iris-200",
   aqua: "bg-aqua/10 text-aqua border-aqua/25",
   positive: "bg-positive/12 text-positive border-positive/25",
   warning: "bg-warning/12 text-warning border-warning/25",
@@ -75,7 +75,7 @@ export function Progress({
   const pct = Math.max(0, Math.min(100, value));
   const bar =
     tone === "iris"
-      ? "bg-iris-gradient"
+      ? "bg-iris-500"
       : tone === "positive"
       ? "bg-positive"
       : tone === "warning"
@@ -84,7 +84,7 @@ export function Progress({
   return (
     <div className={cn("h-1.5 w-full overflow-hidden rounded-full bg-content/[0.06]", className)}>
       <div
-        className={cn("h-full rounded-full transition-[width] duration-700 ease-out", bar, showGlow && tone === "iris" && "shadow-[0_0_12px_rgba(237,113,80,0.6)]")}
+        className={cn("h-full rounded-full transition-[width] duration-700 ease-out", bar)}
         style={{ width: `${pct}%` }}
       />
     </div>
@@ -124,8 +124,8 @@ export function Chip({
       className={cn(
         "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-medium transition-all duration-200 active:scale-95",
         selected
-          ? "border-iris-400/50 bg-iris-500/15 text-iris-200 shadow-[0_0_0_1px_rgba(237,113,80,0.3),0_0_20px_-8px_rgba(237,113,80,0.7)]"
-          : "border-line bg-content/[0.04] text-content-muted hover:border-line-strong hover:text-content hover:bg-content/[0.06]",
+          ? "border-iris-500 bg-iris-50 text-iris-700"
+          : "border-line-strong bg-surface text-content-muted hover:border-iris-300 hover:text-content",
         className
       )}
     >

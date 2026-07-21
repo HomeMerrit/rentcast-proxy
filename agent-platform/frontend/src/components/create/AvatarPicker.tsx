@@ -50,7 +50,7 @@ export function AvatarPicker({
         <div
           className={cn(
             "relative h-28 w-28 overflow-hidden rounded-3xl border border-line-strong bg-surface-inset",
-            "shadow-[0_0_0_4px_rgba(237,113,80,0.10),0_18px_40px_-18px_rgba(237,113,80,0.6)]"
+            "shadow-[0_0_0_4px_rgba(237,113,80,0.12)]"
           )}
         >
           {value.avatar_url ? (

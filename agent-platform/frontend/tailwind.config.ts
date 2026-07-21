@@ -2,8 +2,9 @@ import type { Config } from "tailwindcss";
 
 /**
  * AgentOS design system — warm living-world brand (see /BRAND.md).
- * Light warm paper surfaces (never dark, never purple), warm ink, a coral
- * signature with gold reward and department hues. Soft, sunlit, hand-made feel.
+ * Clean cream paper surfaces (never dark, never purple), near-black ink, thin
+ * oat borders, the brand coral as the one hero accent. Flat fills, generous
+ * whitespace, a playful lift + hard-offset shadow on interactive elements.
  */
 const config: Config = {
   darkMode: "class",
@@ -15,17 +16,17 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Warm living-world brand — LIGHT paper (never dark/purple). See /BRAND.md.
-        canvas: "#F1E9D8",
+        // Warm living-world brand — clean cream paper (never dark/purple).
+        canvas: "#FAF9F7",
         surface: {
           DEFAULT: "#FFFFFF",
           raised: "#FFFFFF",
-          overlay: "#FBF6EC",
-          inset: "#F0E7D5",
+          overlay: "#F5F3EE",
+          inset: "#F1EEE7",
         },
         line: {
-          DEFAULT: "rgba(36,31,24,0.10)",
-          strong: "rgba(36,31,24,0.17)",
+          DEFAULT: "#EEE9DF",
+          strong: "#DAD4C8",
         },
         content: {
           DEFAULT: "#241F18",
@@ -67,6 +68,9 @@ const config: Config = {
       fontSize: {
         "2xs": ["0.6875rem", { lineHeight: "1rem", letterSpacing: "0.02em" }],
       },
+      letterSpacing: {
+        display: "-0.03em",
+      },
       borderRadius: {
         lg: "0.625rem",
         xl: "0.875rem",
@@ -74,19 +78,17 @@ const config: Config = {
         "3xl": "1.5rem",
       },
       boxShadow: {
-        card: "0 1px 0 0 rgba(255,255,255,0.6) inset, 0 10px 26px -14px rgba(36,31,24,0.16)",
-        raised: "0 1px 0 0 rgba(255,255,255,0.7) inset, 0 22px 50px -22px rgba(36,31,24,0.22)",
-        glow: "0 0 0 1px rgba(237,113,80,0.35), 0 0 40px -8px rgba(237,113,80,0.4)",
-        "glow-aqua": "0 0 0 1px rgba(90,151,214,0.35), 0 0 40px -8px rgba(90,151,214,0.4)",
-        focus: "0 0 0 2px rgba(241,233,216,1), 0 0 0 4px rgba(237,113,80,0.6)",
+        card: "0 1px 2px 0 rgba(36,31,24,0.05)",
+        raised: "0 2px 8px -2px rgba(36,31,24,0.08)",
+        offset: "3px 3px 0 0 #241F18",
+        "offset-iris": "3px 3px 0 0 #ED7150",
+        focus: "0 0 0 2px #FAF9F7, 0 0 0 4px rgba(237,113,80,0.6)",
       },
       backgroundImage: {
         "iris-gradient": "linear-gradient(135deg, #F0BE4D 0%, #ED7150 92%)",
         "iris-soft": "linear-gradient(135deg, rgba(237,113,80,0.14), rgba(240,190,77,0.10))",
         "grid-faint":
-          "linear-gradient(rgba(36,31,24,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(36,31,24,0.035) 1px, transparent 1px)",
-        "radial-iris":
-          "radial-gradient(60% 50% at 50% 0%, rgba(240,190,77,0.14), transparent 70%)",
+          "linear-gradient(rgba(36,31,24,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(36,31,24,0.025) 1px, transparent 1px)",
       },
       backgroundSize: {
         grid: "44px 44px",

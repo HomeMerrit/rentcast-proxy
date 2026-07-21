@@ -53,11 +53,11 @@ export function FileDropzone({
         className={cn(
           "relative flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed px-6 py-10 text-center transition-all duration-200",
           drag
-            ? "border-iris-400/70 bg-iris-500/[0.07] shadow-[0_0_0_3px_rgba(237,113,80,0.12)]"
+            ? "border-iris-500 bg-iris-50"
             : "border-line-strong bg-surface-inset/60 hover:border-line-strong hover:bg-surface-inset"
         )}
       >
-        <div className="grid h-12 w-12 place-items-center rounded-2xl bg-iris-soft text-iris-300">
+        <div className="grid h-12 w-12 place-items-center rounded-2xl bg-iris-soft text-iris-600">
           <UploadCloud className="h-6 w-6" />
         </div>
         <div>
@@ -112,7 +112,7 @@ export function FileDropzone({
                 key={f.name + f.size}
                 className="flex items-center gap-2.5 rounded-lg border border-line bg-surface-inset px-3 py-2"
               >
-                <FileText className="h-4 w-4 shrink-0 text-iris-300" />
+                <FileText className="h-4 w-4 shrink-0 text-iris-600" />
                 <span className="min-w-0 flex-1 truncate text-xs text-content">{f.name}</span>
                 <span className="shrink-0 text-2xs text-content-subtle">
                   {readableBytes(f.size)}

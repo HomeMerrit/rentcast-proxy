@@ -49,7 +49,7 @@ export function XpBar({ growth: g, className }: { growth: Growth; className?: st
   return (
     <div className={cn("h-1.5 w-full overflow-hidden rounded-full bg-surface-inset", className)}>
       <div
-        className="h-full rounded-full bg-iris-gradient transition-[width] duration-700 ease-out"
+        className="h-full rounded-full bg-iris-500 transition-[width] duration-700 ease-out"
         style={{ width: `${Math.max(g.xp > 0 ? 6 : 0, g.pct)}%` }}
       />
     </div>

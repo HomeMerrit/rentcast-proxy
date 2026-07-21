@@ -66,14 +66,14 @@ export function SkillPicker({
       <div>
         <div className="mb-2 flex items-center justify-between">
           <span className="flex items-center gap-1.5 text-sm font-medium text-content">
-            <Sparkles className="h-4 w-4 text-iris-300" />
+            <Sparkles className="h-4 w-4 text-iris-600" />
             Recommended for {department || "this role"}
           </span>
           {recommended.length > 0 && (
             <button
               type="button"
               onClick={addAll}
-              className="inline-flex items-center gap-1 text-2xs font-medium text-iris-300 hover:text-iris-200"
+              className="inline-flex items-center gap-1 text-2xs font-medium text-iris-600 hover:text-iris-500"
             >
               <Wand2 className="h-3 w-3" /> Add all
             </button>
@@ -141,7 +141,7 @@ export function SkillPicker({
                 <span
                   className={cn(
                     "w-9 shrink-0 text-right text-xs font-medium tabular-nums",
-                    v.proficiency >= 75 ? "text-positive" : v.proficiency >= 45 ? "text-iris-300" : "text-content-muted"
+                    v.proficiency >= 75 ? "text-positive" : v.proficiency >= 45 ? "text-iris-600" : "text-content-muted"
                   )}
                 >
                   {v.proficiency}

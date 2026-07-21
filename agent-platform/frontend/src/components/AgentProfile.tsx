@@ -481,7 +481,7 @@ export function AgentProfile({ agent }: Props) {
                 onClick={() => setRunOpen(true)}
                 disabled={isAgentBusy}
                 title={isAgentBusy ? "This agent is busy right now" : "Give this agent a job"}
-                className="rounded-xl bg-iris-gradient px-4 py-2 text-sm font-medium text-white shadow-[0_8px_24px_-10px_rgba(237,113,80,0.8)] transition-transform active:scale-95 disabled:opacity-40"
+                className="btn-cta px-4 py-2 text-sm disabled:opacity-40"
               >
                 {isAgentBusy ? "Working…" : "Give a job"}
               </button>

@@ -33,7 +33,7 @@ export function TeamDashboard({ agents }: Props) {
             <HumanInbox />
             <Link
               href="/agents/new"
-              className="inline-flex h-9 items-center gap-1.5 rounded-xl bg-iris-gradient px-3.5 text-sm font-medium text-white shadow-[0_8px_24px_-10px_rgba(237,113,80,0.8)] transition-transform active:scale-95"
+              className="btn-cta h-9 px-4 text-sm"
             >
               <Plus className="h-4 w-4" /> New agent
             </Link>
@@ -67,7 +67,7 @@ export function TeamDashboard({ agents }: Props) {
           ))}
           <Link
             href="/agents/new"
-            className="group flex min-h-[168px] flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-line-strong bg-content/[0.03] text-content-subtle transition-all hover:border-iris-400/50 hover:bg-iris-500/[0.04] hover:text-iris-300"
+            className="group flex min-h-[168px] flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-line-strong bg-content/[0.03] text-content-subtle transition-all hover:border-iris-400/50 hover:bg-iris-500/[0.04] hover:text-iris-600"
           >
             <span className="grid h-11 w-11 place-items-center rounded-xl bg-content/[0.05] transition-colors group-hover:bg-iris-soft">
               <Plus className="h-5 w-5" />

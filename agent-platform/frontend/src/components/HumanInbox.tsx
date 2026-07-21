@@ -162,7 +162,7 @@ export default function HumanInbox() {
                       <button
                         onClick={() => handleReply(msg)}
                         disabled={!replies[msg.id]?.trim() || sending[msg.id]}
-                        className="w-full rounded-lg bg-iris-gradient py-1.5 text-sm font-medium text-white transition-transform active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
+                        className="btn-cta w-full py-1.5 text-sm disabled:cursor-not-allowed"
                       >
                         {sending[msg.id] ? "Sending…" : "Reply"}
                       </button>

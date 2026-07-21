@@ -42,10 +42,7 @@ export function AccountMenu() {
         aria-haspopup="menu"
         aria-expanded={open}
       >
-        <span
-          className="grid h-6 w-6 place-items-center rounded-lg text-xs font-bold text-white"
-          style={{ background: "linear-gradient(135deg,#F0BE4D 0%,#ED7150 92%)" }}
-        >
+        <span className="grid h-6 w-6 place-items-center rounded-full bg-iris-500 text-xs font-bold text-white">
           {initial}
         </span>
         <span className="hidden max-w-[10rem] truncate font-medium text-content sm:inline">{label}</span>

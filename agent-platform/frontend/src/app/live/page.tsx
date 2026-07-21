@@ -19,7 +19,7 @@ import type { Agent, AGUIEvent } from "@/types/agent";
 function describe(e: AGUIEvent): { text: string; tone: string } {
   const d = e.data || {};
   switch (e.type) {
-    case "RUN_STARTED": return { text: `started ${(d.task_type as string) || "a task"}`, tone: "text-iris-300" };
+    case "RUN_STARTED": return { text: `started ${(d.task_type as string) || "a task"}`, tone: "text-iris-600" };
     case "RUN_FINISHED": return { text: `finished the job`, tone: "text-positive" };
     case "RUN_ERROR": return { text: `errored`, tone: "text-danger" };
     case "TOOL_CALL_START": return { text: `used ${(d.tool_name as string) || "a tool"}`, tone: "text-warning" };
@@ -27,7 +27,7 @@ function describe(e: AGUIEvent): { text: string; tone: string } {
     case "CUSTOM":
       if (d.subtype === "REFLECTION") return { text: "reflected on its work", tone: "text-content-muted" };
       if (d.subtype === "MEMORY_RETRIEVED") return { text: `recalled ${(d.count as number) || 0} memories`, tone: "text-content-muted" };
-      if (d.subtype === "A2A_SENT") return { text: `messaged ${(d.to_agent as string) || "an agent"}`, tone: "text-iris-300" };
+      if (d.subtype === "A2A_SENT") return { text: `messaged ${(d.to_agent as string) || "an agent"}`, tone: "text-iris-600" };
       if (d.subtype === "HUMAN_NOTIFIED") return { text: "asked a human", tone: "text-warning" };
       return { text: "did something", tone: "text-content-muted" };
     default: return { text: "", tone: "text-content-muted" };
@@ -75,7 +75,7 @@ export default function LivePage() {
               <Radio className="h-3 w-3" /> {fleet.isConnected ? "Streaming" : "Reconnecting…"}
             </span>
             <HumanInbox />
-            <Link href="/agents/new" className="inline-flex h-9 items-center gap-1.5 rounded-xl bg-iris-gradient px-3.5 text-sm font-medium text-white shadow-[0_8px_24px_-10px_rgba(237,113,80,0.8)] transition-transform active:scale-95">
+            <Link href="/agents/new" className="btn-cta h-9 px-4 text-sm">
               <Plus className="h-4 w-4" /> Hire
             </Link>
           </div>
@@ -127,12 +127,12 @@ export default function LivePage() {
               const status = live?.status ?? a.status;
               const busy = status === "active" || status === "thinking";
               return (
-                <Card key={a.id} className={cn("p-4 transition-all", busy && "border-iris-500/40 shadow-glow")}>
+                <Card key={a.id} className={cn("p-4 transition-all", busy && "border-iris-500/50")}>
                   <div className="flex items-center gap-3">
                     <AgentAvatar seed={a.avatar_seed} url={a.avatar_url} name={a.name} status={status} size={40} />
                     <div className="min-w-0 flex-1">
                       <span className="flex items-center gap-1.5">
-                        <Link href={`/agents/${a.id}`} className="truncate font-display text-sm font-semibold text-content hover:text-iris-200">{a.name}</Link>
+                        <Link href={`/agents/${a.id}`} className="truncate font-display text-sm font-semibold text-content hover:text-iris-500">{a.name}</Link>
                         <KitChip agent={a} />
                       </span>
                       <p className="truncate text-2xs text-content-subtle">{a.title}</p>
@@ -151,7 +151,7 @@ export default function LivePage() {
                         {busy && <span className="ml-0.5 inline-block h-3 w-1 animate-pulse bg-iris-400 align-middle" />}
                       </p>
                     ) : busy ? (
-                      <span className="inline-flex items-center gap-1.5 text-xs text-iris-300">
+                      <span className="inline-flex items-center gap-1.5 text-xs text-iris-600">
                         <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-iris-400" /> thinking…
                       </span>
                     ) : (
@@ -168,7 +168,7 @@ export default function LivePage() {
             })}
             {agents.length === 0 && (
               <Card className="col-span-full grid place-items-center p-10 text-sm text-content-subtle">
-                No workers yet. <Link href="/agents/new" className="ml-1 text-iris-300">Hire one →</Link>
+                No workers yet. <Link href="/agents/new" className="ml-1 text-iris-600">Hire one →</Link>
               </Card>
             )}
           </div>
@@ -176,7 +176,7 @@ export default function LivePage() {
           {/* global event ticker */}
           <Card className="p-5">
             <h3 className="mb-3 flex items-center gap-1.5 font-display text-sm font-semibold text-content">
-              <Zap className="h-4 w-4 text-iris-300" /> Event stream
+              <Zap className="h-4 w-4 text-iris-600" /> Event stream
             </h3>
             <div className="max-h-[560px] space-y-1.5 overflow-y-auto pr-1">
               {namedEvents.length === 0 && (

@@ -41,7 +41,7 @@ export default function NetworkPage() {
           </div>
           <div className="flex items-center gap-2">
             <HumanInbox />
-            <Link href="/agents/new" className="inline-flex h-9 items-center gap-1.5 rounded-xl bg-iris-gradient px-3.5 text-sm font-medium text-white shadow-[0_8px_24px_-10px_rgba(237,113,80,0.8)] transition-transform active:scale-95">
+            <Link href="/agents/new" className="btn-cta h-9 px-4 text-sm">
               <Plus className="h-4 w-4" /> Hire
             </Link>
           </div>
@@ -119,7 +119,7 @@ export default function NetworkPage() {
           {/* recent A2A messages */}
           <Card className="p-5">
             <h3 className="mb-3 flex items-center gap-1.5 font-display text-sm font-semibold text-content">
-              <MessageSquare className="h-4 w-4 text-iris-300" /> Recent hand-offs
+              <MessageSquare className="h-4 w-4 text-iris-600" /> Recent hand-offs
             </h3>
             <div className="max-h-[520px] space-y-2 overflow-y-auto pr-1">
               {graph?.recent.length === 0 && (

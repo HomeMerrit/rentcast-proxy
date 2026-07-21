@@ -119,7 +119,7 @@ export function CommandCenter() {
             <HumanInbox />
             <Link
               href="/agents/new"
-              className="inline-flex h-9 items-center gap-1.5 rounded-xl bg-iris-gradient px-3.5 text-sm font-medium text-white shadow-[0_8px_24px_-10px_rgba(237,113,80,0.8)] transition-transform active:scale-95"
+              className="btn-cta h-9 px-4 text-sm"
             >
               <Plus className="h-4 w-4" /> Hire
             </Link>
@@ -158,7 +158,7 @@ export function CommandCenter() {
               <div className="pointer-events-none absolute inset-x-0 bottom-4 z-10 flex flex-col items-center gap-1.5">
                 <Link
                   href="/hq"
-                  className="pointer-events-auto rounded-xl bg-iris-gradient px-5 py-2.5 text-sm font-semibold text-white shadow-[0_10px_30px_-10px_rgba(237,113,80,0.9)] transition-transform active:scale-95"
+                  className="btn-cta pointer-events-auto px-6 py-2.5 text-sm font-semibold"
                 >
                   Step inside HQ →
                 </Link>
@@ -413,7 +413,7 @@ function NextStep({
       <div className="ml-auto flex items-center gap-2">
         <button
           onClick={onGiveJob}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-iris-gradient px-3 py-1.5 text-xs font-medium text-white shadow-[0_8px_24px_-12px_rgba(237,113,80,0.8)] transition-transform active:scale-95"
+          className="btn-cta px-3.5 py-1.5 text-xs"
         >
           <Briefcase className="h-3.5 w-3.5" /> Give a job
         </button>
@@ -429,7 +429,7 @@ function NextStep({
 }
 
 const primaryBtn =
-  "inline-flex items-center gap-1.5 rounded-xl bg-iris-gradient px-4 py-2 text-sm font-medium text-white shadow-[0_8px_24px_-10px_rgba(237,113,80,0.8)] transition-transform active:scale-95";
+  "btn-cta px-5 py-2 text-sm";
 
 function Prompt({
   eyebrow, title, body, primary,

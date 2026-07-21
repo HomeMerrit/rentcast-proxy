@@ -21,6 +21,13 @@ body {
   min-height: 100vh;
 }
 
+/* Clay-style headline compression — big type gets tight, punchy tracking */
+h1,
+h2 {
+  letter-spacing: theme("letterSpacing.display");
+  text-wrap: balance;
+}
+
 ::selection {
   background: rgba(237, 113, 80, 0.26);
   color: #241F18;
@@ -58,11 +65,16 @@ body {
   .card-raised {
     @apply rounded-2xl bg-surface-raised border border-line shadow-raised;
   }
+  /* legacy name — now a solid accent (flat fills, no text gradients) */
   .text-gradient {
-    @apply bg-iris-gradient bg-clip-text text-transparent;
+    @apply bg-none text-iris-600;
   }
   .eyebrow {
     @apply text-2xs font-medium uppercase tracking-[0.14em] text-content-subtle;
+  }
+  /* the one CTA treatment: coral pill that lifts onto a hard ink shadow */
+  .btn-cta {
+    @apply inline-flex items-center justify-center gap-1.5 rounded-full bg-iris-500 font-medium text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-iris-600 hover:shadow-offset active:translate-y-0 active:shadow-none disabled:pointer-events-none disabled:opacity-50;
   }
 }
 
@@ -75,11 +87,9 @@ body {
     display: none;
   }
   .app-backdrop {
-    background-image: theme("backgroundImage.radial-iris"),
-      theme("backgroundImage.grid-faint");
-    background-size: auto, 44px 44px;
-    background-position: center top, center top;
-    background-repeat: no-repeat, repeat;
+    background-image: theme("backgroundImage.grid-faint");
+    background-size: 44px 44px;
+    background-position: center top;
   }
   .shimmer {
     position: relative;
