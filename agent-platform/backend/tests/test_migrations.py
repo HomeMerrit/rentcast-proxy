@@ -6,6 +6,7 @@ drift guard so the baseline can never silently fall out of sync with the models:
   * fresh DB              -> `upgrade`: every table + alembic_version + default org
   * existing pre-Alembic  -> `stamp`:  adopt in place, no DDL, data preserved
   * already managed        -> `upgrade` again is a no-op (idempotent)
+  * incomplete schema     -> `rebuild`: quarantine by rename (rows kept), build fresh
   * models == migrations  -> `alembic check` reports no pending changes
 """
 import os
@@ -81,6 +82,45 @@ async def test_existing_predates_alembic_is_stamped_not_rebuilt():
             "SELECT name FROM organizations WHERE id = :id"
         ), {"id": marker})).scalar_one_or_none()
     assert found == "Preexisting"
+
+
+async def test_incomplete_schema_is_quarantined_and_rebuilt():
+    """A DB missing model tables (legacy shape or an interrupted build) must
+    never be stamped: what exists is renamed aside — rows intact — and the
+    baseline builds a complete schema."""
+    await _drop_all()
+    from app.database import Base
+    import app.models_db  # noqa: F401
+    async with test_engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+    marker = str(uuid.uuid4())
+    async with test_engine.begin() as conn:
+        await conn.execute(sa.text(
+            "INSERT INTO organizations (id, name, plan, created_at) "
+            "VALUES (:id, 'LegacyOrg', 'pilot', now())"
+        ), {"id": marker})
+        # Simulate the pre-tenancy production shape: core tables present, the
+        # newer org/user tables gone, no alembic_version.
+        await conn.execute(sa.text("ALTER TABLE organizations RENAME TO organizations__old"))
+        await conn.execute(sa.text('DROP TABLE IF EXISTS users CASCADE'))
+
+    action = await adopt_or_upgrade(test_engine)
+    assert action == "rebuild"
+    tables = await _tables()
+    assert EXPECTED_TABLES.issubset(tables)
+    # existing tables were renamed aside, not dropped — the legacy row survives
+    assert "agents__quarantined" in tables
+    async with TestSession() as db:
+        found = (await db.execute(sa.text(
+            "SELECT name FROM organizations__old WHERE id = :id"
+        ), {"id": marker})).scalar_one_or_none()
+    assert found == "LegacyOrg"
+    # and the fresh schema is genuinely usable: default org seeded
+    async with TestSession() as db:
+        seeded = (await db.execute(sa.text(
+            "SELECT name FROM organizations WHERE id = :id"
+        ), {"id": settings.default_org_id})).scalar_one_or_none()
+    assert seeded == settings.default_org_name
 
 
 async def test_idempotent_second_run_is_noop():
