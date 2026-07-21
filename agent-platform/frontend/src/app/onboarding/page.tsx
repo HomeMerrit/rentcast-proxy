@@ -163,9 +163,17 @@ export default function OnboardingPage() {
 
       <header className="relative z-10 mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
         <Logo />
-        <Link href="/" className="text-xs text-content-subtle hover:text-content-muted">
-          Skip for now
-        </Link>
+        <div className="flex items-center gap-4">
+          <Link href="/" className="text-xs text-content-subtle hover:text-content-muted">
+            Skip for now
+          </Link>
+          <Link
+            href="/login?mode=signin"
+            className="inline-flex h-8 items-center rounded-full border border-line-strong bg-surface px-3.5 text-xs font-medium text-content transition-all hover:-translate-y-0.5 hover:shadow-offset-iris"
+          >
+            Sign in
+          </Link>
+        </div>
       </header>
 
       <div className="relative z-10 mx-auto max-w-6xl px-4 pb-16">

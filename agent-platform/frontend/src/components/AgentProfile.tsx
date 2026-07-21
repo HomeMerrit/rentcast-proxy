@@ -414,9 +414,9 @@ export function AgentProfile({ agent }: Props) {
 
         {/* ── Profile header card ───────────────────────────────────────── */}
         <div className="rounded-2xl border border-line bg-surface-raised p-6 shadow-raised">
-          <div className="flex items-start gap-6">
+          <div className="flex flex-col items-start gap-6 sm:flex-row">
             {/* live 3D mascot — spins slowly, wears the agent's accent, plays its status */}
-            <div className="relative h-44 w-40 shrink-0 overflow-hidden rounded-2xl bg-surface-inset ring-1 ring-black/5">
+            <div className="relative mx-auto h-44 w-40 shrink-0 overflow-hidden rounded-2xl bg-surface-inset ring-1 ring-black/5 sm:mx-0">
               <ApeTurntable
                 status={APE_STATUS[liveStatus] ?? "idle"}
                 accent={avatarHue(agent.avatar_seed || agent.name)[0]}
@@ -443,7 +443,7 @@ export function AgentProfile({ agent }: Props) {
                 <p className="mt-3 text-sm leading-relaxed text-content-muted">{agent.bio}</p>
               )}
 
-              <div className="mt-4 flex items-center gap-6 text-sm">
+              <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm">
                 <div className="text-center">
                   <div className="font-display text-xl font-semibold tabular-nums text-content">
                     {agent.task_count.toLocaleString()}

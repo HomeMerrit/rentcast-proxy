@@ -46,13 +46,15 @@ export function ApeTurntable({
       >
         {/* far enough back that every clip + earned gear (crown tops ~3.2) keeps headroom */}
         <PerspectiveCamera makeDefault fov={34} position={[0, 0.5, 7.0]} near={0.1} far={40} />
-        <ambientLight intensity={0.55} color="#fff3e2" />
+        {/* soft wrap rig: one gentle key + ambient + hemisphere fill so the
+            blocky faces never snap bright/dark while the model rotates */}
+        <ambientLight intensity={0.8} color="#fff3e2" />
         <directionalLight
-          position={[-4, 6, 5]} intensity={2.2} color="#fff7ee" castShadow
+          position={[-4, 6, 5]} intensity={1.5} color="#fff7ee" castShadow
           shadow-mapSize={[1024, 1024]} shadow-bias={-0.0003} shadow-normalBias={0.05} shadow-radius={5}
         />
-        <directionalLight position={[4.5, 3, 3]} intensity={0.8} color="#ffd9b0" />
-        <directionalLight position={[0, 5, -5]} intensity={1.0} />
+        <directionalLight position={[4.5, 3, 3]} intensity={0.6} color="#ffd9b0" />
+        <hemisphereLight args={["#fff7ee", "#caa27a", 0.55]} />
         {/* character centered on the camera axis (ape is ~2.2 tall + FX above) */}
         <group position={[0, -1.45, 0]}>
           <Suspense fallback={null}>

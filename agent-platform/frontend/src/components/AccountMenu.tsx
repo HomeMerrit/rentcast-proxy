@@ -1,10 +1,11 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getWorkspace, getApiKey, clearApiKey } from "@/lib/auth";
 
-/** Workspace chip + sign-out. Renders nothing until a key is present (keeps the
- *  frictionless demo clean; appears once a real workspace is signed in). */
+/** Workspace chip + sign-out when signed in; a quiet Sign in link otherwise,
+ *  so return visitors always have a way back into their workspace. */
 export function AccountMenu() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -25,7 +26,15 @@ export function AccountMenu() {
     return () => document.removeEventListener("mousedown", onDoc);
   }, []);
 
-  if (!authed) return null;
+  if (!authed)
+    return (
+      <Link
+        href="/login?mode=signin"
+        className="inline-flex h-9 items-center rounded-full border border-line-strong bg-surface px-4 text-sm font-medium text-content transition-all hover:-translate-y-0.5 hover:shadow-offset-iris"
+      >
+        Sign in
+      </Link>
+    );
   const label = workspace || "Workspace";
   const initial = label.trim().charAt(0).toUpperCase() || "W";
 

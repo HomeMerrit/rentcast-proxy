@@ -157,10 +157,11 @@ export function ApeworksExteriorScene({
       <Suspense fallback={null}>
         <ExteriorShell />
         {onEnterHq && <EntrancePortal onEnter={onEnterHq} />}
-        {/* greeter at the door, matching AGENT_SLOT_DOOR in the GLB */}
+        {/* greeter at the door, matching AGENT_SLOT_DOOR in the GLB; idle so
+            the entrance doesn't strobe with status FX on the hero */}
         <ApeAgentGlb
           id="greeter"
-          status="waiting"
+          status="idle"
           position={[3.2, 0.75, 6.7]}
           rotation={[0, -0.3, 0]}
           scale={0.85}

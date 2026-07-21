@@ -66,9 +66,10 @@ function WaitingFx() {
   const hand = useRef<THREE.Mesh>(null);
   useFrame(({ clock }) => {
     const t = clock.elapsedTime;
-    ring.current?.scale.setScalar(1.075 + Math.sin(t * 2.2) * 0.075);
+    // gentle breathing only — a bigger pulse throbs across the bloom threshold
+    ring.current?.scale.setScalar(1.025 + Math.sin(t * 2.2) * 0.025);
     // Clock-hand orbiter, negative angle so it reads as clockwise face-on.
-    hand.current?.position.set(Math.cos(-t * 1.4) * 0.3, Math.sin(-t * 1.4) * 0.3, 0);
+    hand.current?.position.set(Math.cos(-t * 1.1) * 0.3, Math.sin(-t * 1.1) * 0.3, 0);
   });
   return (
     <Billboard>

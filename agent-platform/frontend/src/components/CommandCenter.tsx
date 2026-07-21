@@ -382,18 +382,18 @@ function NextStep({
   // Something is running → celebrate + point at the live floor.
   if (activeCount > 0) {
     return (
-      <div className="flex items-center gap-3 rounded-xl border border-positive/30 bg-positive-soft px-4 py-3">
+      <div className="flex flex-wrap items-center gap-3 rounded-xl border border-positive/30 bg-positive-soft px-4 py-3">
         <span className="relative flex h-2 w-2 shrink-0">
           <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-positive opacity-75" />
           <span className="relative inline-flex h-2 w-2 rounded-full bg-positive" />
         </span>
-        <p className="text-sm text-content">
+        <p className="min-w-0 flex-1 text-sm text-content">
           <span className="font-medium">{activeCount} worker{activeCount > 1 ? "s" : ""} at work now.</span>{" "}
           <span className="text-content-muted">See the work and hand-offs in real time.</span>
         </p>
         <Link
           href="/live"
-          className="ml-auto inline-flex items-center gap-1.5 rounded-lg border border-line bg-surface px-3 py-1.5 text-xs font-medium text-content transition-colors hover:border-line-strong"
+          className="ml-auto inline-flex items-center gap-1.5 whitespace-nowrap rounded-lg border border-line bg-surface px-3 py-1.5 text-xs font-medium text-content transition-colors hover:border-line-strong"
         >
           <Radio className="h-3.5 w-3.5 text-positive" /> Watch the floor
         </Link>
@@ -445,7 +445,9 @@ function Prompt({
           <h2 className="mt-1 font-display text-xl font-semibold tracking-tight text-content">{title}</h2>
           <p className="mt-1 max-w-xl text-sm text-content-muted">{body}</p>
         </div>
-        <div className="shrink-0">{primary}</div>
+        {/* nowrap so a tight row pushes the action onto its own line instead of
+            squeezing the label into a multi-line button */}
+        <div className="shrink-0 whitespace-nowrap">{primary}</div>
       </div>
     </div>
   );

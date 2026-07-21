@@ -72,8 +72,8 @@ export default function HumanInbox() {
 
       {/* Drawer */}
       <div
-        className={`fixed right-0 top-0 z-50 h-full w-full max-w-md transform border-l border-line bg-surface shadow-raised transition-transform duration-300 ${
-          open ? "translate-x-0" : "translate-x-full"
+        className={`fixed right-0 top-0 z-50 h-full w-full max-w-md transform border-l border-line bg-surface shadow-raised transition-[transform,visibility] duration-300 ${
+          open ? "visible translate-x-0" : "invisible translate-x-full"
         }`}
       >
         <div className="flex h-full flex-col">
