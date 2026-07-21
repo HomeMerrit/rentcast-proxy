@@ -2,16 +2,21 @@
   PASS health 200  200
   PASS skills catalog  10 departments
   PASS skills recommend Research  10 skills
-  FAIL company create  500
-  FAIL agent create  500
-  FAIL agent has avatar_url
+  PASS company create  201
+  PASS document upload+ingest  status=201 chunks=3
+  PASS agent create  201
+  PASS agent has avatar_url
   PASS agent linked to company
-  FAIL stats overview  agents=None cost=None
-  FAIL stats agents  500
-  FAIL stats activity  500
-  FAIL stats timeseries  points=0
-  FAIL stats network  nodes=0 edges=0
-  FAIL fleet stream connect  status=500 first={"detail":"Internal server error","request_id":"9c875436-11b
+  PASS agent add skills  skills=['Debugging', 'Testing']
+  PASS agent patch  200
+  PASS company documents list
+  PASS agent delete  204
+  PASS stats overview  agents=0 cost=0.0
+  PASS stats agents  200
+  PASS stats activity  200
+  PASS stats timeseries  points=14
+  PASS stats network  nodes=0 edges=0
+  PASS fleet stream connect  status=200 first=data: {"type": "CONNECTED", "scope": "fleet"}
 
-=== 4/13 checks passed ===
-RESULT=FAIL 4/13
+=== 18/18 checks passed ===
+RESULT=PASS 18/18
