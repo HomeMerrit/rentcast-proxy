@@ -39,7 +39,7 @@
   $ railway up --detach   (cwd=/home/runner/work/rentcast-proxy/rentcast-proxy/agent-platform/backend)
     Indexing...
     Uploading...
-      Build Logs: https://railway.com/project/311fa837-720a-4a33-9439-28e7c853bd7a/service/a7402d3d-8436-4578-80ae-41e7bede5bb4?id=f721dc54-17b6-4b59-8fdd-386bf76a773f&
+      Build Logs: https://railway.com/project/311fa837-720a-4a33-9439-28e7c853bd7a/service/a7402d3d-8436-4578-80ae-41e7bede5bb4?id=ffae9f8b-cd6d-4d23-afa7-19353635a175&
   [exit 0]
 
 === Deploy celery ===
@@ -55,7 +55,7 @@
   $ railway up --detach   (cwd=/home/runner/work/rentcast-proxy/rentcast-proxy/agent-platform/backend)
     Indexing...
     Uploading...
-      Build Logs: https://railway.com/project/311fa837-720a-4a33-9439-28e7c853bd7a/service/1403ebc4-65e8-4137-91c3-4a6a0f31af46?id=2c3ff8aa-360f-402a-bf8a-e1913eb30bac&
+      Build Logs: https://railway.com/project/311fa837-720a-4a33-9439-28e7c853bd7a/service/1403ebc4-65e8-4137-91c3-4a6a0f31af46?id=665c3d41-fd58-4b76-bdb5-e8d485539293&
   [exit 0]
 
 === Deploy celery-beat ===
@@ -71,7 +71,7 @@
   $ railway up --detach   (cwd=/home/runner/work/rentcast-proxy/rentcast-proxy/agent-platform/backend)
     Indexing...
     Uploading...
-      Build Logs: https://railway.com/project/311fa837-720a-4a33-9439-28e7c853bd7a/service/01aefb60-2429-47bc-85ca-da2b6b2f114e?id=5282842f-3804-45c8-836a-1bec7766cd41&
+      Build Logs: https://railway.com/project/311fa837-720a-4a33-9439-28e7c853bd7a/service/01aefb60-2429-47bc-85ca-da2b6b2f114e?id=5963d77e-46bf-4d6c-a19d-46ca2c741207&
   [exit 0]
 
 === Deploy frontend ===
@@ -87,14 +87,14 @@
   $ railway up --detach   (cwd=/home/runner/work/rentcast-proxy/rentcast-proxy/agent-platform/frontend)
     Indexing...
     Uploading...
-      Build Logs: https://railway.com/project/311fa837-720a-4a33-9439-28e7c853bd7a/service/129956d5-6cf1-422f-9096-57d10d956837?id=5fd243aa-3036-42a9-bc43-ef22fb40558d&
+      Build Logs: https://railway.com/project/311fa837-720a-4a33-9439-28e7c853bd7a/service/129956d5-6cf1-422f-9096-57d10d956837?id=9c6ce5f7-c442-4c0d-b909-5e10291e7be8&
   [exit 0]
 
 === Poll deployment status (30s) ===
   celery-beat    BUILDING
-  frontend       BUILDING
-  celery         SUCCESS
+  frontend       INITIALIZING
+  celery         INITIALIZING
   Redis          SUCCESS
   Postgres       SUCCESS
-  backend        SUCCESS
+  backend        INITIALIZING
   qdrant         SUCCESS
