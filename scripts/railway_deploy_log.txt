@@ -17,7 +17,7 @@
 === Railway CLI diagnostics ===
 
   $ railway --version
-    railway 5.27.1
+    railway 5.27.2
   [exit 0]
 
   $ railway whoami
@@ -39,7 +39,7 @@
   $ railway up --detach   (cwd=/home/runner/work/rentcast-proxy/rentcast-proxy/agent-platform/backend)
     Indexing...
     Uploading...
-      Build Logs: https://railway.com/project/311fa837-720a-4a33-9439-28e7c853bd7a/service/a7402d3d-8436-4578-80ae-41e7bede5bb4?id=de45c6f8-5868-4702-bf31-53eb526d1057&
+      Build Logs: https://railway.com/project/311fa837-720a-4a33-9439-28e7c853bd7a/service/a7402d3d-8436-4578-80ae-41e7bede5bb4?id=f721dc54-17b6-4b59-8fdd-386bf76a773f&
   [exit 0]
 
 === Deploy celery ===
@@ -55,7 +55,7 @@
   $ railway up --detach   (cwd=/home/runner/work/rentcast-proxy/rentcast-proxy/agent-platform/backend)
     Indexing...
     Uploading...
-      Build Logs: https://railway.com/project/311fa837-720a-4a33-9439-28e7c853bd7a/service/1403ebc4-65e8-4137-91c3-4a6a0f31af46?id=b6f8d27e-8736-408e-8285-dfa2c9c9049d&
+      Build Logs: https://railway.com/project/311fa837-720a-4a33-9439-28e7c853bd7a/service/1403ebc4-65e8-4137-91c3-4a6a0f31af46?id=2c3ff8aa-360f-402a-bf8a-e1913eb30bac&
   [exit 0]
 
 === Deploy celery-beat ===
@@ -71,7 +71,7 @@
   $ railway up --detach   (cwd=/home/runner/work/rentcast-proxy/rentcast-proxy/agent-platform/backend)
     Indexing...
     Uploading...
-      Build Logs: https://railway.com/project/311fa837-720a-4a33-9439-28e7c853bd7a/service/01aefb60-2429-47bc-85ca-da2b6b2f114e?id=c1e249ea-df41-43b6-9190-87ee18232c90&
+      Build Logs: https://railway.com/project/311fa837-720a-4a33-9439-28e7c853bd7a/service/01aefb60-2429-47bc-85ca-da2b6b2f114e?id=5282842f-3804-45c8-836a-1bec7766cd41&
   [exit 0]
 
 === Deploy frontend ===
@@ -87,13 +87,13 @@
   $ railway up --detach   (cwd=/home/runner/work/rentcast-proxy/rentcast-proxy/agent-platform/frontend)
     Indexing...
     Uploading...
-      Build Logs: https://railway.com/project/311fa837-720a-4a33-9439-28e7c853bd7a/service/129956d5-6cf1-422f-9096-57d10d956837?id=28f12794-3bea-4442-bba5-802fe0aad94b&
+      Build Logs: https://railway.com/project/311fa837-720a-4a33-9439-28e7c853bd7a/service/129956d5-6cf1-422f-9096-57d10d956837?id=5fd243aa-3036-42a9-bc43-ef22fb40558d&
   [exit 0]
 
 === Poll deployment status (30s) ===
-  celery-beat    DEPLOYING
+  celery-beat    BUILDING
   frontend       BUILDING
-  celery         DEPLOYING
+  celery         SUCCESS
   Redis          SUCCESS
   Postgres       SUCCESS
   backend        SUCCESS
