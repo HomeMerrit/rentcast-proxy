@@ -1,227 +1,965 @@
 Services: {"celery-beat": "01aefb60-2429-47bc-85ca-da2b6b2f114e", "frontend": "129956d5-6cf1-422f-9096-57d10d956837", "celery": "1403ebc4-65e8-4137-91c3-4a6a0f31af46", "Redis": "2066b31c-4654-45f0-bb24-d0f764005e64", "Postgres": "44c5d981-0795-4ac6-b80d-ac44ed3cd21d", "backend": "a7402d3d-8436-4578-80ae-41e7bede5bb4", "qdrant": "b3b21715-5351-44b6-bed7-811c5f854ac6"}
 
-########## backend : SUCCESS (deployment 6696f88d-9652-48da-be55-1a7aee571a35) ##########
+########## backend : SUCCESS (deployment 421c70b0-7bb2-47fd-96c7-db42342784bc) ##########
 ---- BUILD LOGS (backend) ----
-  scheduling build on Metal builder "builder-dmpfyc"
-  scheduling build on Metal builder "builder-dmpfyc"
+  Setting up libpng16-16t64:amd64 (1.6.48-1+deb13u5) ...
+
+  Setting up libsensors5:amd64 (1:3.6.2-2) ...
+
+  Setting up libvulkan1:amd64 (1.4.309.0-1) ...
+
+  Setting up fonts-ipafont-gothic (00303-23) ...
+
+  update-alternatives: using /usr/share/fonts/opentype/ipafont-gothic/ipag.ttf to provide /usr/share/fonts/truetype/fonts-japanese-gothic.ttf (fonts-japanese-gothic.ttf) in auto mode
+
+  Setting up libxshmfence1:amd64 (1.3.3-1) ...
+
+  Setting up at-spi2-common (2.56.2-1+deb13u1) ...
+
+  Setting up libxcb-randr0:amd64 (1.17.0-2+b1) ...
+
+  Setting up fonts-liberation (1:2.1.5-3) ...
+
+  Setting up libx11-6:amd64 (2:1.8.12-1) ...
+
+  Setting up libthai-data (0.1.29-2) ...
+
+  Setting up libxkbfile1:amd64 (1:1.1.0-1+b4) ...
+
+  Setting up libdrm-common (2.4.124-2) ...
+
+  Setting up libxcomposite1:amd64 (1:0.4.6-1) ...
+
+  Setting up libxml2:amd64 (2.12.7+dfsg+really2.9.14-2.1+deb13u3) ...
+
+  Setting up fonts-unifont (1:15.1.01-1) ...
+
+  Setting up libxkbcommon0:amd64 (1.7.0-2) ...
+
+  Setting up libxcb-dri3-0:amd64 (1.17.0-2+b1) ...
+
+  Setting up libllvm19:amd64 (1:19.1.7-3+b1) ...
+
+  Setting up libx11-xcb1:amd64 (2:1.8.12-1) ...
+
+  Setting up libice6:amd64 (2:1.1.1-1) ...
+
+  Setting up libxdamage1:amd64 (1:1.1.6-1+b2) ...
+
+  Setting up libatk1.0-0t64:amd64 (2.56.2-1+deb13u1) ...
+
+  Setting up libxpm4:amd64 (1:3.5.17-1+deb13u1) ...
+
+  Setting up libxrender1:amd64 (1:0.9.12-1) ...
+
+  Setting up fontconfig-config (2.15.0-2.3) ...
+
+  debconf: unable to initialize frontend: Dialog
+debconf: (TERM is not set, so the dialog frontend is not usable.)
+debconf: falling back to frontend: Readline
+
+  debconf: unable to initialize frontend: Readline
+debconf: (Can't locate Term/ReadLine.pm in @INC (you may need to install the Term::ReadLine module) (@INC entries checked: /etc/perl /usr/local/lib/x86_64-linux-gnu/perl/5.40.1 /usr/local/share/perl/5.40.1 /usr/lib/x86_64-linux-gnu/perl5/5.40 /usr/share/perl5 /usr/lib/x86_64-linux-gnu/perl-base /usr/lib/x86_64-linux-gnu/perl/5.40 /usr/share/perl/5.40 /usr/local/lib/site_perl) at /usr/share/perl5/Debconf/FrontEnd/Readline.pm line 8.)
+debconf: falling back to frontend: Teletype
+
+  debconf: unable to initialize frontend: Teletype
+debconf: (This frontend requires a controlling tty.)
+debconf: falling back to frontend: Noninteractive
+
+  Setting up libavahi-common3:amd64 (0.8-16) ...
+
+  Setting up libxext6:amd64 (2:1.3.4-1+b3) ...
+
+  Setting up libnss3:amd64 (2:3.110-1+deb13u3) ...
+
+  Setting up libxxf86vm1:amd64 (1:1.1.4-1+b4) ...
+
+  Setting up libthai0:amd64 (0.1.29-2+b1) ...
+
+  Setting up libfreetype6:amd64 (2.13.3+dfsg-1+deb13u1) ...
+
+  Setting up libxfixes3:amd64 (1:6.0.0-2+b4) ...
+
+  Setting up libxrandr2:amd64 (2:1.5.4-1+b3) ...
+
+  Setting up libdrm2:amd64 (2.4.124-2) ...
+
+  Setting up libharfbuzz0b:amd64 (10.2.0-1+deb13u1) ...
+
+  Setting up libfontconfig1:amd64 (2.15.0-2.3) ...
+
+  Setting up libsm6:amd64 (2:1.2.6-1) ...
+
+  Setting up libxfont2:amd64 (1:2.0.6-1+deb13u1) ...
+
+  Setting up libavahi-client3:amd64 (0.8-16) ...
+
+  Setting up libdrm-amdgpu1:amd64 (2.4.124-2) ...
+
+  Setting up fontconfig (2.15.0-2.3) ...
+
+  Regenerating fonts cache... 
+  done.
+
+  Setting up libxi6:amd64 (2:1.8.2-1) ...
+
+  Setting up libpango-1.0-0:amd64 (1.56.3-1) ...
+
+  Setting up libdrm-intel1:amd64 (2.4.124-2) ...
+
+  Setting up fonts-wqy-zenhei (0.9.45-8) ...
+
+  Setting up xfonts-utils (1:7.7+7) ...
+
+  Setting up libcairo2:amd64 (1.18.4-1+b1) ...
+
+  Setting up libatspi2.0-0t64:amd64 (2.56.2-1+deb13u1) ...
+
+  Setting up libxt6t64:amd64 (1:1.2.1-1.2+b2) ...
+
+  Setting up libcups2t64:amd64 (2.4.10-3+deb13u2) ...
+
+  Setting up xfonts-scalable (1:1.0.3-1.3) ...
+
+  Setting up libatk-bridge2.0-0t64:amd64 (2.56.2-1+deb13u1) ...
+
+  Setting up mesa-libgallium:amd64 (25.0.7-2+deb13u1) ...
+
+  Setting up libxmu6:amd64 (2:1.1.3-3+b4) ...
+
+  Setting up libgbm1:amd64 (25.0.7-2+deb13u1) ...
+
+  Setting up libgl1-mesa-dri:amd64 (25.0.7-2+deb13u1) ...
+
+  Setting up libxaw7:amd64 (2:1.0.16-1) ...
+
+  Setting up libglx-mesa0:amd64 (25.0.7-2+deb13u1) ...
+
+  Setting up libglx0:amd64 (1.7.0-1+b2) ...
+
+  Setting up x11-xkb-utils (7.7+9) ...
+
+  Setting up libgl1:amd64 (1.7.0-1+b2) ...
+
+  Setting up xserver-common (2:21.1.16-1.3+deb13u3) ...
+
+  Setting up xvfb (2:21.1.16-1.3+deb13u3) ...
+
+  Processing triggers for libc-bin (2.41-12+deb13u3) ...
+
+  Downloading Chrome for Testing 149.0.7827.55 (playwright chromium v1228) from https://cdn.playwright.dev/builds/cft/149.0.7827.55/linux64/chrome-linux64.zip
+
+  |                                                                                |   0% of 177 MiB
+
+  |■■■■■■■■                                                                        |  10% of 177 MiB
+
+  |■■■■■■■■■■■■■■■■                                                                |  20% of 177 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 177 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 177 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 177 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 177 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 177 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 177 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 177 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 177 MiB
+
+  Chrome for Testing 149.0.7827.55 (playwright chromium v1228) downloaded to /root/.cache/ms-playwright/chromium-1228
+
+  Downloading FFmpeg (playwright ffmpeg v1011) from https://cdn.playwright.dev/dbazure/download/playwright/builds/ffmpeg/1011/ffmpeg-linux.zip
+
+  |                                                                                |   0% of 2.3 MiB
+
+  |■■■■■■■■                                                                        |  10% of 2.3 MiB
+
+  |■■■■■■■■■■■■■■■■                                                                |  20% of 2.3 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 2.3 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 2.3 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 2.3 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 2.3 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 2.3 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 2.3 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 2.3 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 2.3 MiB
+
+  FFmpeg (playwright ffmpeg v1011) downloaded to /root/.cache/ms-playwright/ffmpeg-1011
+
+  Downloading Chrome Headless Shell 149.0.7827.55 (playwright chromium-headless-shell v1228) from https://cdn.playwright.dev/builds/cft/149.0.7827.55/linux64/chrome-headless-shell-linux64.zip
+
+  |                                                                                |   0% of 114.2 MiB
+
+  |■■■■■■■■                                                                        |  10% of 114.2 MiB
+
+  |■■■■■■■■■■■■■■■■                                                                |  20% of 114.2 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 114.2 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 114.2 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 114.2 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 114.2 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 114.2 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 114.2 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 114.2 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 114.2 MiB
+
+  Chrome Headless Shell 149.0.7827.55 (playwright chromium-headless-shell v1228) downloaded to /root/.cache/ms-playwright/chromium_headless_shell-1228
+
+  [6/7] RUN playwright install chromium --with-deps
+  [7/7] COPY . .
+  [7/7] COPY . .
+  exporting to docker image format
+  exporting to docker image format
+  containerimage.config.digest: sha256:8d633deaef4705570610afd0052cdd7bb1454b44659c444b3163e98e12e61e3e
+  containerimage.digest: sha256:e876c78ce1f325af8a58044c561dafa30f42ffde1260e893ee7f103e490610a2
+  containerimage.descriptor: eyJtZWRpYVR5cGUiOiJhcHBsaWNhdGlvbi92bmQub2NpLmltYWdlLm1hbmlmZXN0LnYxK2pzb24iLCJkaWdlc3QiOiJzaGEyNTY6ZTg3NmM3OGNlMWYzMjVhZjhhNTgwNDRjNTYxZGFmYTMwZjQyZmZkZTEyNjBlODkzZWU3ZjEwM2U0OTA2MTBhMiIsInNpemUiOjIyMDEsImFubm90YXRpb25zIjp7Im9yZy5vcGVuY29udGFpbmVycy5pbWFnZS5jcmVhdGVkIjoiMjAyNi0wNy0yMVQwMTowMjo1MVoifSwicGxhdGZvcm0iOnsiYXJjaGl0ZWN0dXJlIjoiYW1kNjQiLCJvcyI6ImxpbnV4In19
+  image push
+  image push
   image push
 ---- RUNTIME LOGS (backend) ----
-  Starting Container
-  INFO:     Application startup complete.
-  INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
-  INFO:     Started server process [1]
-  INFO:     Waiting for application startup.
-  INFO:     100.64.0.2:43408 - "GET /health HTTP/1.1" 200 OK
-  INFO:     100.64.0.3:29964 - "GET /agents/ HTTP/1.1" 200 OK
-  INFO:     100.64.0.2:43408 - "POST /agents/ HTTP/1.1" 201 Created
-  INFO:     100.64.0.4:48212 - "GET /agents/ HTTP/1.1" 200 OK
-  INFO:     100.64.0.5:31126 - "GET /agents/aea7b301-0c7c-43b5-842c-07f8995973b2 HTTP/1.1" 200 OK
-  INFO:     100.64.0.6:41754 - "POST /agents/aea7b301-0c7c-43b5-842c-07f8995973b2/run HTTP/1.1" 200 OK
-  INFO:     100.64.0.7:51914 - "GET /work-log/aea7b301-0c7c-43b5-842c-07f8995973b2?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.4:60872 - "GET /work-log/aea7b301-0c7c-43b5-842c-07f8995973b2?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.8:13180 - "GET /work-log/aea7b301-0c7c-43b5-842c-07f8995973b2?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.3:11372 - "GET /work-log/aea7b301-0c7c-43b5-842c-07f8995973b2?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.8:19420 - "GET /work-log/aea7b301-0c7c-43b5-842c-07f8995973b2?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.9:33834 - "GET /work-log/aea7b301-0c7c-43b5-842c-07f8995973b2?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.2:51402 - "GET /work-log/aea7b301-0c7c-43b5-842c-07f8995973b2?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.3:58834 - "GET /work-log/aea7b301-0c7c-43b5-842c-07f8995973b2?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.10:50966 - "GET /work-log/aea7b301-0c7c-43b5-842c-07f8995973b2?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.11:22592 - "GET /work-log/aea7b301-0c7c-43b5-842c-07f8995973b2?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.8:42836 - "GET /work-log/aea7b301-0c7c-43b5-842c-07f8995973b2?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.7:56204 - "GET /work-log/aea7b301-0c7c-43b5-842c-07f8995973b2?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.12:31972 - "GET /work-log/aea7b301-0c7c-43b5-842c-07f8995973b2?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.7:47332 - "GET /work-log/aea7b301-0c7c-43b5-842c-07f8995973b2?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.13:22080 - "GET /work-log/aea7b301-0c7c-43b5-842c-07f8995973b2?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.4:27508 - "GET /agents/aea7b301-0c7c-43b5-842c-07f8995973b2 HTTP/1.1" 200 OK
-  INFO:     100.64.0.3:35018 - "GET /agents/ HTTP/1.1" 200 OK
-  INFO:     100.64.0.5:61298 - "GET /agents/20f4227f-d381-4a49-87cb-0442610cb6e1 HTTP/1.1" 200 OK
-  INFO:     100.64.0.15:56032 - "POST /agents/20f4227f-d381-4a49-87cb-0442610cb6e1/run HTTP/1.1" 200 OK
-  INFO:     100.64.0.14:42076 - "GET /health HTTP/1.1" 200 OK
-  INFO:     100.64.0.15:56032 - "GET /agents/ HTTP/1.1" 200 OK
-  INFO:     100.64.0.16:42348 - "POST /agents/ HTTP/1.1" 201 Created
-  INFO:     100.64.0.10:37246 - "GET /work-log/20f4227f-d381-4a49-87cb-0442610cb6e1?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.17:46018 - "GET /work-log/20f4227f-d381-4a49-87cb-0442610cb6e1?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.12:59050 - "GET /work-log/20f4227f-d381-4a49-87cb-0442610cb6e1?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.18:47816 - "GET /work-log/20f4227f-d381-4a49-87cb-0442610cb6e1?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.19:28764 - "GET /work-log/20f4227f-d381-4a49-87cb-0442610cb6e1?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.5:17574 - "GET /work-log/20f4227f-d381-4a49-87cb-0442610cb6e1?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.7:42034 - "GET /work-log/20f4227f-d381-4a49-87cb-0442610cb6e1?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.12:29474 - "GET /work-log/20f4227f-d381-4a49-87cb-0442610cb6e1?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.2:57602 - "GET /work-log/20f4227f-d381-4a49-87cb-0442610cb6e1?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.14:31714 - "GET /work-log/20f4227f-d381-4a49-87cb-0442610cb6e1?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.14:19176 - "GET /work-log/20f4227f-d381-4a49-87cb-0442610cb6e1?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.19:24766 - "GET /work-log/20f4227f-d381-4a49-87cb-0442610cb6e1?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.5:16506 - "GET /work-log/20f4227f-d381-4a49-87cb-0442610cb6e1?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.16:22926 - "GET /work-log/20f4227f-d381-4a49-87cb-0442610cb6e1?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.4:19216 - "GET /work-log/20f4227f-d381-4a49-87cb-0442610cb6e1?limit=5 HTTP/1.1" 200 OK
-  INFO:     100.64.0.5:62696 - "GET /agents/20f4227f-d381-4a49-87cb-0442610cb6e1 HTTP/1.1" 200 OK
-
-########## celery : SUCCESS (deployment fa828545-2c05-47eb-ae89-7ddec8aee4a1) ##########
----- BUILD LOGS (celery) ----
-  scheduling build on Metal builder "builder-zteqqo"
-  scheduling build on Metal builder "builder-zteqqo"
-  image push
----- RUNTIME LOGS (celery) ----
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
-      return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
-      value = await result
-              ^^^^^^^^^^^^
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 546, in _prepare_and_execute
-      self._handle_exception(error)
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 497, in _handle_exception
-      self._adapt_connection._handle_exception(error)
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 780, in _handle_exception
-      raise translated_error from error
-  sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.Error: <class 'asyncpg.exceptions.DataError'>: invalid input for query argument $6: [{'signature': 'EogDCokBCA8YAipAfKN5Vzfr... (expected str, got list)
-  
-  The above exception was the direct cause of the following exception:
-  
-  Traceback (most recent call last):
-    File "/usr/local/lib/python3.12/site-packages/celery/app/trace.py", line 453, in trace_task
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-      R = retval = fun(*args, **kwargs)
-                   ^^^^^^^^^^^^^^^^^^^^
-    File "/app/app/workers/agent_tasks.py", line 15, in run_async
-    File "/usr/local/lib/python3.12/site-packages/celery/app/trace.py", line 736, in __protected_call__
-      return loop.run_until_complete(coro)
-      return self.run(*args, **kwargs)
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-             ^^^^^^^^^^^^^^^^^^^^^^^^^
-    File "/usr/local/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
-    File "/app/app/workers/agent_tasks.py", line 137, in run_agent_task
-      return future.result()
-      raise self.retry(exc=exc, countdown=2 ** self.request.retries)
-             ^^^^^^^^^^^^^^^
-            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    File "/usr/local/lib/python3.12/site-packages/celery/app/task.py", line 736, in retry
-      raise_with_context(exc)
-    File "/app/app/workers/agent_tasks.py", line 135, in run_agent_task
-      return run_async(_run_task_async(agent_id, agent_name, task_type, task_input, model))
-    File "/app/app/workers/agent_tasks.py", line 90, in _run_task_async
-      await db.commit()
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/ext/asyncio/session.py", line 1009, in commit
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 1288, in _prepare_impl
-                  ^^^^^^^^^^^^^^^^^^^^
-      await greenlet_spawn(self.sync_session.commit)
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 1313, in commit
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 203, in greenlet_spawn
-      self._prepare_impl()
-      result = context.switch(value)
-               ^^^^^^^^^^^^^^^^^^^^^
-    File "<string>", line 2, in _prepare_impl
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 2028, in commit
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/orm/state_changes.py", line 139, in _go
-      trans.commit(_to_root=True)
-      ret_value = fn(self, *arg, **kw)
-    File "<string>", line 2, in commit
-                  ^^^^^^^^^^^^^^^^^^^^
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/orm/state_changes.py", line 139, in _go
-      ret_value = fn(self, *arg, **kw)
-      self.session.flush()
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 4352, in flush
-      self._flush(objects)
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 4487, in _flush
-      with util.safe_reraise():
-           ^^^^^^^^^^^^^^^^^^^
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 146, in __exit__
-      raise exc_value.with_traceback(exc_tb)
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 4448, in _flush
-      flush_context.execute()
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/orm/unitofwork.py", line 466, in execute
-      rec.execute(self)
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/orm/unitofwork.py", line 642, in execute
-      util.preloaded.orm_persistence.save_obj(
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/orm/persistence.py", line 93, in save_obj
-      _emit_insert_statements(
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/orm/persistence.py", line 1233, in _emit_insert_statements
-      result = connection.execute(
-               ^^^^^^^^^^^^^^^^^^^
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1418, in execute
-      return meth(
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1986, in _exec_single_context
-             ^^^^^
-      self._handle_dbapi_exception(
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/sql/elements.py", line 515, in _execute_on_connection
-      ret = self._execute_context(
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 2355, in _handle_dbapi_exception
-      return connection._execute_clauseelement(
-            ^^^^^^^^^^^^^^^^^^^^^^
-      raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1846, in _execute_context
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1640, in _execute_clauseelement
-      return self._exec_single_context(
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^
     File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
       self.dialect.do_execute(
     File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 941, in do_execute
       cursor.execute(statement, parameters)
     File "/usr/local/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 568, in execute
       self._adapt_connection.await_(
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
-      return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
-      value = await result
-              ^^^^^^^^^^^^
     File "/usr/local/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 546, in _prepare_and_execute
       self._handle_exception(error)
     File "/usr/local/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 497, in _handle_exception
       self._adapt_connection._handle_exception(error)
     File "/usr/local/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 780, in _handle_exception
       raise translated_error from error
-  sqlalchemy.exc.DBAPIError: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.DataError'>: invalid input for query argument $6: [{'signature': 'EogDCokBCA8YAipAfKN5Vzfr... (expected str, got list)
-  [SQL: INSERT INTO work_log (id, agent_id, task_type, task_input, result, reflection, success, tokens_used, duration_ms, started_at, finished_at) VALUES ($1::UUID, $2::UUID, $3::VARCHAR, $4::JSON, $5::VARCHAR, $6::VARCHAR, $7::BOOLEAN, $8::INTEGER, $9::INTEGER, $10::TIMESTAMP WITH TIME ZONE, $11::TIMESTAMP WITH TIME ZONE)]
-  [parameters: (UUID('ddcd37d5-18f7-42d2-80c7-449e89d9fa14'), UUID('20f4227f-d381-4a49-87cb-0442610cb6e1'), 'research', '{"prompt": "In one sentence, confirm you are an AgentOS agent running live on Railway."}', 'I am an AgentOS agent running live on Railway, ready to assist with your tasks.\n\n**Reflection:** This was a simple self-identification task requiring no external tools—just a direct, one-sentence confirmation as requested.', [{'signature': 'EogDCokBCA8YAipAfKN5Vzfr5+EgDY5XYAYHs0MEGYrpJxLUirM9lL2u2lMBSqMvTgx9BLjVmjuePV5+qQWiRwvbMtafiLhObuQ4SzIPY2xhdWRlLXNvbm5ldC01OABCCHRoaW ... (893 characters truncated) ...  more technical detail (e.g., specifics about the AgentOS/Railway setup) if the user indicates they want depth rather than brevity.', 'type': 'text'}], True, 1504, 7013, datetime.datetime(2026, 7, 17, 1, 5, 47, 641902, tzinfo=datetime.timezone.utc), datetime.datetime(2026, 7, 17, 1, 5, 54, 752736, tzinfo=datetime.timezone.utc))]
-  (Background on this error at: https://sqlalche.me/e/20/dbapi)
-  [2026-07-17 01:06:00,011: INFO/MainProcess] Task app.workers.agent_tasks.health_check[3c3c2189-2ba0-4a77-bfb2-a14c2be5b8eb] received
-  [2026-07-17 01:06:00,022: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[3c3c2189-2ba0-4a77-bfb2-a14c2be5b8eb] succeeded in 0.008926213718950748s: {'status': 'ok'}
-  [2026-07-17 01:07:00,009: INFO/MainProcess] Task app.workers.agent_tasks.health_check[43bd27d5-7d1a-45fc-a609-a7bb7e0bc414] received
-  [2026-07-17 01:07:00,011: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[43bd27d5-7d1a-45fc-a609-a7bb7e0bc414] succeeded in 0.0011940952390432358s: {'status': 'ok'}
-  [2026-07-17 01:08:00,007: INFO/MainProcess] Task app.workers.agent_tasks.health_check[0b0eaa85-a2f2-4d51-b40c-d74662235dcb] received
-  [2026-07-17 01:08:00,012: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[0b0eaa85-a2f2-4d51-b40c-d74662235dcb] succeeded in 0.003946528770029545s: {'status': 'ok'}
+  sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.ProgrammingError: <class 'asyncpg.exceptions.UndefinedTableError'>: relation "organizations" does not exist
+  
+  The above exception was the direct cause of the following exception:
+  
+  Traceback (most recent call last):
+    File "/usr/local/lib/python3.12/site-packages/starlette/middleware/errors.py", line 165, in __call__
+      await self.app(scope, receive, _send)
+    File "/usr/local/lib/python3.12/site-packages/starlette/middleware/cors.py", line 85, in __call__
+      await self.app(scope, receive, send)
+    File "/app/app/observability.py", line 113, in __call__
+      await self.app(scope, receive, send_wrapper)
+    File "/usr/local/lib/python3.12/site-packages/starlette/middleware/base.py", line 185, in __call__
+      with collapse_excgroups():
+           ^^^^^^^^^^^^^^^^^^^^
+    File "/usr/local/lib/python3.12/contextlib.py", line 158, in __exit__
+      self.gen.throw(value)
+    File "/usr/local/lib/python3.12/site-packages/starlette/_utils.py", line 82, in collapse_excgroups
+    File "/usr/local/lib/python3.12/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+      await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+    File "/usr/local/lib/python3.12/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+      raise exc
+      raise exc
+    File "/usr/local/lib/python3.12/site-packages/starlette/middleware/base.py", line 187, in __call__
+    File "/usr/local/lib/python3.12/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+      response = await self.dispatch_func(request, call_next)
+      await app(scope, receive, sender)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/usr/local/lib/python3.12/site-packages/starlette/routing.py", line 715, in __call__
+    File "/app/app/rate_limit.py", line 32, in rate_limit_middleware
+      await self.middleware_stack(scope, receive, send)
+      return await call_next(request)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/usr/local/lib/python3.12/site-packages/starlette/middleware/base.py", line 163, in call_next
+      raise app_exc
+    File "/usr/local/lib/python3.12/site-packages/starlette/middleware/base.py", line 149, in coro
+      await self.app(scope, receive_or_disconnect, send_no_error)
+    File "/usr/local/lib/python3.12/site-packages/starlette/routing.py", line 735, in app
+      await route.handle(scope, receive, send)
+    File "/usr/local/lib/python3.12/site-packages/starlette/routing.py", line 288, in handle
+      await self.app(scope, receive, send)
+    File "/usr/local/lib/python3.12/site-packages/starlette/routing.py", line 76, in app
+      await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+    File "/usr/local/lib/python3.12/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+      raise exc
+    File "/usr/local/lib/python3.12/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+      await app(scope, receive, sender)
+    File "/usr/local/lib/python3.12/site-packages/starlette/routing.py", line 73, in app
+      response = await f(request)
+                 ^^^^^^^^^^^^^^^^
+    File "/usr/local/lib/python3.12/site-packages/fastapi/routing.py", line 291, in app
+      solved_result = await solve_dependencies(
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/usr/local/lib/python3.12/site-packages/fastapi/dependencies/utils.py", line 638, in solve_dependencies
+      solved = await call(**solved_result.values)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/app/app/tenancy.py", line 66, in get_current_org
+      return await _default_org(db)
+             ^^^^^^^^^^^^^^^^^^^^^^
+    File "/app/app/tenancy.py", line 24, in _default_org
+      org = await db.get(Organization, oid)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/ext/asyncio/session.py", line 604, in get
+      return await greenlet_spawn(
+             ^^^^^^^^^^^^^^^^^^^^^
+    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 201, in greenlet_spawn
+      result = context.throw(*sys.exc_info())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 3693, in get
+      return self._get_impl(
+             ^^^^^^^^^^^^^^^
+    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 3873, in _get_impl
+      return self._execute_internal(
+             ^^^^^^^^^^^^^^^^^^^^^^^
+    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 2247, in _execute_internal
+      result: Result[Any] = compile_state_cls.orm_execute_statement(
+    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1986, in _exec_single_context
+      self._handle_exception(error)
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 941, in do_execute
+      cursor.execute(statement, parameters)
+  
+    File "/app/app/observability.py", line 113, in __call__
+      await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+      response = await f(request)
+                 ^^^^^^^^^^^^^^^^
+      return self._get_impl(
+      return connection._execute_clauseelement(
+      return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+  (Background on this error at: https://sqlalche.me/e/20/f405)
+  asyncpg.exceptions.UndefinedTableError: relation "organizations" does not exist
+      self._adapt_connection._handle_exception(error)
+      raise exc
+    File "/usr/local/lib/python3.12/site-packages/starlette/routing.py", line 735, in app
+      org = await org_from_token(token, db)
+             ^^^^^^^^^^^
+      return self._exec_single_context(
+      self._handle_exception(error)
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/usr/local/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 941, in do_execute
+      value = await result
+  
+      await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+      response = await f(request)
+      result = context.throw(*sys.exc_info())
+      return meth(
+      self._adapt_connection.await_(
+  FROM organizations 
+  Railway rate limit of 500 logs/sec reached for replica, update your application to reduce the logging rate. Messages dropped: 1613
 
-########## celery-beat : SUCCESS (deployment 59191d00-6889-4ff3-ba16-e1cfea59fc3a) ##########
+########## celery : SUCCESS (deployment 22f6d781-ddbb-454f-8c5b-c6da7b36ad9f) ##########
+---- BUILD LOGS (celery) ----
+  Setting up libpng16-16t64:amd64 (1.6.48-1+deb13u5) ...
+
+  Setting up libsensors5:amd64 (1:3.6.2-2) ...
+
+  Setting up libvulkan1:amd64 (1.4.309.0-1) ...
+
+  Setting up fonts-ipafont-gothic (00303-23) ...
+
+  update-alternatives: using /usr/share/fonts/opentype/ipafont-gothic/ipag.ttf to provide /usr/share/fonts/truetype/fonts-japanese-gothic.ttf (fonts-japanese-gothic.ttf) in auto mode
+
+  Setting up libxshmfence1:amd64 (1.3.3-1) ...
+
+  Setting up at-spi2-common (2.56.2-1+deb13u1) ...
+
+  Setting up libxcb-randr0:amd64 (1.17.0-2+b1) ...
+
+  Setting up fonts-liberation (1:2.1.5-3) ...
+
+  Setting up libx11-6:amd64 (2:1.8.12-1) ...
+
+  Setting up libthai-data (0.1.29-2) ...
+
+  Setting up libxkbfile1:amd64 (1:1.1.0-1+b4) ...
+
+  Setting up libdrm-common (2.4.124-2) ...
+
+  Setting up libxcomposite1:amd64 (1:0.4.6-1) ...
+
+  Setting up libxml2:amd64 (2.12.7+dfsg+really2.9.14-2.1+deb13u3) ...
+
+  Setting up fonts-unifont (1:15.1.01-1) ...
+
+  Setting up libxkbcommon0:amd64 (1.7.0-2) ...
+
+  Setting up libxcb-dri3-0:amd64 (1.17.0-2+b1) ...
+
+  Setting up libllvm19:amd64 (1:19.1.7-3+b1) ...
+
+  Setting up libx11-xcb1:amd64 (2:1.8.12-1) ...
+
+  Setting up libice6:amd64 (2:1.1.1-1) ...
+
+  Setting up libxdamage1:amd64 (1:1.1.6-1+b2) ...
+
+  Setting up libatk1.0-0t64:amd64 (2.56.2-1+deb13u1) ...
+
+  Setting up libxpm4:amd64 (1:3.5.17-1+deb13u1) ...
+
+  Setting up libxrender1:amd64 (1:0.9.12-1) ...
+
+  Setting up fontconfig-config (2.15.0-2.3) ...
+
+  debconf: unable to initialize frontend: Dialog
+debconf: (TERM is not set, so the dialog frontend is not usable.)
+debconf: falling back to frontend: Readline
+
+  debconf: unable to initialize frontend: Readline
+debconf: (Can't locate Term/ReadLine.pm in @INC (you may need to install the Term::ReadLine module) (@INC entries checked: /etc/perl /usr/local/lib/x86_64-linux-gnu/perl/5.40.1 /usr/local/share/perl/5.40.1 /usr/lib/x86_64-linux-gnu/perl5/5.40 /usr/share/perl5 /usr/lib/x86_64-linux-gnu/perl-base /usr/lib/x86_64-linux-gnu/perl/5.40 /usr/share/perl/5.40 /usr/local/lib/site_perl) at /usr/share/perl5/Debconf/FrontEnd/Readline.pm line 8.)
+debconf: falling back to frontend: Teletype
+
+  debconf: unable to initialize frontend: Teletype
+debconf: (This frontend requires a controlling tty.)
+debconf: falling back to frontend: Noninteractive
+
+  Setting up libavahi-common3:amd64 (0.8-16) ...
+
+  Setting up libxext6:amd64 (2:1.3.4-1+b3) ...
+
+  Setting up libnss3:amd64 (2:3.110-1+deb13u3) ...
+
+  Setting up libxxf86vm1:amd64 (1:1.1.4-1+b4) ...
+
+  Setting up libthai0:amd64 (0.1.29-2+b1) ...
+
+  Setting up libfreetype6:amd64 (2.13.3+dfsg-1+deb13u1) ...
+
+  Setting up libxfixes3:amd64 (1:6.0.0-2+b4) ...
+
+  Setting up libxrandr2:amd64 (2:1.5.4-1+b3) ...
+
+  Setting up libdrm2:amd64 (2.4.124-2) ...
+
+  Setting up libharfbuzz0b:amd64 (10.2.0-1+deb13u1) ...
+
+  Setting up libfontconfig1:amd64 (2.15.0-2.3) ...
+
+  Setting up libsm6:amd64 (2:1.2.6-1) ...
+
+  Setting up libxfont2:amd64 (1:2.0.6-1+deb13u1) ...
+
+  Setting up libavahi-client3:amd64 (0.8-16) ...
+
+  Setting up libdrm-amdgpu1:amd64 (2.4.124-2) ...
+
+  Setting up fontconfig (2.15.0-2.3) ...
+
+  Regenerating fonts cache... 
+  done.
+
+  Setting up libxi6:amd64 (2:1.8.2-1) ...
+
+  Setting up libpango-1.0-0:amd64 (1.56.3-1) ...
+
+  Setting up libdrm-intel1:amd64 (2.4.124-2) ...
+
+  Setting up fonts-wqy-zenhei (0.9.45-8) ...
+
+  Setting up xfonts-utils (1:7.7+7) ...
+
+  Setting up libcairo2:amd64 (1.18.4-1+b1) ...
+
+  Setting up libatspi2.0-0t64:amd64 (2.56.2-1+deb13u1) ...
+
+  Setting up libxt6t64:amd64 (1:1.2.1-1.2+b2) ...
+
+  Setting up libcups2t64:amd64 (2.4.10-3+deb13u2) ...
+
+  Setting up xfonts-scalable (1:1.0.3-1.3) ...
+
+  Setting up libatk-bridge2.0-0t64:amd64 (2.56.2-1+deb13u1) ...
+
+  Setting up mesa-libgallium:amd64 (25.0.7-2+deb13u1) ...
+
+  Setting up libxmu6:amd64 (2:1.1.3-3+b4) ...
+
+  Setting up libgbm1:amd64 (25.0.7-2+deb13u1) ...
+
+  Setting up libgl1-mesa-dri:amd64 (25.0.7-2+deb13u1) ...
+
+  Setting up libxaw7:amd64 (2:1.0.16-1) ...
+
+  Setting up libglx-mesa0:amd64 (25.0.7-2+deb13u1) ...
+
+  Setting up libglx0:amd64 (1.7.0-1+b2) ...
+
+  Setting up x11-xkb-utils (7.7+9) ...
+
+  Setting up libgl1:amd64 (1.7.0-1+b2) ...
+
+  Setting up xserver-common (2:21.1.16-1.3+deb13u3) ...
+
+  Setting up xvfb (2:21.1.16-1.3+deb13u3) ...
+
+  Processing triggers for libc-bin (2.41-12+deb13u3) ...
+
+  Downloading Chrome for Testing 149.0.7827.55 (playwright chromium v1228) from https://cdn.playwright.dev/builds/cft/149.0.7827.55/linux64/chrome-linux64.zip
+
+  |                                                                                |   0% of 177 MiB
+
+  |■■■■■■■■                                                                        |  10% of 177 MiB
+
+  |■■■■■■■■■■■■■■■■                                                                |  20% of 177 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 177 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 177 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 177 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 177 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 177 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 177 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 177 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 177 MiB
+
+  Chrome for Testing 149.0.7827.55 (playwright chromium v1228) downloaded to /root/.cache/ms-playwright/chromium-1228
+
+  Downloading FFmpeg (playwright ffmpeg v1011) from https://cdn.playwright.dev/dbazure/download/playwright/builds/ffmpeg/1011/ffmpeg-linux.zip
+
+  |                                                                                |   0% of 2.3 MiB
+
+  |■■■■■■■■                                                                        |  10% of 2.3 MiB
+
+  |■■■■■■■■■■■■■■■■                                                                |  20% of 2.3 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 2.3 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 2.3 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 2.3 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 2.3 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 2.3 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 2.3 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 2.3 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 2.3 MiB
+
+  FFmpeg (playwright ffmpeg v1011) downloaded to /root/.cache/ms-playwright/ffmpeg-1011
+
+  Downloading Chrome Headless Shell 149.0.7827.55 (playwright chromium-headless-shell v1228) from https://cdn.playwright.dev/builds/cft/149.0.7827.55/linux64/chrome-headless-shell-linux64.zip
+
+  |                                                                                |   0% of 114.2 MiB
+
+  |■■■■■■■■                                                                        |  10% of 114.2 MiB
+
+  |■■■■■■■■■■■■■■■■                                                                |  20% of 114.2 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 114.2 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 114.2 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 114.2 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 114.2 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 114.2 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 114.2 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 114.2 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 114.2 MiB
+
+  Chrome Headless Shell 149.0.7827.55 (playwright chromium-headless-shell v1228) downloaded to /root/.cache/ms-playwright/chromium_headless_shell-1228
+
+  [6/7] RUN playwright install chromium --with-deps
+  [7/7] COPY . .
+  [7/7] COPY . .
+  exporting to docker image format
+  exporting to docker image format
+  containerimage.descriptor: eyJtZWRpYVR5cGUiOiJhcHBsaWNhdGlvbi92bmQub2NpLmltYWdlLm1hbmlmZXN0LnYxK2pzb24iLCJkaWdlc3QiOiJzaGEyNTY6ZTY5YzA3MWIyYWU5Mzc5YTNhNjAwMjJkYzJkZmRmNDMzMTdlZjUwYTNlZThkOWE4ZmQwZDk5ZmU0OGM2YzFmMiIsInNpemUiOjIyMDEsImFubm90YXRpb25zIjp7Im9yZy5vcGVuY29udGFpbmVycy5pbWFnZS5jcmVhdGVkIjoiMjAyNi0wNy0yMVQwMTowMjo1OFoifSwicGxhdGZvcm0iOnsiYXJjaGl0ZWN0dXJlIjoiYW1kNjQiLCJvcyI6ImxpbnV4In19
+  containerimage.config.digest: sha256:b19975548ecc34d70808dcfb8c449b73c5fa0e41da3114377c9dada57fb74624
+  containerimage.digest: sha256:e69c071b2ae9379a3a60022dc2dfdf43317ef50a3ee8d9a8fd0d99fe48c6c1f2
+  image push
+  image push
+  image push
+---- RUNTIME LOGS (celery) ----
+  Starting Container
+  /usr/local/lib/python3.12/site-packages/celery/platforms.py:829: SecurityWarning: You're running the worker with superuser privileges: this is
+  absolutely not recommended!
+  
+  Please specify a different user using the --uid option.
+  
+  User information: uid=0 euid=0 gid=0 egid=0
+  
+    warnings.warn(SecurityWarning(ROOT_DISCOURAGED.format(
+   
+   -------------- celery@9c870ae7f956 v5.4.0 (opalescent)
+  --- ***** ----- 
+  -- ******* ---- Linux-6.18.15+deb13-cloud-amd64-x86_64-with-glibc2.41 2026-07-21 01:03:54
+  - *** --- * --- 
+  - ** ---------- [config]
+  - ** ---------- .> app:         agent_platform:0x7f524914fd10
+  - ** ---------- .> transport:   redis://default:**@redis.railway.internal:6379//
+  - ** ---------- .> results:     redis://default:**@redis.railway.internal:6379/
+  - *** --- * --- .> concurrency: 2 (prefork)
+  -- ******* ---- .> task events: OFF (enable -E to monitor tasks in this worker)
+  --- ***** ----- 
+   -------------- [queues]
+                  .> celery           exchange=celery(direct) key=celery
+                  
+  
+  [tasks]
+    . app.workers.agent_tasks.health_check
+    . app.workers.agent_tasks.run_agent_task
+    . app.workers.agent_tasks.run_eval_for_task
+    . app.workers.agent_tasks.run_evolution_for_agent
+    . app.workers.agent_tasks.run_reflexion_eval
+  
+  [2026-07-21 01:03:54,920: WARNING/MainProcess] /usr/local/lib/python3.12/site-packages/celery/worker/consumer/consumer.py:508: CPendingDeprecationWarning: The broker_connection_retry configuration setting will no longer determine
+  whether broker connection retries are made during startup in Celery 6.0 and above.
+  If you wish to retain the existing behavior for retrying connections on startup,
+  you should set broker_connection_retry_on_startup to True.
+    warnings.warn(
+  
+  [2026-07-21 01:03:54,956: INFO/MainProcess] Connected to redis://default:**@redis.railway.internal:6379//
+  [2026-07-21 01:03:54,957: WARNING/MainProcess] /usr/local/lib/python3.12/site-packages/celery/worker/consumer/consumer.py:508: CPendingDeprecationWarning: The broker_connection_retry configuration setting will no longer determine
+  whether broker connection retries are made during startup in Celery 6.0 and above.
+  If you wish to retain the existing behavior for retrying connections on startup,
+  you should set broker_connection_retry_on_startup to True.
+    warnings.warn(
+  
+  [2026-07-21 01:03:54,961: INFO/MainProcess] mingle: searching for neighbors
+  [2026-07-21 01:03:55,980: INFO/MainProcess] mingle: sync with 1 nodes
+  [2026-07-21 01:03:55,980: INFO/MainProcess] mingle: sync complete
+  [2026-07-21 01:03:55,994: INFO/MainProcess] celery@9c870ae7f956 ready.
+  [2026-07-21 01:04:00,091: INFO/MainProcess] Task app.workers.agent_tasks.health_check[1941cef4-5d30-4071-8060-966dfcbe12d4] received
+  [2026-07-21 01:04:00,121: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[1941cef4-5d30-4071-8060-966dfcbe12d4] succeeded in 0.028662127442657948s: {'status': 'ok'}
+  [2026-07-21 01:05:00,016: INFO/MainProcess] Task app.workers.agent_tasks.health_check[44c00dd9-a72a-47c5-aaef-61026cedcb9f] received
+  [2026-07-21 01:05:00,020: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[44c00dd9-a72a-47c5-aaef-61026cedcb9f] succeeded in 0.0030375774949789047s: {'status': 'ok'}
+  [2026-07-21 01:06:00,006: INFO/MainProcess] Task app.workers.agent_tasks.health_check[7ea5c3f3-43c0-4240-b392-eee76c64cc24] received
+  [2026-07-21 01:06:00,008: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[7ea5c3f3-43c0-4240-b392-eee76c64cc24] succeeded in 0.0011169752106070518s: {'status': 'ok'}
+  [2026-07-21 01:07:00,007: INFO/MainProcess] Task app.workers.agent_tasks.health_check[e08f3a91-684e-4902-bc8e-7a07fbe4ccd2] received
+  [2026-07-21 01:07:00,009: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[e08f3a91-684e-4902-bc8e-7a07fbe4ccd2] succeeded in 0.0010973550379276276s: {'status': 'ok'}
+  [2026-07-21 01:08:00,006: INFO/MainProcess] Task app.workers.agent_tasks.health_check[c90b3532-b948-4c37-bd69-253c56d912c9] received
+  [2026-07-21 01:08:00,015: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[c90b3532-b948-4c37-bd69-253c56d912c9] succeeded in 0.007966289296746254s: {'status': 'ok'}
+  [2026-07-21 01:09:00,007: INFO/MainProcess] Task app.workers.agent_tasks.health_check[2b6d9ac8-1a6d-4f81-b982-05e01f94dc4a] received
+  [2026-07-21 01:09:00,009: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[2b6d9ac8-1a6d-4f81-b982-05e01f94dc4a] succeeded in 0.001340201124548912s: {'status': 'ok'}
+  [2026-07-21 01:10:00,008: INFO/MainProcess] Task app.workers.agent_tasks.health_check[f5e0487e-6018-435e-ac51-883d61f98356] received
+  [2026-07-21 01:10:00,011: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[f5e0487e-6018-435e-ac51-883d61f98356] succeeded in 0.0014185700565576553s: {'status': 'ok'}
+  [2026-07-21 01:11:00,006: INFO/MainProcess] Task app.workers.agent_tasks.health_check[d8c563e0-002c-42c5-8f0e-d256b12ad1ff] received
+  [2026-07-21 01:11:00,013: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[d8c563e0-002c-42c5-8f0e-d256b12ad1ff] succeeded in 0.005780830979347229s: {'status': 'ok'}
+  [2026-07-21 01:12:00,009: INFO/MainProcess] Task app.workers.agent_tasks.health_check[e9b57081-fde1-42f6-b069-99792f4f053b] received
+  [2026-07-21 01:12:00,013: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[e9b57081-fde1-42f6-b069-99792f4f053b] succeeded in 0.0016979854553937912s: {'status': 'ok'}
+  [2026-07-21 01:13:00,011: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[50fb6a31-7943-4547-90c9-0f8cd4de097c] succeeded in 0.0018140748143196106s: {'status': 'ok'}
+  [2026-07-21 01:13:00,008: INFO/MainProcess] Task app.workers.agent_tasks.health_check[50fb6a31-7943-4547-90c9-0f8cd4de097c] received
+  [2026-07-21 01:14:00,009: INFO/MainProcess] Task app.workers.agent_tasks.health_check[269e7970-a87f-48bc-abcb-100a02018006] received
+  [2026-07-21 01:14:00,011: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[269e7970-a87f-48bc-abcb-100a02018006] succeeded in 0.0013273023068904877s: {'status': 'ok'}
+  [2026-07-21 01:15:00,006: INFO/MainProcess] Task app.workers.agent_tasks.health_check[c70f8cd9-152f-46ca-80e5-efe25793658d] received
+  [2026-07-21 01:15:00,009: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[c70f8cd9-152f-46ca-80e5-efe25793658d] succeeded in 0.0025333650410175323s: {'status': 'ok'}
+  [2026-07-21 01:16:00,009: INFO/MainProcess] Task app.workers.agent_tasks.health_check[6b863f33-099d-43ca-8e59-82b3fb3fd49d] received
+  [2026-07-21 01:16:00,017: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[6b863f33-099d-43ca-8e59-82b3fb3fd49d] succeeded in 0.006498221307992935s: {'status': 'ok'}
+  [2026-07-21 01:17:00,007: INFO/MainProcess] Task app.workers.agent_tasks.health_check[05255f9d-52e6-4ad1-9f70-1ee569260a60] received
+  [2026-07-21 01:17:00,010: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[05255f9d-52e6-4ad1-9f70-1ee569260a60] succeeded in 0.001716376282274723s: {'status': 'ok'}
+  [2026-07-21 01:18:00,008: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[1b90e445-5f03-450b-bf75-957852f6e778] succeeded in 0.0010398756712675095s: {'status': 'ok'}
+  [2026-07-21 01:18:00,006: INFO/MainProcess] Task app.workers.agent_tasks.health_check[1b90e445-5f03-450b-bf75-957852f6e778] received
+  [2026-07-21 01:19:00,005: INFO/MainProcess] Task app.workers.agent_tasks.health_check[1641d07a-777d-42b7-9d5b-ae00d02c3e05] received
+  [2026-07-21 01:19:00,007: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[1641d07a-777d-42b7-9d5b-ae00d02c3e05] succeeded in 0.001063336618244648s: {'status': 'ok'}
+  [2026-07-21 01:20:00,006: INFO/MainProcess] Task app.workers.agent_tasks.health_check[dc34704e-a9d1-438b-b911-50632fe69651] received
+  [2026-07-21 01:20:00,007: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[dc34704e-a9d1-438b-b911-50632fe69651] succeeded in 0.0009286683052778244s: {'status': 'ok'}
+  [2026-07-21 01:21:00,007: INFO/MainProcess] Task app.workers.agent_tasks.health_check[364dd34d-860d-44b0-a8ae-f2d7357c4aa0] received
+  [2026-07-21 01:21:00,010: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[364dd34d-860d-44b0-a8ae-f2d7357c4aa0] succeeded in 0.0014153001829981804s: {'status': 'ok'}
+  [2026-07-21 01:22:00,008: INFO/MainProcess] Task app.workers.agent_tasks.health_check[68c849d5-f504-49cf-9a42-28ce156258fc] received
+  [2026-07-21 01:22:00,011: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[68c849d5-f504-49cf-9a42-28ce156258fc] succeeded in 0.001674906350672245s: {'status': 'ok'}
+  [2026-07-21 01:23:00,015: INFO/MainProcess] Task app.workers.agent_tasks.health_check[be926987-b44d-496a-92b5-2738079c3536] received
+  [2026-07-21 01:23:00,020: INFO/ForkPoolWorker-2] Task app.workers.agent_tasks.health_check[be926987-b44d-496a-92b5-2738079c3536] succeeded in 0.0012156320735812187s: {'status': 'ok'}
+
+########## celery-beat : SUCCESS (deployment 21327b3d-1f1d-457a-ae38-432b41b0613c) ##########
 ---- BUILD LOGS (celery-beat) ----
-  scheduling build on Metal builder "builder-gxtevu"
-  scheduling build on Metal builder "builder-gxtevu"
+  Setting up libfribidi0:amd64 (1.0.16-1) ...
+
+  Setting up libpng16-16t64:amd64 (1.6.48-1+deb13u5) ...
+
+  Setting up libsensors5:amd64 (1:3.6.2-2) ...
+
+  Setting up libvulkan1:amd64 (1.4.309.0-1) ...
+
+  Setting up fonts-ipafont-gothic (00303-23) ...
+
+  update-alternatives: using /usr/share/fonts/opentype/ipafont-gothic/ipag.ttf to provide /usr/share/fonts/truetype/fonts-japanese-gothic.ttf (fonts-japanese-gothic.ttf) in auto mode
+
+  Setting up libxshmfence1:amd64 (1.3.3-1) ...
+
+  Setting up at-spi2-common (2.56.2-1+deb13u1) ...
+
+  Setting up libxcb-randr0:amd64 (1.17.0-2+b1) ...
+
+  Setting up fonts-liberation (1:2.1.5-3) ...
+
+  Setting up libx11-6:amd64 (2:1.8.12-1) ...
+
+  Setting up libthai-data (0.1.29-2) ...
+
+  Setting up libxkbfile1:amd64 (1:1.1.0-1+b4) ...
+
+  Setting up libdrm-common (2.4.124-2) ...
+
+  Setting up libxcomposite1:amd64 (1:0.4.6-1) ...
+
+  Setting up libxml2:amd64 (2.12.7+dfsg+really2.9.14-2.1+deb13u3) ...
+
+  Setting up fonts-unifont (1:15.1.01-1) ...
+
+  Setting up libxkbcommon0:amd64 (1.7.0-2) ...
+
+  Setting up libxcb-dri3-0:amd64 (1.17.0-2+b1) ...
+
+  Setting up libllvm19:amd64 (1:19.1.7-3+b1) ...
+
+  Setting up libx11-xcb1:amd64 (2:1.8.12-1) ...
+
+  Setting up libice6:amd64 (2:1.1.1-1) ...
+
+  Setting up libxdamage1:amd64 (1:1.1.6-1+b2) ...
+
+  Setting up libatk1.0-0t64:amd64 (2.56.2-1+deb13u1) ...
+
+  Setting up libxpm4:amd64 (1:3.5.17-1+deb13u1) ...
+
+  Setting up libxrender1:amd64 (1:0.9.12-1) ...
+
+  Setting up fontconfig-config (2.15.0-2.3) ...
+
+  debconf: unable to initialize frontend: Dialog
+debconf: (TERM is not set, so the dialog frontend is not usable.)
+debconf: falling back to frontend: Readline
+
+  debconf: unable to initialize frontend: Readline
+debconf: (Can't locate Term/ReadLine.pm in @INC (you may need to install the Term::ReadLine module) (@INC entries checked: /etc/perl /usr/local/lib/x86_64-linux-gnu/perl/5.40.1 /usr/local/share/perl/5.40.1 /usr/lib/x86_64-linux-gnu/perl5/5.40 /usr/share/perl5 /usr/lib/x86_64-linux-gnu/perl-base /usr/lib/x86_64-linux-gnu/perl/5.40 /usr/share/perl/5.40 /usr/local/lib/site_perl) at /usr/share/perl5/Debconf/FrontEnd/Readline.pm line 8.)
+debconf: falling back to frontend: Teletype
+
+  debconf: unable to initialize frontend: Teletype
+debconf: (This frontend requires a controlling tty.)
+debconf: falling back to frontend: Noninteractive
+
+  Setting up libavahi-common3:amd64 (0.8-16) ...
+
+  Setting up libxext6:amd64 (2:1.3.4-1+b3) ...
+
+  Setting up libnss3:amd64 (2:3.110-1+deb13u3) ...
+
+  Setting up libxxf86vm1:amd64 (1:1.1.4-1+b4) ...
+
+  Setting up libthai0:amd64 (0.1.29-2+b1) ...
+
+  Setting up libfreetype6:amd64 (2.13.3+dfsg-1+deb13u1) ...
+
+  Setting up libxfixes3:amd64 (1:6.0.0-2+b4) ...
+
+  Setting up libxrandr2:amd64 (2:1.5.4-1+b3) ...
+
+  Setting up libdrm2:amd64 (2.4.124-2) ...
+
+  Setting up libharfbuzz0b:amd64 (10.2.0-1+deb13u1) ...
+
+  Setting up libfontconfig1:amd64 (2.15.0-2.3) ...
+
+  Setting up libsm6:amd64 (2:1.2.6-1) ...
+
+  Setting up libxfont2:amd64 (1:2.0.6-1+deb13u1) ...
+
+  Setting up libavahi-client3:amd64 (0.8-16) ...
+
+  Setting up libdrm-amdgpu1:amd64 (2.4.124-2) ...
+
+  Setting up fontconfig (2.15.0-2.3) ...
+
+  Regenerating fonts cache... 
+  done.
+
+  Setting up libxi6:amd64 (2:1.8.2-1) ...
+
+  Setting up libpango-1.0-0:amd64 (1.56.3-1) ...
+
+  Setting up libdrm-intel1:amd64 (2.4.124-2) ...
+
+  Setting up fonts-wqy-zenhei (0.9.45-8) ...
+
+  Setting up xfonts-utils (1:7.7+7) ...
+
+  Setting up libcairo2:amd64 (1.18.4-1+b1) ...
+
+  Setting up libatspi2.0-0t64:amd64 (2.56.2-1+deb13u1) ...
+
+  Setting up libxt6t64:amd64 (1:1.2.1-1.2+b2) ...
+
+  Setting up libcups2t64:amd64 (2.4.10-3+deb13u2) ...
+
+  Setting up xfonts-scalable (1:1.0.3-1.3) ...
+
+  Setting up libatk-bridge2.0-0t64:amd64 (2.56.2-1+deb13u1) ...
+
+  Setting up mesa-libgallium:amd64 (25.0.7-2+deb13u1) ...
+
+  Setting up libxmu6:amd64 (2:1.1.3-3+b4) ...
+
+  Setting up libgbm1:amd64 (25.0.7-2+deb13u1) ...
+
+  Setting up libgl1-mesa-dri:amd64 (25.0.7-2+deb13u1) ...
+
+  Setting up libxaw7:amd64 (2:1.0.16-1) ...
+
+  Setting up libglx-mesa0:amd64 (25.0.7-2+deb13u1) ...
+
+  Setting up libglx0:amd64 (1.7.0-1+b2) ...
+
+  Setting up x11-xkb-utils (7.7+9) ...
+
+  Setting up libgl1:amd64 (1.7.0-1+b2) ...
+
+  Setting up xserver-common (2:21.1.16-1.3+deb13u3) ...
+
+  Setting up xvfb (2:21.1.16-1.3+deb13u3) ...
+
+  Processing triggers for libc-bin (2.41-12+deb13u3) ...
+
+  Downloading Chrome for Testing 149.0.7827.55 (playwright chromium v1228) from https://cdn.playwright.dev/builds/cft/149.0.7827.55/linux64/chrome-linux64.zip
+
+  |                                                                                |   0% of 177 MiB
+
+  |■■■■■■■■                                                                        |  10% of 177 MiB
+
+  |■■■■■■■■■■■■■■■■                                                                |  20% of 177 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 177 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 177 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 177 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 177 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 177 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 177 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 177 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 177 MiB
+
+  Chrome for Testing 149.0.7827.55 (playwright chromium v1228) downloaded to /root/.cache/ms-playwright/chromium-1228
+
+  Downloading FFmpeg (playwright ffmpeg v1011) from https://cdn.playwright.dev/dbazure/download/playwright/builds/ffmpeg/1011/ffmpeg-linux.zip
+
+  |                                                                                |   0% of 2.3 MiB
+
+  |■■■■■■■■                                                                        |  10% of 2.3 MiB
+
+  |■■■■■■■■■■■■■■■■                                                                |  20% of 2.3 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 2.3 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 2.3 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 2.3 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 2.3 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 2.3 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 2.3 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 2.3 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 2.3 MiB
+
+  FFmpeg (playwright ffmpeg v1011) downloaded to /root/.cache/ms-playwright/ffmpeg-1011
+
+  Downloading Chrome Headless Shell 149.0.7827.55 (playwright chromium-headless-shell v1228) from https://cdn.playwright.dev/builds/cft/149.0.7827.55/linux64/chrome-headless-shell-linux64.zip
+
+  |                                                                                |   0% of 114.2 MiB
+
+  |■■■■■■■■                                                                        |  10% of 114.2 MiB
+
+  |■■■■■■■■■■■■■■■■                                                                |  20% of 114.2 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 114.2 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 114.2 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 114.2 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 114.2 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 114.2 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 114.2 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 114.2 MiB
+
+  |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 114.2 MiB
+
+  Chrome Headless Shell 149.0.7827.55 (playwright chromium-headless-shell v1228) downloaded to /root/.cache/ms-playwright/chromium_headless_shell-1228
+
+  [6/7] RUN playwright install chromium --with-deps
+  [7/7] COPY . .
+  [7/7] COPY . .
+  exporting to docker image format
+  exporting to docker image format
+  containerimage.descriptor: eyJtZWRpYVR5cGUiOiJhcHBsaWNhdGlvbi92bmQub2NpLmltYWdlLm1hbmlmZXN0LnYxK2pzb24iLCJkaWdlc3QiOiJzaGEyNTY6MTY4NWVjNDU3YzAwMjBiMWUxNTk2MWNjMDAzM2U2ODk2NDFkYjRjMzJhY2NhNzk1N2M2YzIxYjkwOTEwMTMyOCIsInNpemUiOjIyMDEsImFubm90YXRpb25zIjp7Im9yZy5vcGVuY29udGFpbmVycy5pbWFnZS5jcmVhdGVkIjoiMjAyNi0wNy0yMVQwMTowMzowNloifSwicGxhdGZvcm0iOnsiYXJjaGl0ZWN0dXJlIjoiYW1kNjQiLCJvcyI6ImxpbnV4In19
+  containerimage.config.digest: sha256:9f664099827779e4dc52586d87df4b708e28bcd22b6f4ddaee7a694497626b5c
+  containerimage.digest: sha256:1685ec457c0020b1e15961cc0033e689641db4c32acca7957c6c21b909101328
+  image push
   image push
 ---- RUNTIME LOGS (celery-beat) ----
   Starting Container
-      . db -> celerybeat-schedule
-      . logfile -> [stderr]@%INFO
-      . maxinterval -> 5.00 minutes (300s)
-  [2026-07-17 00:53:09,438: INFO/MainProcess] beat: Starting...
-  celery beat v5.4.0 (opalescent) is starting.
-      . broker -> redis://default:**@redis.railway.internal:6379//
+  [2026-07-21 01:03:53,163: INFO/MainProcess] beat: Starting...
       . loader -> celery.loaders.app.AppLoader
-  __    -    ... __   -        _
       . scheduler -> celery.beat.PersistentScheduler
-  LocalTime -> 2026-07-17 00:53:09
+  celery beat v5.4.0 (opalescent) is starting.
+  __    -    ... __   -        _
+  LocalTime -> 2026-07-21 01:03:53
+      . db -> celerybeat-schedule
   Configuration ->
-  [2026-07-17 00:54:00,042: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:55:00,001: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:56:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:57:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:58:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 00:59:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 01:00:00,000: INFO/MainProcess] Scheduler: Sending due task reflexion-eval-every-hour (app.workers.agent_tasks.run_reflexion_eval)
-  [2026-07-17 01:00:00,015: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 01:01:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 01:02:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 01:03:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 01:04:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 01:05:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 01:06:00,002: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 01:07:00,002: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
-  [2026-07-17 01:08:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+      . logfile -> [stderr]@%INFO
+      . broker -> redis://default:**@redis.railway.internal:6379//
+      . maxinterval -> 5.00 minutes (300s)
+  [2026-07-21 01:04:00,059: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+  [2026-07-21 01:05:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+  [2026-07-21 01:06:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+  [2026-07-21 01:07:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+  [2026-07-21 01:08:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+  [2026-07-21 01:09:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+  [2026-07-21 01:10:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+  [2026-07-21 01:11:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+  [2026-07-21 01:12:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+  [2026-07-21 01:13:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+  [2026-07-21 01:14:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+  [2026-07-21 01:15:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+  [2026-07-21 01:16:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+  [2026-07-21 01:17:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+  [2026-07-21 01:18:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+  [2026-07-21 01:19:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+  [2026-07-21 01:20:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+  [2026-07-21 01:21:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+  [2026-07-21 01:22:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
+  [2026-07-21 01:23:00,000: INFO/MainProcess] Scheduler: Sending due task health-check-every-minute (app.workers.agent_tasks.health_check)
 
-########## frontend : SUCCESS (deployment d0a84500-cb87-4a98-aa7c-69283a3269ba) ##########
+########## frontend : SUCCESS (deployment 06c01093-b678-4ab5-ab32-ccaac4cac512) ##########
 ---- BUILD LOGS (frontend) ----
   scheduling build on Metal builder "builder-gugrhl"
-  fetched snapshot sha256:9a0b133263285830055bf0418c8c56e7cefa847d9acc73702d26e6bc3b2d4be4 (73 kB bytes)
+  fetched snapshot sha256:f1239bba6af03889a3817d7a3a30ee1f9bafcfd721b42d7798e76b66aebe275b (2.9 MB bytes)
   fetching snapshot
   unpacking archive
   [internal] load build definition from Dockerfile
@@ -234,9 +972,6 @@ Services: {"celery-beat": "01aefb60-2429-47bc-85ca-da2b6b2f114e", "frontend": "1
   [internal] load .dockerignore
   [internal] load .dockerignore
   [internal] load .dockerignore
-  [runner 4/6] COPY --from=builder /app/public ./public
-  [builder 5/5] RUN npm run build
-  [builder 4/5] COPY . .
   [builder 3/5] COPY --from=deps /app/node_modules ./node_modules
   [deps 4/4] RUN npm ci
   [deps 3/4] COPY package.json package-lock.json* ./
@@ -246,33 +981,149 @@ Services: {"celery-beat": "01aefb60-2429-47bc-85ca-da2b6b2f114e", "frontend": "1
   [deps 1/4] FROM docker.io/library/node:20-alpine@sha256:fb4cd12c85ee03686f6af5362a0b0d56d50c58a04632e6c0fb8363f609372293
   [runner 6/6] COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
   [runner 5/6] COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+  [runner 4/6] COPY --from=builder /app/public ./public
+  [builder 5/5] RUN npm run build
+  [builder 4/5] COPY . .
   [internal] load build context
   [deps 1/4] FROM docker.io/library/node:20-alpine@sha256:fb4cd12c85ee03686f6af5362a0b0d56d50c58a04632e6c0fb8363f609372293
   [deps 1/4] FROM docker.io/library/node:20-alpine@sha256:fb4cd12c85ee03686f6af5362a0b0d56d50c58a04632e6c0fb8363f609372293
   [internal] load build context
   [internal] load build context
   [deps 2/4] WORKDIR /app
-  [runner 3/6] RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nextjs
+  [deps 3/4] COPY package.json package-lock.json* ./
   [deps 3/4] COPY package.json package-lock.json* ./
   [deps 4/4] RUN npm ci
-  [builder 3/5] COPY --from=deps /app/node_modules ./node_modules
-  [builder 4/5] COPY . .
-  [builder 5/5] RUN npm run build
-  [runner 4/6] COPY --from=builder /app/public ./public
-  [runner 5/6] COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-  [runner 6/6] COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-  exporting to docker image format
-  exporting to docker image format
-  containerimage.descriptor: eyJtZWRpYVR5cGUiOiJhcHBsaWNhdGlvbi92bmQub2NpLmltYWdlLm1hbmlmZXN0LnYxK2pzb24iLCJkaWdlc3QiOiJzaGEyNTY6ZDg0ZDdkNzUwNzkzOWFkMjI3ZmJjODI3Y2JlMzYyYzJjZThkOGU2NTRmZmYwMTUyMTEwYWM2OTQzNWExM2I0MCIsInNpemUiOjIwMDIsImFubm90YXRpb25zIjp7Im9yZy5vcGVuY29udGFpbmVycy5pbWFnZS5jcmVhdGVkIjoiMjAyNi0wNy0xN1QwMDozMTozNFoifSwicGxhdGZvcm0iOnsiYXJjaGl0ZWN0dXJlIjoiYW1kNjQiLCJvcyI6ImxpbnV4In19
-  containerimage.config.digest: sha256:0dc7e2973a3ef3c0d8c216889b1f5f6fe102d5498ff2f4896efb4cfeac07f8b9
-  containerimage.digest: sha256:d84d7d7507939ad227fbc827cbe362c2ce8d8e654fff0152110ac69435a13b40
+  npm warn EBADENGINE Unsupported engine {
+npm warn EBADENGINE   package: 'camera-controls@3.1.2',
+npm warn EBADENGINE   required: { node: '>=22.0.0', npm: '>=10.5.1' },
+npm warn EBADENGINE   current: { node: 'v20.20.2', npm: '10.8.2' }
+npm warn EBADENGINE }
+
   scheduling build on Metal builder "builder-gugrhl"
+  npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+
+  npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+
+  npm warn deprecated glob@7.2.3: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+
+  npm warn deprecated @humanwhocodes/object-schema@2.0.3: Use @eslint/object-schema instead
+
+  npm warn deprecated @humanwhocodes/config-array@0.13.0: Use @eslint/config-array instead
+
+  npm warn deprecated eslint@8.57.1: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+
+  
+added 435 packages, and audited 436 packages in 12s
+
+  
+  155 packages are looking for funding
+  run `npm fund` for details
+
+  
+2 moderate severity vulnerabilities
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+
+  npm notice
+npm notice New major version of npm available! 10.8.2 -> 12.0.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.0.1
+npm notice To update run: npm install -g npm@12.0.1
+npm notice
+
+  [deps 4/4] RUN npm ci
+  [builder 3/5] COPY --from=deps /app/node_modules ./node_modules
+  [builder 3/5] COPY --from=deps /app/node_modules ./node_modules
+  [builder 4/5] COPY . .
+  [builder 4/5] COPY . .
+  [builder 5/5] RUN npm run build
+  
+> agent-platform-frontend@0.1.0 build
+> next build
+
+
+     ▲ Next.js 15.5.20
+
+  
+     Creating an optimized production build ...
+
+   ✓ Compiled successfully in 24.7s
+
+     Linting and checking validity of types ...
+
+     Collecting page data ...
+
+     Generating static pages (0/15) ...
+
+     Generating static pages (3/15) 
+
+     Generating static pages (7/15) 
+
+     Generating static pages (11/15) 
+
+   ✓ Generating static pages (15/15)
+
+     Finalizing page optimization ...
+   Collecting build traces ...
+
+  
+  Route (app)                                 Size  First Load JS
+┌ ƒ /                                    10.6 kB         180 kB
+├ ○ /_not-found                            996 B         104 kB
+├ ƒ /agents/[id]                         10.6 kB         176 kB
+├ ○ /agents/new                            766 B         171 kB
+├ ○ /dev/ape                             2.35 kB         105 kB
+├ ○ /dev/ape-exact                       2.34 kB         105 kB
+├ ○ /dev/ape-glb                         2.38 kB         105 kB
+├ ○ /dev/exterior                        1.69 kB         105 kB
+├ ○ /dev/jersey                          2.06 kB         105 kB
+├ ○ /dev/workspace                       2.75 kB         106 kB
+├ ○ /hq                                  4.04 kB         128 kB
+├ ○ /live                                5.45 kB         175 kB
+├ ○ /login                               2.84 kB         119 kB
+├ ○ /network                             6.42 kB         171 kB
+└ ○ /onboarding                          6.47 kB         177 kB
++ First Load JS shared by all             103 kB
+  ├ chunks/1255-d90f22433f14e976.js      46.2 kB
+  ├ chunks/4bd1b696-f785427dddbba9fb.js  54.2 kB
+  └ other shared chunks (total)          2.41 kB
+
+
+ƒ Middleware                             34.1 kB
+
+
+  ○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+
+  npm notice
+npm notice New major version of npm available! 10.8.2 -> 12.0.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.0.1
+npm notice To update run: npm install -g npm@12.0.1
+npm notice
+
+  [builder 5/5] RUN npm run build
+  [runner 3/6] RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nextjs
+  [runner 3/6] RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nextjs
+  [runner 4/6] COPY --from=builder /app/public ./public
+  [runner 4/6] COPY --from=builder /app/public ./public
+  [runner 5/6] COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+  [runner 5/6] COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+  [runner 6/6] COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+  [runner 6/6] COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+  exporting to docker image format
+  exporting to docker image format
+  containerimage.descriptor: eyJtZWRpYVR5cGUiOiJhcHBsaWNhdGlvbi92bmQub2NpLmltYWdlLm1hbmlmZXN0LnYxK2pzb24iLCJkaWdlc3QiOiJzaGEyNTY6ZmI4MzY2MTM3NmNlZmE3NTcwOWIyZGFlMDIzZGZhZmIzZjY5Y2RiNTA3MTdmYzJmMjcxYWY3ZGIxNmNmZjE1MyIsInNpemUiOjIwMDcsImFubm90YXRpb25zIjp7Im9yZy5vcGVuY29udGFpbmVycy5pbWFnZS5jcmVhdGVkIjoiMjAyNi0wNy0yMVQwMTowNDo1NVoifSwicGxhdGZvcm0iOnsiYXJjaGl0ZWN0dXJlIjoiYW1kNjQiLCJvcyI6ImxpbnV4In19
+  containerimage.config.digest: sha256:bc95f00f233bc2787dc70ad947b59cdc6834d37959feef203d99670da2e4a24d
+  containerimage.digest: sha256:fb83661376cefa75709b2dae023dfafb3f69cdb50717fc2f271af7db16cff153
   image push
 ---- RUNTIME LOGS (frontend) ----
   Starting Container
+   ✓ Starting...
      ▲ Next.js 15.5.20
      - Local:        http://localhost:3000
      - Network:      http://0.0.0.0:3000
   
-   ✓ Starting...
-   ✓ Ready in 74ms
+   ✓ Ready in 68ms
