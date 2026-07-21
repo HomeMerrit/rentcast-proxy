@@ -9,6 +9,6 @@ Project: agentos-platform
 
 === HTTP PROBES (from runner) ===
   200  https://backend-production-a20b.up.railway.app/health   {"status":"ok","auth_required":false}
-  200  https://frontend-production-a9cc3.up.railway.app/   <!DOCTYPE html><!--HC__Dc1ruzt4JIMlumwXl--><html lang="en" class="dark __variable_f367f3 __variable_6b9622 __variable_6d
+  200  https://frontend-production-a9cc3.up.railway.app/   <!DOCTYPE html><!--XNXxBHP_haiXZsQioYnw9--><html lang="en" class="dark __variable_f367f3 __variable_6b9622 __variable_6d
 JSON={"backend": {"status": "SUCCESS", "domains": ["backend-production-a20b.up.railway.app"]}, "frontend": {"status": "SUCCESS", "domains": ["frontend-production-a9cc3.up.railway.app"]}, "celery": {"status": "SUCCESS", "domains": []}, "celery-beat": {"status": "SUCCESS", "domains": []}, "qdrant": {"status": "SUCCESS", "domains": []}}
 PROBES={"https://backend-production-a20b.up.railway.app/health": 200, "https://frontend-production-a9cc3.up.railway.app/": 200}
