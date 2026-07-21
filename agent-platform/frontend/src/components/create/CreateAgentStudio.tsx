@@ -7,6 +7,7 @@ import { api } from "@/lib/api";
 import { Button, Field, Input, Textarea, Select, Card, Badge, useToast } from "@/components/ui";
 import { AvatarPicker, type AvatarValue } from "./AvatarPicker";
 import { SkillPicker, type PickedSkill } from "./SkillPicker";
+import { MintReveal } from "./MintReveal";
 import { avatarHue } from "@/components/AgentAvatar";
 import { patternOf, jerseyNumberOf, kitShades } from "@/components/world/kit";
 import type { Agent } from "@/types/agent";
@@ -56,6 +57,7 @@ export function CreateAgentStudio({
   const [bio, setBio] = useState("");
   const [skills, setSkills] = useState<PickedSkill[]>([]);
   const [saving, setSaving] = useState(false);
+  const [minted, setMinted] = useState<Agent | null>(null);
 
   const valid = name.trim() && title.trim() && department;
 
@@ -91,8 +93,8 @@ export function CreateAgentStudio({
           /* skills are non-fatal */
         }
       }
-      toast({ tone: "success", title: `${agent.name} hired`, description: `${title} joined your team.` });
-      onCreated?.(agent);
+      // the reveal overlay is the confirmation; onCreated fires from its CTA
+      setMinted(agent);
     } catch (e) {
       toast({
         tone: "error",
@@ -106,6 +108,17 @@ export function CreateAgentStudio({
 
   return (
     <div className={compact ? "" : "mx-auto max-w-5xl"}>
+      {minted && (
+        <MintReveal
+          name={minted.name}
+          title={title.trim()}
+          department={department}
+          accent={kitAccent}
+          jersey={{ number: kitNumber, label: kitLabel }}
+          pattern={kitPattern}
+          onDone={() => onCreated?.(minted)}
+        />
+      )}
       <div className="grid gap-5 lg:grid-cols-[300px_1fr]">
         {/* Live preview */}
         <div className="lg:sticky lg:top-6 lg:self-start">

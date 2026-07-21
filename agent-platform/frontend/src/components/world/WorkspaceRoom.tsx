@@ -5,6 +5,7 @@ import { ApeworksShell } from "./ApeworksShell";
 import { WorkspaceLighting } from "./WorkspaceLighting";
 import { AgentWorkstation } from "./AgentWorkstation";
 import { ApeAgentGlb } from "./ApeAgentGlb";
+import { PromotionFx } from "./PromotionFx";
 import { jerseyNumberOf, patternOf } from "./kit";
 import { resolveRoom, HQ_MAX_AGENTS } from "./WorkspaceRoom.config";
 import type { WorkspaceRoomProps, RoomConfig } from "./WorkspaceRoom.types";
@@ -46,6 +47,11 @@ export function WorkspaceRoom({
                 selected={agent.id === selectedAgentId}
                 onClick={onAgentClick}
               />
+            )}
+            {agent?.promotedLevel != null && (
+              <group position={pouf ? [0, 0.56, 0] : [0, 0, -1.22]}>
+                <PromotionFx key={`${agent.id}-${agent.promotedLevel}`} level={agent.promotedLevel} accent={agent.accentColor} />
+              </group>
             )}
           </group>
         );

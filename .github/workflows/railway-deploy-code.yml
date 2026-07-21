@@ -8,9 +8,18 @@ on:
         required: false
         default: 'backend,celery,celery-beat,frontend'
         type: string
+  push:
+    branches:
+      - claude/airtable-hyper-agent-research-et2uba
+    paths:
+      - 'agent-platform/**'
 
 permissions:
   contents: write
+
+concurrency:
+  group: railway-deploy
+  cancel-in-progress: false
 
 jobs:
   deploy:

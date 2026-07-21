@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
@@ -43,10 +43,44 @@ export default function HqPage() {
   const [fading, setFading] = useState(false);
   const [entering, setEntering] = useState(false); // door fly-through in progress
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  // a just-earned level-up being celebrated on the floor
+  const [promo, setPromo] = useState<{ id: string; level: number } | null>(null);
+  const levelsRef = useRef<Record<string, number> | null>(null);
   const fleet = useFleetStream();
 
+  // Poll the roster so task counts (and therefore levels) stay live — the
+  // fleet stream only carries status. A level rising between polls is a
+  // promotion: celebrate it at the agent's workstation.
   useEffect(() => {
-    api.agents.list().then(setAgents).catch(() => setAgents([]));
+    let alive = true;
+    const load = () =>
+      api.agents
+        .list()
+        .then((list) => {
+          if (!alive) return;
+          setAgents(list);
+          const levels: Record<string, number> = {};
+          for (const a of list) {
+            levels[a.id] = agentGrowth({ task_count: a.task_count, success_count: a.success_count }).level;
+          }
+          const prev = levelsRef.current;
+          levelsRef.current = levels;
+          if (!prev) return; // first load is the baseline, not a promotion
+          const risen = list.find((a) => prev[a.id] != null && levels[a.id] > prev[a.id]);
+          if (risen) {
+            setPromo({ id: risen.id, level: levels[risen.id] });
+            setTimeout(() => setPromo((p) => (p?.id === risen.id ? null : p)), 4500);
+          }
+        })
+        .catch(() => {
+          if (alive && levelsRef.current === null) setAgents([]);
+        });
+    load();
+    const timer = setInterval(load, 20_000);
+    return () => {
+      alive = false;
+      clearInterval(timer);
+    };
   }, []);
 
   const switchView = (next: View) => {
@@ -85,8 +119,9 @@ export default function HqPage() {
         accentColor: avatarHue(a.avatar_seed || a.name)[0],
         kitId: a.avatar_seed || a.id,
         accessories: earnedAccessories(agentGrowth({ task_count: a.task_count, success_count: a.success_count })),
+        promotedLevel: promo?.id === a.id ? promo.level : null,
       })),
-    [agents, fleet.agents],
+    [agents, fleet.agents, promo],
   );
 
   const selected = agents.find((a) => a.id === selectedId) ?? null;
@@ -128,6 +163,7 @@ export default function HqPage() {
           <WorkspacePreviewScene
             agents={floorAgents}
             selectedAgentId={selectedId}
+            focusAgentId={promo?.id ?? null}
             onAgentClick={(id) => setSelectedId((cur) => (cur === id ? null : id))}
             onCreateAgent={() => router.push("/agents/new")}
           />

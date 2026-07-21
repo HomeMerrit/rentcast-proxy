@@ -21,6 +21,8 @@ export interface WorkspaceAgent {
   kitId?: string;
   /** growth-earned gear (headset, crown) */
   accessories?: ApeAccessory[];
+  /** set to the new level while a just-earned promotion celebration plays */
+  promotedLevel?: number | null;
 }
 
 /** A placed workstation anchor within a room layout. */

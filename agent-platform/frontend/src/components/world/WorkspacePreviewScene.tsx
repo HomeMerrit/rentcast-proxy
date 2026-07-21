@@ -10,24 +10,27 @@ import { resolveRoom } from "./WorkspaceRoom.config";
 import type { WorkspaceAgent, WorkspaceType, WorkspaceQuality } from "./WorkspaceRoom.types";
 
 export function WorkspacePreviewScene({
-  type = "operations", agents, selectedAgentId = null, onAgentClick, onCreateAgent,
+  type = "operations", agents, selectedAgentId = null, focusAgentId = null, onAgentClick, onCreateAgent,
   quality = "high", orbit = false, paused = false,
 }: {
   type?: WorkspaceType; agents: WorkspaceAgent[]; selectedAgentId?: string | null;
+  /** camera-only focus (e.g. a promotion moment) — overrides selection for the shot */
+  focusAgentId?: string | null;
   onAgentClick?: (id: string) => void; onCreateAgent?: (id: string) => void;
   quality?: WorkspaceQuality; orbit?: boolean; paused?: boolean;
 }) {
   const room = useMemo(() => resolveRoom(type, agents.length), [type, agents.length]);
   const overview = room.camera.overview;
 
+  const focusId = focusAgentId ?? selectedAgentId;
   const focus: CamShot | null = useMemo(() => {
-    if (!selectedAgentId) return null;
-    const idx = agents.findIndex((a) => a.id === selectedAgentId);
+    if (!focusId) return null;
+    const idx = agents.findIndex((a) => a.id === focusId);
     const slot = room.slots[idx];
     if (!slot) return null;
     const [x, , z] = slot.position;
     return { position: [x + 1.8, 2.3, z + 3.0], target: [x, 1.25, z - 0.4] };
-  }, [selectedAgentId, agents, room]);
+  }, [focusId, agents, room]);
 
   return (
     <Canvas
