@@ -147,17 +147,19 @@ class BaseAgent:
 
         active_system_prompt = state.get("system_prompt") or SYSTEM_PROMPT
 
-        # Only send system message on first think (no prior AI messages)
+        # First think: seed the conversation and persist it into graph state so
+        # later think iterations and the reflect step keep the original task.
         prior_ai = [m for m in state["messages"] if isinstance(m, AIMessage)]
         if not prior_ai:
-            messages = [SystemMessage(content=active_system_prompt), HumanMessage(content=task_desc)]
+            seed_messages = [SystemMessage(content=active_system_prompt), HumanMessage(content=task_desc)]
+            messages = seed_messages
         else:
+            seed_messages = []
             messages = list(state["messages"])
 
-        # Stream response
+        # Stream response, merging chunks so tool_calls and usage survive
         full_content = ""
-        tool_calls = []
-        last_chunk = None
+        acc = None
         msg_id = str(uuid4())
         text_started = False
 
@@ -168,7 +170,7 @@ class BaseAgent:
         stream_config = {"callbacks": [self._langfuse_handler]} if self._langfuse_handler else {}
 
         async for chunk in self.llm_with_tools.astream(messages, config=stream_config):
-            last_chunk = chunk
+            acc = chunk if acc is None else acc + chunk
             # Extract text delta
             delta = ""
             if isinstance(chunk.content, str):
@@ -186,26 +188,20 @@ class BaseAgent:
                 if self._publisher:
                     await self._publisher.publish("TEXT_MESSAGE_CONTENT", {"delta": delta, "message_id": msg_id})
 
-            # Accumulate tool calls
-            if hasattr(chunk, "tool_call_chunks") and chunk.tool_call_chunks:
-                tool_calls.extend(chunk.tool_call_chunks)
-
         if text_started and self._publisher:
             await self._publisher.publish("TEXT_MESSAGE_END", {"message_id": msg_id})
 
-        # Build the final AI message
         tokens = 0
-        if last_chunk and last_chunk.usage_metadata:
-            tokens = last_chunk.usage_metadata.get("total_tokens", 0)
+        if acc is not None and acc.usage_metadata:
+            tokens = acc.usage_metadata.get("total_tokens", 0)
 
-        # Reconstruct proper AI message with tool_calls if present
-        if last_chunk:
-            ai_msg = AIMessage(content=full_content or last_chunk.content, tool_calls=last_chunk.tool_calls if hasattr(last_chunk, 'tool_calls') else [])
+        if acc is not None:
+            ai_msg = AIMessage(content=acc.content, tool_calls=acc.tool_calls)
         else:
             ai_msg = AIMessage(content=full_content)
 
         return {
-            "messages": [ai_msg],
+            "messages": seed_messages + [ai_msg],
             "result": full_content if full_content else state.get("result"),
             "tokens_used": state.get("tokens_used", 0) + tokens,
         }
@@ -285,8 +281,18 @@ class BaseAgent:
         return str(content) if content is not None else ""
 
     async def _reflect(self, state: AgentState) -> dict:
-        reflect_messages = list(state["messages"]) + [HumanMessage(content=REFLECT_PROMPT)]
-        response = await self.llm.ainvoke(reflect_messages)
+        reflect_messages = list(state["messages"])
+        # If the tool-iteration cap left unanswered tool calls, close them out —
+        # the API rejects a tool_use block with no matching tool_result.
+        last = reflect_messages[-1] if reflect_messages else None
+        if isinstance(last, AIMessage) and last.tool_calls:
+            reflect_messages += [
+                ToolMessage(content="Tool execution skipped (iteration limit reached).", tool_call_id=tc["id"])
+                for tc in last.tool_calls
+            ]
+        reflect_messages.append(HumanMessage(content=REFLECT_PROMPT))
+        # History may contain tool blocks, which require the tools param to be present
+        response = await self.llm_with_tools.ainvoke(reflect_messages)
         tokens = response.usage_metadata.get("total_tokens", 0) if response.usage_metadata else 0
         reflection_text = self._content_text(response.content)
         if self._publisher:

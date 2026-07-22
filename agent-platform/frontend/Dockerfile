@@ -8,6 +8,15 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
+# NEXT_PUBLIC_* values are inlined into the client bundle at build time, so they
+# must arrive as build args (Railway passes service variables to Docker builds
+# only for declared ARGs). Left unset, the bundle falls back to demo mode.
+ARG NEXT_PUBLIC_API_URL
+ARG NEXT_PUBLIC_STREAM_URL
+ARG NEXT_PUBLIC_REQUIRE_AUTH
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL \
+    NEXT_PUBLIC_STREAM_URL=$NEXT_PUBLIC_STREAM_URL \
+    NEXT_PUBLIC_REQUIRE_AUTH=$NEXT_PUBLIC_REQUIRE_AUTH
 RUN npm run build
 
 FROM node:20-alpine AS runner
