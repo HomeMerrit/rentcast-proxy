@@ -1,0 +1,79 @@
+{
+ "run_id": "h7wbko",
+ "steps": [
+  {
+   "name": "home load",
+   "ok": true,
+   "detail": "1401ms to networkidle"
+  },
+  {
+   "name": "hire button gated before input",
+   "ok": true,
+   "detail": "disabled=true"
+  },
+  {
+   "name": "hire via UI produced reveal moment",
+   "ok": true,
+   "detail": "4186ms"
+  },
+  {
+   "name": "landed on agent profile after hire",
+   "ok": true,
+   "detail": "https://frontend-production-a9cc3.up.railway.app/agents/new"
+  },
+  {
+   "name": "job queued via dialog (toast)",
+   "ok": false,
+   "detail": "Give a job button not found"
+  },
+  {
+   "name": "live floor shows stream state pill",
+   "ok": true,
+   "detail": "matches=1"
+  },
+  {
+   "name": "task finished on backend",
+   "ok": false,
+   "detail": "no row in 180s"
+  }
+ ],
+ "console_errors": {
+  "desktop": [],
+  "mobile": []
+ },
+ "failed_requests": {
+  "desktop": [
+   "GET https://frontend-production-a9cc3.up.railway.app/?_rsc=B7yroOPNvpOYIw-w net::ERR_ABORTED",
+   "GET https://frontend-production-a9cc3.up.railway.app/?_rsc=_LDP7vwF_7lyIZji net::ERR_ABORTED",
+   "GET https://frontend-production-a9cc3.up.railway.app/?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+   "GET https://frontend-production-a9cc3.up.railway.app/agents/agent-maya?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+   "GET https://frontend-production-a9cc3.up.railway.app/agents/agent-jake?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+   "GET https://frontend-production-a9cc3.up.railway.app/agents/agent-ada?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+   "GET https://frontend-production-a9cc3.up.railway.app/agents/agent-dana?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+   "GET https://frontend-production-a9cc3.up.railway.app/agents/agent-iris?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+   "GET https://frontend-production-a9cc3.up.railway.app/agents/agent-ravi?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+   "GET https://frontend-production-a9cc3.up.railway.app/agents/agent-leo?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+   "GET https://frontend-production-a9cc3.up.railway.app/agents/agent-nora?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+   "GET https://frontend-production-a9cc3.up.railway.app/?_rsc=3C7GVewgHlvW12yL net::ERR_ABORTED"
+  ],
+  "mobile": [
+   "GET https://frontend-production-a9cc3.up.railway.app/?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+   "GET https://frontend-production-a9cc3.up.railway.app/agents/agent-sofia?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+   "GET https://frontend-production-a9cc3.up.railway.app/agents/agent-maya?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+   "GET https://frontend-production-a9cc3.up.railway.app/agents/agent-dana?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+   "GET https://frontend-production-a9cc3.up.railway.app/agents/agent-ada?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+   "GET https://frontend-production-a9cc3.up.railway.app/agents/agent-jake?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+   "GET https://frontend-production-a9cc3.up.railway.app/agents/agent-nora?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+   "GET https://frontend-production-a9cc3.up.railway.app/agents/agent-iris?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+   "GET https://frontend-production-a9cc3.up.railway.app/agents/agent-ravi?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+   "GET https://frontend-production-a9cc3.up.railway.app/agents/agent-leo?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+   "GET https://frontend-production-a9cc3.up.railway.app/?_rsc=_LDP7vwF_7lyIZji net::ERR_ABORTED"
+  ]
+ },
+ "findings": [
+  {
+   "severity": "P2",
+   "text": "mobile /live horizontal overflow 390px"
+  }
+ ]
+}
