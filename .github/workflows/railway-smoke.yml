@@ -1,15 +1,19 @@
-name: Railway Smoke Test
+name: Prod Stress Test
 
 on:
   workflow_dispatch:
+    inputs:
+      spend_cap_usd:
+        description: Max USD the test may spend before it stops dispatching
+        default: "10"
 
 permissions:
   contents: write
 
 jobs:
-  smoke:
+  api:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 80
     steps:
       - name: Checkout platform branch
         uses: actions/checkout@v4
@@ -22,19 +26,66 @@ jobs:
           python-version: '3.12'
       - name: Install deps
         run: pip install requests
-      - name: Run smoke test
-        run: python3 scripts/railway_smoke.py
-      - name: Commit smoke result
+      - name: Run API stress test
+        env:
+          BACKEND_URL: https://backend-production-a20b.up.railway.app
+          FRONTEND_URL: https://frontend-production-a9cc3.up.railway.app
+          SPEND_CAP_USD: ${{ inputs.spend_cap_usd }}
+        run: python3 scripts/stress_test.py
+      - name: Commit results
         if: always()
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          if [ -f railway_smoke.txt ]; then
-            git config user.email "github-actions[bot]@users.noreply.github.com"
-            git config user.name "github-actions[bot]"
-            git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
-            cp railway_smoke.txt scripts/railway_smoke_output.txt
-            git add scripts/railway_smoke_output.txt
-            git diff --cached --quiet || git commit -m "chore: railway smoke result [skip ci]"
-            git push origin claude/airtable-hyper-agent-research-et2uba
-          fi
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
+          mkdir -p scripts/stress_results
+          cp stress_report.json scripts/stress_results/ 2>/dev/null || true
+          cp stress_report.md scripts/stress_results/ 2>/dev/null || true
+          git pull --rebase origin claude/airtable-hyper-agent-research-et2uba || true
+          git add scripts/stress_results
+          git diff --cached --quiet || git commit -m "chore: stress test results [skip ci]"
+          git push origin claude/airtable-hyper-agent-research-et2uba
+
+  ui:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: api
+    if: always()
+    steps:
+      - name: Checkout platform branch
+        uses: actions/checkout@v4
+        with:
+          ref: claude/airtable-hyper-agent-research-et2uba
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install Playwright
+        run: |
+          npm init -y >/dev/null
+          npm i playwright >/dev/null 2>&1
+          npx playwright install --with-deps chromium
+      - name: Run UI journey
+        env:
+          BACKEND_URL: https://backend-production-a20b.up.railway.app
+          FRONTEND_URL: https://frontend-production-a9cc3.up.railway.app
+        run: node scripts/stress_ui.js
+      - name: Commit results
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
+          mkdir -p scripts/stress_results/shots
+          cp stress_ui_report.json scripts/stress_results/ 2>/dev/null || true
+          cp stress_shots/*.png scripts/stress_results/shots/ 2>/dev/null || true
+          rm -f package.json package-lock.json
+          git pull --rebase origin claude/airtable-hyper-agent-research-et2uba || true
+          git add scripts/stress_results
+          git diff --cached --quiet || git commit -m "chore: stress test UI results [skip ci]"
+          git push origin claude/airtable-hyper-agent-research-et2uba
