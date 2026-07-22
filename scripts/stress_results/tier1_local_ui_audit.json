@@ -1,0 +1,644 @@
+{
+ "pages": {
+  "d-home": {
+   "path": "/",
+   "loadMs": 7609,
+   "spill": 448,
+   "imgsNoAlt": 0,
+   "noName": 1,
+   "smallTargets": 6,
+   "h1s": 1,
+   "title": "ApeAgents · Build a company that builds itself",
+   "bodyText": 322,
+   "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+   ],
+   "failedRequests": [
+    "GET http://localhost:3000/?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+    "GET http://localhost:3000/agents/agent-maya?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+    "GET http://localhost:3000/agents/agent-jake?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+    "GET http://localhost:3000/agents/agent-sofia?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+    "GET http://localhost:3000/agents/agent-nora?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+    "GET http://localhost:3000/agents/agent-sam?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+    "GET http://localhost:3000/agents/agent-iris?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+    "GET http://localhost:3000/agents/agent-leo?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+    "GET http://localhost:3000/agents/agent-ravi?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=3C7GVewgHlvW12yL net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=_LDP7vwF_7lyIZji net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=j7s84HGI7papZ6oY net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=j7s84HGI7papZ6oY net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=okzff1m0uRMesyJc net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=P-LOgdkbURoPyURJ net::ERR_ABORTED"
+   ]
+  },
+  "d-live": {
+   "path": "/live",
+   "loadMs": 4163,
+   "spill": 448,
+   "imgsNoAlt": 0,
+   "noName": 1,
+   "smallTargets": 18,
+   "h1s": 1,
+   "title": "ApeAgents · Build a company that builds itself",
+   "bodyText": 1778,
+   "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+   ],
+   "failedRequests": [
+    "GET http://localhost:3000/?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+    "GET http://localhost:3000/agents/agent-maya?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+    "GET http://localhost:3000/agents/agent-jake?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+    "GET http://localhost:3000/agents/agent-sofia?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+    "GET http://localhost:3000/agents/agent-nora?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+    "GET http://localhost:3000/agents/agent-sam?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+    "GET http://localhost:3000/agents/agent-iris?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+    "GET http://localhost:3000/agents/agent-leo?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+    "GET http://localhost:3000/agents/agent-ravi?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=3C7GVewgHlvW12yL net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=_LDP7vwF_7lyIZji net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=j7s84HGI7papZ6oY net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=j7s84HGI7papZ6oY net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=okzff1m0uRMesyJc net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=P-LOgdkbURoPyURJ net::ERR_ABORTED"
+   ]
+  },
+  "d-network": {
+   "path": "/network",
+   "loadMs": 3111,
+   "spill": 448,
+   "imgsNoAlt": 0,
+   "noName": 1,
+   "smallTargets": 4,
+   "h1s": 1,
+   "title": "ApeAgents · Build a company that builds itself",
+   "bodyText": 883,
+   "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+   ],
+   "failedRequests": [
+    "GET http://localhost:3000/?_rsc=3C7GVewgHlvW12yL net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=_LDP7vwF_7lyIZji net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=j7s84HGI7papZ6oY net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=j7s84HGI7papZ6oY net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=okzff1m0uRMesyJc net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=P-LOgdkbURoPyURJ net::ERR_ABORTED"
+   ]
+  },
+  "d-onboarding": {
+   "path": "/onboarding",
+   "loadMs": 3192,
+   "spill": 0,
+   "imgsNoAlt": 0,
+   "noName": 0,
+   "smallTargets": 2,
+   "h1s": 1,
+   "title": "ApeAgents · Build a company that builds itself",
+   "bodyText": 520,
+   "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+   ],
+   "failedRequests": [
+    "GET http://localhost:3000/?_rsc=_LDP7vwF_7lyIZji net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=j7s84HGI7papZ6oY net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=j7s84HGI7papZ6oY net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=okzff1m0uRMesyJc net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=P-LOgdkbURoPyURJ net::ERR_ABORTED"
+   ]
+  },
+  "d-new-agent": {
+   "path": "/agents/new",
+   "loadMs": 7094,
+   "spill": 0,
+   "imgsNoAlt": 0,
+   "noName": 1,
+   "smallTargets": 4,
+   "h1s": 1,
+   "title": "ApeAgents · Build a company that builds itself",
+   "bodyText": 692,
+   "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+   ],
+   "failedRequests": [
+    "GET http://localhost:3000/?_rsc=_LDP7vwF_7lyIZji net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=j7s84HGI7papZ6oY net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=j7s84HGI7papZ6oY net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=okzff1m0uRMesyJc net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=P-LOgdkbURoPyURJ net::ERR_ABORTED"
+   ]
+  },
+  "d-login": {
+   "path": "/login",
+   "loadMs": 3120,
+   "spill": 0,
+   "imgsNoAlt": 0,
+   "noName": 0,
+   "smallTargets": 0,
+   "h1s": 0,
+   "title": "ApeAgents · Build a company that builds itself",
+   "bodyText": 169,
+   "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+   ],
+   "failedRequests": [
+    "GET http://localhost:3000/?_rsc=j7s84HGI7papZ6oY net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=j7s84HGI7papZ6oY net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=okzff1m0uRMesyJc net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=P-LOgdkbURoPyURJ net::ERR_ABORTED"
+   ]
+  },
+  "d-login-signin": {
+   "path": "/login?mode=signin",
+   "loadMs": 3062,
+   "spill": 0,
+   "imgsNoAlt": 0,
+   "noName": 0,
+   "smallTargets": 1,
+   "h1s": 0,
+   "title": "ApeAgents · Build a company that builds itself",
+   "bodyText": 118,
+   "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+   ],
+   "failedRequests": [
+    "GET http://localhost:3000/?_rsc=j7s84HGI7papZ6oY net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=okzff1m0uRMesyJc net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=P-LOgdkbURoPyURJ net::ERR_ABORTED"
+   ]
+  },
+  "d-hq": {
+   "path": "/hq",
+   "loadMs": 6645,
+   "spill": 0,
+   "imgsNoAlt": 0,
+   "noName": 0,
+   "smallTargets": 1,
+   "h1s": 0,
+   "title": "ApeAgents · Build a company that builds itself",
+   "bodyText": 89,
+   "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+   ],
+   "failedRequests": [
+    "GET http://localhost:3000/?_rsc=okzff1m0uRMesyJc net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=P-LOgdkbURoPyURJ net::ERR_ABORTED"
+   ]
+  },
+  "d-profile": {
+   "path": "/agents/agent-maya",
+   "loadMs": 4852,
+   "spill": 0,
+   "imgsNoAlt": 0,
+   "noName": 0,
+   "smallTargets": 1,
+   "h1s": 1,
+   "title": "ApeAgents · Build a company that builds itself",
+   "bodyText": 1016,
+   "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+   ],
+   "failedRequests": [
+    "GET http://localhost:3000/?_rsc=P-LOgdkbURoPyURJ net::ERR_ABORTED"
+   ]
+  },
+  "d-profile-404": {
+   "path": "/agents/does-not-exist",
+   "loadMs": 3461,
+   "spill": 0,
+   "imgsNoAlt": 0,
+   "noName": 0,
+   "smallTargets": 1,
+   "h1s": 1,
+   "title": "ApeAgents · Build a company that builds itself",
+   "bodyText": 1016,
+   "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+   ],
+   "failedRequests": [
+    "GET http://localhost:3000/?_rsc=P-LOgdkbURoPyURJ net::ERR_ABORTED"
+   ]
+  },
+  "d-route-404": {
+   "path": "/no-such-page",
+   "loadMs": 3077,
+   "spill": 0,
+   "imgsNoAlt": 0,
+   "noName": 0,
+   "smallTargets": 0,
+   "h1s": 1,
+   "title": "ApeAgents · Build a company that builds itself",
+   "bodyText": 33,
+   "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+   ],
+   "failedRequests": []
+  },
+  "m-home": {
+   "path": "/",
+   "loadMs": 7331,
+   "spill": 390,
+   "imgsNoAlt": 0,
+   "noName": 1,
+   "smallTargets": 6,
+   "h1s": 1,
+   "title": "ApeAgents · Build a company that builds itself",
+   "bodyText": 272,
+   "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+   ],
+   "failedRequests": [
+    "GET http://localhost:3000/?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+    "GET http://localhost:3000/agents/agent-dana?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+    "GET http://localhost:3000/agents/agent-maya?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+    "GET http://localhost:3000/agents/agent-sofia?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+    "GET http://localhost:3000/agents/agent-jake?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+    "GET http://localhost:3000/agents/agent-iris?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+    "GET http://localhost:3000/agents/agent-ravi?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=3C7GVewgHlvW12yL net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=_LDP7vwF_7lyIZji net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=j7s84HGI7papZ6oY net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=j7s84HGI7papZ6oY net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=okzff1m0uRMesyJc net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=P-LOgdkbURoPyURJ net::ERR_ABORTED"
+   ]
+  },
+  "m-live": {
+   "path": "/live",
+   "loadMs": 4312,
+   "spill": 390,
+   "imgsNoAlt": 0,
+   "noName": 1,
+   "smallTargets": 18,
+   "h1s": 1,
+   "title": "ApeAgents · Build a company that builds itself",
+   "bodyText": 1746,
+   "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+   ],
+   "failedRequests": [
+    "GET http://localhost:3000/?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+    "GET http://localhost:3000/agents/agent-dana?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+    "GET http://localhost:3000/agents/agent-maya?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+    "GET http://localhost:3000/agents/agent-sofia?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+    "GET http://localhost:3000/agents/agent-jake?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+    "GET http://localhost:3000/agents/agent-iris?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+    "GET http://localhost:3000/agents/agent-ravi?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=3C7GVewgHlvW12yL net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=_LDP7vwF_7lyIZji net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=j7s84HGI7papZ6oY net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=j7s84HGI7papZ6oY net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=okzff1m0uRMesyJc net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=P-LOgdkbURoPyURJ net::ERR_ABORTED"
+   ]
+  },
+  "m-network": {
+   "path": "/network",
+   "loadMs": 3088,
+   "spill": 390,
+   "imgsNoAlt": 0,
+   "noName": 1,
+   "smallTargets": 4,
+   "h1s": 1,
+   "title": "ApeAgents · Build a company that builds itself",
+   "bodyText": 861,
+   "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+   ],
+   "failedRequests": [
+    "GET http://localhost:3000/?_rsc=3C7GVewgHlvW12yL net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=_LDP7vwF_7lyIZji net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=j7s84HGI7papZ6oY net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=j7s84HGI7papZ6oY net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=okzff1m0uRMesyJc net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=P-LOgdkbURoPyURJ net::ERR_ABORTED"
+   ]
+  },
+  "m-onboarding": {
+   "path": "/onboarding",
+   "loadMs": 3179,
+   "spill": 0,
+   "imgsNoAlt": 0,
+   "noName": 0,
+   "smallTargets": 2,
+   "h1s": 1,
+   "title": "ApeAgents · Build a company that builds itself",
+   "bodyText": 520,
+   "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+   ],
+   "failedRequests": [
+    "GET http://localhost:3000/?_rsc=_LDP7vwF_7lyIZji net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=j7s84HGI7papZ6oY net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=j7s84HGI7papZ6oY net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=okzff1m0uRMesyJc net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=P-LOgdkbURoPyURJ net::ERR_ABORTED"
+   ]
+  },
+  "m-new-agent": {
+   "path": "/agents/new",
+   "loadMs": 7361,
+   "spill": 0,
+   "imgsNoAlt": 0,
+   "noName": 1,
+   "smallTargets": 4,
+   "h1s": 1,
+   "title": "ApeAgents · Build a company that builds itself",
+   "bodyText": 676,
+   "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+   ],
+   "failedRequests": [
+    "GET http://localhost:3000/?_rsc=_LDP7vwF_7lyIZji net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=j7s84HGI7papZ6oY net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=j7s84HGI7papZ6oY net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=okzff1m0uRMesyJc net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=P-LOgdkbURoPyURJ net::ERR_ABORTED"
+   ]
+  },
+  "m-login": {
+   "path": "/login",
+   "loadMs": 3155,
+   "spill": 0,
+   "imgsNoAlt": 0,
+   "noName": 0,
+   "smallTargets": 0,
+   "h1s": 0,
+   "title": "ApeAgents · Build a company that builds itself",
+   "bodyText": 169,
+   "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+   ],
+   "failedRequests": [
+    "GET http://localhost:3000/?_rsc=j7s84HGI7papZ6oY net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=j7s84HGI7papZ6oY net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=okzff1m0uRMesyJc net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=P-LOgdkbURoPyURJ net::ERR_ABORTED"
+   ]
+  },
+  "m-login-signin": {
+   "path": "/login?mode=signin",
+   "loadMs": 3059,
+   "spill": 0,
+   "imgsNoAlt": 0,
+   "noName": 0,
+   "smallTargets": 1,
+   "h1s": 0,
+   "title": "ApeAgents · Build a company that builds itself",
+   "bodyText": 118,
+   "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+   ],
+   "failedRequests": [
+    "GET http://localhost:3000/?_rsc=j7s84HGI7papZ6oY net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=okzff1m0uRMesyJc net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=P-LOgdkbURoPyURJ net::ERR_ABORTED"
+   ]
+  },
+  "m-hq": {
+   "path": "/hq",
+   "loadMs": 6605,
+   "spill": 0,
+   "imgsNoAlt": 0,
+   "noName": 0,
+   "smallTargets": 1,
+   "h1s": 0,
+   "title": "ApeAgents · Build a company that builds itself",
+   "bodyText": 52,
+   "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+   ],
+   "failedRequests": [
+    "GET http://localhost:3000/?_rsc=okzff1m0uRMesyJc net::ERR_ABORTED",
+    "GET http://localhost:3000/?_rsc=P-LOgdkbURoPyURJ net::ERR_ABORTED"
+   ]
+  },
+  "m-profile": {
+   "path": "/agents/agent-maya",
+   "loadMs": 4783,
+   "spill": 0,
+   "imgsNoAlt": 0,
+   "noName": 0,
+   "smallTargets": 1,
+   "h1s": 1,
+   "title": "ApeAgents · Build a company that builds itself",
+   "bodyText": 1016,
+   "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+   ],
+   "failedRequests": [
+    "GET http://localhost:3000/?_rsc=P-LOgdkbURoPyURJ net::ERR_ABORTED"
+   ]
+  },
+  "m-profile-404": {
+   "path": "/agents/does-not-exist",
+   "loadMs": 3456,
+   "spill": 0,
+   "imgsNoAlt": 0,
+   "noName": 0,
+   "smallTargets": 1,
+   "h1s": 1,
+   "title": "ApeAgents · Build a company that builds itself",
+   "bodyText": 1016,
+   "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+   ],
+   "failedRequests": [
+    "GET http://localhost:3000/?_rsc=P-LOgdkbURoPyURJ net::ERR_ABORTED"
+   ]
+  },
+  "m-route-404": {
+   "path": "/no-such-page",
+   "loadMs": 3093,
+   "spill": 0,
+   "imgsNoAlt": 0,
+   "noName": 0,
+   "smallTargets": 0,
+   "h1s": 1,
+   "title": "ApeAgents · Build a company that builds itself",
+   "bodyText": 33,
+   "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+   ],
+   "failedRequests": []
+  }
+ },
+ "flows": [
+  {
+   "name": "onboarding: empty business name gives feedback",
+   "ok": true,
+   "detail": "matches=2"
+  },
+  {
+   "name": "onboarding: company path advances through steps",
+   "ok": true,
+   "detail": "http://localhost:3000/onboarding"
+  },
+  {
+   "name": "create: hire gated before input",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "create: skills recommended after department pick",
+   "ok": true,
+   "detail": "chips~3"
+  },
+  {
+   "name": "create: hire enabled after required fields",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "create: mint reveal after hire",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "run dialog: busy state blocks job (demo agent busy)",
+   "ok": true,
+   "detail": "Working…"
+  },
+  {
+   "name": "inbox: drawer opens from bell",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "inbox: reply submits",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "login: signin attempt handled (demo accepts any key)",
+   "ok": true,
+   "detail": "http://localhost:3000/"
+  },
+  {
+   "name": "profile tab Memories present",
+   "ok": false,
+   "detail": "tab not found"
+  },
+  {
+   "name": "profile: tabs navigable",
+   "ok": true,
+   "detail": ""
+  }
+ ],
+ "findings": [
+  {
+   "sev": "P2",
+   "where": "d /",
+   "text": "horizontal overflow 448px"
+  },
+  {
+   "sev": "P2",
+   "where": "d /",
+   "text": "1 console errors; first: Failed to load resource: the server responded with a status of 404 (Not Found)"
+  },
+  {
+   "sev": "P2",
+   "where": "d /live",
+   "text": "horizontal overflow 448px"
+  },
+  {
+   "sev": "P2",
+   "where": "d /live",
+   "text": "9 failed requests; first: GET http://localhost:3000/?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED"
+  },
+  {
+   "sev": "P2",
+   "where": "d /network",
+   "text": "horizontal overflow 448px"
+  },
+  {
+   "sev": "P2",
+   "where": "d /network",
+   "text": "1 failed requests; first: GET http://localhost:3000/?_rsc=3C7GVewgHlvW12yL net::ERR_ABORTED"
+  },
+  {
+   "sev": "P2",
+   "where": "d /agents/new",
+   "text": "1 failed requests; first: GET http://localhost:3000/?_rsc=_LDP7vwF_7lyIZji net::ERR_ABORTED"
+  },
+  {
+   "sev": "P2",
+   "where": "d /login",
+   "text": "1 failed requests; first: GET http://localhost:3000/?_rsc=j7s84HGI7papZ6oY net::ERR_ABORTED"
+  },
+  {
+   "sev": "P2",
+   "where": "d /login?mode=signin",
+   "text": "1 failed requests; first: GET http://localhost:3000/?_rsc=j7s84HGI7papZ6oY net::ERR_ABORTED"
+  },
+  {
+   "sev": "P2",
+   "where": "d /hq",
+   "text": "1 failed requests; first: GET http://localhost:3000/?_rsc=okzff1m0uRMesyJc net::ERR_ABORTED"
+  },
+  {
+   "sev": "P2",
+   "where": "d /agents/does-not-exist",
+   "text": "1 failed requests; first: GET http://localhost:3000/?_rsc=P-LOgdkbURoPyURJ net::ERR_ABORTED"
+  },
+  {
+   "sev": "P2",
+   "where": "d /no-such-page",
+   "text": "1 console errors; first: Failed to load resource: the server responded with a status of 404 (Not Found)"
+  },
+  {
+   "sev": "P1",
+   "where": "m /",
+   "text": "horizontal overflow 390px"
+  },
+  {
+   "sev": "P1",
+   "where": "m /live",
+   "text": "horizontal overflow 390px"
+  },
+  {
+   "sev": "P2",
+   "where": "m /live",
+   "text": "7 failed requests; first: GET http://localhost:3000/?_rsc=WBYxbXEgKeZRN635 net::ERR_ABORTED"
+  },
+  {
+   "sev": "P1",
+   "where": "m /network",
+   "text": "horizontal overflow 390px"
+  },
+  {
+   "sev": "P2",
+   "where": "m /network",
+   "text": "1 failed requests; first: GET http://localhost:3000/?_rsc=3C7GVewgHlvW12yL net::ERR_ABORTED"
+  },
+  {
+   "sev": "P2",
+   "where": "m /agents/new",
+   "text": "1 failed requests; first: GET http://localhost:3000/?_rsc=_LDP7vwF_7lyIZji net::ERR_ABORTED"
+  },
+  {
+   "sev": "P2",
+   "where": "m /login",
+   "text": "1 failed requests; first: GET http://localhost:3000/?_rsc=j7s84HGI7papZ6oY net::ERR_ABORTED"
+  },
+  {
+   "sev": "P2",
+   "where": "m /login?mode=signin",
+   "text": "1 failed requests; first: GET http://localhost:3000/?_rsc=j7s84HGI7papZ6oY net::ERR_ABORTED"
+  },
+  {
+   "sev": "P2",
+   "where": "m /hq",
+   "text": "1 failed requests; first: GET http://localhost:3000/?_rsc=okzff1m0uRMesyJc net::ERR_ABORTED"
+  },
+  {
+   "sev": "P2",
+   "where": "m /agents/does-not-exist",
+   "text": "1 failed requests; first: GET http://localhost:3000/?_rsc=P-LOgdkbURoPyURJ net::ERR_ABORTED"
+  },
+  {
+   "sev": "P2",
+   "where": "m /no-such-page",
+   "text": "1 console errors; first: Failed to load resource: the server responded with a status of 404 (Not Found)"
+  }
+ ]
+}
