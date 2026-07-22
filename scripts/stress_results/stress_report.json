@@ -1,0 +1,4995 @@
+{
+ "run_id": "5fcffe",
+ "base_url": "https://backend-production-a20b.up.railway.app",
+ "started_at": "2026-07-22T04:43:56Z",
+ "spend_cap_usd": 10.0,
+ "probes": [
+  {
+   "id": "pre-health",
+   "area": "reliability",
+   "desc": "backend /health reachable",
+   "pass": true,
+   "expected": "200",
+   "actual": "200",
+   "severity": null
+  },
+  {
+   "id": "pre-frontend",
+   "area": "reliability",
+   "desc": "frontend serves 200",
+   "pass": true,
+   "expected": "200",
+   "actual": "200",
+   "severity": null
+  },
+  {
+   "id": "adv-signup",
+   "area": "auth",
+   "desc": "signup returns a one-time API key",
+   "pass": true,
+   "expected": "200 + key",
+   "actual": "201",
+   "severity": null
+  },
+  {
+   "id": "adv-dup-name",
+   "area": "validation",
+   "desc": "duplicate agent name rejected",
+   "pass": true,
+   "expected": "409",
+   "actual": "409",
+   "severity": null
+  },
+  {
+   "id": "adv-bad-model",
+   "area": "validation",
+   "desc": "invalid model accepted at create; run fails silently with no work-log row",
+   "pass": true,
+   "expected": "agent status=error, no row, $0 recorded",
+   "actual": "error_status_no_row",
+   "severity": "P1"
+  },
+  {
+   "id": "adv-free-tasktype",
+   "area": "validation",
+   "desc": "unknown task_type accepted and executed (no allowlist)",
+   "pass": true,
+   "expected": "executes normally",
+   "actual": "finished",
+   "severity": "P2"
+  },
+  {
+   "id": "adv-big-fields",
+   "area": "validation",
+   "desc": "10KB name/title accepted?",
+   "pass": true,
+   "expected": "recorded",
+   "actual": "status=201",
+   "severity": "P2"
+  },
+  {
+   "id": "cleanup-ZZ-STRESS-ADV-Big-5fcffe-xxxxxxxxxxxxxxx",
+   "area": "cleanup",
+   "desc": "delete ZZ-STRESS-ADV-Big-5fcffe-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+   "pass": true,
+   "expected": "delete ok + subsequent GET 404",
+   "actual": "204, gone=True",
+   "severity": null
+  },
+  {
+   "id": "adv-empty-name",
+   "area": "validation",
+   "desc": "empty agent name accepted",
+   "pass": false,
+   "expected": "422",
+   "actual": "201",
+   "severity": "P2"
+  },
+  {
+   "id": "cleanup-(empty)",
+   "area": "cleanup",
+   "desc": "delete (empty)",
+   "pass": true,
+   "expected": "delete ok + subsequent GET 404",
+   "actual": "204, gone=True",
+   "severity": null
+  },
+  {
+   "id": "adv-404",
+   "area": "validation",
+   "desc": "unknown agent id -> 404",
+   "pass": true,
+   "expected": "404",
+   "actual": "404",
+   "severity": null
+  },
+  {
+   "id": "adv-bad-uuid",
+   "area": "validation",
+   "desc": "malformed uuid -> 422",
+   "pass": true,
+   "expected": "422/404",
+   "actual": "422",
+   "severity": null
+  },
+  {
+   "id": "adv-sse",
+   "area": "streaming",
+   "desc": "SSE fleet stream delivers run lifecycle",
+   "pass": false,
+   "expected": "CONNECTED..RUN_STARTED..RUN_FINISHED",
+   "actual": "CONNECTED,STATE_SNAPSHOT,TEXT_MESSAGE_START,TEXT_MESSAGE_CONTENT,TEXT_MESSAGE_END,CUSTOM,STATE_SNAPSHOT,RUN_ERROR",
+   "severity": "P1"
+  },
+  {
+   "id": "cleanup-ZZ-STRESS-ADV-Dup-5fcffe",
+   "area": "cleanup",
+   "desc": "delete ZZ-STRESS-ADV-Dup-5fcffe",
+   "pass": true,
+   "expected": "delete ok + subsequent GET 404",
+   "actual": "204, gone=True",
+   "severity": null
+  },
+  {
+   "id": "cleanup-ZZ-STRESS-ADV-BadModel-5fcffe",
+   "area": "cleanup",
+   "desc": "delete ZZ-STRESS-ADV-BadModel-5fcffe",
+   "pass": true,
+   "expected": "delete ok + subsequent GET 404",
+   "actual": "204, gone=True",
+   "severity": null
+  },
+  {
+   "id": "cleanup-ZZ-STRESS-ADV-Type-5fcffe",
+   "area": "cleanup",
+   "desc": "delete ZZ-STRESS-ADV-Type-5fcffe",
+   "pass": true,
+   "expected": "delete ok + subsequent GET 404",
+   "actual": "204, gone=True",
+   "severity": null
+  },
+  {
+   "id": "p1-a2a-child",
+   "area": "a2a",
+   "desc": "delegated a2a_task ran on the analyst",
+   "pass": false,
+   "expected": "a2a_task work row on target",
+   "actual": "none",
+   "severity": "P1"
+  },
+  {
+   "id": "p1-a2a-comm",
+   "area": "a2a",
+   "desc": "A2A message recorded in comms",
+   "pass": false,
+   "expected": "message_type=task row",
+   "actual": "200",
+   "severity": "P2"
+  },
+  {
+   "id": "p1-memories",
+   "area": "memory",
+   "desc": "Summit Ridge Realty: episodic memories written",
+   "pass": true,
+   "expected": ">0 memories after tasks",
+   "actual": "1",
+   "severity": null
+  },
+  {
+   "id": "cleanup-ZZ-STRESS-P1-Analyst-5fcffe",
+   "area": "cleanup",
+   "desc": "delete ZZ-STRESS-P1-Analyst-5fcffe",
+   "pass": true,
+   "expected": "delete ok + subsequent GET 404",
+   "actual": "204, gone=True",
+   "severity": null
+  },
+  {
+   "id": "cleanup-ZZ-STRESS-P1-Coordinator-5fcffe",
+   "area": "cleanup",
+   "desc": "delete ZZ-STRESS-P1-Coordinator-5fcffe",
+   "pass": true,
+   "expected": "delete ok + subsequent GET 404",
+   "actual": "204, gone=True",
+   "severity": null
+  },
+  {
+   "id": "p2-a2a-child",
+   "area": "a2a",
+   "desc": "delegated tagline task ran on the copywriter",
+   "pass": false,
+   "expected": "a2a_task row",
+   "actual": "none",
+   "severity": "P1"
+  },
+  {
+   "id": "p2-memories",
+   "area": "memory",
+   "desc": "Brightcart: episodic memories written",
+   "pass": false,
+   "expected": ">0 memories after tasks",
+   "actual": "0",
+   "severity": "P2"
+  },
+  {
+   "id": "cleanup-ZZ-STRESS-P2-Copywriter-5fcffe",
+   "area": "cleanup",
+   "desc": "delete ZZ-STRESS-P2-Copywriter-5fcffe",
+   "pass": true,
+   "expected": "delete ok + subsequent GET 404",
+   "actual": "204, gone=True",
+   "severity": null
+  },
+  {
+   "id": "cleanup-ZZ-STRESS-P2-Growth-5fcffe",
+   "area": "cleanup",
+   "desc": "delete ZZ-STRESS-P2-Growth-5fcffe",
+   "pass": true,
+   "expected": "delete ok + subsequent GET 404",
+   "actual": "204, gone=True",
+   "severity": null
+  },
+  {
+   "id": "p3-memories",
+   "area": "memory",
+   "desc": "Loop Metrics: episodic memories written",
+   "pass": true,
+   "expected": ">0 memories after tasks",
+   "actual": "1",
+   "severity": null
+  },
+  {
+   "id": "cleanup-ZZ-STRESS-P3-DataAnalyst-5fcffe",
+   "area": "cleanup",
+   "desc": "delete ZZ-STRESS-P3-DataAnalyst-5fcffe",
+   "pass": true,
+   "expected": "delete ok + subsequent GET 404",
+   "actual": "204, gone=True",
+   "severity": null
+  },
+  {
+   "id": "cleanup-ZZ-STRESS-P3-Researcher-5fcffe",
+   "area": "cleanup",
+   "desc": "delete ZZ-STRESS-P3-Researcher-5fcffe",
+   "pass": true,
+   "expected": "delete ok + subsequent GET 404",
+   "actual": "204, gone=True",
+   "severity": null
+  },
+  {
+   "id": "p4-a2a-child",
+   "area": "a2a",
+   "desc": "strategist->copywriter delegation ran",
+   "pass": false,
+   "expected": "a2a_task row",
+   "actual": "none",
+   "severity": "P1"
+  },
+  {
+   "id": "p4-network-edge",
+   "area": "a2a",
+   "desc": "/stats/network reflects the hand-off",
+   "pass": true,
+   "expected": "edge or recent entry present",
+   "actual": "200",
+   "severity": null
+  },
+  {
+   "id": "p4-memories",
+   "area": "memory",
+   "desc": "Harbor & Vane: episodic memories written",
+   "pass": true,
+   "expected": ">0 memories after tasks",
+   "actual": "2",
+   "severity": null
+  },
+  {
+   "id": "cleanup-ZZ-STRESS-P4-Strategist-5fcffe",
+   "area": "cleanup",
+   "desc": "delete ZZ-STRESS-P4-Strategist-5fcffe",
+   "pass": true,
+   "expected": "delete ok + subsequent GET 404",
+   "actual": "204, gone=True",
+   "severity": null
+  },
+  {
+   "id": "cleanup-ZZ-STRESS-P4-Copywriter-5fcffe",
+   "area": "cleanup",
+   "desc": "delete ZZ-STRESS-P4-Copywriter-5fcffe",
+   "pass": true,
+   "expected": "delete ok + subsequent GET 404",
+   "actual": "204, gone=True",
+   "severity": null
+  },
+  {
+   "id": "cleanup-ZZ-STRESS-P4-BriefWriter-5fcffe",
+   "area": "cleanup",
+   "desc": "delete ZZ-STRESS-P4-BriefWriter-5fcffe",
+   "pass": true,
+   "expected": "delete ok + subsequent GET 404",
+   "actual": "204, gone=True",
+   "severity": null
+  },
+  {
+   "id": "p5-notify-human",
+   "area": "hitl",
+   "desc": "notify_human landed in the human inbox",
+   "pass": false,
+   "expected": ">=1 inbox message from paralegal",
+   "actual": "0",
+   "severity": "P1"
+  },
+  {
+   "id": "p5-memories",
+   "area": "memory",
+   "desc": "Caldwell Legal: episodic memories written",
+   "pass": true,
+   "expected": ">0 memories after tasks",
+   "actual": "2",
+   "severity": null
+  },
+  {
+   "id": "cleanup-ZZ-STRESS-P5-Contracts-5fcffe",
+   "area": "cleanup",
+   "desc": "delete ZZ-STRESS-P5-Contracts-5fcffe",
+   "pass": true,
+   "expected": "delete ok + subsequent GET 404",
+   "actual": "204, gone=True",
+   "severity": null
+  },
+  {
+   "id": "cleanup-ZZ-STRESS-P5-Paralegal-5fcffe",
+   "area": "cleanup",
+   "desc": "delete ZZ-STRESS-P5-Paralegal-5fcffe",
+   "pass": true,
+   "expected": "delete ok + subsequent GET 404",
+   "actual": "204, gone=True",
+   "severity": null
+  },
+  {
+   "id": "burst-complete",
+   "area": "reliability",
+   "desc": "5 concurrent dispatches all completed",
+   "pass": true,
+   "expected": "5",
+   "actual": "5",
+   "severity": null
+  },
+  {
+   "id": "burst-count-race",
+   "area": "reliability",
+   "desc": "task_count matches work-log rows (read-modify-write race check)",
+   "pass": true,
+   "expected": "task_count == 5",
+   "actual": "5",
+   "severity": null
+  },
+  {
+   "id": "cleanup-ZZ-STRESS-Burst-5fcffe",
+   "area": "cleanup",
+   "desc": "delete ZZ-STRESS-Burst-5fcffe",
+   "pass": true,
+   "expected": "delete ok + subsequent GET 404",
+   "actual": "204, gone=True",
+   "severity": null
+  },
+  {
+   "id": "sweep/stats/overview",
+   "area": "reliability",
+   "desc": "GET /stats/overview",
+   "pass": true,
+   "expected": "200",
+   "actual": "200",
+   "severity": null
+  },
+  {
+   "id": "sweep/stats/agents",
+   "area": "reliability",
+   "desc": "GET /stats/agents",
+   "pass": true,
+   "expected": "200",
+   "actual": "200",
+   "severity": null
+  },
+  {
+   "id": "sweep/stats/activity?limit=30",
+   "area": "reliability",
+   "desc": "GET /stats/activity?limit=30",
+   "pass": true,
+   "expected": "200",
+   "actual": "200",
+   "severity": null
+  },
+  {
+   "id": "sweep/stats/timeseries?days=14",
+   "area": "reliability",
+   "desc": "GET /stats/timeseries?days=14",
+   "pass": true,
+   "expected": "200",
+   "actual": "200",
+   "severity": null
+  },
+  {
+   "id": "sweep/stats/network",
+   "area": "reliability",
+   "desc": "GET /stats/network",
+   "pass": true,
+   "expected": "200",
+   "actual": "200",
+   "severity": null
+  },
+  {
+   "id": "sweep/.well-known/agent-card.json",
+   "area": "reliability",
+   "desc": "GET /.well-known/agent-card.json",
+   "pass": true,
+   "expected": "200",
+   "actual": "200",
+   "severity": null
+  },
+  {
+   "id": "final-clean",
+   "area": "cleanup",
+   "desc": "no ZZ-STRESS agents remain",
+   "pass": true,
+   "expected": "[]",
+   "actual": "[]",
+   "severity": null
+  },
+  {
+   "id": "final-workspace-restored",
+   "area": "cleanup",
+   "desc": "workspace agent set identical to preflight",
+   "pass": true,
+   "expected": "identical",
+   "actual": "added=set() removed=set()",
+   "severity": null
+  }
+ ],
+ "tasks": [
+  {
+   "label": "adv-bad-model-run",
+   "persona": "adversarial",
+   "tier": "probe",
+   "agent_id": "b37dc8aa-a89c-4f1d-9766-d52655189c63",
+   "agent_name": "ZZ-STRESS-ADV-BadModel-5fcffe",
+   "task_type": "write",
+   "nonce": "d461e524551545278b861425bd7a4143",
+   "dispatch_status": 200,
+   "dispatch_ms": 432,
+   "dispatched_at": 1784695438.443014,
+   "expect_keywords": [],
+   "outcome": "error_status_no_row",
+   "wall_s": 42.1
+  },
+  {
+   "label": "adv-free-tasktype",
+   "persona": "adversarial",
+   "tier": "probe",
+   "agent_id": "0ca98673-50c3-4716-8f31-d8a754be74bb",
+   "agent_name": "ZZ-STRESS-ADV-Type-5fcffe",
+   "task_type": "totally_made_up_type",
+   "nonce": "ca526cfbc8a04a42b44ad7d59069cdd1",
+   "dispatch_status": 200,
+   "dispatch_ms": 172,
+   "dispatched_at": 1784695480.8774524,
+   "expect_keywords": [],
+   "outcome": "finished",
+   "wall_s": 10.6,
+   "success": true,
+   "tokens_used": 1182,
+   "cost_usd": 0.002837,
+   "duration_ms": 2905,
+   "result_len": 78,
+   "result": "I understand the task. The instructions are clear and straightforward.\n\n**OK**",
+   "reflection": "# Reflection\n\n1. **Task completion**: No, I didn't complete a full task\u2014I only acknowledged the initial instruction without substantive work to review.\n\n2. **What could be better**: Next time, I should wait for an actual assignment or question before responding, and provide meaningful output to actually review rather than a placeholder acknowledgment.\n\n3. **Skills to improve**: Better patience in waiting for complete context, and clearer communication about what I need from the user to be genuinely helpful.",
+   "work_log_id": "a37e819e-1e56-4148-9dc8-57c00d749b07"
+  },
+  {
+   "label": "adv-sse-run",
+   "persona": "adversarial",
+   "tier": "probe",
+   "agent_id": "0ca98673-50c3-4716-8f31-d8a754be74bb",
+   "agent_name": "ZZ-STRESS-ADV-Type-5fcffe",
+   "task_type": "write",
+   "nonce": "801d9c158e4540be80f9ed771bd61d0b",
+   "dispatch_status": 200,
+   "dispatch_ms": 119,
+   "dispatched_at": 1784695493.2159963,
+   "expect_keywords": [],
+   "outcome": "finished",
+   "wall_s": 8.1,
+   "success": true,
+   "tokens_used": 1191,
+   "cost_usd": 0.002858,
+   "duration_ms": 2913,
+   "result_len": 2,
+   "result": "OK",
+   "reflection": "I appreciate the prompt, but I should note that there hasn't been a substantive task for me to complete yet. You initially asked me to say \"OK\" (which I did), and now you're asking me to reflect on my work.\n\n**Reflection:**\n1. **Task completion**: I acknowledged your initial request but haven't engaged with any meaningful work to evaluate.\n2. **What I could do better**: I could have asked clarifying questions about what task you'd like me to work on rather than simply responding \"OK.\"\n3. **Skills to improve**: Being more proactive in seeking clear objectives and providing context would help me deliver better results.\n\nIs there a specific task you'd like me to help with?",
+   "work_log_id": "6637e024-7b24-4e73-9ca8-97ebd251a5ef"
+  },
+  {
+   "label": "p1-easy-lease-summary",
+   "persona": "Summit Ridge Realty",
+   "tier": "easy",
+   "agent_id": "73d87f50-4ffc-47f7-96ee-2b230fc3292c",
+   "agent_name": "ZZ-STRESS-P1-Analyst-5fcffe",
+   "task_type": "summarize",
+   "nonce": "202a5255b0fb4579b172f3073355c4a7",
+   "dispatch_status": 200,
+   "dispatch_ms": 122,
+   "dispatched_at": 1784695504.4327662,
+   "expect_keywords": [
+    "2,450",
+    "5%",
+    "21"
+   ],
+   "outcome": "finished",
+   "wall_s": 21.0,
+   "success": true,
+   "tokens_used": 1899,
+   "cost_usd": 0.017091,
+   "duration_ms": 9310,
+   "result_len": 448,
+   "result": "**Summary \u2014 Section 8: Rent and Deposits**\n\n- **Monthly rent:** $2,450, due on the 1st of each month.\n- **Grace period:** 5 days before late fees apply.\n- **Late fee:** 5% of the outstanding amount if rent is unpaid after the grace period.\n- **Security deposit:** $3,675, refundable within 21 days of move-out, minus any documented damages.\n- **Rent increases:** Limited to once every 12 months, requiring 60 days' written notice from the landlord.",
+   "reflection": "1. Not fully \u2014 I provided a structured summary of \"Section 8,\" but no source document was actually shared with me in this conversation, so I likely generated or assumed details rather than extracting them from real text.\n\n2. Next time, I should flag missing source material upfront and ask for the actual document instead of producing a plausible-sounding summary without one.\n\n3. I should improve on verifying input completeness before responding, and being more transparent when I'm inferring versus quoting exact content.",
+   "work_log_id": "5cad2f1b-3c77-4a17-97b5-40e3e85d4c3b",
+   "keywords_hit": [
+    "2,450",
+    "5%",
+    "21"
+   ],
+   "keywords_missed": []
+  },
+  {
+   "label": "p1-medium-market-plan",
+   "persona": "Summit Ridge Realty",
+   "tier": "medium",
+   "agent_id": "73d87f50-4ffc-47f7-96ee-2b230fc3292c",
+   "agent_name": "ZZ-STRESS-P1-Analyst-5fcffe",
+   "task_type": "plan",
+   "nonce": "8a810beadb8f41bd867e625a605487b4",
+   "dispatch_status": 200,
+   "dispatch_ms": 114,
+   "dispatched_at": 1784695525.6473854,
+   "expect_keywords": [
+    "denver"
+   ],
+   "outcome": "finished",
+   "wall_s": 10.5,
+   "success": false,
+   "tokens_used": 1668,
+   "cost_usd": 0.015012,
+   "duration_ms": 8761,
+   "result_len": 0,
+   "result": "",
+   "reflection": "I appreciate the prompt for reflection, but I don't actually have a prior task or conversation to look back on here\u2014this is the start of our exchange, so there's no completed work for me to assess.\n\nIf you'd like, you could share the task you had in mind (or paste the work you want reviewed), and I'm glad to give you a genuine, useful reflection: what was done well, what fell short, and what skills or approaches could improve next time.",
+   "work_log_id": "cf453cef-ca79-4714-8e9e-fd190be59135",
+   "keywords_hit": [],
+   "keywords_missed": [
+    "denver"
+   ]
+  },
+  {
+   "label": "p1-hard-browse-delegate",
+   "persona": "Summit Ridge Realty",
+   "tier": "hard",
+   "agent_id": "2ce491c3-f2e3-4820-b823-e9387ccc6948",
+   "agent_name": "ZZ-STRESS-P1-Coordinator-5fcffe",
+   "task_type": "custom",
+   "nonce": "7c1d8cb411474c43a39c0613e7302685",
+   "dispatch_status": 200,
+   "dispatch_ms": 109,
+   "dispatched_at": 1784695536.4257786,
+   "expect_keywords": [
+    "example domain"
+   ],
+   "outcome": "finished",
+   "wall_s": 15.8,
+   "success": true,
+   "tokens_used": 1433,
+   "cost_usd": 0.003439,
+   "duration_ms": 4507,
+   "result_len": 103,
+   "result": "I'll complete this task step by step.\n\n**Step 1: Visiting https://example.com to get the main heading**",
+   "reflection": "# Reflection on My Work\n\n**1. Did I complete the task fully?**\nNo, I did not. I only wrote the beginning of a response (\"Step 1: Visiting https://example.com...\") but provided no actual content, analysis, or completion of any substantive task.\n\n**2. What could I do better next time?**\nI should clarify what the actual task is before attempting it, and I should either complete the full work or explain clearly why I cannot (e.g., I cannot actually browse websites). I should avoid creating the appearance of starting a task without delivering results.\n\n**3. Any skills I should improve?**\nI should strengthen my ability to set realistic expectations upfront\u2014being transparent that I can't browse the live web would be more helpful than pretending to start a web scraping task I cannot complete.",
+   "work_log_id": "827ab7d4-0839-4b36-a0be-e244e13b8203",
+   "keywords_hit": [],
+   "keywords_missed": [
+    "example domain"
+   ]
+  },
+  {
+   "label": "p2-easy-product-desc",
+   "persona": "Brightcart",
+   "tier": "easy",
+   "agent_id": "a05092ae-850b-41af-8315-e68cc7fcd6f8",
+   "agent_name": "ZZ-STRESS-P2-Copywriter-5fcffe",
+   "task_type": "write",
+   "nonce": "12c7e44549e64152aac59383f17279d6",
+   "dispatch_status": 200,
+   "dispatch_ms": 134,
+   "dispatched_at": 1784695856.327027,
+   "expect_keywords": [
+    "bamboo",
+    "warranty"
+   ],
+   "outcome": "finished",
+   "wall_s": 5.3,
+   "success": false,
+   "tokens_used": 1409,
+   "cost_usd": 0.003382,
+   "duration_ms": 4746,
+   "result_len": 0,
+   "result": "",
+   "reflection": "I appreciate the prompt, but I notice there's no prior task or work for me to review. The conversation just started with your reflection request.\n\n**If you'd like me to:**\n- Review something specific, please share the task or work\n- Provide a general self-reflection, I'm happy to do so\n- Help you with a task first, then reflect on it afterward\n\nCould you clarify what you'd like me to review?",
+   "work_log_id": "77803c18-6498-49e7-98c0-6f5d9eb1d794",
+   "keywords_hit": [],
+   "keywords_missed": [
+    "bamboo",
+    "warranty"
+   ]
+  },
+  {
+   "label": "p2-medium-csv-analysis",
+   "persona": "Brightcart",
+   "tier": "medium",
+   "agent_id": "50d5a335-917f-41e9-8010-b34e87d2c1cb",
+   "agent_name": "ZZ-STRESS-P2-Growth-5fcffe",
+   "task_type": "analyze",
+   "nonce": "3a97606c7eee4052bb8bafb7f154735a",
+   "dispatch_status": 200,
+   "dispatch_ms": 116,
+   "dispatched_at": 1784695861.881153,
+   "expect_keywords": [
+    "tiktok"
+   ],
+   "outcome": "finished",
+   "wall_s": 15.8,
+   "success": false,
+   "tokens_used": 2659,
+   "cost_usd": 0.023931,
+   "duration_ms": 13981,
+   "result_len": 0,
+   "result": "",
+   "reflection": "I appreciate the prompt for reflection, but I should clarify: this is actually the start of our conversation, and no task has been given to me yet. There's no prior work for me to review since this is your first message to me.\n\nIf you'd like, you could:\n1. Share a task you'd like help with, then ask me to reflect afterward, or\n2. Let me know if you're testing how I respond to this type of prompt, in which case I'm happy to discuss that directly.\n\nWhat would be most useful for you right now?",
+   "work_log_id": "c0bc0263-f4a1-449d-ba4b-043d0f8c7027",
+   "keywords_hit": [],
+   "keywords_missed": [
+    "tiktok"
+   ]
+  },
+  {
+   "label": "p2-hard-plan-delegate",
+   "persona": "Brightcart",
+   "tier": "hard",
+   "agent_id": "50d5a335-917f-41e9-8010-b34e87d2c1cb",
+   "agent_name": "ZZ-STRESS-P2-Growth-5fcffe",
+   "task_type": "plan",
+   "nonce": "fc2966aad0b54b898918b03316448119",
+   "dispatch_status": 200,
+   "dispatch_ms": 115,
+   "dispatched_at": 1784695877.8633094,
+   "expect_keywords": [],
+   "outcome": "finished",
+   "wall_s": 15.8,
+   "success": false,
+   "tokens_used": 1753,
+   "cost_usd": 0.015777,
+   "duration_ms": 12372,
+   "result_len": 0,
+   "result": "",
+   "reflection": "I appreciate the prompt for reflection, but I don't actually have a prior task or conversation to look back on here\u2014this is the start of our exchange, so there's no work yet to evaluate.\n\nIf you meant to share a task you'd like me to complete first, go ahead and send it over, and I'm happy to do the work and then reflect on it afterward. Alternatively, if you're testing how I respond to this kind of prompt in isolation, let me know that too\u2014happy to discuss how I'd approach self-review in general.",
+   "work_log_id": "1870a21e-6e4e-493e-955e-a3df0dfe2f77"
+  },
+  {
+   "label": "p3-easy-notes-summary",
+   "persona": "Loop Metrics",
+   "tier": "easy",
+   "agent_id": "937042f1-f176-4a33-b3e0-099e660b780e",
+   "agent_name": "ZZ-STRESS-P3-DataAnalyst-5fcffe",
+   "task_type": "summarize",
+   "nonce": "a3803f2f5f3541a0813681cef14a8260",
+   "dispatch_status": 200,
+   "dispatch_ms": 118,
+   "dispatched_at": 1784696197.6007285,
+   "expect_keywords": [
+    "pricing",
+    "churn",
+    "referral",
+    "SOC 2"
+   ],
+   "outcome": "finished",
+   "wall_s": 31.5,
+   "success": true,
+   "tokens_used": 3015,
+   "cost_usd": 0.027135,
+   "duration_ms": 15693,
+   "result_len": 1089,
+   "result": "# Weekly Growth Sync \u2014 Summary\n\n**Attendees:** Ana, Priya, Tom, Jordan\n\n## Key Discussion Points\n- **Trial-to-paid conversion** dropped from 18% to 14% following the pricing page redesign (Ana)\n- **Enterprise churn** is concentrated in accounts that skipped an onboarding call (Priya)\n- **Referral program** performing well \u2014 drove 212 signups and cut CAC by 22% (Tom)\n- **SOC 2 audit** fieldwork begins on the 14th (Jordan)\n\n## Action Items\n| Owner | Action | Deadline |\n|---|---|---|\n| Tom | Roll back pricing page hero copy | Friday |\n| Jordan | Schedule onboarding calls for all Q3 enterprise signups | \u2014 |\n| Ana | Double the referral reward budget for one more month | \u2014 |\n| Priya | Own evidence collection checklist for SOC 2; report blockers | Monday |\n\n**Reflection:** The summary was straightforward \u2014 the source content was already well-structured with clear speaker attributions and explicit action items, so no external research or clarification was needed. I organized it into a scannable format (discussion points + action table) to maximize usefulness for meeting follow-up.",
+   "reflection": "1. **Not fully** \u2014 on review, the action item owners don't align with who raised each issue: Tom is assigned the pricing rollback (Ana's topic), Jordan gets onboarding calls (Priya's topic), Ana gets the referral budget (Tom's topic), and Priya gets SOC 2 evidence (Jordan's topic). This mismatch suggests I transcribed/assigned owners without cross-checking them against the discussion points, which is a meaningful accuracy error in a document meant to drive follow-up.\n\n2. Next time I'd explicitly verify that each action item's owner logically ties back to the person who raised or is closest to that issue (e.g., Ana owning the pricing rollback, Priya owning onboarding calls) before finalizing, rather than assuming the source order was correct.\n\n3. I should improve **cross-referencing/consist",
+   "work_log_id": "91c101f4-55fa-4a92-bb90-2cc2aea9e10e",
+   "keywords_hit": [
+    "pricing",
+    "churn",
+    "referral",
+    "SOC 2"
+   ],
+   "keywords_missed": []
+  },
+  {
+   "label": "p3-medium-browse-research",
+   "persona": "Loop Metrics",
+   "tier": "medium",
+   "agent_id": "2753c97c-2726-4091-a4dd-202dbadc3638",
+   "agent_name": "ZZ-STRESS-P3-Researcher-5fcffe",
+   "task_type": "research",
+   "nonce": "f48478d063be43fe8aa716185c26d38e",
+   "dispatch_status": 200,
+   "dispatch_ms": 116,
+   "dispatched_at": 1784696229.2988598,
+   "expect_keywords": [],
+   "outcome": "finished",
+   "wall_s": 10.6,
+   "success": false,
+   "tokens_used": 1339,
+   "cost_usd": 0.012051,
+   "duration_ms": 5552,
+   "result_len": 0,
+   "result": "",
+   "reflection": "I don't actually have a previous task or piece of work to review in this conversation\u2014this appears to be the start of our conversation, so there's no prior output for me to reflect on.\n\nIf you'd like me to complete a task and then reflect on it, please share what you'd like me to work on. Alternatively, if you were expecting me to reflect on something from a previous session, please note that I don't retain memory between separate conversations, so you'd need to paste in the relevant work or context here.",
+   "work_log_id": "9b4a4643-5ce5-489b-98be-ff6119b7bef3"
+  },
+  {
+   "label": "p3-hard-python",
+   "persona": "Loop Metrics",
+   "tier": "hard",
+   "agent_id": "937042f1-f176-4a33-b3e0-099e660b780e",
+   "agent_name": "ZZ-STRESS-P3-DataAnalyst-5fcffe",
+   "task_type": "analyze",
+   "nonce": "ef1d888c4ae740eeb700a40f02e5d49b",
+   "dispatch_status": 200,
+   "dispatch_ms": 118,
+   "dispatched_at": 1784696240.0984375,
+   "expect_keywords": [
+    "19.8"
+   ],
+   "outcome": "finished",
+   "wall_s": 10.6,
+   "success": false,
+   "tokens_used": 1499,
+   "cost_usd": 0.013491,
+   "duration_ms": 5595,
+   "result_len": 0,
+   "result": "",
+   "reflection": "I appreciate the prompt for reflection, but I don't actually have a prior task or conversation to review here\u2014this appears to be the start of our exchange, so there's no completed work for me to assess.\n\nIf you'd like, you could either:\n- Share the task/work you want me to reflect on, or\n- Give me an actual task to complete first, then ask for this reflection afterward\n\nWhich would be helpful?",
+   "work_log_id": "b943ab6c-d8cd-42fd-9d8c-d573dd151396",
+   "keywords_hit": [],
+   "keywords_missed": [
+    "19.8"
+   ]
+  },
+  {
+   "label": "p4-easy-outreach",
+   "persona": "Harbor & Vane",
+   "tier": "easy",
+   "agent_id": "4d70f30c-18a1-4cee-ac62-4fef178a8f4c",
+   "agent_name": "ZZ-STRESS-P4-Copywriter-5fcffe",
+   "task_type": "outreach",
+   "nonce": "a622e10648f2422d8b3f9409ab61f736",
+   "dispatch_status": 200,
+   "dispatch_ms": 117,
+   "dispatched_at": 1784696252.9687855,
+   "expect_keywords": [
+    "hotel"
+   ],
+   "outcome": "finished",
+   "wall_s": 52.4,
+   "success": true,
+   "tokens_used": 3630,
+   "cost_usd": 0.008712,
+   "duration_ms": 23928,
+   "result_len": 153,
+   "result": "I'll help you create an outreach strategy to book brand audit calls with boutique hotel owners in coastal towns. Let me develop a comprehensive approach.",
+   "reflection": "# Reflection on My Response\n\n1. **Completeness**: No, I didn't complete the task\u2014I only acknowledged the request without actually delivering the outreach strategy. I should have provided concrete elements like prospect identification methods, email templates, call scripts, value propositions, and follow-up sequences.\n\n2. **Improvement**: Next time, I should immediately deliver substantive content rather than announcing my intent to help. I could also have asked clarifying questions (budget, timeline, target hotel size) to tailor the strategy better.\n\n3. **Skills to improve**: I need stronger execution on the first attempt and better proactive questioning to understand context before responding. Being more direct and comprehensive upfront would provide immediate value rather than requiring ",
+   "work_log_id": "bf4ac590-f9f6-4eff-9fca-369eefa137d7",
+   "keywords_hit": [
+    "hotel"
+   ],
+   "keywords_missed": []
+  },
+  {
+   "label": "p4-easy2-brief",
+   "persona": "Harbor & Vane",
+   "tier": "easy",
+   "agent_id": "b019df82-eef8-4f15-b931-272679d0920c",
+   "agent_name": "ZZ-STRESS-P4-BriefWriter-5fcffe",
+   "task_type": "write",
+   "nonce": "719ef86ec1b04b95952830a77226814e",
+   "dispatch_status": 200,
+   "dispatch_ms": 124,
+   "dispatched_at": 1784696305.6277995,
+   "expect_keywords": [],
+   "outcome": "finished",
+   "wall_s": 52.4,
+   "success": true,
+   "tokens_used": 4006,
+   "cost_usd": 0.036054,
+   "duration_ms": 24820,
+   "result_len": 3212,
+   "result": "# Design Brief: Rebranding [Family Olive Oil Co.] for U.S. Market Entry\n\n## Background\n[Family Olive Oil Co.] is a multigenerational, family-owned olive oil producer preparing to launch in the United States. The current brand identity, built for its domestic/regional market, needs to be reimagined to compete on U.S. retail shelves while preserving the authenticity and heritage that differentiate it from mass-market and private-label brands.\n\n## Objective\nDevelop a refreshed visual and verbal identity that communicates premium quality, old-world craftsmanship, and family provenance\u2014while feeling accessible and relevant to American consumers unfamiliar with the brand's regional origins.\n\n## Target Audience\n- **Primary:** Health-conscious home cooks and food enthusiasts, ages 30\u201355, household income $75K+, shopping at specialty grocers (Whole Foods, Trader Joe's, Sprouts) and gourmet online retailers.\n- **Secondary:** Chefs, restaurateurs, and culinary gift-buyers seeking authentic, story-driven ingredients.\n- **Psychographics:** Values transparency, sustainability, and traceable origin; influenced by Mediterranean diet trends; willing to pay a premium for quality and story.\n\n## Brand Tone & Personality\n- **Warm, not stiff:** Feels like a family recipe passed down, not a corporate product.\n- **Confident, not boastful:** Quiet quality over loud claims.\n- **Modern heritage:** Honors tradition through contemporary design\u2014clean, uncluttered, tactile.\n- **Voice:** Conversational, sensory, and rooted in place (specific groves, harvest seasons, family names) rather than generic \"Mediterranean lifestyle\" clich\u00e9s.\n\n## Key Messages\n1. Multi-generational family stewardship of the land and craft.\n2. Single-origin/estate-grown authenticity and traceability.\n3. Old-world method, new-world accessibility (easy to use, versatile in American kitchens).\n\n## Deliverables\n1. **Brand strategy summary** (positioning statement, tone-of-voice guide, competitive differentiation)\n2. **Logo suite** (primary mark, icon/monogram, lockups for bottle and packaging)\n3. **Color palette & typography system**\n4. **Packaging design** for core SKUs (bottle label, tin, gift box)\n5. **Brand pattern/texture element** (e.g., grove motif, olive branch iconography) for secondary applications\n6. **Style guide** (10\u201315 pages) covering usage across packaging, web, and social\n7. **Launch assets:** website hero/banner concepts, social media templates, point-of-sale shelf talker\n\n## Timeline & Constraints\n- 8-week design sprint; packaging must meet FDA labeling requirements and fit standard U.S. retail bottle dimensions (250ml, 500ml, 750ml).\n- Budget allocation to be confirmed with client; prioritize logo/packaging first, digital assets second.\n\n## References\n1. **Graza** \u2014 Bold, playful modern branding for olive oil that broke from traditional \"old world\" cues; useful reference for how a heritage product can feel fresh without losing credibility (graza.co).\n2. **Brightland** \u2014 Premium U.S. olive oil brand praised for minimalist, editorial-style packaging and strong storytelling around origin and craft (brightland.co).\n\n---\n*Prepared for: [Client Name] | Prepared by: [Agency/Designer Name] | Date: [Date]*",
+   "reflection": "**Reflection:**\n\n1. **Completion:** The brief itself (strategy framework, deliverables list, tone/audience definition) is thorough and well-structured, but it's a *planning document*\u2014not the actual deliverables. I outlined *what* should be created (logo suite, packaging, style guide) without producing the actual visual concepts, copy examples, or tangible design directions requested in the brief.\n\n2. **What could be better:** I should have included at least sample executions\u2014a draft positioning statement, 2-3 tagline options, a proposed color palette with hex codes, or rough naming/logo direction\u2014to make the brief actionable rather than purely structural. Grounding the \"modern heritage\" concept with concrete visual references (mood board language, specific pattern ideas beyond \"olive branc",
+   "work_log_id": "588ed824-2a36-4f0c-a94d-d95d3dfa826f"
+  },
+  {
+   "label": "p4-medium-strategy",
+   "persona": "Harbor & Vane",
+   "tier": "medium",
+   "agent_id": "bea19ee7-ccb7-44c1-a0a8-0416b988853e",
+   "agent_name": "ZZ-STRESS-P4-Strategist-5fcffe",
+   "task_type": "plan",
+   "nonce": "535c78966d924bb49dd4d61962e31b07",
+   "dispatch_status": 200,
+   "dispatch_ms": 117,
+   "dispatched_at": 1784696358.2497818,
+   "expect_keywords": [],
+   "outcome": "finished",
+   "wall_s": 73.5,
+   "success": true,
+   "tokens_used": 4997,
+   "cost_usd": 0.224865,
+   "duration_ms": 33131,
+   "result_len": 4406,
+   "result": "# 90-Day Content Strategy: Olive Oil Rebrand\n\n## Constraints Applied\n- **Channels:** 2 max \u2192 **Instagram** (visual, food/lifestyle fit) + **Email/Newsletter** (owned, high ROI, retention)\n- **Team:** 1 writer (realistic cadence assumed below)\n- **Paid budget:** $2,000/month = **$6,000 total** over 90 days\n\n---\n\n## Strategic Objective\nReintroduce the brand's new identity, build a recognizable visual/voice signature, and convert awareness into first-time and repeat buyers.\n\n**Success = 3 phases:** Reveal \u2192 Reinforce \u2192 Convert.\n\n---\n\n## Phase 1 \u2014 Days 1\u201330: The Reveal (Brand Story)\n**Goal:** Signal change, explain *why*, seed the new identity.\n\n| Item | Detail |\n|---|---|\n| Instagram cadence | 3 posts/week + 3 stories/week (realistic for 1 writer) |\n| Email cadence | 1/week (4 total) |\n| Content themes | \"The rebrand story,\" origin/provenance, before\u2192after reveal, founder note |\n| Paid ($2k) | $1,200 IG awareness (reach + video views on the reveal), $800 retargeting site visitors |\n\n**Writer weekly load:** ~3 IG captions + 1 email + repurpose stories from long posts.\n\n---\n\n## Phase 2 \u2014 Days 31\u201360: Reinforce (Education + Trust)\n**Goal:** Build authority and desire around the product.\n\n| Item | Detail |\n|---|---|\n| Instagram cadence | 3 posts/week (recipes, pairing tips, harvest/quality education, UGC reposts) |\n| Email cadence | 1/week \u2014 \"how to use / quality markers / recipe series\" |\n| Content themes | Usage, quality differentiators, sustainability, social proof |\n| Paid ($2k) | $1,000 engagement/reach on top-performing recipe content, $1,000 retargeting toward product pages |\n\n**Tactic:** Launch a lightweight UGC ask (customers reshare with branded hashtag) to reduce writer load and generate authentic assets.\n\n---\n\n## Phase 3 \u2014 Days 61\u201390: Convert (Offer + Loyalty)\n**Goal:** Turn engaged audience into buyers and subscribers.\n\n| Item | Detail |\n|---|---|\n| Instagram cadence | 3 posts/week (product hero, limited offer, testimonials, bundle spotlight) |\n| Email cadence | 2/week (offer launch + reminder / last-call sequence) |\n| Content themes | Launch offer, bundles, subscribe-and-save, gifting angle |\n| Paid ($2k) | $1,400 conversion campaign (purchase-optimized), $600 retargeting cart abandoners |\n\n**Offer:** Rebrand launch discount or free-shipping threshold to spur first purchase; capture emails at checkout for retention.\n\n---\n\n## Content Production System (1 Writer)\n- **Batch monthly:** Write all 12\u201313 IG captions + 4\u20138 emails in 2 focused sessions.\n- **Repurpose ratio 1:3:** Each email \u2192 2\u20133 IG posts/stories.\n- **Templates:** Build 3 reusable post formats (educational, story, product) to cut writing time.\n- **Visuals:** Reuse the rebrand shoot assets across all 90 days (assume shoot exists; if not, flag as dependency).\n\n---\n\n## Budget Summary ($6,000 total)\n\n| Phase | Awareness/Reach | Retargeting | Conversion |\n|---|---|---|---|\n| 1 (Reveal) | $1,200 | $800 | \u2014 |\n| 2 (Reinforce) | $1,000 | $1,000 | \u2014 |\n| 3 (Convert) | \u2014 | $600 | $1,400 |\n\nBudget deliberately shifts from **top-of-funnel \u2192 bottom-of-funnel** as the audience warms.\n\n---\n\n## KPIs by Phase\n- **Phase 1:** Reach, video views, follower growth, email sign-ups.\n- **Phase 2:** Engagement rate, saves/shares, email open/click rate, site visits.\n- **Phase 3:** Conversion rate, ROAS, revenue, repeat/subscribe rate.\n\n**North-star metric:** Cost per first-time purchaser (measured Phase 3).\n\n---\n\n## Key Assumptions & Dependencies (flagged)\n1. **Brand assets (logo, palette, photography)** are finalized before Day 1 \u2014 critical dependency.\n2. **E-commerce + email platform** with retargeting pixel installed.\n3. Writer cadence set at 3 IG/week to stay sustainable for one person; scale down to 2/week if quality slips.\n4. Instagram chosen over TikTok/others for asset reuse efficiency; swap if audience data says otherwise.\n\n---\n\n### Reflection\nThe plan respects all four constraints (2 channels, 1 writer, $2k/mo) and structures the 90 days into a logical awareness\u2192conversion funnel with a matching budget shift. The main risk is over-reliance on a single writer; I mitigated this with batching, templates, and UGC. I made reasonable assumptions (existing brand assets, e-comm stack) and flagged them rather than inventing specifics. If you share actual audience data, current sales baseline, or the finalized brand assets, I can tighten channel choice and set concrete numeric KPI targets.",
+   "reflection": "## Reflection\n\n1. **Task completion:** Yes, the plan fully addresses all four constraints (2 channels, 1 writer, $2k/month budget) and delivers a coherent 90-day funnel structure with cadence, themes, budget allocation, and phase-specific KPIs \u2014 but it leaned heavily on assumptions rather than requesting inputs upfront.\n\n2. **What I'd do better:** I should have asked clarifying questions *before* building (e.g., audience data, sales baseline, whether brand assets exist), since these materially change channel choice and KPI targets; instead I made assumptions and flagged them after the fact, which is less efficient than front-loading the discovery.\n\n3. **Skills to improve:** Setting concrete, numeric KPI targets (I left them qualitative) and pressure-testing the single-writer cadence agains",
+   "work_log_id": "83c8d5ef-5da9-402f-ad84-89a59d1b9d78"
+  },
+  {
+   "label": "p4-hard-pipeline",
+   "persona": "Harbor & Vane",
+   "tier": "hard",
+   "agent_id": "bea19ee7-ccb7-44c1-a0a8-0416b988853e",
+   "agent_name": "ZZ-STRESS-P4-Strategist-5fcffe",
+   "task_type": "custom",
+   "nonce": "43599e2b32bd46e98f07f72a93841d27",
+   "dispatch_status": 200,
+   "dispatch_ms": 119,
+   "dispatched_at": 1784696431.9690795,
+   "expect_keywords": [],
+   "outcome": "finished",
+   "wall_s": 15.9,
+   "success": true,
+   "tokens_used": 1543,
+   "cost_usd": 0.069435,
+   "duration_ms": 7776,
+   "result_len": 47,
+   "result": "I'll delegate this task to the specified agent.",
+   "reflection": "I notice there's a mismatch here\u2014the reflection prompt asks me to review completed work, but I don't actually have a task or any work to reflect on. My previous message (\"I'll delegate this task to the specified agent\") referenced a task and agent that aren't visible in our conversation.\n\nRather than invent a reflection about work I didn't do, here's an honest assessment:\n\n1. **Did I complete the task?** No\u2014there was no actual task provided to me, and my prior message referenced delegating something that had no specified content or agent.\n\n2. **What could I do better?** I should have asked for the actual task details instead of claiming to delegate an unspecified task to an unnamed agent.\n\n3. **Skills to improve?** Recognizing when I lack sufficient context to act, and asking clarifying qu",
+   "work_log_id": "c131abef-4091-41d4-9ae8-4eb106108644"
+  },
+  {
+   "label": "p5-easy-clause",
+   "persona": "Caldwell Legal",
+   "tier": "easy",
+   "agent_id": "08b8d7a0-a6da-4830-af52-e108cfd77cc5",
+   "agent_name": "ZZ-STRESS-P5-Contracts-5fcffe",
+   "task_type": "summarize",
+   "nonce": "44891a3aeff44aa2a131f31a2a170492",
+   "dispatch_status": 200,
+   "dispatch_ms": 111,
+   "dispatched_at": 1784696752.4178514,
+   "expect_keywords": [
+    "250,000",
+    "60"
+   ],
+   "outcome": "finished",
+   "wall_s": 26.2,
+   "success": true,
+   "tokens_used": 2357,
+   "cost_usd": 0.021213,
+   "duration_ms": 12804,
+   "result_len": 894,
+   "result": "**Summary:**\n\nThis clause outlines three key contract terms:\n\n1. **IP Indemnification:** The Supplier agrees to indemnify the Client against third-party intellectual property claims, but this obligation is capped at an aggregate maximum of $250,000.\n\n2. **Termination for Breach:** Either party may terminate the agreement due to material breach, but only after: (a) providing written notice of the breach, and (b) allowing a 60-day cure period for the breaching party to remedy the issue.\n\n3. **Limitation of Liability:** Neither party is liable for consequential damages, with two exceptions \u2014 cases involving gross negligence or willful misconduct remain actionable.\n\n**Key takeaway:** This is a standard risk-allocation clause balancing supplier liability protection (capped indemnity, no consequential damages) with client protection (termination rights, carve-outs for egregious conduct).",
+   "reflection": "1. **Completion:** The summary covered the three main provisions (indemnification cap, termination mechanics, liability limitations) and synthesized them into a clear takeaway, but I can't fully verify accuracy since I don't have the original clause text in view to double-check exact figures, defined terms, or conditional language.\n\n2. **Improvement:** I should have quoted or referenced specific clause numbers/language directly from the source text to ground the summary in verifiable evidence, rather than presenting interpretations without citation.\n\n3. **Skills to develop:** Better practice in flagging assumptions explicitly (e.g., \"assuming $250,000 is per-claim vs. aggregate\") and asking clarifying questions when key details\u2014like whether notice must be certified mail or e-service\u2014are am",
+   "work_log_id": "f8b42c48-5489-4fdf-a42c-c0cf9e686e09",
+   "keywords_hit": [
+    "250,000",
+    "60"
+   ],
+   "keywords_missed": []
+  },
+  {
+   "label": "p5-medium-escalation",
+   "persona": "Caldwell Legal",
+   "tier": "medium",
+   "agent_id": "59abdc12-3ab4-40e7-baaa-c761336ea97e",
+   "agent_name": "ZZ-STRESS-P5-Paralegal-5fcffe",
+   "task_type": "custom",
+   "nonce": "2cd0fc55635c4c379f2dcc141ac6cbef",
+   "dispatch_status": 200,
+   "dispatch_ms": 114,
+   "dispatched_at": 1784696778.884074,
+   "expect_keywords": [],
+   "outcome": "finished",
+   "wall_s": 10.6,
+   "success": true,
+   "tokens_used": 1406,
+   "cost_usd": 0.003374,
+   "duration_ms": 4480,
+   "result_len": 111,
+   "result": "I'll use the notify_human tool to ask your supervisor about the counterparty's revised limitation of liability.",
+   "reflection": "# Reflection on My Previous Response\n\n1. **Task Completion**: No, I did not complete the task fully. I only stated an intention to use a tool but didn't actually provide a substantive review of the counterparty's revised limitation of liability clause or meaningful analysis.\n\n2. **What Could Be Better**: I should have directly analyzed the specific language, identified key risks (caps, exclusions, carve-outs), compared it to standard market terms, and provided concrete recommendations\u2014rather than deferring to a supervisor without first demonstrating the legal expertise expected in a contract review.\n\n3. **Skills to Improve**: I need to be more proactive in legal analysis and less reliant on passing tasks upward; I should also ask clarifying questions upfront (e.g., \"What's the liability ca",
+   "work_log_id": "b10c63e2-e340-453a-9d1c-53187629ef05"
+  },
+  {
+   "label": "p5-hard-long-input",
+   "persona": "Caldwell Legal",
+   "tier": "hard",
+   "agent_id": "08b8d7a0-a6da-4830-af52-e108cfd77cc5",
+   "agent_name": "ZZ-STRESS-P5-Contracts-5fcffe",
+   "task_type": "analyze",
+   "nonce": "d1cb6738d7d748a7b7424ffca087b413",
+   "dispatch_status": 200,
+   "dispatch_ms": 167,
+   "dispatched_at": 1784696789.8468182,
+   "expect_keywords": [
+    "net-30",
+    "net-45",
+    "90",
+    "100,000",
+    "1,000,000"
+   ],
+   "outcome": "finished",
+   "wall_s": 47.2,
+   "success": true,
+   "tokens_used": 16483,
+   "cost_usd": 0.148347,
+   "duration_ms": 19971,
+   "result_len": 2988,
+   "result": "## Analysis of Key Term Conflicts\n\n**Note on scope:** The task references \"three documents,\" but only **two** documents were provided in the input \u2014 Document A (ACME Master Services Agreement) and Document B (ACME Statement of Work Rider). I'll analyze the conflicts present in these two. Additionally, Document B's text is **truncated** (cuts off mid-Section 16, before reaching the payment/termination/liability sections other than 12a), so only the payment term key term is available for comparison in Document B \u2014 no termination or liability KEY TERM clauses appear in the supplied text for Document B.\n\n---\n\n### 1. Payment Terms \u2014 **CONFLICT**\n| Document | Term |\n|---|---|\n| **Document A**, Section 12a | Invoices due **net-30 from receipt**, and explicitly limited to **undisputed** invoices |\n| **Document B**, Section 12a | Invoices due **net-45 from invoice date**, with **no carve-out for disputed invoices** |\n\n**Conflict details:**\n- Different payment windows (30 vs. 45 days).\n- Different triggering event for the clock: \"receipt\" of invoice (Doc A) vs. \"invoice date\" (Doc B) \u2014 these can differ by days depending on mailing/delivery lag.\n- Document A only obligates payment of *undisputed* invoices within the window; Document B contains no such qualifier, meaning it could be read to require payment of all invoices, disputed or not, within 45 days.\n\n---\n\n### 2. Termination for Convenience \u2014 **NOT COMPARABLE (data missing)**\n| Document | Term |\n|---|---|\n| **Document A**, Section 24a | Termination for convenience requires **30 days' prior written notice** |\n| **Document B** | **Not present** in the supplied text \u2014 the document is cut off before this section would appear |\n\nNo conflict can be confirmed; Document B's termination provision is unknown from the text given.\n\n---\n\n### 3. Liability Cap \u2014 **NOT COMPARABLE (data missing)**\n| Document | Term |\n|---|---|\n| **Document A**, Section 36a | Aggregate liability capped at **$100,000** |\n| **Document B** | **Not present** in the supplied text |\n\nAgain, no conflict can be confirmed since Document B's liability provision is not in the excerpt.\n\n---\n\n### Summary\n- **Confirmed conflict:** Payment terms (net-30-from-receipt/undisputed-only in Doc A vs. net-45-from-invoice-date/no dispute carve-out in Doc B).\n- **Termination and liability terms:** Cannot be compared because Document B's text was truncated before those sections and no \"Document C\" was actually supplied despite the task description mentioning three documents.\n\n**Recommendation:** Obtain the complete text of Document B (and the actual third document, if one exists) to confirm whether termination notice periods and liability caps also conflict, since payment terms already show a clear and material discrepancy that should be flagged for reconciliation (typically the more specific/later-executed document, e.g., an SOW rider, controls over the MSA unless the MSA states otherwise \u2014 this order-of-precedence question should also be verified).",
+   "reflection": "## Reflection\n\n1. **Did I complete the task fully?** No \u2014 I only had access to two documents instead of the three referenced in the task, and Document B was truncated, so I could only fully verify one conflict (payment terms) while flagging the other two as unconfirmed rather than resolving them.\n\n2. **What could I do better next time?** Before diving into analysis, I should have immediately flagged the missing/truncated content upfront and explicitly asked for the complete Document B and the missing Document C, rather than proceeding with partial analysis and only noting the gap at the end \u2014 surfacing blocking issues early is more useful than working around them silently.\n\n3. **Skills to improve?** I should get better at halting to request missing critical inputs *before* producing a leng",
+   "work_log_id": "6c64bf28-f8ff-4eee-bba6-1f1cf23ee468",
+   "keywords_hit": [
+    "net-30",
+    "net-45",
+    "100,000"
+   ],
+   "keywords_missed": [
+    "90",
+    "1,000,000"
+   ]
+  },
+  {
+   "label": "burst-0",
+   "persona": "burst",
+   "tier": "burst",
+   "agent_id": "a3d96f3d-f337-44e4-81bb-3a5bc0503123",
+   "agent_name": "ZZ-STRESS-Burst-5fcffe",
+   "task_type": "write",
+   "nonce": "2f2c0edaa28b45aa9e2be65b625f5c67",
+   "dispatch_status": 200,
+   "dispatch_ms": 118,
+   "dispatched_at": 1784696839.0866737,
+   "expect_keywords": [],
+   "outcome": "finished",
+   "wall_s": 28.1
+  },
+  {
+   "label": "burst-3",
+   "persona": "burst",
+   "tier": "burst",
+   "agent_id": "a3d96f3d-f337-44e4-81bb-3a5bc0503123",
+   "agent_name": "ZZ-STRESS-Burst-5fcffe",
+   "task_type": "write",
+   "nonce": "deb9941ddd0f4f15bfc84e5a5663f82c",
+   "dispatch_status": 200,
+   "dispatch_ms": 224,
+   "dispatched_at": 1784696839.1960056,
+   "expect_keywords": [],
+   "outcome": "finished",
+   "wall_s": 28.3
+  },
+  {
+   "label": "burst-4",
+   "persona": "burst",
+   "tier": "burst",
+   "agent_id": "a3d96f3d-f337-44e4-81bb-3a5bc0503123",
+   "agent_name": "ZZ-STRESS-Burst-5fcffe",
+   "task_type": "write",
+   "nonce": "0ed407a74e0a4a6ba0c6b2f9919018ef",
+   "dispatch_status": 200,
+   "dispatch_ms": 251,
+   "dispatched_at": 1784696839.2233405,
+   "expect_keywords": [],
+   "outcome": "finished",
+   "wall_s": 28.4
+  },
+  {
+   "label": "burst-2",
+   "persona": "burst",
+   "tier": "burst",
+   "agent_id": "a3d96f3d-f337-44e4-81bb-3a5bc0503123",
+   "agent_name": "ZZ-STRESS-Burst-5fcffe",
+   "task_type": "write",
+   "nonce": "91653575f51842468098cae722fce5a8",
+   "dispatch_status": 200,
+   "dispatch_ms": 363,
+   "dispatched_at": 1784696839.3336377,
+   "expect_keywords": [],
+   "outcome": "finished",
+   "wall_s": 28.0
+  },
+  {
+   "label": "burst-1",
+   "persona": "burst",
+   "tier": "burst",
+   "agent_id": "a3d96f3d-f337-44e4-81bb-3a5bc0503123",
+   "agent_name": "ZZ-STRESS-Burst-5fcffe",
+   "task_type": "write",
+   "nonce": "07b52e3fe76a460ba2f3d0999725a1d6",
+   "dispatch_status": 200,
+   "dispatch_ms": 365,
+   "dispatched_at": 1784696839.3353317,
+   "expect_keywords": [],
+   "outcome": "finished",
+   "wall_s": 27.9
+  }
+ ],
+ "http_log": [
+  {
+   "m": "GET",
+   "p": "/health",
+   "s": 200,
+   "ms": 265
+  },
+  {
+   "m": "GET",
+   "p": "/billing/usage",
+   "s": 200,
+   "ms": 154
+  },
+  {
+   "m": "GET",
+   "p": "/agents/",
+   "s": 200,
+   "ms": 127
+  },
+  {
+   "m": "GET",
+   "p": "/stats/overview",
+   "s": 200,
+   "ms": 193
+  },
+  {
+   "m": "GET",
+   "p": "/company",
+   "s": 200,
+   "ms": 114
+  },
+  {
+   "m": "GET",
+   "p": "https://frontend-production-a9cc3.up.railway.app/",
+   "s": 200,
+   "ms": 434
+  },
+  {
+   "m": "POST",
+   "p": "/auth/signup",
+   "s": 201,
+   "ms": 153
+  },
+  {
+   "m": "POST",
+   "p": "/agents/",
+   "s": 201,
+   "ms": 171
+  },
+  {
+   "m": "POST",
+   "p": "/agents/",
+   "s": 409,
+   "ms": 116
+  },
+  {
+   "m": "POST",
+   "p": "/agents/",
+   "s": 201,
+   "ms": 122
+  },
+  {
+   "m": "POST",
+   "p": "/agents/b37dc8aa-a89c-4f1d-9766-d52655189c63/run",
+   "s": 200,
+   "ms": 432
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/b37dc8aa-a89c-4f1d-9766-d52655189c63?limit=50",
+   "s": 200,
+   "ms": 124
+  },
+  {
+   "m": "GET",
+   "p": "/agents/b37dc8aa-a89c-4f1d-9766-d52655189c63",
+   "s": 200,
+   "ms": 118
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/b37dc8aa-a89c-4f1d-9766-d52655189c63?limit=50",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/agents/b37dc8aa-a89c-4f1d-9766-d52655189c63",
+   "s": 200,
+   "ms": 136
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/b37dc8aa-a89c-4f1d-9766-d52655189c63?limit=50",
+   "s": 200,
+   "ms": 122
+  },
+  {
+   "m": "GET",
+   "p": "/agents/b37dc8aa-a89c-4f1d-9766-d52655189c63",
+   "s": 200,
+   "ms": 122
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/b37dc8aa-a89c-4f1d-9766-d52655189c63?limit=50",
+   "s": 200,
+   "ms": 110
+  },
+  {
+   "m": "GET",
+   "p": "/agents/b37dc8aa-a89c-4f1d-9766-d52655189c63",
+   "s": 200,
+   "ms": 114
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/b37dc8aa-a89c-4f1d-9766-d52655189c63?limit=50",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/agents/b37dc8aa-a89c-4f1d-9766-d52655189c63",
+   "s": 200,
+   "ms": 114
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/b37dc8aa-a89c-4f1d-9766-d52655189c63?limit=50",
+   "s": 200,
+   "ms": 117
+  },
+  {
+   "m": "GET",
+   "p": "/agents/b37dc8aa-a89c-4f1d-9766-d52655189c63",
+   "s": 200,
+   "ms": 121
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/b37dc8aa-a89c-4f1d-9766-d52655189c63?limit=50",
+   "s": 200,
+   "ms": 119
+  },
+  {
+   "m": "GET",
+   "p": "/agents/b37dc8aa-a89c-4f1d-9766-d52655189c63",
+   "s": 200,
+   "ms": 124
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/b37dc8aa-a89c-4f1d-9766-d52655189c63?limit=50",
+   "s": 200,
+   "ms": 117
+  },
+  {
+   "m": "GET",
+   "p": "/agents/b37dc8aa-a89c-4f1d-9766-d52655189c63",
+   "s": 200,
+   "ms": 121
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/b37dc8aa-a89c-4f1d-9766-d52655189c63?limit=50",
+   "s": 200,
+   "ms": 116
+  },
+  {
+   "m": "GET",
+   "p": "/agents/b37dc8aa-a89c-4f1d-9766-d52655189c63",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "POST",
+   "p": "/agents/",
+   "s": 201,
+   "ms": 118
+  },
+  {
+   "m": "POST",
+   "p": "/agents/0ca98673-50c3-4716-8f31-d8a754be74bb/run",
+   "s": 200,
+   "ms": 172
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/0ca98673-50c3-4716-8f31-d8a754be74bb?limit=50",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/agents/0ca98673-50c3-4716-8f31-d8a754be74bb",
+   "s": 200,
+   "ms": 124
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/0ca98673-50c3-4716-8f31-d8a754be74bb?limit=50",
+   "s": 200,
+   "ms": 115
+  },
+  {
+   "m": "GET",
+   "p": "/agents/0ca98673-50c3-4716-8f31-d8a754be74bb",
+   "s": 200,
+   "ms": 120
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/0ca98673-50c3-4716-8f31-d8a754be74bb?limit=50",
+   "s": 200,
+   "ms": 132
+  },
+  {
+   "m": "GET",
+   "p": "/billing/usage",
+   "s": 200,
+   "ms": 105
+  },
+  {
+   "m": "POST",
+   "p": "/agents/",
+   "s": 201,
+   "ms": 144
+  },
+  {
+   "m": "GET",
+   "p": "/agents/fc1f8bfe-ddc0-4e7c-8d10-e0575e28844e",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/agents/fc1f8bfe-ddc0-4e7c-8d10-e0575e28844e/memories",
+   "s": 200,
+   "ms": 193
+  },
+  {
+   "m": "DELETE",
+   "p": "/agents/fc1f8bfe-ddc0-4e7c-8d10-e0575e28844e",
+   "s": 204,
+   "ms": 123
+  },
+  {
+   "m": "GET",
+   "p": "/agents/fc1f8bfe-ddc0-4e7c-8d10-e0575e28844e",
+   "s": 404,
+   "ms": 116
+  },
+  {
+   "m": "POST",
+   "p": "/agents/",
+   "s": 201,
+   "ms": 142
+  },
+  {
+   "m": "GET",
+   "p": "/agents/f20f414c-f175-460a-9c7a-7d7505d6fcd8",
+   "s": 200,
+   "ms": 113
+  },
+  {
+   "m": "GET",
+   "p": "/agents/f20f414c-f175-460a-9c7a-7d7505d6fcd8/memories",
+   "s": 200,
+   "ms": 114
+  },
+  {
+   "m": "DELETE",
+   "p": "/agents/f20f414c-f175-460a-9c7a-7d7505d6fcd8",
+   "s": 204,
+   "ms": 124
+  },
+  {
+   "m": "GET",
+   "p": "/agents/f20f414c-f175-460a-9c7a-7d7505d6fcd8",
+   "s": 404,
+   "ms": 105
+  },
+  {
+   "m": "GET",
+   "p": "/agents/8cd57df6-a744-474e-aa86-6000df8a9829",
+   "s": 404,
+   "ms": 110
+  },
+  {
+   "m": "GET",
+   "p": "/agents/not-a-uuid",
+   "s": 422,
+   "ms": 106
+  },
+  {
+   "m": "POST",
+   "p": "/agents/0ca98673-50c3-4716-8f31-d8a754be74bb/run",
+   "s": 200,
+   "ms": 119
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/0ca98673-50c3-4716-8f31-d8a754be74bb?limit=50",
+   "s": 200,
+   "ms": 211
+  },
+  {
+   "m": "GET",
+   "p": "/agents/0ca98673-50c3-4716-8f31-d8a754be74bb",
+   "s": 200,
+   "ms": 129
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/0ca98673-50c3-4716-8f31-d8a754be74bb?limit=50",
+   "s": 200,
+   "ms": 133
+  },
+  {
+   "m": "GET",
+   "p": "/agents/6ec66a99-7987-4c53-8e93-5352d3874011",
+   "s": 200,
+   "ms": 159
+  },
+  {
+   "m": "GET",
+   "p": "/agents/b37dc8aa-a89c-4f1d-9766-d52655189c63",
+   "s": 200,
+   "ms": 230
+  },
+  {
+   "m": "GET",
+   "p": "/agents/0ca98673-50c3-4716-8f31-d8a754be74bb",
+   "s": 200,
+   "ms": 120
+  },
+  {
+   "m": "GET",
+   "p": "/agents/6ec66a99-7987-4c53-8e93-5352d3874011/memories",
+   "s": 200,
+   "ms": 149
+  },
+  {
+   "m": "DELETE",
+   "p": "/agents/6ec66a99-7987-4c53-8e93-5352d3874011",
+   "s": 204,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/agents/6ec66a99-7987-4c53-8e93-5352d3874011",
+   "s": 404,
+   "ms": 104
+  },
+  {
+   "m": "GET",
+   "p": "/agents/b37dc8aa-a89c-4f1d-9766-d52655189c63/memories",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "DELETE",
+   "p": "/agents/b37dc8aa-a89c-4f1d-9766-d52655189c63",
+   "s": 204,
+   "ms": 242
+  },
+  {
+   "m": "GET",
+   "p": "/agents/b37dc8aa-a89c-4f1d-9766-d52655189c63",
+   "s": 404,
+   "ms": 124
+  },
+  {
+   "m": "GET",
+   "p": "/agents/0ca98673-50c3-4716-8f31-d8a754be74bb/memories",
+   "s": 200,
+   "ms": 275
+  },
+  {
+   "m": "DELETE",
+   "p": "/agents/0ca98673-50c3-4716-8f31-d8a754be74bb/memories/e436299c-420f-4841-9111-dd",
+   "s": 204,
+   "ms": 157
+  },
+  {
+   "m": "DELETE",
+   "p": "/agents/0ca98673-50c3-4716-8f31-d8a754be74bb/memories/e7196c34-17fd-4426-aac7-eb",
+   "s": 204,
+   "ms": 121
+  },
+  {
+   "m": "DELETE",
+   "p": "/agents/0ca98673-50c3-4716-8f31-d8a754be74bb",
+   "s": 204,
+   "ms": 278
+  },
+  {
+   "m": "GET",
+   "p": "/agents/0ca98673-50c3-4716-8f31-d8a754be74bb",
+   "s": 404,
+   "ms": 205
+  },
+  {
+   "m": "GET",
+   "p": "/billing/usage",
+   "s": 200,
+   "ms": 100
+  },
+  {
+   "m": "POST",
+   "p": "/agents/",
+   "s": 201,
+   "ms": 114
+  },
+  {
+   "m": "POST",
+   "p": "/agents/73d87f50-4ffc-47f7-96ee-2b230fc3292c/skills",
+   "s": 422,
+   "ms": 101
+  },
+  {
+   "m": "POST",
+   "p": "/agents/",
+   "s": 201,
+   "ms": 211
+  },
+  {
+   "m": "POST",
+   "p": "/agents/2ce491c3-f2e3-4820-b823-e9387ccc6948/skills",
+   "s": 422,
+   "ms": 98
+  },
+  {
+   "m": "POST",
+   "p": "/agents/73d87f50-4ffc-47f7-96ee-2b230fc3292c/run",
+   "s": 200,
+   "ms": 122
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 107
+  },
+  {
+   "m": "GET",
+   "p": "/agents/73d87f50-4ffc-47f7-96ee-2b230fc3292c",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/agents/73d87f50-4ffc-47f7-96ee-2b230fc3292c",
+   "s": 200,
+   "ms": 109
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 108
+  },
+  {
+   "m": "GET",
+   "p": "/agents/73d87f50-4ffc-47f7-96ee-2b230fc3292c",
+   "s": 200,
+   "ms": 113
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/agents/73d87f50-4ffc-47f7-96ee-2b230fc3292c",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 107
+  },
+  {
+   "m": "GET",
+   "p": "/billing/usage",
+   "s": 200,
+   "ms": 104
+  },
+  {
+   "m": "POST",
+   "p": "/agents/73d87f50-4ffc-47f7-96ee-2b230fc3292c/run",
+   "s": 200,
+   "ms": 114
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 107
+  },
+  {
+   "m": "GET",
+   "p": "/agents/73d87f50-4ffc-47f7-96ee-2b230fc3292c",
+   "s": 200,
+   "ms": 105
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 110
+  },
+  {
+   "m": "GET",
+   "p": "/agents/73d87f50-4ffc-47f7-96ee-2b230fc3292c",
+   "s": 200,
+   "ms": 109
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 114
+  },
+  {
+   "m": "GET",
+   "p": "/billing/usage",
+   "s": 200,
+   "ms": 121
+  },
+  {
+   "m": "POST",
+   "p": "/agents/2ce491c3-f2e3-4820-b823-e9387ccc6948/run",
+   "s": 200,
+   "ms": 109
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/2ce491c3-f2e3-4820-b823-e9387ccc6948?limit=50",
+   "s": 200,
+   "ms": 127
+  },
+  {
+   "m": "GET",
+   "p": "/agents/2ce491c3-f2e3-4820-b823-e9387ccc6948",
+   "s": 200,
+   "ms": 113
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/2ce491c3-f2e3-4820-b823-e9387ccc6948?limit=50",
+   "s": 200,
+   "ms": 105
+  },
+  {
+   "m": "GET",
+   "p": "/agents/2ce491c3-f2e3-4820-b823-e9387ccc6948",
+   "s": 200,
+   "ms": 106
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/2ce491c3-f2e3-4820-b823-e9387ccc6948?limit=50",
+   "s": 200,
+   "ms": 108
+  },
+  {
+   "m": "GET",
+   "p": "/agents/2ce491c3-f2e3-4820-b823-e9387ccc6948",
+   "s": 200,
+   "ms": 132
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/2ce491c3-f2e3-4820-b823-e9387ccc6948?limit=50",
+   "s": 200,
+   "ms": 106
+  },
+  {
+   "m": "GET",
+   "p": "/billing/usage",
+   "s": 200,
+   "ms": 103
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 109
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 110
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 110
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 115
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 109
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 108
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 106
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 108
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 110
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 107
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 113
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 107
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 106
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 110
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 113
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 109
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 109
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 121
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 106
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 114
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 110
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 108
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 107
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 129
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 131
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 114
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 135
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 109
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 106
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 126
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 109
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 106
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 122
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 105
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 108
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 114
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 109
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 109
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 107
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 107
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 108
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 108
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 119
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 109
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 121
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 115
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 107
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 109
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 107
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 107
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 109
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/73d87f50-4ffc-47f7-96ee-2b230fc3292c?limit=50",
+   "s": 200,
+   "ms": 106
+  },
+  {
+   "m": "GET",
+   "p": "/comms/2ce491c3-f2e3-4820-b823-e9387ccc6948",
+   "s": 200,
+   "ms": 153
+  },
+  {
+   "m": "GET",
+   "p": "/agents/73d87f50-4ffc-47f7-96ee-2b230fc3292c/evals",
+   "s": 200,
+   "ms": 117
+  },
+  {
+   "m": "GET",
+   "p": "/agents/73d87f50-4ffc-47f7-96ee-2b230fc3292c/memories",
+   "s": 200,
+   "ms": 152
+  },
+  {
+   "m": "GET",
+   "p": "/billing/usage",
+   "s": 200,
+   "ms": 110
+  },
+  {
+   "m": "GET",
+   "p": "/agents/73d87f50-4ffc-47f7-96ee-2b230fc3292c",
+   "s": 200,
+   "ms": 113
+  },
+  {
+   "m": "GET",
+   "p": "/agents/2ce491c3-f2e3-4820-b823-e9387ccc6948",
+   "s": 200,
+   "ms": 110
+  },
+  {
+   "m": "GET",
+   "p": "/agents/73d87f50-4ffc-47f7-96ee-2b230fc3292c/memories",
+   "s": 200,
+   "ms": 118
+  },
+  {
+   "m": "DELETE",
+   "p": "/agents/73d87f50-4ffc-47f7-96ee-2b230fc3292c/memories/c01bc8ce-6df5-4a56-b13d-dc",
+   "s": 204,
+   "ms": 115
+  },
+  {
+   "m": "DELETE",
+   "p": "/agents/73d87f50-4ffc-47f7-96ee-2b230fc3292c",
+   "s": 204,
+   "ms": 126
+  },
+  {
+   "m": "GET",
+   "p": "/agents/73d87f50-4ffc-47f7-96ee-2b230fc3292c",
+   "s": 404,
+   "ms": 108
+  },
+  {
+   "m": "GET",
+   "p": "/agents/2ce491c3-f2e3-4820-b823-e9387ccc6948/memories",
+   "s": 200,
+   "ms": 116
+  },
+  {
+   "m": "DELETE",
+   "p": "/agents/2ce491c3-f2e3-4820-b823-e9387ccc6948/memories/2ec5924f-e30f-48d4-8c77-6e",
+   "s": 204,
+   "ms": 113
+  },
+  {
+   "m": "DELETE",
+   "p": "/agents/2ce491c3-f2e3-4820-b823-e9387ccc6948",
+   "s": 204,
+   "ms": 127
+  },
+  {
+   "m": "GET",
+   "p": "/agents/2ce491c3-f2e3-4820-b823-e9387ccc6948",
+   "s": 404,
+   "ms": 104
+  },
+  {
+   "m": "POST",
+   "p": "/agents/",
+   "s": 201,
+   "ms": 120
+  },
+  {
+   "m": "POST",
+   "p": "/agents/a05092ae-850b-41af-8315-e68cc7fcd6f8/skills",
+   "s": 422,
+   "ms": 189
+  },
+  {
+   "m": "POST",
+   "p": "/agents/",
+   "s": 201,
+   "ms": 136
+  },
+  {
+   "m": "POST",
+   "p": "/agents/50d5a335-917f-41e9-8010-b34e87d2c1cb/skills",
+   "s": 422,
+   "ms": 106
+  },
+  {
+   "m": "POST",
+   "p": "/agents/a05092ae-850b-41af-8315-e68cc7fcd6f8/run",
+   "s": 200,
+   "ms": 134
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 113
+  },
+  {
+   "m": "GET",
+   "p": "/agents/a05092ae-850b-41af-8315-e68cc7fcd6f8",
+   "s": 200,
+   "ms": 107
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/billing/usage",
+   "s": 200,
+   "ms": 103
+  },
+  {
+   "m": "POST",
+   "p": "/agents/50d5a335-917f-41e9-8010-b34e87d2c1cb/run",
+   "s": 200,
+   "ms": 116
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/50d5a335-917f-41e9-8010-b34e87d2c1cb?limit=50",
+   "s": 200,
+   "ms": 105
+  },
+  {
+   "m": "GET",
+   "p": "/agents/50d5a335-917f-41e9-8010-b34e87d2c1cb",
+   "s": 200,
+   "ms": 110
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/50d5a335-917f-41e9-8010-b34e87d2c1cb?limit=50",
+   "s": 200,
+   "ms": 106
+  },
+  {
+   "m": "GET",
+   "p": "/agents/50d5a335-917f-41e9-8010-b34e87d2c1cb",
+   "s": 200,
+   "ms": 108
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/50d5a335-917f-41e9-8010-b34e87d2c1cb?limit=50",
+   "s": 200,
+   "ms": 108
+  },
+  {
+   "m": "GET",
+   "p": "/agents/50d5a335-917f-41e9-8010-b34e87d2c1cb",
+   "s": 200,
+   "ms": 114
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/50d5a335-917f-41e9-8010-b34e87d2c1cb?limit=50",
+   "s": 200,
+   "ms": 109
+  },
+  {
+   "m": "GET",
+   "p": "/billing/usage",
+   "s": 200,
+   "ms": 101
+  },
+  {
+   "m": "POST",
+   "p": "/agents/50d5a335-917f-41e9-8010-b34e87d2c1cb/run",
+   "s": 200,
+   "ms": 115
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/50d5a335-917f-41e9-8010-b34e87d2c1cb?limit=50",
+   "s": 200,
+   "ms": 107
+  },
+  {
+   "m": "GET",
+   "p": "/agents/50d5a335-917f-41e9-8010-b34e87d2c1cb",
+   "s": 200,
+   "ms": 110
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/50d5a335-917f-41e9-8010-b34e87d2c1cb?limit=50",
+   "s": 200,
+   "ms": 108
+  },
+  {
+   "m": "GET",
+   "p": "/agents/50d5a335-917f-41e9-8010-b34e87d2c1cb",
+   "s": 200,
+   "ms": 109
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/50d5a335-917f-41e9-8010-b34e87d2c1cb?limit=50",
+   "s": 200,
+   "ms": 108
+  },
+  {
+   "m": "GET",
+   "p": "/agents/50d5a335-917f-41e9-8010-b34e87d2c1cb",
+   "s": 200,
+   "ms": 119
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/50d5a335-917f-41e9-8010-b34e87d2c1cb?limit=50",
+   "s": 200,
+   "ms": 107
+  },
+  {
+   "m": "GET",
+   "p": "/billing/usage",
+   "s": 200,
+   "ms": 101
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 106
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 110
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 108
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 108
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 108
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 110
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 106
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 113
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 134
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 113
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 163
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 114
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 107
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 119
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 108
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 116
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 107
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 109
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 107
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 110
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 107
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 109
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 110
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 116
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 115
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 117
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 136
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 117
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 119
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 119
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 114
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 113
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 121
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 115
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 113
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 118
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 114
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 113
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 115
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 114
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 115
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 230
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 120
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 155
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 143
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 114
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 122
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 117
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a05092ae-850b-41af-8315-e68cc7fcd6f8?limit=50",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/agents/a05092ae-850b-41af-8315-e68cc7fcd6f8/evals",
+   "s": 200,
+   "ms": 122
+  },
+  {
+   "m": "GET",
+   "p": "/agents/a05092ae-850b-41af-8315-e68cc7fcd6f8/memories",
+   "s": 200,
+   "ms": 153
+  },
+  {
+   "m": "GET",
+   "p": "/billing/usage",
+   "s": 200,
+   "ms": 107
+  },
+  {
+   "m": "GET",
+   "p": "/agents/a05092ae-850b-41af-8315-e68cc7fcd6f8",
+   "s": 200,
+   "ms": 113
+  },
+  {
+   "m": "GET",
+   "p": "/agents/50d5a335-917f-41e9-8010-b34e87d2c1cb",
+   "s": 200,
+   "ms": 113
+  },
+  {
+   "m": "GET",
+   "p": "/agents/a05092ae-850b-41af-8315-e68cc7fcd6f8/memories",
+   "s": 200,
+   "ms": 116
+  },
+  {
+   "m": "DELETE",
+   "p": "/agents/a05092ae-850b-41af-8315-e68cc7fcd6f8",
+   "s": 204,
+   "ms": 126
+  },
+  {
+   "m": "GET",
+   "p": "/agents/a05092ae-850b-41af-8315-e68cc7fcd6f8",
+   "s": 404,
+   "ms": 106
+  },
+  {
+   "m": "GET",
+   "p": "/agents/50d5a335-917f-41e9-8010-b34e87d2c1cb/memories",
+   "s": 200,
+   "ms": 116
+  },
+  {
+   "m": "DELETE",
+   "p": "/agents/50d5a335-917f-41e9-8010-b34e87d2c1cb",
+   "s": 204,
+   "ms": 123
+  },
+  {
+   "m": "GET",
+   "p": "/agents/50d5a335-917f-41e9-8010-b34e87d2c1cb",
+   "s": 404,
+   "ms": 107
+  },
+  {
+   "m": "POST",
+   "p": "/agents/",
+   "s": 201,
+   "ms": 119
+  },
+  {
+   "m": "POST",
+   "p": "/agents/937042f1-f176-4a33-b3e0-099e660b780e/skills",
+   "s": 422,
+   "ms": 117
+  },
+  {
+   "m": "POST",
+   "p": "/agents/",
+   "s": 201,
+   "ms": 120
+  },
+  {
+   "m": "POST",
+   "p": "/agents/2753c97c-2726-4091-a4dd-202dbadc3638/skills",
+   "s": 422,
+   "ms": 102
+  },
+  {
+   "m": "POST",
+   "p": "/agents/937042f1-f176-4a33-b3e0-099e660b780e/run",
+   "s": 200,
+   "ms": 118
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/937042f1-f176-4a33-b3e0-099e660b780e?limit=50",
+   "s": 200,
+   "ms": 114
+  },
+  {
+   "m": "GET",
+   "p": "/agents/937042f1-f176-4a33-b3e0-099e660b780e",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/937042f1-f176-4a33-b3e0-099e660b780e?limit=50",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/agents/937042f1-f176-4a33-b3e0-099e660b780e",
+   "s": 200,
+   "ms": 114
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/937042f1-f176-4a33-b3e0-099e660b780e?limit=50",
+   "s": 200,
+   "ms": 113
+  },
+  {
+   "m": "GET",
+   "p": "/agents/937042f1-f176-4a33-b3e0-099e660b780e",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/937042f1-f176-4a33-b3e0-099e660b780e?limit=50",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/agents/937042f1-f176-4a33-b3e0-099e660b780e",
+   "s": 200,
+   "ms": 113
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/937042f1-f176-4a33-b3e0-099e660b780e?limit=50",
+   "s": 200,
+   "ms": 110
+  },
+  {
+   "m": "GET",
+   "p": "/agents/937042f1-f176-4a33-b3e0-099e660b780e",
+   "s": 200,
+   "ms": 116
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/937042f1-f176-4a33-b3e0-099e660b780e?limit=50",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/agents/937042f1-f176-4a33-b3e0-099e660b780e",
+   "s": 200,
+   "ms": 115
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/937042f1-f176-4a33-b3e0-099e660b780e?limit=50",
+   "s": 200,
+   "ms": 116
+  },
+  {
+   "m": "GET",
+   "p": "/billing/usage",
+   "s": 200,
+   "ms": 105
+  },
+  {
+   "m": "POST",
+   "p": "/agents/2753c97c-2726-4091-a4dd-202dbadc3638/run",
+   "s": 200,
+   "ms": 116
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/2753c97c-2726-4091-a4dd-202dbadc3638?limit=50",
+   "s": 200,
+   "ms": 115
+  },
+  {
+   "m": "GET",
+   "p": "/agents/2753c97c-2726-4091-a4dd-202dbadc3638",
+   "s": 200,
+   "ms": 113
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/2753c97c-2726-4091-a4dd-202dbadc3638?limit=50",
+   "s": 200,
+   "ms": 113
+  },
+  {
+   "m": "GET",
+   "p": "/agents/2753c97c-2726-4091-a4dd-202dbadc3638",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/2753c97c-2726-4091-a4dd-202dbadc3638?limit=50",
+   "s": 200,
+   "ms": 116
+  },
+  {
+   "m": "GET",
+   "p": "/billing/usage",
+   "s": 200,
+   "ms": 109
+  },
+  {
+   "m": "POST",
+   "p": "/agents/937042f1-f176-4a33-b3e0-099e660b780e/run",
+   "s": 200,
+   "ms": 118
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/937042f1-f176-4a33-b3e0-099e660b780e?limit=50",
+   "s": 200,
+   "ms": 114
+  },
+  {
+   "m": "GET",
+   "p": "/agents/937042f1-f176-4a33-b3e0-099e660b780e",
+   "s": 200,
+   "ms": 115
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/937042f1-f176-4a33-b3e0-099e660b780e?limit=50",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/agents/937042f1-f176-4a33-b3e0-099e660b780e",
+   "s": 200,
+   "ms": 113
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/937042f1-f176-4a33-b3e0-099e660b780e?limit=50",
+   "s": 200,
+   "ms": 115
+  },
+  {
+   "m": "GET",
+   "p": "/billing/usage",
+   "s": 200,
+   "ms": 106
+  },
+  {
+   "m": "GET",
+   "p": "/agents/937042f1-f176-4a33-b3e0-099e660b780e/evals",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/agents/937042f1-f176-4a33-b3e0-099e660b780e/memories",
+   "s": 200,
+   "ms": 149
+  },
+  {
+   "m": "GET",
+   "p": "/billing/usage",
+   "s": 200,
+   "ms": 106
+  },
+  {
+   "m": "GET",
+   "p": "/agents/937042f1-f176-4a33-b3e0-099e660b780e",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/agents/2753c97c-2726-4091-a4dd-202dbadc3638",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/agents/937042f1-f176-4a33-b3e0-099e660b780e/memories",
+   "s": 200,
+   "ms": 114
+  },
+  {
+   "m": "DELETE",
+   "p": "/agents/937042f1-f176-4a33-b3e0-099e660b780e/memories/45c53860-d276-43f9-911f-b8",
+   "s": 204,
+   "ms": 118
+  },
+  {
+   "m": "DELETE",
+   "p": "/agents/937042f1-f176-4a33-b3e0-099e660b780e",
+   "s": 204,
+   "ms": 120
+  },
+  {
+   "m": "GET",
+   "p": "/agents/937042f1-f176-4a33-b3e0-099e660b780e",
+   "s": 404,
+   "ms": 105
+  },
+  {
+   "m": "GET",
+   "p": "/agents/2753c97c-2726-4091-a4dd-202dbadc3638/memories",
+   "s": 200,
+   "ms": 115
+  },
+  {
+   "m": "DELETE",
+   "p": "/agents/2753c97c-2726-4091-a4dd-202dbadc3638",
+   "s": 204,
+   "ms": 121
+  },
+  {
+   "m": "GET",
+   "p": "/agents/2753c97c-2726-4091-a4dd-202dbadc3638",
+   "s": 404,
+   "ms": 105
+  },
+  {
+   "m": "POST",
+   "p": "/agents/",
+   "s": 201,
+   "ms": 118
+  },
+  {
+   "m": "POST",
+   "p": "/agents/bea19ee7-ccb7-44c1-a0a8-0416b988853e/skills",
+   "s": 422,
+   "ms": 102
+  },
+  {
+   "m": "POST",
+   "p": "/agents/",
+   "s": 201,
+   "ms": 117
+  },
+  {
+   "m": "POST",
+   "p": "/agents/4d70f30c-18a1-4cee-ac62-4fef178a8f4c/skills",
+   "s": 422,
+   "ms": 104
+  },
+  {
+   "m": "POST",
+   "p": "/agents/",
+   "s": 201,
+   "ms": 131
+  },
+  {
+   "m": "POST",
+   "p": "/agents/b019df82-eef8-4f15-b931-272679d0920c/skills",
+   "s": 422,
+   "ms": 103
+  },
+  {
+   "m": "POST",
+   "p": "/agents/4d70f30c-18a1-4cee-ac62-4fef178a8f4c/run",
+   "s": 200,
+   "ms": 117
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/agents/4d70f30c-18a1-4cee-ac62-4fef178a8f4c",
+   "s": 200,
+   "ms": 118
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/agents/4d70f30c-18a1-4cee-ac62-4fef178a8f4c",
+   "s": 200,
+   "ms": 115
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 116
+  },
+  {
+   "m": "GET",
+   "p": "/agents/4d70f30c-18a1-4cee-ac62-4fef178a8f4c",
+   "s": 200,
+   "ms": 115
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 109
+  },
+  {
+   "m": "GET",
+   "p": "/agents/4d70f30c-18a1-4cee-ac62-4fef178a8f4c",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 110
+  },
+  {
+   "m": "GET",
+   "p": "/agents/4d70f30c-18a1-4cee-ac62-4fef178a8f4c",
+   "s": 200,
+   "ms": 116
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 116
+  },
+  {
+   "m": "GET",
+   "p": "/agents/4d70f30c-18a1-4cee-ac62-4fef178a8f4c",
+   "s": 200,
+   "ms": 116
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 121
+  },
+  {
+   "m": "GET",
+   "p": "/agents/4d70f30c-18a1-4cee-ac62-4fef178a8f4c",
+   "s": 200,
+   "ms": 118
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 119
+  },
+  {
+   "m": "GET",
+   "p": "/agents/4d70f30c-18a1-4cee-ac62-4fef178a8f4c",
+   "s": 200,
+   "ms": 114
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 113
+  },
+  {
+   "m": "GET",
+   "p": "/agents/4d70f30c-18a1-4cee-ac62-4fef178a8f4c",
+   "s": 200,
+   "ms": 113
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 122
+  },
+  {
+   "m": "GET",
+   "p": "/agents/4d70f30c-18a1-4cee-ac62-4fef178a8f4c",
+   "s": 200,
+   "ms": 117
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 110
+  },
+  {
+   "m": "GET",
+   "p": "/billing/usage",
+   "s": 200,
+   "ms": 107
+  },
+  {
+   "m": "POST",
+   "p": "/agents/b019df82-eef8-4f15-b931-272679d0920c/run",
+   "s": 200,
+   "ms": 124
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/b019df82-eef8-4f15-b931-272679d0920c?limit=50",
+   "s": 200,
+   "ms": 118
+  },
+  {
+   "m": "GET",
+   "p": "/agents/b019df82-eef8-4f15-b931-272679d0920c",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/b019df82-eef8-4f15-b931-272679d0920c?limit=50",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/agents/b019df82-eef8-4f15-b931-272679d0920c",
+   "s": 200,
+   "ms": 113
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/b019df82-eef8-4f15-b931-272679d0920c?limit=50",
+   "s": 200,
+   "ms": 115
+  },
+  {
+   "m": "GET",
+   "p": "/agents/b019df82-eef8-4f15-b931-272679d0920c",
+   "s": 200,
+   "ms": 122
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/b019df82-eef8-4f15-b931-272679d0920c?limit=50",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/agents/b019df82-eef8-4f15-b931-272679d0920c",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/b019df82-eef8-4f15-b931-272679d0920c?limit=50",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/agents/b019df82-eef8-4f15-b931-272679d0920c",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/b019df82-eef8-4f15-b931-272679d0920c?limit=50",
+   "s": 200,
+   "ms": 113
+  },
+  {
+   "m": "GET",
+   "p": "/agents/b019df82-eef8-4f15-b931-272679d0920c",
+   "s": 200,
+   "ms": 119
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/b019df82-eef8-4f15-b931-272679d0920c?limit=50",
+   "s": 200,
+   "ms": 114
+  },
+  {
+   "m": "GET",
+   "p": "/agents/b019df82-eef8-4f15-b931-272679d0920c",
+   "s": 200,
+   "ms": 113
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/b019df82-eef8-4f15-b931-272679d0920c?limit=50",
+   "s": 200,
+   "ms": 113
+  },
+  {
+   "m": "GET",
+   "p": "/agents/b019df82-eef8-4f15-b931-272679d0920c",
+   "s": 200,
+   "ms": 114
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/b019df82-eef8-4f15-b931-272679d0920c?limit=50",
+   "s": 200,
+   "ms": 115
+  },
+  {
+   "m": "GET",
+   "p": "/agents/b019df82-eef8-4f15-b931-272679d0920c",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/b019df82-eef8-4f15-b931-272679d0920c?limit=50",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/agents/b019df82-eef8-4f15-b931-272679d0920c",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/b019df82-eef8-4f15-b931-272679d0920c?limit=50",
+   "s": 200,
+   "ms": 113
+  },
+  {
+   "m": "GET",
+   "p": "/billing/usage",
+   "s": 200,
+   "ms": 105
+  },
+  {
+   "m": "POST",
+   "p": "/agents/bea19ee7-ccb7-44c1-a0a8-0416b988853e/run",
+   "s": 200,
+   "ms": 117
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/bea19ee7-ccb7-44c1-a0a8-0416b988853e?limit=50",
+   "s": 200,
+   "ms": 109
+  },
+  {
+   "m": "GET",
+   "p": "/agents/bea19ee7-ccb7-44c1-a0a8-0416b988853e",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/bea19ee7-ccb7-44c1-a0a8-0416b988853e?limit=50",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/agents/bea19ee7-ccb7-44c1-a0a8-0416b988853e",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/bea19ee7-ccb7-44c1-a0a8-0416b988853e?limit=50",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/agents/bea19ee7-ccb7-44c1-a0a8-0416b988853e",
+   "s": 200,
+   "ms": 115
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/bea19ee7-ccb7-44c1-a0a8-0416b988853e?limit=50",
+   "s": 200,
+   "ms": 110
+  },
+  {
+   "m": "GET",
+   "p": "/agents/bea19ee7-ccb7-44c1-a0a8-0416b988853e",
+   "s": 200,
+   "ms": 113
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/bea19ee7-ccb7-44c1-a0a8-0416b988853e?limit=50",
+   "s": 200,
+   "ms": 113
+  },
+  {
+   "m": "GET",
+   "p": "/agents/bea19ee7-ccb7-44c1-a0a8-0416b988853e",
+   "s": 200,
+   "ms": 113
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/bea19ee7-ccb7-44c1-a0a8-0416b988853e?limit=50",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/agents/bea19ee7-ccb7-44c1-a0a8-0416b988853e",
+   "s": 200,
+   "ms": 110
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/bea19ee7-ccb7-44c1-a0a8-0416b988853e?limit=50",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/agents/bea19ee7-ccb7-44c1-a0a8-0416b988853e",
+   "s": 200,
+   "ms": 117
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/bea19ee7-ccb7-44c1-a0a8-0416b988853e?limit=50",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/agents/bea19ee7-ccb7-44c1-a0a8-0416b988853e",
+   "s": 200,
+   "ms": 114
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/bea19ee7-ccb7-44c1-a0a8-0416b988853e?limit=50",
+   "s": 200,
+   "ms": 183
+  },
+  {
+   "m": "GET",
+   "p": "/agents/bea19ee7-ccb7-44c1-a0a8-0416b988853e",
+   "s": 200,
+   "ms": 165
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/bea19ee7-ccb7-44c1-a0a8-0416b988853e?limit=50",
+   "s": 200,
+   "ms": 130
+  },
+  {
+   "m": "GET",
+   "p": "/agents/bea19ee7-ccb7-44c1-a0a8-0416b988853e",
+   "s": 200,
+   "ms": 119
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/bea19ee7-ccb7-44c1-a0a8-0416b988853e?limit=50",
+   "s": 200,
+   "ms": 141
+  },
+  {
+   "m": "GET",
+   "p": "/agents/bea19ee7-ccb7-44c1-a0a8-0416b988853e",
+   "s": 200,
+   "ms": 124
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/bea19ee7-ccb7-44c1-a0a8-0416b988853e?limit=50",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/agents/bea19ee7-ccb7-44c1-a0a8-0416b988853e",
+   "s": 200,
+   "ms": 113
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/bea19ee7-ccb7-44c1-a0a8-0416b988853e?limit=50",
+   "s": 200,
+   "ms": 127
+  },
+  {
+   "m": "GET",
+   "p": "/agents/bea19ee7-ccb7-44c1-a0a8-0416b988853e",
+   "s": 200,
+   "ms": 122
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/bea19ee7-ccb7-44c1-a0a8-0416b988853e?limit=50",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/agents/bea19ee7-ccb7-44c1-a0a8-0416b988853e",
+   "s": 200,
+   "ms": 116
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/bea19ee7-ccb7-44c1-a0a8-0416b988853e?limit=50",
+   "s": 200,
+   "ms": 119
+  },
+  {
+   "m": "GET",
+   "p": "/billing/usage",
+   "s": 200,
+   "ms": 106
+  },
+  {
+   "m": "POST",
+   "p": "/agents/bea19ee7-ccb7-44c1-a0a8-0416b988853e/run",
+   "s": 200,
+   "ms": 119
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/bea19ee7-ccb7-44c1-a0a8-0416b988853e?limit=50",
+   "s": 200,
+   "ms": 119
+  },
+  {
+   "m": "GET",
+   "p": "/agents/bea19ee7-ccb7-44c1-a0a8-0416b988853e",
+   "s": 200,
+   "ms": 113
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/bea19ee7-ccb7-44c1-a0a8-0416b988853e?limit=50",
+   "s": 200,
+   "ms": 144
+  },
+  {
+   "m": "GET",
+   "p": "/agents/bea19ee7-ccb7-44c1-a0a8-0416b988853e",
+   "s": 200,
+   "ms": 114
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/bea19ee7-ccb7-44c1-a0a8-0416b988853e?limit=50",
+   "s": 200,
+   "ms": 122
+  },
+  {
+   "m": "GET",
+   "p": "/agents/bea19ee7-ccb7-44c1-a0a8-0416b988853e",
+   "s": 200,
+   "ms": 142
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/bea19ee7-ccb7-44c1-a0a8-0416b988853e?limit=50",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/billing/usage",
+   "s": 200,
+   "ms": 107
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 113
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 114
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 115
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 116
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 116
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 113
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 110
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 114
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 115
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 117
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 117
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 115
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 121
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 117
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 178
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 113
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 107
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 110
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 107
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 107
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 109
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 107
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 113
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 109
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 118
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 113
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 105
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 107
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 107
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 116
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 109
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 109
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 107
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 113
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 109
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 114
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 116
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 109
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 108
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 106
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 108
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 107
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 108
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 107
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 109
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 105
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 108
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/4d70f30c-18a1-4cee-ac62-4fef178a8f4c?limit=50",
+   "s": 200,
+   "ms": 113
+  },
+  {
+   "m": "GET",
+   "p": "/stats/network",
+   "s": 200,
+   "ms": 134
+  },
+  {
+   "m": "GET",
+   "p": "/agents/bea19ee7-ccb7-44c1-a0a8-0416b988853e/evals",
+   "s": 200,
+   "ms": 107
+  },
+  {
+   "m": "GET",
+   "p": "/agents/bea19ee7-ccb7-44c1-a0a8-0416b988853e/memories",
+   "s": 200,
+   "ms": 141
+  },
+  {
+   "m": "GET",
+   "p": "/billing/usage",
+   "s": 200,
+   "ms": 100
+  },
+  {
+   "m": "GET",
+   "p": "/agents/bea19ee7-ccb7-44c1-a0a8-0416b988853e",
+   "s": 200,
+   "ms": 107
+  },
+  {
+   "m": "GET",
+   "p": "/agents/4d70f30c-18a1-4cee-ac62-4fef178a8f4c",
+   "s": 200,
+   "ms": 106
+  },
+  {
+   "m": "GET",
+   "p": "/agents/b019df82-eef8-4f15-b931-272679d0920c",
+   "s": 200,
+   "ms": 108
+  },
+  {
+   "m": "GET",
+   "p": "/agents/bea19ee7-ccb7-44c1-a0a8-0416b988853e/memories",
+   "s": 200,
+   "ms": 115
+  },
+  {
+   "m": "DELETE",
+   "p": "/agents/bea19ee7-ccb7-44c1-a0a8-0416b988853e/memories/2122572c-3d35-4e7e-bd9f-68",
+   "s": 204,
+   "ms": 113
+  },
+  {
+   "m": "DELETE",
+   "p": "/agents/bea19ee7-ccb7-44c1-a0a8-0416b988853e/memories/cdb70b06-39d8-4e12-8204-dc",
+   "s": 204,
+   "ms": 110
+  },
+  {
+   "m": "DELETE",
+   "p": "/agents/bea19ee7-ccb7-44c1-a0a8-0416b988853e",
+   "s": 204,
+   "ms": 128
+  },
+  {
+   "m": "GET",
+   "p": "/agents/bea19ee7-ccb7-44c1-a0a8-0416b988853e",
+   "s": 404,
+   "ms": 99
+  },
+  {
+   "m": "GET",
+   "p": "/agents/4d70f30c-18a1-4cee-ac62-4fef178a8f4c/memories",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "DELETE",
+   "p": "/agents/4d70f30c-18a1-4cee-ac62-4fef178a8f4c/memories/8a6ad8c0-1cf7-4534-9fbc-9b",
+   "s": 204,
+   "ms": 109
+  },
+  {
+   "m": "DELETE",
+   "p": "/agents/4d70f30c-18a1-4cee-ac62-4fef178a8f4c",
+   "s": 204,
+   "ms": 120
+  },
+  {
+   "m": "GET",
+   "p": "/agents/4d70f30c-18a1-4cee-ac62-4fef178a8f4c",
+   "s": 404,
+   "ms": 100
+  },
+  {
+   "m": "GET",
+   "p": "/agents/b019df82-eef8-4f15-b931-272679d0920c/memories",
+   "s": 200,
+   "ms": 113
+  },
+  {
+   "m": "DELETE",
+   "p": "/agents/b019df82-eef8-4f15-b931-272679d0920c/memories/07e945f4-a9c8-4937-94e1-68",
+   "s": 204,
+   "ms": 115
+  },
+  {
+   "m": "DELETE",
+   "p": "/agents/b019df82-eef8-4f15-b931-272679d0920c",
+   "s": 204,
+   "ms": 114
+  },
+  {
+   "m": "GET",
+   "p": "/agents/b019df82-eef8-4f15-b931-272679d0920c",
+   "s": 404,
+   "ms": 100
+  },
+  {
+   "m": "POST",
+   "p": "/agents/",
+   "s": 201,
+   "ms": 113
+  },
+  {
+   "m": "POST",
+   "p": "/agents/08b8d7a0-a6da-4830-af52-e108cfd77cc5/skills",
+   "s": 422,
+   "ms": 96
+  },
+  {
+   "m": "POST",
+   "p": "/agents/",
+   "s": 201,
+   "ms": 114
+  },
+  {
+   "m": "POST",
+   "p": "/agents/59abdc12-3ab4-40e7-baaa-c761336ea97e/skills",
+   "s": 422,
+   "ms": 100
+  },
+  {
+   "m": "POST",
+   "p": "/agents/08b8d7a0-a6da-4830-af52-e108cfd77cc5/run",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/08b8d7a0-a6da-4830-af52-e108cfd77cc5?limit=50",
+   "s": 200,
+   "ms": 104
+  },
+  {
+   "m": "GET",
+   "p": "/agents/08b8d7a0-a6da-4830-af52-e108cfd77cc5",
+   "s": 200,
+   "ms": 105
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/08b8d7a0-a6da-4830-af52-e108cfd77cc5?limit=50",
+   "s": 200,
+   "ms": 113
+  },
+  {
+   "m": "GET",
+   "p": "/agents/08b8d7a0-a6da-4830-af52-e108cfd77cc5",
+   "s": 200,
+   "ms": 114
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/08b8d7a0-a6da-4830-af52-e108cfd77cc5?limit=50",
+   "s": 200,
+   "ms": 129
+  },
+  {
+   "m": "GET",
+   "p": "/agents/08b8d7a0-a6da-4830-af52-e108cfd77cc5",
+   "s": 200,
+   "ms": 114
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/08b8d7a0-a6da-4830-af52-e108cfd77cc5?limit=50",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/agents/08b8d7a0-a6da-4830-af52-e108cfd77cc5",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/08b8d7a0-a6da-4830-af52-e108cfd77cc5?limit=50",
+   "s": 200,
+   "ms": 117
+  },
+  {
+   "m": "GET",
+   "p": "/agents/08b8d7a0-a6da-4830-af52-e108cfd77cc5",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/08b8d7a0-a6da-4830-af52-e108cfd77cc5?limit=50",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/billing/usage",
+   "s": 200,
+   "ms": 105
+  },
+  {
+   "m": "POST",
+   "p": "/agents/59abdc12-3ab4-40e7-baaa-c761336ea97e/run",
+   "s": 200,
+   "ms": 114
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/59abdc12-3ab4-40e7-baaa-c761336ea97e?limit=50",
+   "s": 200,
+   "ms": 108
+  },
+  {
+   "m": "GET",
+   "p": "/agents/59abdc12-3ab4-40e7-baaa-c761336ea97e",
+   "s": 200,
+   "ms": 120
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/59abdc12-3ab4-40e7-baaa-c761336ea97e?limit=50",
+   "s": 200,
+   "ms": 114
+  },
+  {
+   "m": "GET",
+   "p": "/agents/59abdc12-3ab4-40e7-baaa-c761336ea97e",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/59abdc12-3ab4-40e7-baaa-c761336ea97e?limit=50",
+   "s": 200,
+   "ms": 114
+  },
+  {
+   "m": "GET",
+   "p": "/billing/usage",
+   "s": 200,
+   "ms": 107
+  },
+  {
+   "m": "GET",
+   "p": "/comms/human-inbox",
+   "s": 200,
+   "ms": 114
+  },
+  {
+   "m": "POST",
+   "p": "/agents/08b8d7a0-a6da-4830-af52-e108cfd77cc5/run",
+   "s": 200,
+   "ms": 167
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/08b8d7a0-a6da-4830-af52-e108cfd77cc5?limit=50",
+   "s": 200,
+   "ms": 110
+  },
+  {
+   "m": "GET",
+   "p": "/agents/08b8d7a0-a6da-4830-af52-e108cfd77cc5",
+   "s": 200,
+   "ms": 114
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/08b8d7a0-a6da-4830-af52-e108cfd77cc5?limit=50",
+   "s": 200,
+   "ms": 117
+  },
+  {
+   "m": "GET",
+   "p": "/agents/08b8d7a0-a6da-4830-af52-e108cfd77cc5",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/08b8d7a0-a6da-4830-af52-e108cfd77cc5?limit=50",
+   "s": 200,
+   "ms": 119
+  },
+  {
+   "m": "GET",
+   "p": "/agents/08b8d7a0-a6da-4830-af52-e108cfd77cc5",
+   "s": 200,
+   "ms": 116
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/08b8d7a0-a6da-4830-af52-e108cfd77cc5?limit=50",
+   "s": 200,
+   "ms": 118
+  },
+  {
+   "m": "GET",
+   "p": "/agents/08b8d7a0-a6da-4830-af52-e108cfd77cc5",
+   "s": 200,
+   "ms": 119
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/08b8d7a0-a6da-4830-af52-e108cfd77cc5?limit=50",
+   "s": 200,
+   "ms": 168
+  },
+  {
+   "m": "GET",
+   "p": "/agents/08b8d7a0-a6da-4830-af52-e108cfd77cc5",
+   "s": 200,
+   "ms": 118
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/08b8d7a0-a6da-4830-af52-e108cfd77cc5?limit=50",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/agents/08b8d7a0-a6da-4830-af52-e108cfd77cc5",
+   "s": 200,
+   "ms": 115
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/08b8d7a0-a6da-4830-af52-e108cfd77cc5?limit=50",
+   "s": 200,
+   "ms": 110
+  },
+  {
+   "m": "GET",
+   "p": "/agents/08b8d7a0-a6da-4830-af52-e108cfd77cc5",
+   "s": 200,
+   "ms": 114
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/08b8d7a0-a6da-4830-af52-e108cfd77cc5?limit=50",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/agents/08b8d7a0-a6da-4830-af52-e108cfd77cc5",
+   "s": 200,
+   "ms": 113
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/08b8d7a0-a6da-4830-af52-e108cfd77cc5?limit=50",
+   "s": 200,
+   "ms": 109
+  },
+  {
+   "m": "GET",
+   "p": "/agents/08b8d7a0-a6da-4830-af52-e108cfd77cc5",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/08b8d7a0-a6da-4830-af52-e108cfd77cc5?limit=50",
+   "s": 200,
+   "ms": 122
+  },
+  {
+   "m": "GET",
+   "p": "/billing/usage",
+   "s": 200,
+   "ms": 103
+  },
+  {
+   "m": "GET",
+   "p": "/agents/08b8d7a0-a6da-4830-af52-e108cfd77cc5/evals",
+   "s": 200,
+   "ms": 122
+  },
+  {
+   "m": "GET",
+   "p": "/agents/08b8d7a0-a6da-4830-af52-e108cfd77cc5/memories",
+   "s": 200,
+   "ms": 154
+  },
+  {
+   "m": "GET",
+   "p": "/billing/usage",
+   "s": 200,
+   "ms": 108
+  },
+  {
+   "m": "GET",
+   "p": "/agents/08b8d7a0-a6da-4830-af52-e108cfd77cc5",
+   "s": 200,
+   "ms": 114
+  },
+  {
+   "m": "GET",
+   "p": "/agents/59abdc12-3ab4-40e7-baaa-c761336ea97e",
+   "s": 200,
+   "ms": 109
+  },
+  {
+   "m": "GET",
+   "p": "/agents/08b8d7a0-a6da-4830-af52-e108cfd77cc5/memories",
+   "s": 200,
+   "ms": 118
+  },
+  {
+   "m": "DELETE",
+   "p": "/agents/08b8d7a0-a6da-4830-af52-e108cfd77cc5/memories/db21f536-8c2b-4a17-bdac-02",
+   "s": 204,
+   "ms": 115
+  },
+  {
+   "m": "DELETE",
+   "p": "/agents/08b8d7a0-a6da-4830-af52-e108cfd77cc5/memories/e262e7cf-0886-434c-8aa5-aa",
+   "s": 204,
+   "ms": 117
+  },
+  {
+   "m": "DELETE",
+   "p": "/agents/08b8d7a0-a6da-4830-af52-e108cfd77cc5",
+   "s": 204,
+   "ms": 124
+  },
+  {
+   "m": "GET",
+   "p": "/agents/08b8d7a0-a6da-4830-af52-e108cfd77cc5",
+   "s": 404,
+   "ms": 107
+  },
+  {
+   "m": "GET",
+   "p": "/agents/59abdc12-3ab4-40e7-baaa-c761336ea97e/memories",
+   "s": 200,
+   "ms": 117
+  },
+  {
+   "m": "DELETE",
+   "p": "/agents/59abdc12-3ab4-40e7-baaa-c761336ea97e/memories/6f05a92d-4af5-4259-8728-4e",
+   "s": 204,
+   "ms": 118
+  },
+  {
+   "m": "DELETE",
+   "p": "/agents/59abdc12-3ab4-40e7-baaa-c761336ea97e",
+   "s": 204,
+   "ms": 118
+  },
+  {
+   "m": "GET",
+   "p": "/agents/59abdc12-3ab4-40e7-baaa-c761336ea97e",
+   "s": 404,
+   "ms": 105
+  },
+  {
+   "m": "POST",
+   "p": "/agents/",
+   "s": 201,
+   "ms": 114
+  },
+  {
+   "m": "POST",
+   "p": "/agents/a3d96f3d-f337-44e4-81bb-3a5bc0503123/run",
+   "s": 200,
+   "ms": 118
+  },
+  {
+   "m": "POST",
+   "p": "/agents/a3d96f3d-f337-44e4-81bb-3a5bc0503123/run",
+   "s": 200,
+   "ms": 224
+  },
+  {
+   "m": "POST",
+   "p": "/agents/a3d96f3d-f337-44e4-81bb-3a5bc0503123/run",
+   "s": 200,
+   "ms": 251
+  },
+  {
+   "m": "POST",
+   "p": "/agents/a3d96f3d-f337-44e4-81bb-3a5bc0503123/run",
+   "s": 200,
+   "ms": 363
+  },
+  {
+   "m": "POST",
+   "p": "/agents/a3d96f3d-f337-44e4-81bb-3a5bc0503123/run",
+   "s": 200,
+   "ms": 365
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a3d96f3d-f337-44e4-81bb-3a5bc0503123?limit=50",
+   "s": 200,
+   "ms": 137
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a3d96f3d-f337-44e4-81bb-3a5bc0503123?limit=50",
+   "s": 200,
+   "ms": 116
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a3d96f3d-f337-44e4-81bb-3a5bc0503123?limit=50",
+   "s": 200,
+   "ms": 121
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a3d96f3d-f337-44e4-81bb-3a5bc0503123?limit=50",
+   "s": 200,
+   "ms": 110
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a3d96f3d-f337-44e4-81bb-3a5bc0503123?limit=50",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a3d96f3d-f337-44e4-81bb-3a5bc0503123?limit=50",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a3d96f3d-f337-44e4-81bb-3a5bc0503123?limit=50",
+   "s": 200,
+   "ms": 118
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a3d96f3d-f337-44e4-81bb-3a5bc0503123?limit=50",
+   "s": 200,
+   "ms": 281
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a3d96f3d-f337-44e4-81bb-3a5bc0503123?limit=50",
+   "s": 200,
+   "ms": 109
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a3d96f3d-f337-44e4-81bb-3a5bc0503123?limit=50",
+   "s": 200,
+   "ms": 115
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a3d96f3d-f337-44e4-81bb-3a5bc0503123?limit=50",
+   "s": 200,
+   "ms": 109
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a3d96f3d-f337-44e4-81bb-3a5bc0503123?limit=50",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a3d96f3d-f337-44e4-81bb-3a5bc0503123?limit=50",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a3d96f3d-f337-44e4-81bb-3a5bc0503123?limit=50",
+   "s": 200,
+   "ms": 110
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a3d96f3d-f337-44e4-81bb-3a5bc0503123?limit=50",
+   "s": 200,
+   "ms": 110
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a3d96f3d-f337-44e4-81bb-3a5bc0503123?limit=50",
+   "s": 200,
+   "ms": 114
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a3d96f3d-f337-44e4-81bb-3a5bc0503123?limit=50",
+   "s": 200,
+   "ms": 118
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a3d96f3d-f337-44e4-81bb-3a5bc0503123?limit=50",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a3d96f3d-f337-44e4-81bb-3a5bc0503123?limit=50",
+   "s": 200,
+   "ms": 117
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a3d96f3d-f337-44e4-81bb-3a5bc0503123?limit=50",
+   "s": 200,
+   "ms": 114
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a3d96f3d-f337-44e4-81bb-3a5bc0503123?limit=50",
+   "s": 200,
+   "ms": 109
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a3d96f3d-f337-44e4-81bb-3a5bc0503123?limit=50",
+   "s": 200,
+   "ms": 115
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a3d96f3d-f337-44e4-81bb-3a5bc0503123?limit=50",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a3d96f3d-f337-44e4-81bb-3a5bc0503123?limit=50",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a3d96f3d-f337-44e4-81bb-3a5bc0503123?limit=50",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a3d96f3d-f337-44e4-81bb-3a5bc0503123?limit=50",
+   "s": 200,
+   "ms": 110
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a3d96f3d-f337-44e4-81bb-3a5bc0503123?limit=50",
+   "s": 200,
+   "ms": 114
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a3d96f3d-f337-44e4-81bb-3a5bc0503123?limit=50",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a3d96f3d-f337-44e4-81bb-3a5bc0503123?limit=50",
+   "s": 200,
+   "ms": 110
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a3d96f3d-f337-44e4-81bb-3a5bc0503123?limit=50",
+   "s": 200,
+   "ms": 114
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a3d96f3d-f337-44e4-81bb-3a5bc0503123?limit=50",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a3d96f3d-f337-44e4-81bb-3a5bc0503123?limit=50",
+   "s": 200,
+   "ms": 109
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a3d96f3d-f337-44e4-81bb-3a5bc0503123?limit=50",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a3d96f3d-f337-44e4-81bb-3a5bc0503123?limit=50",
+   "s": 200,
+   "ms": 114
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a3d96f3d-f337-44e4-81bb-3a5bc0503123?limit=50",
+   "s": 200,
+   "ms": 112
+  },
+  {
+   "m": "GET",
+   "p": "/work-log/a3d96f3d-f337-44e4-81bb-3a5bc0503123?limit=50",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/agents/a3d96f3d-f337-44e4-81bb-3a5bc0503123",
+   "s": 200,
+   "ms": 114
+  },
+  {
+   "m": "GET",
+   "p": "/agents/a3d96f3d-f337-44e4-81bb-3a5bc0503123",
+   "s": 200,
+   "ms": 122
+  },
+  {
+   "m": "GET",
+   "p": "/agents/a3d96f3d-f337-44e4-81bb-3a5bc0503123/memories",
+   "s": 200,
+   "ms": 145
+  },
+  {
+   "m": "DELETE",
+   "p": "/agents/a3d96f3d-f337-44e4-81bb-3a5bc0503123/memories/2c157d12-0046-49cb-9cb8-a0",
+   "s": 204,
+   "ms": 115
+  },
+  {
+   "m": "DELETE",
+   "p": "/agents/a3d96f3d-f337-44e4-81bb-3a5bc0503123/memories/6be25ac0-4efd-4b9e-b4a1-8f",
+   "s": 204,
+   "ms": 117
+  },
+  {
+   "m": "DELETE",
+   "p": "/agents/a3d96f3d-f337-44e4-81bb-3a5bc0503123/memories/7fd069e3-ee0f-4540-9153-79",
+   "s": 204,
+   "ms": 113
+  },
+  {
+   "m": "DELETE",
+   "p": "/agents/a3d96f3d-f337-44e4-81bb-3a5bc0503123/memories/90ead78d-16cf-46a9-9743-fc",
+   "s": 204,
+   "ms": 117
+  },
+  {
+   "m": "DELETE",
+   "p": "/agents/a3d96f3d-f337-44e4-81bb-3a5bc0503123/memories/c31f2e76-d5fa-4020-a82e-12",
+   "s": 204,
+   "ms": 116
+  },
+  {
+   "m": "DELETE",
+   "p": "/agents/a3d96f3d-f337-44e4-81bb-3a5bc0503123/memories/d2762c39-cc59-461a-993a-31",
+   "s": 204,
+   "ms": 115
+  },
+  {
+   "m": "DELETE",
+   "p": "/agents/a3d96f3d-f337-44e4-81bb-3a5bc0503123/memories/efa253bf-1ac5-405c-80f6-22",
+   "s": 204,
+   "ms": 119
+  },
+  {
+   "m": "DELETE",
+   "p": "/agents/a3d96f3d-f337-44e4-81bb-3a5bc0503123",
+   "s": 204,
+   "ms": 128
+  },
+  {
+   "m": "GET",
+   "p": "/agents/a3d96f3d-f337-44e4-81bb-3a5bc0503123",
+   "s": 404,
+   "ms": 108
+  },
+  {
+   "m": "GET",
+   "p": "/stats/overview",
+   "s": 200,
+   "ms": 125
+  },
+  {
+   "m": "GET",
+   "p": "/stats/agents",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/stats/activity?limit=30",
+   "s": 200,
+   "ms": 109
+  },
+  {
+   "m": "GET",
+   "p": "/stats/timeseries?days=14",
+   "s": 200,
+   "ms": 113
+  },
+  {
+   "m": "GET",
+   "p": "/stats/network",
+   "s": 200,
+   "ms": 111
+  },
+  {
+   "m": "GET",
+   "p": "/.well-known/agent-card.json",
+   "s": 200,
+   "ms": 106
+  },
+  {
+   "m": "GET",
+   "p": "/billing/usage",
+   "s": 200,
+   "ms": 104
+  },
+  {
+   "m": "GET",
+   "p": "/agents/",
+   "s": 200,
+   "ms": 107
+  },
+  {
+   "m": "GET",
+   "p": "/stats/overview",
+   "s": 200,
+   "ms": 152
+  }
+ ],
+ "billing": {
+  "baseline": {
+   "period_start": "2026-07-01T00:00:00+00:00",
+   "budget_usd": 50.0,
+   "spent_usd": 0.0,
+   "remaining_usd": 50.0,
+   "tokens_used": 0,
+   "over_budget": false
+  },
+  "after_phase1": {
+   "period_start": "2026-07-01T00:00:00+00:00",
+   "budget_usd": 50.0,
+   "spent_usd": 0.0,
+   "remaining_usd": 50.0,
+   "tokens_used": 0,
+   "over_budget": false
+  },
+  "after_Summit Ridge Realty": {
+   "period_start": "2026-07-01T00:00:00+00:00",
+   "budget_usd": 50.0,
+   "spent_usd": 0.035542,
+   "remaining_usd": 49.964458,
+   "tokens_used": 5000,
+   "over_budget": false
+  },
+  "after_Brightcart": {
+   "period_start": "2026-07-01T00:00:00+00:00",
+   "budget_usd": 50.0,
+   "spent_usd": 0.04309,
+   "remaining_usd": 49.95691,
+   "tokens_used": 5821,
+   "over_budget": false
+  },
+  "after_Loop Metrics": {
+   "period_start": "2026-07-01T00:00:00+00:00",
+   "budget_usd": 50.0,
+   "spent_usd": 0.052677,
+   "remaining_usd": 49.947323,
+   "tokens_used": 5853,
+   "over_budget": false
+  },
+  "after_Harbor & Vane": {
+   "period_start": "2026-07-01T00:00:00+00:00",
+   "budget_usd": 50.0,
+   "spent_usd": 0.339066,
+   "remaining_usd": 49.660934,
+   "tokens_used": 14176,
+   "over_budget": false
+  },
+  "after_Caldwell Legal": {
+   "period_start": "2026-07-01T00:00:00+00:00",
+   "budget_usd": 50.0,
+   "spent_usd": 0.172934,
+   "remaining_usd": 49.827066,
+   "tokens_used": 20246,
+   "over_budget": false
+  },
+  "pre_cleanup_final": {
+   "period_start": "2026-07-01T00:00:00+00:00",
+   "budget_usd": 50.0,
+   "spent_usd": 0.0,
+   "remaining_usd": 50.0,
+   "tokens_used": 0,
+   "over_budget": false
+  },
+  "post_cleanup": {
+   "period_start": "2026-07-01T00:00:00+00:00",
+   "budget_usd": 50.0,
+   "spent_usd": 0.0,
+   "remaining_usd": 50.0,
+   "tokens_used": 0,
+   "over_budget": false
+  }
+ },
+ "snapshots": {
+  "health": {
+   "status": "ok",
+   "auth_required": false
+  },
+  "pre_agents": [],
+  "pre_overview": {
+   "agents": 0,
+   "active": 0,
+   "idle": 0,
+   "error": 0,
+   "tasks": 0,
+   "success": 0,
+   "success_rate": 0,
+   "total_cost_usd": 0.0,
+   "total_tokens": 0,
+   "avg_eval": null,
+   "departments": []
+  },
+  "pre_company": [
+   {
+    "id": "1d4fb6b0-1a4c-41e3-ae9d-0442f051c720",
+    "name": "Smoke Test Co",
+    "industry": "Technology",
+    "description": "Automated smoke test.",
+    "website": null,
+    "logo_url": null,
+    "size": null,
+    "created_at": "2026-07-21T01:39:54.605605Z",
+    "updated_at": "2026-07-21T01:39:54.605609Z"
+   }
+  ],
+  "post_agents": [],
+  "post_overview": {
+   "agents": 0,
+   "active": 0,
+   "idle": 0,
+   "error": 0,
+   "tasks": 0,
+   "success": 0,
+   "success_rate": 0,
+   "total_cost_usd": 0.0,
+   "total_tokens": 0,
+   "avg_eval": null,
+   "departments": []
+  }
+ },
+ "notes": [
+  "signup created a permanent org row (no org delete endpoint) \u2014 residue invisible to the default workspace"
+ ],
+ "aborted": null,
+ "sse_events": [
+  "CONNECTED",
+  "STATE_SNAPSHOT",
+  "TEXT_MESSAGE_START",
+  "TEXT_MESSAGE_CONTENT",
+  "TEXT_MESSAGE_END",
+  "CUSTOM",
+  "STATE_SNAPSHOT",
+  "RUN_ERROR"
+ ],
+ "evals_samples": [
+  {
+   "persona": "Summit Ridge Realty",
+   "status": 200,
+   "body": [
+    {
+     "id": "76700f9f-054e-4f8a-a3e1-74173789a376",
+     "agent_id": "73d87f50-4ffc-47f7-96ee-2b230fc3292c",
+     "work_log_id": "cf453cef-ca79-4714-8e9e-fd190be59135",
+     "score": 15,
+     "reasoning": "The agent failed to complete the assigned task. Instead of developing a rental market analysis plan for Denver metro, it deflected by claiming no prior context existed, despite clear task parameters being provided. The agent produced no deliverable, analysis framework, timeline, or data sources\u2014only a meta-commentary about needing clarification.",
+     "judge_model": "claude-haiku-4-5-20251001",
+     "skill_updates": {
+      "Task Completion": -8,
+      "Planning": -7,
+      "Market Analysis": -5
+     },
+     "created_at": "2026-07-22T04:45:37.342212Z"
+    },
+    {
+     "id": "78442c99-e3d3-4981-b62f-6bddc3b4fd11",
+     "agent_id": "73d87f50-4ffc-47f7-96ee-2b230fc3292c",
+     "work_log_id": "5cad2f1b-3c77-4a17-97b5-40e3e85d4c3b",
+     "score": 35,
+     "reasoning": "The agent demonstrated poor task completion by fabricating content not present in the source material (rent increase clause, 60-day notice requirement). While the reflection shows good self-awareness about hallucination risks, the output quality is significantly compromised by inventing details, and the agent failed to flag the incomplete input immediately.",
+     "judge_model": "claude-haiku-4-5-20251001",
+     "skill_updates": {
+      "Summarization": -8,
+      "Accuracy": -7,
+      "Self-Awareness": 5
+     },
+     "created_at": "2026-07-22T04:45:26.502433Z"
+    }
+   ]
+  },
+  {
+   "persona": "Brightcart",
+   "status": 200,
+   "body": [
+    {
+     "id": "28c499e2-3503-4515-b7cd-14b58bccaad8",
+     "agent_id": "a05092ae-850b-41af-8315-e68cc7fcd6f8",
+     "work_log_id": "77803c18-6498-49e7-98c0-6f5d9eb1d794",
+     "score": 15,
+     "reasoning": "The agent failed to complete the assigned task entirely. Instead of writing the product description for AscendDesk Pro as requested, it asked for clarification despite having clear, complete instructions. The agent also provided no reflection on task performance, missing both primary and secondary objectives.",
+     "judge_model": "claude-haiku-4-5-20251001",
+     "skill_updates": {
+      "Writing": -8,
+      "Task Completion": -10,
+      "Instruction Following": -9
+     },
+     "created_at": "2026-07-22T04:51:07.476753Z"
+    }
+   ]
+  },
+  {
+   "persona": "Loop Metrics",
+   "status": 200,
+   "body": [
+    {
+     "id": "d6203e1d-89fd-4a46-9a70-b2e02b90770d",
+     "agent_id": "937042f1-f176-4a33-b3e0-099e660b780e",
+     "work_log_id": "b943ab6c-d8cd-42fd-9d8c-d573dd151396",
+     "score": 15,
+     "reasoning": "The agent failed to complete the core task. It was explicitly instructed to use the execute_python tool to compute mean and sample standard deviation for the churn data [12, 19, 23, 8, 30, 27], then interpret results. Instead, the agent declined to perform the analysis and requested clarification, demonstrating task avoidance rather than task execution. The reflection was also inappropriate given this was a direct, clear task request.",
+     "judge_model": "claude-haiku-4-5-20251001",
+     "skill_updates": {
+      "Analysis": -8,
+      "Task Completion": -10,
+      "Technical Execution": -7
+     },
+     "created_at": "2026-07-22T04:57:27.821061Z"
+    },
+    {
+     "id": "a41e369e-f6ec-487b-abd2-4ba762649202",
+     "agent_id": "937042f1-f176-4a33-b3e0-099e660b780e",
+     "work_log_id": "91c101f4-55fa-4a92-bb90-2cc2aea9e10e",
+     "score": 62,
+     "reasoning": "The agent produced a well-structured summary with clear formatting and identified key discussion points, but made critical errors in action item ownership assignment that don't match the input content. The reflection demonstrates good self-awareness about these mistakes, though the incomplete reflection text suggests the analysis was cut off. Task completion is partial due to the ownership misalignment.",
+     "judge_model": "claude-haiku-4-5-20251001",
+     "skill_updates": {
+      "Summarization": -5,
+      "Attention to Detail": -8,
+      "Self-Reflection": 4
+     },
+     "created_at": "2026-07-22T04:57:06.840037Z"
+    }
+   ]
+  },
+  {
+   "persona": "Harbor & Vane",
+   "status": 200,
+   "body": [
+    {
+     "id": "cda43e82-42bc-4600-b7cc-ca05027043ee",
+     "agent_id": "bea19ee7-ccb7-44c1-a0a8-0416b988853e",
+     "work_log_id": "c131abef-4091-41d4-9ae8-4eb106108644",
+     "score": 15,
+     "reasoning": "The agent failed to complete the core task requirement: it did not actually use the send_to_agent tool to delegate the copywriting task. Instead, it only stated intent to delegate without executing the action. The agent's reflection acknowledges this failure, showing self-awareness but not remedying the incomplete task execution.",
+     "judge_model": "claude-haiku-4-5-20251001",
+     "skill_updates": {
+      "Task Execution": -8,
+      "Self-Awareness": 5,
+      "Tool Usage": -7
+     },
+     "created_at": "2026-07-22T05:00:48.822729Z"
+    },
+    {
+     "id": "a8cfa99a-eb84-4a35-b803-65ea0026d970",
+     "agent_id": "bea19ee7-ccb7-44c1-a0a8-0416b988853e",
+     "work_log_id": "83c8d5ef-5da9-402f-ad84-89a59d1b9d78",
+     "score": 72,
+     "reasoning": "The agent delivered a structured, actionable 90-day strategy that respects all constraints and includes realistic cadence, budget allocation, and phase-based KPIs. However, the output is incomplete (cuts off mid-reflection), lacks specific content examples/themes, and the reflection acknowledges it made assumptions without requesting clarification upfront\u2014reducing strategic depth and stakeholder alignment.",
+     "judge_model": "claude-haiku-4-5-20251001",
+     "skill_updates": {
+      "Strategic Planning": 6,
+      "Constraint Management": 7,
+      "Content Strategy": 5
+     },
+     "created_at": "2026-07-22T05:00:28.778591Z"
+    }
+   ]
+  },
+  {
+   "persona": "Caldwell Legal",
+   "status": 200,
+   "body": [
+    {
+     "id": "1270cc8d-a2a7-48a8-b52f-4c5d3a414bae",
+     "agent_id": "08b8d7a0-a6da-4830-af52-e108cfd77cc5",
+     "work_log_id": "6c64bf28-f8ff-4eee-bba6-1f1cf23ee468",
+     "score": 62,
+     "reasoning": "Agent demonstrated strong analytical structure and identified data limitations transparently, but task completion was significantly hampered by incomplete input (2 of 3 documents, truncated text). The payment terms conflict analysis was accurate and well-formatted, but inability to analyze termination and liability sections due to truncation prevented full task delivery. Reflection showed good self-awareness but was cut off mid-sentence.",
+     "judge_model": "claude-haiku-4-5-20251001",
+     "skill_updates": {
+      "Analysis": 5,
+      "Document Review": -3,
+      "Communication": 4
+     },
+     "created_at": "2026-07-22T05:07:17.035473Z"
+    },
+    {
+     "id": "3a96dd1c-f482-4cfd-9f08-4fa8e15d75e1",
+     "agent_id": "08b8d7a0-a6da-4830-af52-e108cfd77cc5",
+     "work_log_id": "f8b42c48-5489-4fdf-a42c-c0cf9e686e09",
+     "score": 72,
+     "reasoning": "The agent successfully identified and summarized the three main contractual provisions with clear structure and accurate interpretation of the key terms (indemnification cap, termination procedures, liability limitations). However, the output was incomplete (cut off mid-sentence), and the reflection appropriately flagged accuracy concerns due to incomplete source text visibility. The summary demonstrates good legal comprehension but lacks the precision and completeness expected for contract analysis.",
+     "judge_model": "claude-haiku-4-5-20251001",
+     "skill_updates": {
+      "Legal Analysis": 5,
+      "Summarization": 3,
+      "Attention to Detail": -4
+     },
+     "created_at": "2026-07-22T05:06:18.582691Z"
+    }
+   ]
+  }
+ ],
+ "burst": {
+  "dispatch_ms_sorted": [
+   118,
+   224,
+   251,
+   363,
+   365
+  ],
+  "completed": 5,
+  "rows": 5,
+  "task_count": 5
+ },
+ "finished_at": "2026-07-22T05:07:50Z",
+ "measured_cost_usd": 0.664
+}
